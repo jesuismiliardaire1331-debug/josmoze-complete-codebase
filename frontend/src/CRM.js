@@ -163,6 +163,43 @@ const CRMDashboard = () => {
     return colors[alertLevel] || colors.normal;
   };
 
+  const createCampaign = async (campaignData) => {
+    try {
+      await axios.post(`${API}/crm/campaigns`, campaignData);
+      fetchCampaigns();
+      fetchSocialMediaData();
+      alert('✅ Campagne créée avec succès !');
+    } catch (error) {
+      console.error('Erreur lors de la création de campagne:', error);
+      alert('❌ Erreur lors de la création de campagne');
+    }
+  };
+
+  const generateContent = async (contentRequest) => {
+    try {
+      const response = await axios.post(`${API}/crm/content/generate`, contentRequest);
+      fetchAdCreatives();
+      alert('✅ Contenu généré avec succès !');
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la génération de contenu:', error);
+      alert('❌ Erreur lors de la génération de contenu');
+      return null;
+    }
+  };
+
+  const optimizeBudget = async () => {
+    try {
+      const response = await axios.post(`${API}/crm/campaigns/optimize-budget`);
+      fetchCampaigns();
+      fetchSocialMediaData();
+      alert(`✅ Budget optimisé ! ${response.data.optimization_actions?.length || 0} campagnes optimisées`);
+    } catch (error) {
+      console.error('Erreur lors de l\'optimisation:', error);
+      alert('❌ Erreur lors de l\'optimisation du budget');
+    }
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
       day: '2-digit',
