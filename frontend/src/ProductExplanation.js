@@ -387,6 +387,89 @@ const ProductExplanation = () => {
           </div>
         </div>
 
+        {/* Nos Produits Phares */}
+        <div className="mb-16">
+          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            🏆 Nos Modèles de Fontaines à Eau Osmosée
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* BlueMountain */}
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
+              <div className="text-center mb-6">
+                <img 
+                  src="https://www.josmose.fr/2570-large_default/fontaine-osmoseur-minibluesea.jpg"
+                  alt="Fontaine BlueMountain"
+                  className="w-full h-64 object-contain rounded-lg mb-4"
+                />
+                <h4 className="text-2xl font-bold text-blue-900 mb-2">BlueMountain Compact</h4>
+                <p className="text-gray-600">Fontaine osmosée de bureau et domestique</p>
+              </div>
+              
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✓</span>
+                  <span>Production: jusqu'à 380L/jour (16L/h)</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✓</span>
+                  <span>Eau chaude, froide et tempérée</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✓</span>
+                  <span>Membrane 100GPD encapsulée</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-600">✓</span>
+                  <span>Dimensions: 56×41×30 cm</span>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-center">
+                <div className="text-2xl font-bold text-blue-600 mb-2">À partir de 578€</div>
+                <div className="text-sm text-gray-500">ou location 11€/mois</div>
+              </div>
+            </div>
+
+            {/* Fontaine Design */}
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
+              <div className="text-center mb-6">
+                <img 
+                  src="https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png"
+                  alt="Fontaine Intelligente H20"
+                  className="w-full h-64 object-contain rounded-lg mb-4"
+                />
+                <h4 className="text-2xl font-bold text-green-900 mb-2">Fontaine Intelligente H₂O</h4>
+                <p className="text-gray-600">Contrôle digital et design minimaliste</p>
+              </div>
+              
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-600">✓</span>
+                  <span>Contrôle température du bout des doigts</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-600">✓</span>
+                  <span>Température réglée en 3 secondes</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-600">✓</span>
+                  <span>Sécurité enfant intégrée</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-green-600">✓</span>
+                  <span>Installation simple - Plug & Play</span>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-center">
+                <div className="text-2xl font-bold text-green-600 mb-2">Sur devis</div>
+                <div className="text-sm text-gray-500">Consultation gratuite</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Installation et Maintenance */}
         <div className="bg-blue-50 p-8 rounded-2xl mb-16">
           <h3 className="text-3xl font-bold text-center text-blue-900 mb-8">
