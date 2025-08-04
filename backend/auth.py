@@ -72,7 +72,7 @@ CRM_USERS = {
         "email": "antonio@josmose.com",
         "full_name": "Antonio - Directeur Général",
         "role": "admin",  # Directeur = admin complet
-        "password_hash": "$2b$12$Vmy8F4.vgKHoY8TchO.nCeqSLO0jl3zF6GWjJ9xn4QG8xRe5P8V5W",  # "Antonio@2024!Secure"
+        "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
         "is_active": True
     },
     "aziza@josmose.com": {
