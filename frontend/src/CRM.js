@@ -862,6 +862,289 @@ const CRMDashboard = () => {
           </div>
         )}
 
+        {/* Onglet Marketing Automation */}
+        {activeTab === 'marketing' && socialMediaData && (
+          <div className="space-y-6">
+            {/* KPIs Marketing */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl shadow-lg hover:transform hover:scale-105 transition-all">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-blue-100 text-sm font-medium">Total Impressions</p>
+                    <p className="text-3xl font-bold">{socialMediaData.performance?.total_impressions?.toLocaleString() || 0}</p>
+                  </div>
+                  <div className="text-4xl opacity-80">👀</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 rounded-xl shadow-lg hover:transform hover:scale-105 transition-all">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-green-100 text-sm font-medium">Conversions</p>
+                    <p className="text-3xl font-bold">{socialMediaData.performance?.total_conversions || 0}</p>
+                  </div>
+                  <div className="text-4xl opacity-80">🎯</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-500 to-violet-600 text-white p-6 rounded-xl shadow-lg hover:transform hover:scale-105 transition-all">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-purple-100 text-sm font-medium">ROAS</p>
+                    <p className="text-3xl font-bold">{socialMediaData.performance?.total_roas || 0}x</p>
+                  </div>
+                  <div className="text-4xl opacity-80">💰</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-br from-pink-500 to-rose-600 text-white p-6 rounded-xl shadow-lg hover:transform hover:scale-105 transition-all">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-pink-100 text-sm font-medium">Budget Utilisé</p>
+                    <p className="text-3xl font-bold">€{socialMediaData.performance?.budget_used || 0}</p>
+                  </div>
+                  <div className="text-4xl opacity-80">💳</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Actions Rapides */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="mr-2">🚀</span>
+                  Actions Rapides
+                </h3>
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => {
+                      const campaignData = {
+                        name: `Campagne Auto ${new Date().toLocaleDateString()}`,
+                        platform: "facebook",
+                        objective: "conversions",
+                        budget: 50,
+                        target_country: "FR"
+                      };
+                      createCampaign(campaignData);
+                    }}
+                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all"
+                  >
+                    🎯 Créer Campagne Auto
+                  </button>
+                  
+                  <button 
+                    onClick={() => {
+                      const contentRequest = {
+                        type: "post",
+                        platform: "facebook", 
+                        language: "fr"
+                      };
+                      generateContent(contentRequest);
+                    }}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 px-4 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all"
+                  >
+                    ✨ Générer Contenu IA
+                  </button>
+                  
+                  <button 
+                    onClick={optimizeBudget}
+                    className="w-full bg-gradient-to-r from-purple-500 to-violet-600 text-white py-2 px-4 rounded-lg font-semibold hover:from-purple-600 hover:to-violet-700 transition-all"
+                  >
+                    🎛️ Optimiser Budget
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="mr-2">📱</span>
+                  Plateformes Actives
+                </h3>
+                <div className="space-y-4">
+                  {Object.entries(socialMediaData.platforms || {}).map(([platform, metrics]) => (
+                    <div key={platform} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center">
+                        <span className="text-lg mr-3">
+                          {platform === 'facebook' && '📘'}
+                          {platform === 'instagram' && '📸'}
+                          {platform === 'tiktok' && '🎵'}
+                        </span>
+                        <span className="font-semibold capitalize">{platform}</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-bold text-gray-700">{metrics.conversions || 0} conv.</div>
+                        <div className="text-xs text-gray-500">€{metrics.cost?.toFixed(2) || 0}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="mr-2">🤖</span>
+                  Automation Active
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                    <span className="text-sm font-medium">🛒 Paniers Abandonnés</span>
+                    <span className="font-bold text-blue-600">{socialMediaData.automated_actions?.abandoned_carts_targeted || 0}</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <span className="text-sm font-medium">🎨 Contenu Généré</span>
+                    <span className="font-bold text-green-600">{socialMediaData.automated_actions?.content_pieces_generated || 0}</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                    <span className="text-sm font-medium">🔗 Landing Pages</span>
+                    <span className="font-bold text-purple-600">{socialMediaData.automated_actions?.landing_pages_created || 0}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Top Campagnes */}
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+              <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
+                <span className="mr-3">🏆</span>
+                Top 5 Campagnes Performantes
+              </h3>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Campagne</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Plateforme</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Impressions</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Conversions</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">ROAS</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Coût</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {(socialMediaData.top_campaigns || []).slice(0, 5).map((campaign, index) => (
+                      <tr key={campaign.campaign_id} className={`hover:bg-blue-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                        <td className="px-6 py-4">
+                          <div>
+                            <div className="font-semibold text-gray-900">{campaign.campaign_name}</div>
+                            <div className="text-sm text-gray-600">{campaign.campaign_id}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-400 to-blue-600 text-white">
+                            {campaign.platform === 'facebook' && '📘 Facebook'}
+                            {campaign.platform === 'instagram' && '📸 Instagram'}
+                            {campaign.platform === 'tiktok' && '🎵 TikTok'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-gray-900">{campaign.impressions?.toLocaleString() || 0}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-green-600">{campaign.conversions || 0}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-purple-600">{campaign.roas || 0}x</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-gray-900">€{campaign.cost?.toFixed(2) || 0}</div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Onglet Campagnes */}
+        {activeTab === 'campaigns' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
+                <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                  <span className="mr-3">🎯</span>
+                  Toutes les Campagnes ({campaigns.length})
+                </h3>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Nom</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Plateforme</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Statut</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Budget</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Performance</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Créé le</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {campaigns.map((campaign, index) => (
+                      <tr key={campaign.campaign_id} className={`hover:bg-blue-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                        <td className="px-6 py-4">
+                          <div>
+                            <div className="font-semibold text-gray-900">{campaign.name}</div>
+                            <div className="text-sm text-gray-600">{campaign.campaign_id}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                            campaign.platform === 'facebook' ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white' :
+                            campaign.platform === 'instagram' ? 'bg-gradient-to-r from-pink-400 to-purple-600 text-white' :
+                            'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
+                          }`}>
+                            {campaign.platform === 'facebook' && '📘'}
+                            {campaign.platform === 'instagram' && '📸'}
+                            {campaign.platform === 'tiktok' && '🎵'}
+                            <span className="ml-1 capitalize">{campaign.platform}</span>
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                            campaign.status === 'active' ? 'bg-gradient-to-r from-green-400 to-green-600 text-white' :
+                            campaign.status === 'paused' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
+                            'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
+                          }`}>
+                            {campaign.status === 'active' ? '✅ Actif' :
+                             campaign.status === 'paused' ? '⏸️ Pausé' :
+                             campaign.status === 'draft' ? '📝 Brouillon' : campaign.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-gray-900">€{campaign.budget_total}</div>
+                          <div className="text-xs text-gray-500">Dépensé: €{campaign.budget_spent || 0}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          {campaign.performance ? (
+                            <div className="space-y-1">
+                              <div className="text-sm font-semibold text-green-600">
+                                🎯 {campaign.performance.conversions || 0} conv.
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                ROAS: {campaign.performance.roas || 0}x
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-400">Pas de données</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {formatDate(campaign.created_at)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Onglet Analytics */}
         {activeTab === 'analytics' && (
           <div className="text-center py-16">
