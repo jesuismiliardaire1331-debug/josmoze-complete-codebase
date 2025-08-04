@@ -191,6 +191,23 @@ def require_role(required_roles: list):
         return current_user
     return role_checker
 
+def get_company_info():
+    """Get company legal information for payment processing"""
+    return COMPANY_INFO
+
+def validate_password_strength(password: str) -> bool:
+    """Validate password meets security requirements"""
+    if len(password) < 8:
+        return False
+    
+    # Check for uppercase, lowercase, numbers, and special characters
+    has_upper = any(c.isupper() for c in password)
+    has_lower = any(c.islower() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    has_special = any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password)
+    
+    return all([has_upper, has_lower, has_digit, has_special])
+
 # Initialize default users
 async def init_users_db():
     """Initialize users in database if needed"""
