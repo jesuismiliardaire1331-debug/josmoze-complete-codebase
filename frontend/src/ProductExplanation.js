@@ -127,8 +127,8 @@ const ProductExplanation = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/d3d3d1eebf0370a53ed1acfdc3d6364b02f78205a23c1d2428fa69fda91cccf5.jpg"
-                  alt="Schéma système osmose inverse"
+                  src="https://www.josmose.fr/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png"
+                  alt="Schéma système osmose inverse BlueMountain"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
