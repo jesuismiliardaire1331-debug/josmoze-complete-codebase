@@ -1,4 +1,5 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends
+from fastapi.security import HTTPBearer
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -12,6 +13,10 @@ from datetime import datetime, timedelta
 import httpx
 import re
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
+
+# Import authentication and AI agents
+from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role
+from ai_agents import get_marketing_automation, MarketingAutomation
 
 
 ROOT_DIR = Path(__file__).parent
