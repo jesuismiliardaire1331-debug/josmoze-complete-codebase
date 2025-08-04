@@ -64,6 +64,33 @@ const CRMDashboard = () => {
     }
   };
 
+  const fetchSocialMediaData = async () => {
+    try {
+      const response = await axios.get(`${API}/crm/social-media/dashboard`);
+      setSocialMediaData(response.data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des données social media:', error);
+    }
+  };
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await axios.get(`${API}/crm/campaigns`);
+      setCampaigns(response.data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des campagnes:', error);
+    }
+  };
+
+  const fetchAdCreatives = async () => {
+    try {
+      const response = await axios.get(`${API}/crm/creatives`);
+      setAdCreatives(response.data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des créatifs:', error);
+    }
+  };
+
   const fetchLeads = async () => {
     try {
       const params = new URLSearchParams();
