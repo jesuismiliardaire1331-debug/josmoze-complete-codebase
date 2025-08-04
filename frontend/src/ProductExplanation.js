@@ -300,6 +300,45 @@ const ProductExplanation = () => {
           </div>
         </div>
 
+        {/* Pourquoi choisir nos systèmes - Nouvelle section avec images */}
+        <div className="mb-16">
+          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            💧 L'Importance d'une Eau Pure pour Toute la Famille
+          </h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
+            {/* Image comparative eau pure/impure */}
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
+              <img 
+                src="https://www.josmose.fr/img/cms/eau-pure-et-impure.png"
+                alt="Comparaison eau pure et impure"
+                className="w-full h-auto rounded-lg mb-4"
+              />
+              <h4 className="text-xl font-bold text-gray-900 mb-2">
+                🔬 Différence Visible au Microscope
+              </h4>
+              <p className="text-gray-600 text-sm">
+                Nos systèmes éliminent tous les contaminants invisibles à l'œil nu mais dangereux pour la santé
+              </p>
+            </div>
+
+            {/* Image contexte familial */}
+            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center">
+              <img 
+                src="https://static.wixstatic.com/media/6af6bd_16baeaf62afc42009cf6ece2f46c767a~mv2.png/v1/fill/w_797,h_487,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Les%20b%C3%A9b%C3%A9s%20pleurent%20quand%20ils%20ont%20faim%2C%20ne%20peuvent%20pas%20attendre__%20c'est%20touj_20250220_19362.png"
+                alt="Protection familiale avec eau pure"
+                className="w-full h-auto rounded-lg mb-4"
+              />
+              <h4 className="text-xl font-bold text-blue-900 mb-2">
+                👶 Protection Optimale pour Bébés et Enfants
+              </h4>
+              <p className="text-blue-700 text-sm">
+                Une eau instantanément disponible à la bonne température, parfaite pour biberon et alimentation infantile
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Contaminants Éliminés */}
         <div className="mb-16">
           <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
