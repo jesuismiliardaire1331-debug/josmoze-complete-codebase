@@ -1051,6 +1051,224 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
     return current_user
 
 
+# ========== NEW INVENTORY & STOCK MANAGEMENT ENDPOINTS ==========
+
+@api_router.get("/products/{product_id}/stock")
+async def get_product_stock(product_id: str):
+    """Obtenir le statut du stock d'un produit (pour affichage public)"""
+    try:
+        stock_status = await inventory_manager.get_stock_status(product_id)
+        
+        # Retourner seulement les infos nécessaires pour le public
+        return {
+            "product_id": product_id,
+            "in_stock": stock_status.get("available_stock", 0) > 0,
+            "show_stock_warning": stock_status.get("show_stock_warning", False),
+            "stock_warning_text": stock_status.get("stock_warning_text"),
+            "available_stock": stock_status.get("available_stock", 0) if stock_status.get("available_stock", 0) > 5 else "Quelques unités"
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting product stock: {e}")
+        return {"in_stock": True, "show_stock_warning": False}
+
+@crm_router.get("/inventory/dashboard")
+async def get_inventory_dashboard(
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Dashboard de gestion des stocks pour le CRM"""
+    try:
+        all_stock = await inventory_manager.get_all_stock_status()
+        
+        # Compter les alertes par niveau
+        alert_counts = {"critical": 0, "warning": 0, "normal": 0, "optimal": 0}
+        for item in all_stock:
+            level = item.get("alert_level", "normal")
+            alert_counts[level] = alert_counts.get(level, 0) + 1
+        
+        # Produits nécessitant un réapprovisionnement
+        restock_needed = [item for item in all_stock if item.get("reorder_needed")]
+        
+        return {
+            "stock_items": all_stock,
+            "alert_summary": alert_counts,
+            "critical_items": [item for item in all_stock if item.get("alert_level") == "critical"],
+            "restock_needed": restock_needed,
+            "total_products": len(all_stock),
+            "last_updated": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting inventory dashboard: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement du dashboard stock")
+
+@crm_router.post("/inventory/restock/{product_id}")
+async def restock_product(
+    product_id: str, 
+    quantity: int,
+    current_user: User = Depends(require_role(["admin", "manager"]))
+):
+    """Réapprovisionner un produit"""
+    try:
+        # Mettre à jour le stock
+        await db.stock_items.update_one(
+            {"product_id": product_id},
+            {
+                "$inc": {
+                    "current_stock": quantity,
+                    "available_stock": quantity
+                },
+                "$set": {
+                    "last_restocked": datetime.utcnow(),
+                    "next_restock_due": datetime.utcnow() + timedelta(days=90),  # 3 mois
+                    "updated_at": datetime.utcnow()
+                }
+            }
+        )
+        
+        # Log de l'opération
+        await db.stock_operations.insert_one({
+            "operation_type": "restock",
+            "product_id": product_id,
+            "quantity": quantity,
+            "performed_by": current_user.username,
+            "timestamp": datetime.utcnow(),
+            "notes": f"Réapprovisionnement de {quantity} unités"
+        })
+        
+        return {"message": f"Stock mis à jour: +{quantity} unités", "success": True}
+        
+    except Exception as e:
+        logging.error(f"Error restocking product: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du réapprovisionnement")
+
+@crm_router.get("/invoices")
+async def get_all_invoices(
+    limit: int = 100,
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir toutes les factures"""
+    try:
+        invoices = await db.invoices.find().sort("created_at", -1).limit(limit).to_list(limit)
+        return invoices
+        
+    except Exception as e:
+        logging.error(f"Error getting invoices: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement des factures")
+
+@crm_router.get("/invoices/{invoice_id}")
+async def get_invoice(
+    invoice_id: str,
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir une facture spécifique"""
+    try:
+        invoice = await db.invoices.find_one({"invoice_id": invoice_id})
+        if not invoice:
+            raise HTTPException(status_code=404, detail="Facture non trouvée")
+        
+        return invoice
+        
+    except Exception as e:
+        logging.error(f"Error getting invoice: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement de la facture")
+
+@crm_router.get("/orders/{order_id}/tracking")
+async def get_order_tracking(
+    order_id: str,
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir le suivi d'une commande"""
+    try:
+        tracking = await db.order_tracking.find_one({"order_id": order_id})
+        if not tracking:
+            raise HTTPException(status_code=404, detail="Suivi non trouvé")
+        
+        return tracking
+        
+    except Exception as e:
+        logging.error(f"Error getting order tracking: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement du suivi")
+
+@crm_router.put("/orders/{order_id}/status")
+async def update_order_status(
+    order_id: str,
+    status_data: Dict[str, Any],
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Mettre à jour le statut d'une commande"""
+    try:
+        new_status = status_data.get("status")
+        message = status_data.get("message", "")
+        
+        result = await inventory_manager.update_order_status(order_id, new_status, message)
+        
+        if not result.get("success"):
+            raise HTTPException(status_code=400, detail=result.get("error"))
+        
+        return {"message": "Statut mis à jour avec succès", "new_status": new_status}
+        
+    except Exception as e:
+        logging.error(f"Error updating order status: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour")
+
+@api_router.get("/customer/profile/{email}")
+async def get_customer_profile(email: str):
+    """Obtenir le profil d'un client"""
+    try:
+        profile = await db.customer_profiles.find_one({"email": email})
+        if not profile:
+            # Créer un profil par défaut
+            default_profile = CustomerProfile(email=email, name="Client")
+            await db.customer_profiles.insert_one(default_profile.dict())
+            return default_profile.dict()
+        
+        return profile
+        
+    except Exception as e:
+        logging.error(f"Error getting customer profile: {e}")
+        return None
+
+@api_router.put("/customer/profile/{email}")
+async def update_customer_profile(email: str, profile_data: Dict[str, Any]):
+    """Mettre à jour le profil d'un client"""
+    try:
+        profile_data["updated_at"] = datetime.utcnow()
+        
+        await db.customer_profiles.update_one(
+            {"email": email},
+            {"$set": profile_data},
+            upsert=True
+        )
+        
+        return {"message": "Profil mis à jour avec succès"}
+        
+    except Exception as e:
+        logging.error(f"Error updating customer profile: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour du profil")
+
+@api_router.get("/tracking/{tracking_number}")
+async def public_tracking(tracking_number: str):
+    """Suivi public d'une commande (sans authentification)"""
+    try:
+        tracking = await db.order_tracking.find_one({"tracking_number": tracking_number})
+        if not tracking:
+            raise HTTPException(status_code=404, detail="Numéro de suivi non trouvé")
+        
+        # Retourner seulement les infos publiques
+        return {
+            "tracking_number": tracking.get("tracking_number"),
+            "status": tracking.get("status"),
+            "status_history": tracking.get("status_history", []),
+            "estimated_delivery": tracking.get("estimated_delivery"),
+            "carrier": tracking.get("carrier")
+        }
+        
+    except Exception as e:
+        logging.error(f"Error getting public tracking: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du suivi")
+
+
 # ========== PROTECTED CRM ENDPOINTS ==========
 
 @crm_router.get("/dashboard/advanced")
