@@ -18,6 +18,9 @@ from emergentintegrations.payments.stripe.checkout import StripeCheckout, Checko
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role
 from ai_agents import get_marketing_automation, MarketingAutomation
 
+# Import new inventory management system
+from inventory_manager import get_inventory_manager, StockItem, CustomerProfile, OrderTracking, Invoice
+
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
