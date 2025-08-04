@@ -43,6 +43,19 @@ social_media_automation = None
 # Create the main app
 app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
 
+# Add Security and Performance Middleware (Critical for Production)
+app.add_middleware(SecurityMiddleware)
+app.add_middleware(CacheMiddleware)
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "https://josmose.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Create routers
 api_router = APIRouter(prefix="/api")
 crm_router = APIRouter(prefix="/crm")  # Pas de /api car sera inclus dans api_router
