@@ -1991,6 +1991,17 @@ class BackendTester:
         self.test_company_legal_info()
         print()
         
+        # NEW ROLE-BASED SECURITY TESTS (as requested in review)
+        print("🔐 NEW ROLE-BASED SECURITY & ANALYTICS TESTS")
+        print("-" * 40)
+        self.test_new_role_authentication()
+        self.test_user_info_endpoint()
+        self.test_analytics_dashboard_permissions()
+        self.test_analytics_csv_export_permissions()
+        self.test_security_stats_permissions()
+        self.test_cache_clear_permissions()
+        print()
+        
         # Basic functionality tests
         print("🔍 BASIC FUNCTIONALITY TESTS")
         print("-" * 40)
