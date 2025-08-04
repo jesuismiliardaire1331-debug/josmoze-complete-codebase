@@ -14,6 +14,10 @@ import httpx
 import re
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
 
+# Import security and performance middleware
+from backend.security_middleware import SecurityMiddleware, CacheMiddleware, get_security_stats, clear_cache
+from backend.analytics_dashboard import AnalyticsEngine, export_analytics_csv
+
 # Import authentication and AI agents
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info, get_user_permissions
 from ai_agents import get_marketing_automation, MarketingAutomation
