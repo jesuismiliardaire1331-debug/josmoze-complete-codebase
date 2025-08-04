@@ -43,7 +43,7 @@ CRM_USERS = {
         "email": "antonio@josmose.com",
         "full_name": "Antonio - Directeur Général",
         "role": "admin",  # Directeur = admin complet
-        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "antonio123"
+        "password_hash": "$2b$12$uaF.wPPgp.IKb2LGA8NbP.fISmvbeOPmlpKveSRb2PNl4g7j9A8uK",  # "antonio123"
         "is_active": True
     },
     "aziza": {
@@ -52,7 +52,7 @@ CRM_USERS = {
         "email": "aziza@josmose.com",
         "full_name": "Aziza - Directrice Adjointe",
         "role": "admin",  # Directrice adjointe = admin complet comme le directeur
-        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "aziza123"
+        "password_hash": "$2b$12$qN8E2duyUB7ffOWbCYrsJe84CPKujvW3WDTLm1PWB7uSQUl/ZocKy",  # "aziza123"
         "is_active": True
     },
     "naima": {
@@ -61,7 +61,7 @@ CRM_USERS = {
         "email": "naima@josmose.com",
         "full_name": "Naima - Directrice Commerciale",
         "role": "admin",  # Directrice commerciale = admin complet aussi
-        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "naima123"
+        "password_hash": "$2b$12$TvMpdk4z8GvXkPT7a.L6ZOAKRmhMX8wTPXKpJyfr1HosLT0qpbYRy",  # "naima123"
         "is_active": True
     },
     "support": {
@@ -70,7 +70,7 @@ CRM_USERS = {
         "email": "support@josmose.com", 
         "full_name": "Support Technique",
         "role": "agent",  # Support = agent (accès limité)
-        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "support123"
+        "password_hash": "$2b$12$tFwdTHX14Vp74YBnyrrI6uq6xpT3RQOTiylodykHS/GjshQ0fMUeG",  # "support123"
         "is_active": True
     }
 }
