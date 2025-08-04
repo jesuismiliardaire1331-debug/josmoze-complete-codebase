@@ -192,7 +192,7 @@ const ProductExplanation = () => {
               <h4 className="text-lg font-bold text-purple-900 mb-3">Membrane UF</h4>
               <div className="text-sm text-purple-800 space-y-2">
                 <p><strong>Ultrafiltration 0.01 micron</strong></p>
-                <p>Retient toutes particules > 0.01 micron</p>
+                <p>Retient toutes particules &gt; 0.01 micron</p>
                 <p>🔹 Virus</p>
                 <p>🔹 Bactéries</p>
                 <p>🔹 Macromolécules</p>
