@@ -1001,7 +1001,7 @@ class BackendTester:
     def run_all_tests(self):
         """Run all backend tests"""
         print("=" * 80)
-        print("JOSMOSE.COM BACKEND API TESTING - CRM & LEAD MANAGEMENT")
+        print("JOSMOSE.COM BACKEND API TESTING - ADVANCED CRM & AUTOMATION")
         print("=" * 80)
         print(f"Backend URL: {BACKEND_URL}")
         print(f"Test started at: {datetime.now().isoformat()}")
@@ -1027,6 +1027,22 @@ class BackendTester:
         self.test_enhanced_contact_form()
         self.test_abandoned_cart_automation()
         self.test_email_automation_logs()
+        print()
+        
+        # 🔥 NEW ADVANCED FEATURES TESTS 🔥
+        print("🔥 NEW ADVANCED MANAGEMENT FEATURES")
+        print("-" * 40)
+        self.test_product_stock_info()
+        self.test_inventory_dashboard()
+        self.test_product_restock()
+        self.test_invoices_list()
+        self.test_order_tracking()
+        self.test_order_status_update()
+        self.test_public_tracking()
+        self.test_customer_profile_get()
+        self.test_customer_profile_update()
+        self.test_payment_automation_integration()
+        self.test_stock_thresholds()
         print()
         
         # Stripe payment tests
@@ -1056,6 +1072,23 @@ class BackendTester:
         print(f"Passed: {passed}")
         print(f"Failed: {total - passed}")
         print(f"Success Rate: {(passed/total)*100:.1f}%")
+        print()
+        
+        # Separate summary for new advanced features
+        advanced_tests = [
+            "Product Stock Info", "Inventory Dashboard", "Product Restock", 
+            "Invoices List", "Order Tracking", "Order Status Update", 
+            "Public Tracking", "Customer Profile Get", "Customer Profile Update",
+            "Payment Automation Integration", "Stock Thresholds"
+        ]
+        
+        advanced_results = [r for r in self.test_results if r["test"] in advanced_tests]
+        advanced_passed = sum(1 for r in advanced_results if r["success"])
+        
+        print("🔥 ADVANCED FEATURES SUMMARY:")
+        print(f"Advanced Tests: {len(advanced_results)}")
+        print(f"Advanced Passed: {advanced_passed}")
+        print(f"Advanced Success Rate: {(advanced_passed/len(advanced_results))*100:.1f}%" if advanced_results else "No advanced tests")
         print()
         
         if total - passed > 0:
