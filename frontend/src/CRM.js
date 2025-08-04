@@ -587,6 +587,209 @@ const CRMDashboard = () => {
           </div>
         )}
 
+        {/* Onglet Stock */}
+        {activeTab === 'stock' && stockData && (
+          <div className="space-y-6">
+            {/* Alertes Stock */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-4 rounded-xl shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-red-100 text-sm">Stock Critique</p>
+                    <p className="text-2xl font-bold">{stockData.alert_summary?.critical || 0}</p>
+                  </div>
+                  <div className="text-3xl">🚨</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white p-4 rounded-xl shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-orange-100 text-sm">Stock Faible</p>
+                    <p className="text-2xl font-bold">{stockData.alert_summary?.warning || 0}</p>
+                  </div>
+                  <div className="text-3xl">⚠️</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-blue-100 text-sm">Stock Normal</p>
+                    <p className="text-2xl font-bold">{stockData.alert_summary?.normal || 0}</p>
+                  </div>
+                  <div className="text-3xl">📦</div>
+                </div>
+              </div>
+
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 rounded-xl shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-green-100 text-sm">Stock Optimal</p>
+                    <p className="text-2xl font-bold">{stockData.alert_summary?.optimal || 0}</p>
+                  </div>
+                  <div className="text-3xl">✅</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tableau de Stock */}
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
+                <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                  <span className="mr-3">📦</span>
+                  Gestion des Stocks ({stockData.stock_items?.length || 0} produits)
+                </h3>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Produit</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Stock Actuel</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Stock Disponible</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Statut</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Alerte</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {stockData.stock_items?.map((item, index) => (
+                      <tr key={item.product_id} className={`hover:bg-blue-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                        <td className="px-6 py-4">
+                          <div>
+                            <div className="font-semibold text-gray-900">{item.product_id}</div>
+                            <div className="text-sm text-gray-600">ID: {item.product_id}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-gray-900">{item.current_stock || 0}</div>
+                          <div className="text-xs text-gray-500">Réservé: {item.reserved_stock || 0}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-gray-900">{item.available_stock || 0}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${getStockAlertColor(item.alert_level)}`}>
+                            {item.alert_level === 'critical' && '🚨 Critique'}
+                            {item.alert_level === 'warning' && '⚠️ Faible'} 
+                            {item.alert_level === 'normal' && '📦 Normal'}
+                            {item.alert_level === 'optimal' && '✅ Optimal'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-600">
+                            {item.alert_message}
+                            {item.reorder_needed && (
+                              <div className="text-xs text-red-600 mt-1 font-medium">
+                                🔄 Recommande urgente
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="number"
+                              placeholder="Qté"
+                              className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                              id={`restock-${item.product_id}`}
+                              min="1"
+                              defaultValue="10"
+                            />
+                            <button
+                              onClick={() => {
+                                const input = document.getElementById(`restock-${item.product_id}`);
+                                const quantity = input.value;
+                                if (quantity && quantity > 0) {
+                                  restockProduct(item.product_id, quantity);
+                                  input.value = "10";
+                                }
+                              }}
+                              className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-1 rounded text-sm font-semibold hover:from-green-600 hover:to-emerald-700 transition-all"
+                            >
+                              ➕ Réapprovisionner
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Onglet Factures */}
+        {activeTab === 'invoices' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+              <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
+                <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                  <span className="mr-3">🧾</span>
+                  Factures ({invoices.length})
+                </h3>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">N° Facture</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Client</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Montant</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Date</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Statut</th>
+                      <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {invoices.map((invoice, index) => (
+                      <tr key={invoice.invoice_id} className={`hover:bg-blue-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                        <td className="px-6 py-4">
+                          <div className="font-semibold text-gray-900">{invoice.invoice_id}</div>
+                          <div className="text-sm text-gray-500">Commande: {invoice.order_id}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div>
+                            <div className="font-semibold text-gray-900">{invoice.customer_name}</div>
+                            <div className="text-sm text-gray-600">{invoice.customer_email}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-lg font-bold text-gray-900">€{invoice.total?.toFixed(2)}</div>
+                          <div className="text-xs text-gray-500">{invoice.currency}</div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-600">
+                          {formatDate(invoice.created_at)}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold ${
+                            invoice.payment_status === 'paid' ? 'bg-gradient-to-r from-green-400 to-green-600 text-white' : 
+                            'bg-gradient-to-r from-yellow-400 to-orange-500 text-white'
+                          }`}>
+                            {invoice.payment_status === 'paid' ? '✅ Payée' : '⏳ En attente'}
+                          </span>
+                          {invoice.pdf_generated && (
+                            <div className="text-xs text-green-600 mt-1">📄 PDF généré</div>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          <button className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
+                            📄 Voir PDF
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Onglet Analytics */}
         {activeTab === 'analytics' && (
           <div className="text-center py-16">
