@@ -999,6 +999,205 @@ class BackendTester:
             self.log_test("Stock Thresholds", False, f"Exception: {str(e)}")
             return False
 
+    # ========== SECURITY AND AUTHENTICATION TESTS ==========
+    
+    def test_login_with_new_credentials(self):
+        """Test login with new email-based credentials"""
+        test_credentials = [
+            ("antonio@josmose.com", "Antonio@2024!Secure", "Antonio - Directeur Général"),
+            ("aziza@josmose.com", "Aziza@2024!Director", "Aziza - Directrice Adjointe"),
+            ("naima@josmose.com", "Naima@2024!Commerce", "Naima - Directrice Commerciale"),
+            ("support@josmose.com", "Support@2024!Help", "Support Technique")
+        ]
+        
+        successful_logins = 0
+        
+        for email, password, expected_name in test_credentials:
+            try:
+                auth_data = {
+                    "username": email,  # Using email as username
+                    "password": password
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=auth_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data and "user" in data:
+                        user = data["user"]
+                        if user.get("full_name") == expected_name:
+                            self.log_test(f"Login {email}", True, f"Successfully authenticated as {expected_name}")
+                            successful_logins += 1
+                            
+                            # Store token for first successful login (for other tests)
+                            if not hasattr(self, 'auth_token'):
+                                self.auth_token = data["access_token"]
+                        else:
+                            self.log_test(f"Login {email}", False, f"Wrong user name: expected {expected_name}, got {user.get('full_name')}")
+                    else:
+                        self.log_test(f"Login {email}", False, "Missing access_token or user in response", data)
+                else:
+                    self.log_test(f"Login {email}", False, f"Status: {response.status_code}", response.text)
+                    
+            except Exception as e:
+                self.log_test(f"Login {email}", False, f"Exception: {str(e)}")
+        
+        # Overall test result
+        if successful_logins == len(test_credentials):
+            self.log_test("New Email Login System", True, f"All {successful_logins}/{len(test_credentials)} email logins successful")
+            return True
+        else:
+            self.log_test("New Email Login System", False, f"Only {successful_logins}/{len(test_credentials)} email logins successful")
+            return False
+
+    def test_login_with_wrong_password(self):
+        """Test login with wrong password (security validation)"""
+        try:
+            auth_data = {
+                "username": "antonio@josmose.com",
+                "password": "WrongPassword123!"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=auth_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 401:
+                self.log_test("Wrong Password Rejection", True, "Correctly rejected wrong password with 401")
+                return True
+            else:
+                self.log_test("Wrong Password Rejection", False, f"Should reject wrong password, got status: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Wrong Password Rejection", False, f"Exception: {str(e)}")
+            return False
+
+    def test_login_with_old_format(self):
+        """Test login with old username format (should fail)"""
+        try:
+            # Try old username format that should no longer work
+            auth_data = {
+                "username": "antonio",  # Old format without @josmose.com
+                "password": "Antonio@2024!Secure"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=auth_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 401:
+                self.log_test("Old Format Rejection", True, "Correctly rejected old username format with 401")
+                return True
+            else:
+                self.log_test("Old Format Rejection", False, f"Should reject old format, got status: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Old Format Rejection", False, f"Exception: {str(e)}")
+            return False
+
+    def test_jwt_token_validation(self):
+        """Test JWT token validation and structure"""
+        if not hasattr(self, 'auth_token') or not self.auth_token:
+            self.log_test("JWT Token Validation", False, "No auth token available from login tests")
+            return False
+        
+        try:
+            # Test using the token to access protected endpoint
+            headers = {"Authorization": f"Bearer {self.auth_token}"}
+            response = self.session.get(f"{BACKEND_URL}/auth/me", headers=headers)
+            
+            if response.status_code == 200:
+                user_data = response.json()
+                required_fields = ["id", "username", "email", "role", "full_name", "is_active"]
+                
+                if all(field in user_data for field in required_fields):
+                    self.log_test("JWT Token Validation", True, f"Token valid, user: {user_data['full_name']} ({user_data['role']})")
+                    return True
+                else:
+                    missing = [f for f in required_fields if f not in user_data]
+                    self.log_test("JWT Token Validation", False, f"Missing user fields: {missing}")
+                    return False
+            else:
+                self.log_test("JWT Token Validation", False, f"Token validation failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("JWT Token Validation", False, f"Exception: {str(e)}")
+            return False
+
+    def test_company_legal_info(self):
+        """Test GET /api/company/legal-info (SIRET, SIREN, TVA validation)"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/company/legal-info")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "success" in data and data["success"] and "company_info" in data:
+                    company_info = data["company_info"]
+                    
+                    # Check required legal fields
+                    required_fields = ["legal_name", "siret", "siren", "vat_number", "legal_form", "capital"]
+                    missing_fields = [f for f in required_fields if f not in company_info]
+                    
+                    if not missing_fields:
+                        # Validate format of legal identifiers
+                        siret = company_info.get("siret", "")
+                        siren = company_info.get("siren", "")
+                        vat_number = company_info.get("vat_number", "")
+                        
+                        # SIRET should be 14 digits
+                        siret_valid = len(siret) == 14 and siret.isdigit()
+                        # SIREN should be 9 digits
+                        siren_valid = len(siren) == 9 and siren.isdigit()
+                        # VAT should start with FR and have 11 characters total
+                        vat_valid = vat_number.startswith("FR") and len(vat_number) == 13
+                        
+                        if siret_valid and siren_valid and vat_valid:
+                            # Check Stripe information
+                            stripe_info = company_info.get("stripe", {})
+                            if "mcc" in stripe_info and "business_profile" in stripe_info:
+                                self.log_test("Company Legal Info", True, 
+                                            f"Legal info complete: SIRET={siret}, SIREN={siren}, TVA={vat_number}, Stripe MCC={stripe_info.get('mcc')}")
+                                return True
+                            else:
+                                self.log_test("Company Legal Info", False, "Missing Stripe configuration")
+                                return False
+                        else:
+                            validation_errors = []
+                            if not siret_valid:
+                                validation_errors.append(f"Invalid SIRET: {siret}")
+                            if not siren_valid:
+                                validation_errors.append(f"Invalid SIREN: {siren}")
+                            if not vat_valid:
+                                validation_errors.append(f"Invalid VAT: {vat_number}")
+                            
+                            self.log_test("Company Legal Info", False, f"Validation errors: {', '.join(validation_errors)}")
+                            return False
+                    else:
+                        self.log_test("Company Legal Info", False, f"Missing required fields: {missing_fields}")
+                        return False
+                else:
+                    self.log_test("Company Legal Info", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Company Legal Info", False, f"Status: {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Company Legal Info", False, f"Exception: {str(e)}")
+            return False
+
     # ========== NEW SOCIAL MEDIA AUTOMATION TESTS ==========
     
     def authenticate_crm(self):
