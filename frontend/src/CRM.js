@@ -29,6 +29,9 @@ const CRMDashboard = () => {
     fetchOrders();
     fetchStockData();
     fetchInvoices();
+    fetchSocialMediaData();
+    fetchCampaigns();
+    fetchAdCreatives();
   }, []);
 
   const fetchDashboardData = async () => {
