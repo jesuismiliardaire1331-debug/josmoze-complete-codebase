@@ -1432,7 +1432,7 @@ async def public_tracking(tracking_number: str):
 
 @crm_router.get("/social-media/dashboard")
 async def get_social_media_dashboard(
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Dashboard des réseaux sociaux et marketing automation"""
     try:
