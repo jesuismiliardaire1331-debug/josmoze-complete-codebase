@@ -135,11 +135,14 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: true
           agent: "main"
           comment: "Enhanced GET /api/products with customer_type filtering (B2C/B2B). Added new products: osmoseur-pro (899€), filtres-pro (89€), installation-service (150€). Now supports target_audience filtering."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Enhanced product catalog working perfectly. B2C returns 5 products, B2B returns 7 products including B2B-specific items (osmoseur-pro, filtres-pro). Customer type filtering functional."
 
   - task: "CRM Dashboard API"
     implemented: true
