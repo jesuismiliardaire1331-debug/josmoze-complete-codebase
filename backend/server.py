@@ -915,36 +915,36 @@ async def initialize_products():
         },
         {
             "id": "fontaine-ultrafiltration",
-            "name": "Fontaine d'Ultrafiltration Compacte",
-            "description": "Fontaine d'ultrafiltration compacte et élégante. Sans électricité, aucun rejet d'eau. Technologie 0.01 micron pour éliminer bactéries et virus.",
+            "name": "Fontaine Intelligente H₂O",
+            "description": "Fontaine d'eau intelligente avec contrôle digital du bout des doigts. Température réglable en 3 secondes, installation plug & play, sécurité enfant intégrée.",
             "price": 399.0,
             "original_price": 499.0,
-            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/4c4845180c928079072df07e0fad5c1c2618e3c7926c1539e69c08cc561e02c7.jpg",
+            "image": "https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png",
             "category": "osmoseur", 
             "target_audience": "both",
             "specifications": {
-                "Type": "Ultrafiltration (UF)",
-                "Taille pores": "0.01 micron",
-                "Électricité": "Non requise",
-                "Rejet d'eau": "Aucun - écologique",
-                "Design": "Compact et élégant",
-                "Installation": "Ultra-simple"
+                "Type": "Fontaine intelligente",
+                "Contrôle": "Digital tactile",
+                "Réglage température": "3 secondes",
+                "Installation": "Plug & Play - simple branchement",
+                "Sécurité": "Protection enfant intégrée",
+                "Design": "Minimaliste et élégant"
             },
             "features": [
-                "Technologie ultrafiltration 0.01 micron",
-                "Supprime bactéries et virus",
-                "Aucun rejet d'eau - 100% écologique", 
-                "Fonctionne sans électricité",
-                "Utilise uniquement pression réseau",
-                "Design compact pour toute cuisine",
-                "Cartouches à baïonnette faciles",
-                "Installation facilitée",
-                "Impact environnemental minimal",
-                "Entretien rapide et simple"
+                "Contrôlez l'eau du bout des doigts grâce au filtre H20",
+                "Température réglable en 3 secondes seulement",
+                "Installation ultra-simple - brancher c'est l'installer",
+                "L'essayer c'est l'adopter - satisfaction garantie",
+                "Stérilisation avancée - adieu pollution, gardez minéraux",
+                "Contrôle précis quantité et température",
+                "Sécurité enfant activable en un clic",
+                "Design minimaliste qui s'adapte à votre cuisine",
+                "Technologie française innovante"
             ],
             "images_gallery": [
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/4c4845180c928079072df07e0fad5c1c2618e3c7926c1539e69c08cc561e02c7.jpg",
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/c5bf2f115baca18848b8ff6b97d8d3c310186696b9dfc776e80de7587c5061ef.jpg"
+                "https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png",
+                "https://static.wixstatic.com/media/6af6bd_1b0ed5e9b180466baeee7436019f6fef~mv2.png/v1/fill/w_520,h_692,al_c,lg_1,q_85,enc_avif,quality_auto/H10e839a4d05e44ab881e05d9aeb3e0d80_jpg_720x720q50-removebg-preview.png",
+                "https://static.wixstatic.com/media/6af6bd_16baeaf62afc42009cf6ece2f46c767a~mv2.png/v1/fill/w_797,h_487,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Les%20b%C3%A9b%C3%A9s%20pleurent%20quand%20ils%20ont%20faim%2C%20ne%20peuvent%20pas%20attendre__%20c'est%20touj_20250220_19362.png"
             ],
             "in_stock": True
         },
