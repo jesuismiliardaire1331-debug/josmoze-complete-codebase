@@ -1053,6 +1053,11 @@ async def startup_db():
     global inventory_manager
     inventory_manager = get_inventory_manager(db)
     await inventory_manager.initialize_stock()
+    
+    # Initialize social media automation
+    global social_media_automation
+    social_media_automation = get_social_media_automation(db)
+    await social_media_automation.initialize_accounts()
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
