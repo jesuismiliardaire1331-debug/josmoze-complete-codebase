@@ -1662,7 +1662,7 @@ async def update_social_media_account(
 
 @crm_router.get("/dashboard/advanced")
 async def get_advanced_crm_dashboard(
-    current_user: User = Depends(require_role(["admin", "manager", "agent", "support"]))
+    current_user: User = Depends(require_role(["manager", "agent", "technique"]))
 ):
     """Advanced CRM dashboard with detailed analytics"""
     try:
