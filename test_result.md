@@ -281,15 +281,18 @@ backend:
 
   - task: "Enhanced Database Integration"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "ENHANCED: Database now includes leads, consultations, email_logs collections. Products enhanced with B2B variants. Payment transactions integrated with lead creation."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Enhanced database integration confirmed. New collections (leads, consultations, email_logs) are functional. Products collection includes B2B variants. Lead creation, consultation requests, and email logging all working with proper database storage."
 
 frontend:
   - task: "Enhanced Navigation System"
