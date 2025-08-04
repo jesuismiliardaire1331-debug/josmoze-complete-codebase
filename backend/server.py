@@ -990,7 +990,236 @@ logger = logging.getLogger(__name__)
 @app.on_event("startup")
 async def startup_db():
     await initialize_products()
+    
+    # Initialize marketing automation
+    global marketing_automation
+    marketing_automation = get_marketing_automation(db)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+
+# ========== AUTHENTICATION ENDPOINTS ==========
+
+@api_router.post("/auth/login")
+async def login(user_auth: UserAuth) -> Token:
+    """Login endpoint for CRM access"""
+    user_data = authenticate_user(user_auth.username, user_auth.password)
+    
+    if not user_data:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid username or password"
+        )
+    
+    # Create JWT token
+    access_token = create_access_token(data={"sub": user_data["username"]})
+    
+    # Update last login
+    user_data["last_login"] = datetime.utcnow()
+    
+    user = User(
+        id=user_data["id"],
+        username=user_data["username"],
+        email=user_data["email"],
+        full_name=user_data["full_name"],
+        role=user_data["role"],
+        is_active=user_data["is_active"],
+        created_at=datetime.utcnow(),
+        last_login=datetime.utcnow()
+    )
+    
+    return Token(
+        access_token=access_token,
+        token_type="bearer",
+        user=user
+    )
+
+@api_router.get("/auth/me")
+async def get_current_user_info(current_user: User = Depends(get_current_user)):
+    """Get current user information"""
+    return current_user
+
+
+# ========== PROTECTED CRM ENDPOINTS ==========
+
+@crm_router.get("/dashboard/advanced")
+async def get_advanced_crm_dashboard(
+    current_user: User = Depends(require_role(["admin", "manager", "agent", "support"]))
+):
+    """Advanced CRM dashboard with detailed analytics"""
+    try:
+        # Get basic dashboard data
+        basic_dashboard = await get_crm_dashboard()
+        
+        # Add advanced metrics
+        advanced_metrics = await get_advanced_analytics()
+        
+        # Marketing automation stats
+        automation_stats = await get_automation_stats()
+        
+        return {
+            **basic_dashboard,
+            "advanced_metrics": advanced_metrics,
+            "automation": automation_stats,
+            "user": {
+                "name": current_user.full_name,
+                "role": current_user.role,
+                "permissions": get_user_permissions(current_user.role)
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Advanced dashboard query failed: {e}")
+        raise HTTPException(status_code=500, detail="Error loading advanced dashboard")
+
+@crm_router.get("/marketing/campaigns")
+async def get_marketing_campaigns(
+    current_user: User = Depends(require_role(["admin", "manager"]))
+):
+    """Get all marketing campaigns"""
+    campaigns_data = await db.marketing_campaigns.find().sort("created_at", -1).to_list(100)
+    return campaigns_data
+
+@crm_router.post("/marketing/campaigns")
+async def create_marketing_campaign(
+    campaign_data: Dict[str, Any],
+    current_user: User = Depends(require_role(["admin", "manager"]))
+):
+    """Create new marketing campaign"""
+    campaign = {
+        "id": str(uuid.uuid4()),
+        "created_by": current_user.username,
+        "created_at": datetime.utcnow(),
+        **campaign_data
+    }
+    
+    await db.marketing_campaigns.insert_one(campaign)
+    return campaign
+
+@crm_router.get("/automation/logs")
+async def get_automation_logs(
+    limit: int = 100,
+    current_user: User = Depends(require_role(["admin", "manager", "agent", "support"]))
+):
+    """Get automation logs (emails, SMS, WhatsApp)"""
+    
+    # Get recent email logs
+    email_logs = await db.email_logs.find().sort("sent_at", -1).limit(limit//3).to_list(limit//3)
+    
+    # Get recent SMS logs
+    sms_logs = await db.sms_logs.find().sort("sent_at", -1).limit(limit//3).to_list(limit//3)
+    
+    # Get recent WhatsApp logs  
+    whatsapp_logs = await db.whatsapp_logs.find().sort("sent_at", -1).limit(limit//3).to_list(limit//3)
+    
+    return {
+        "email_logs": email_logs,
+        "sms_logs": sms_logs,  
+        "whatsapp_logs": whatsapp_logs,
+        "total_logs": len(email_logs) + len(sms_logs) + len(whatsapp_logs)
+    }
+
+async def get_advanced_analytics():
+    """Get advanced analytics for CRM"""
+    try:
+        # Lead conversion funnel
+        funnel_data = {}
+        for status in ["new", "contacted", "qualified", "converted"]:
+            count = await db.leads.count_documents({"status": status})
+            funnel_data[status] = count
+        
+        # Revenue analytics
+        today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        last_30_days = today - timedelta(days=30)
+        
+        monthly_revenue = await db.orders.aggregate([
+            {"$match": {"created_at": {"$gte": last_30_days}, "status": "paid"}},
+            {"$group": {"_id": None, "total": {"$sum": "$total"}}}
+        ]).to_list(1)
+        
+        # Customer lifetime value
+        avg_order_value = await db.orders.aggregate([
+            {"$match": {"status": "paid"}},
+            {"$group": {"_id": None, "avg": {"$avg": "$total"}}}
+        ]).to_list(1)
+        
+        # Lead source analysis
+        source_analysis = await db.leads.aggregate([
+            {"$group": {"_id": "$source", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ]).to_list(10)
+        
+        return {
+            "conversion_funnel": funnel_data,
+            "monthly_revenue": monthly_revenue[0]["total"] if monthly_revenue else 0,
+            "avg_order_value": avg_order_value[0]["avg"] if avg_order_value else 0,
+            "lead_sources": source_analysis,
+            "growth_rate": calculate_growth_rate(),
+            "customer_segments": await get_customer_segments()
+        }
+        
+    except Exception as e:
+        logger.error(f"Advanced analytics failed: {e}")
+        return {}
+
+async def get_automation_stats():
+    """Get marketing automation statistics"""
+    try:
+        # Email stats
+        email_stats = await db.email_logs.aggregate([
+            {"$group": {
+                "_id": "$type", 
+                "sent": {"$sum": 1},
+                "success_rate": {"$avg": {"$cond": [{"$eq": ["$status", "sent"]}, 1, 0]}}
+            }}
+        ]).to_list(10)
+        
+        # SMS stats
+        sms_count = await db.sms_logs.count_documents({})
+        
+        # WhatsApp stats  
+        whatsapp_count = await db.whatsapp_logs.count_documents({})
+        
+        # Scheduled actions
+        pending_actions = await db.scheduled_actions.count_documents({"status": "pending"})
+        
+        return {
+            "email_campaigns": email_stats,
+            "sms_sent": sms_count,
+            "whatsapp_sent": whatsapp_count,
+            "pending_automations": pending_actions,
+            "automation_health": "healthy" if pending_actions < 100 else "busy"
+        }
+        
+    except Exception as e:
+        logger.error(f"Automation stats failed: {e}")
+        return {}
+
+def get_user_permissions(role: str) -> List[str]:
+    """Get user permissions based on role"""
+    permissions_map = {
+        "admin": ["all"],
+        "manager": ["view_analytics", "manage_campaigns", "manage_leads", "view_reports"],
+        "agent": ["manage_leads", "view_basic_analytics", "send_messages"],
+        "support": ["view_logs", "manage_leads", "technical_support"]
+    }
+    return permissions_map.get(role, ["view_basic"])
+
+async def calculate_growth_rate():
+    """Calculate monthly growth rate"""
+    # Simplified growth rate calculation
+    return 15.5  # Placeholder
+
+async def get_customer_segments():
+    """Get customer segmentation data"""
+    segments = await db.leads.aggregate([
+        {"$group": {
+            "_id": "$customer_type",
+            "count": {"$sum": 1},
+            "avg_score": {"$avg": "$score"}
+        }}
+    ]).to_list(10)
+    
+    return segments
