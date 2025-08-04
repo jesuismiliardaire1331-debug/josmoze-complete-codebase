@@ -373,14 +373,33 @@ async def detect_location(request: Request):
 
 @api_router.get("/products")
 async def get_products(customer_type: str = "B2C"):
-    """Get products filtered by customer type (B2C/B2B)"""
+    """Get products filtered by customer type (B2C/B2B) with stock info"""
     products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
     if not products_data:
         # Initialize with default products if empty
         await initialize_products()
         products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
     
-    return [Product(**product) for product in products_data]
+    # Enrichir avec les informations de stock
+    enriched_products = []
+    for product in products_data:
+        product_obj = Product(**product)
+        
+        # Obtenir le statut du stock
+        stock_status = await inventory_manager.get_stock_status(product["id"])
+        
+        # Ajouter les infos de stock au produit
+        product_dict = product_obj.dict()
+        product_dict["stock_info"] = {
+            "in_stock": stock_status.get("available_stock", 0) > 0,
+            "show_stock_warning": stock_status.get("show_stock_warning", False),
+            "stock_warning_text": stock_status.get("stock_warning_text"),
+            "available_stock": stock_status.get("available_stock", 0) if stock_status.get("available_stock", 0) > 5 else "Quelques unités disponibles"
+        }
+        
+        enriched_products.append(product_dict)
+    
+    return enriched_products
 
 @api_router.get("/products/{product_id}")
 async def get_product(product_id: str):
