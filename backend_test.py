@@ -313,6 +313,231 @@ class BackendTester:
         except Exception as e:
             self.log_test("Database Collections", False, f"Exception: {str(e)}")
             return False
+
+    # ========== CRM AND LEAD MANAGEMENT TESTS ==========
+    
+    def test_lead_creation(self):
+        """Test POST /api/leads (create lead with scoring)"""
+        try:
+            lead_data = {
+                "email": "marie.martin@entreprise.fr",
+                "name": "Marie Martin",
+                "phone": "+33123456789",
+                "company": "Entreprise Solutions",
+                "lead_type": "consultation",
+                "customer_type": "B2B",
+                "message": "Besoin d'une solution professionnelle pour notre bureau",
+                "consultation_requested": True,
+                "preferred_contact_time": "matin"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/leads",
+                json=lead_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "lead_id" in data and "score" in data:
+                    # B2B consultation leads should have high scores
+                    if data["score"] >= 70:
+                        self.log_test("Lead Creation", True, f"Lead created with ID: {data['lead_id'][:8]}..., Score: {data['score']}")
+                        self.test_lead_id = data["lead_id"]  # Store for update test
+                        return True
+                    else:
+                        self.log_test("Lead Creation", False, f"Lead score too low: {data['score']} (expected >= 70 for B2B consultation)")
+                        return False
+                else:
+                    self.log_test("Lead Creation", False, "Missing lead_id or score in response", data)
+                    return False
+            else:
+                self.log_test("Lead Creation", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Lead Creation", False, f"Exception: {str(e)}")
+            return False
+
+    def test_crm_dashboard(self):
+        """Test GET /api/crm/dashboard (CRM analytics)"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/crm/dashboard")
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = [
+                    "leads_by_status", "leads_by_type", "total_leads", 
+                    "conversion_rate", "recent_leads", "recent_orders",
+                    "daily_orders", "weekly_orders", "weekly_revenue"
+                ]
+                
+                if all(field in data for field in required_fields):
+                    # Check if analytics data is properly structured
+                    leads_by_status = data["leads_by_status"]
+                    leads_by_type = data["leads_by_type"]
+                    
+                    if isinstance(leads_by_status, dict) and isinstance(leads_by_type, dict):
+                        self.log_test("CRM Dashboard", True, f"Dashboard loaded: {data['total_leads']} leads, {data['conversion_rate']}% conversion")
+                        return True
+                    else:
+                        self.log_test("CRM Dashboard", False, "Invalid data structure for analytics")
+                        return False
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_test("CRM Dashboard", False, f"Missing fields: {missing}", data)
+                    return False
+            else:
+                self.log_test("CRM Dashboard", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("CRM Dashboard", False, f"Exception: {str(e)}")
+            return False
+
+    def test_lead_management(self):
+        """Test GET /api/crm/leads (lead filtering)"""
+        try:
+            # Test getting all leads
+            response_all = self.session.get(f"{BACKEND_URL}/crm/leads")
+            
+            if response_all.status_code == 200:
+                all_leads = response_all.json()
+                
+                # Test filtering by status
+                response_new = self.session.get(f"{BACKEND_URL}/crm/leads?status=new")
+                
+                if response_new.status_code == 200:
+                    new_leads = response_new.json()
+                    
+                    # Test filtering by customer type
+                    response_b2b = self.session.get(f"{BACKEND_URL}/crm/leads?customer_type=B2B")
+                    
+                    if response_b2b.status_code == 200:
+                        b2b_leads = response_b2b.json()
+                        
+                        self.log_test("Lead Management", True, f"All: {len(all_leads)}, New: {len(new_leads)}, B2B: {len(b2b_leads)} leads")
+                        return True
+                    else:
+                        self.log_test("Lead Management", False, f"B2B filter failed: {response_b2b.status_code}")
+                        return False
+                else:
+                    self.log_test("Lead Management", False, f"Status filter failed: {response_new.status_code}")
+                    return False
+            else:
+                self.log_test("Lead Management", False, f"All leads request failed: {response_all.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Lead Management", False, f"Exception: {str(e)}")
+            return False
+
+    def test_lead_update(self):
+        """Test PUT /api/crm/leads/{lead_id} (lead status update)"""
+        if not hasattr(self, 'test_lead_id'):
+            self.log_test("Lead Update", False, "No lead_id available from previous test")
+            return False
+        
+        try:
+            update_data = {
+                "status": "contacted",
+                "notes": ["Premier contact effectué", "Client intéressé par solution pro"]
+            }
+            
+            response = self.session.put(
+                f"{BACKEND_URL}/crm/leads/{self.test_lead_id}",
+                json=update_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data:
+                    self.log_test("Lead Update", True, f"Lead updated successfully: {data['message']}")
+                    return True
+                else:
+                    self.log_test("Lead Update", True, "Lead updated (no message field)")
+                    return True
+            else:
+                self.log_test("Lead Update", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Lead Update", False, f"Exception: {str(e)}")
+            return False
+
+    def test_consultation_request(self):
+        """Test POST /api/consultation/request (professional consultation)"""
+        if not hasattr(self, 'test_lead_id'):
+            self.log_test("Consultation Request", False, "No lead_id available from previous test")
+            return False
+        
+        try:
+            consultation_data = {
+                "lead_id": self.test_lead_id,
+                "consultation_type": "diagnostic",
+                "preferred_date": "2024-01-15",
+                "preferred_time": "14:00",
+                "notes": "Diagnostic complet pour installation professionnelle"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/consultation/request",
+                json=consultation_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data and "expert" in data["message"]:
+                    self.log_test("Consultation Request", True, f"Consultation scheduled: {data['message']}")
+                    return True
+                else:
+                    self.log_test("Consultation Request", False, "Unexpected response format", data)
+                    return False
+            else:
+                self.log_test("Consultation Request", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Consultation Request", False, f"Exception: {str(e)}")
+            return False
+
+    def test_enhanced_contact_form(self):
+        """Test POST /api/contact (enhanced contact form with lead creation)"""
+        try:
+            contact_data = {
+                "name": "Pierre Dubois",
+                "email": "pierre.dubois@restaurant.fr",
+                "phone": "+33987654321",
+                "company": "Restaurant Le Gourmet",
+                "message": "Recherche solution filtration pour restaurant 50 couverts",
+                "request_type": "quote",
+                "customer_type": "B2B",
+                "consultation_requested": True,
+                "preferred_contact_time": "après-midi"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/contact",
+                json=contact_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data and "lead_score" in data:
+                    # B2B contact with consultation should have high score
+                    if data["lead_score"] >= 60:
+                        self.log_test("Enhanced Contact Form", True, f"Contact processed, Lead score: {data['lead_score']}")
+                        return True
+                    else:
+                        self.log_test("Enhanced Contact Form", False, f"Lead score too low: {data['lead_score']} (expected >= 60)")
+                        return False
+                else:
+                    self.log_test("Enhanced Contact Form", False, "Missing message or lead_score", data)
+                    return False
+            else:
+                self.log_test("Enhanced Contact Form", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Enhanced Contact Form", False, f"Exception: {str(e)}")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests"""
