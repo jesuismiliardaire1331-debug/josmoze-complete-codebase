@@ -1265,7 +1265,7 @@ async def get_inventory_dashboard(
 async def restock_product(
     product_id: str, 
     quantity: int,
-    current_user: User = Depends(require_role(["admin", "manager"]))
+    current_user: User = Depends(require_role(["manager"]))
 ):
     """Réapprovisionner un produit"""
     try:
