@@ -1640,7 +1640,7 @@ async def get_social_media_accounts(
 async def update_social_media_account(
     account_id: str,
     account_data: Dict[str, Any],
-    current_user: User = Depends(require_role(["admin", "manager"]))
+    current_user: User = Depends(require_role(["manager"]))
 ):
     """Mettre à jour un compte de réseau social"""
     try:
