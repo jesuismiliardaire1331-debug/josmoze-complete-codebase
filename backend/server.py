@@ -1151,7 +1151,7 @@ async def login(user_auth: UserAuth) -> Token:
     if not user_data:
         raise HTTPException(
             status_code=401,
-            detail="Invalid username or password"
+            detail="Invalid email or password"  # Updated message for email login
         )
     
     # Create JWT token
