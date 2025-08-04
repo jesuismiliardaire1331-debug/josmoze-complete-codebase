@@ -1628,6 +1628,9 @@ function App() {
               <Route path="/consultation" element={<Consultation />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+              {/* CRM Routes */}
+              <Route path="/crm-login" element={<CRMLogin />} />
+              <Route path="/crm" element={<CRMDashboard />} />
             </Routes>
           </main>
           <Footer />
