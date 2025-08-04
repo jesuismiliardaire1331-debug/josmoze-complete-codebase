@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import jwt
 from datetime import datetime, timedelta
 import os
-from typing import Optional
+from typing import Optional, Dict
 from pydantic import BaseModel
 
 # Security configuration
