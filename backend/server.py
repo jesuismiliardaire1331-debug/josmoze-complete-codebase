@@ -1353,7 +1353,7 @@ async def get_order_tracking(
 async def update_order_status(
     order_id: str,
     status_data: Dict[str, Any],
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Mettre à jour le statut d'une commande"""
     try:
