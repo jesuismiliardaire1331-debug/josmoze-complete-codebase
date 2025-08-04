@@ -1015,11 +1015,11 @@ async def initialize_products():
             "name": "Filtres Professionnels - Pack Annuel",
             "description": "Pack de filtres professionnels pour systèmes industriels. Qualité supérieure avec suivi de maintenance.",
             "price": 89.0,
-            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/c5bf2f115baca18848b8ff6b97d8d3c310186696b9dfc776e80de7587c5061ef.jpg",
+            "image": "https://www.josmose.fr/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png",
             "category": "accessoire",
             "target_audience": "B2B",
             "specifications": {
-                "Compatibilité": "Systèmes professionnels",
+                "Compatibilité": "Systèmes professionnels BlueMountain",
                 "Durée de vie": "12 mois",
                 "Contenu": "8 cartouches premium + indicateurs"
             },
