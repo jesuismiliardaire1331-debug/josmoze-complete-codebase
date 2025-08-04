@@ -492,14 +492,14 @@ const ProductGrid = () => {
               
               <button
                 onClick={() => handleAddToCart(product)}
-                disabled={!product.in_stock}
+                disabled={!product.stock_info?.in_stock}
                 className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
-                  product.in_stock
+                  product.stock_info?.in_stock
                     ? 'bg-blue-600 text-white hover:bg-blue-700'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                {product.in_stock 
+                {product.stock_info?.in_stock 
                   ? (customerType === 'B2B' ? 'Demander un Devis 📋' : 'Ajouter au Panier 🛒')
                   : 'Indisponible'
                 }
