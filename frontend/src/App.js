@@ -1612,30 +1612,32 @@ const Consultation = () => {
 function App() {
   return (
     <AppProvider>
-      <div className="App min-h-screen bg-gray-50">
-        <BrowserRouter>
-          <CustomerTypeHandler />
-          <Header />
-          <main>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/particuliers" element={<Home />} />
-              <Route path="/professionnels" element={<BusinessHome />} />
-              <Route path="/panier" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/installation" element={<Installation />} />
-              <Route path="/consultation" element={<Consultation />} />
-              <Route path="/payment-success" element={<PaymentSuccess />} />
-              <Route path="/payment-cancelled" element={<PaymentCancelled />} />
-              {/* CRM Routes */}
-              <Route path="/crm-login" element={<CRMLogin />} />
-              <Route path="/crm" element={<CRMDashboard />} />
-            </Routes>
-          </main>
-          <Footer />
-        </BrowserRouter>
-      </div>
+      <AuthProvider>
+        <div className="App min-h-screen bg-gray-50">
+          <BrowserRouter>
+            <CustomerTypeHandler />
+            <Header />
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/particuliers" element={<Home />} />
+                <Route path="/professionnels" element={<BusinessHome />} />
+                <Route path="/panier" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/installation" element={<Installation />} />
+                <Route path="/consultation" element={<Consultation />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+                {/* CRM Routes */}
+                <Route path="/crm-login" element={<CRMLogin />} />
+                <Route path="/crm" element={<CRMDashboard />} />
+              </Routes>
+            </main>
+            <Footer />
+          </BrowserRouter>
+        </div>
+      </AuthProvider>
     </AppProvider>
   );
 }
