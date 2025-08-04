@@ -137,15 +137,15 @@ const CRMLogin = ({ onLogin }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nom d'utilisateur
+                Email Professionnel
               </label>
               <input
-                type="text"
+                type="email"
                 required
                 value={credentials.username}
                 onChange={(e) => setCredentials({...credentials, username: e.target.value})}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                placeholder="Votre nom d'utilisateur"
+                placeholder="votre.email@josmose.com"
               />
             </div>
 
