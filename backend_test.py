@@ -1618,6 +1618,16 @@ class BackendTester:
         print(f"Test started at: {datetime.now().isoformat()}")
         print()
         
+        # Security and Authentication tests (NEW - as requested)
+        print("🔐 SECURITY & AUTHENTICATION TESTS")
+        print("-" * 40)
+        self.test_login_with_new_credentials()
+        self.test_login_with_wrong_password()
+        self.test_login_with_old_format()
+        self.test_jwt_token_validation()
+        self.test_company_legal_info()
+        print()
+        
         # Basic functionality tests
         print("🔍 BASIC FUNCTIONALITY TESTS")
         print("-" * 40)
