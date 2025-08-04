@@ -1717,7 +1717,7 @@ async def create_marketing_campaign(
 @crm_router.get("/automation/logs")
 async def get_automation_logs(
     limit: int = 100,
-    current_user: User = Depends(require_role(["admin", "manager", "agent", "support"]))
+    current_user: User = Depends(require_role(["manager", "agent", "technique"]))
 ):
     """Get automation logs (emails, SMS, WhatsApp)"""
     
