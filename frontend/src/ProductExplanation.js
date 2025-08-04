@@ -10,10 +10,32 @@ const ProductExplanation = () => {
           <h2 className="text-4xl font-bold text-gray-900 mb-6">
             🌊 Technologie d'Osmose Inverse et d'Ultrafiltration
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
             Découvrez comment nos systèmes révolutionnaires transforment l'eau du robinet en eau pure, 
             éliminant 98% des bactéries et 99% des éléments chimiques pour votre santé et celle de votre famille.
           </p>
+          
+          {/* Vidéo de présentation */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-lg">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">🎥 Vidéo de Présentation</h3>
+              <div className="aspect-w-16 aspect-h-9">
+                <iframe 
+                  width="100%" 
+                  height="400"
+                  src="https://www.youtube.com/embed/lY8a3k8NIYQ"
+                  title="Présentation fontaine osmoseur"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="rounded-lg"
+                ></iframe>
+              </div>
+              <p className="text-gray-600 text-sm mt-3">
+                Découvrez nos fontaines à eau osmosée et leurs avantages
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Problème et Solutions */}
