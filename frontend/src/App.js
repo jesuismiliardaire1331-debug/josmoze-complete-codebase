@@ -218,6 +218,9 @@ const Header = () => {
             <Link to="/contact" className="text-gray-700 hover:text-blue-600 transition-colors">
               Contact
             </Link>
+            <Link to="/crm-login" className="text-gray-500 hover:text-blue-600 transition-colors text-sm">
+              📊 CRM
+            </Link>
           </nav>
           
           <div className="flex items-center space-x-6">
