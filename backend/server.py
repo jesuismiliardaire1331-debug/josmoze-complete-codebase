@@ -1475,7 +1475,7 @@ async def get_all_campaigns(
 @crm_router.post("/campaigns")
 async def create_campaign(
     campaign_data: Dict[str, Any],
-    current_user: User = Depends(require_role(["admin", "manager"]))
+    current_user: User = Depends(require_role(["manager"]))
 ):
     """Créer une nouvelle campagne publicitaire"""
     try:
