@@ -99,7 +99,7 @@ CRM_USERS = {
         "email": "support@josmose.com", 
         "full_name": "Support Technique",
         "role": "agent",  # Support = agent (accès limité)
-        "password_hash": "$2b$12$TKG0qH5.yWNjX1ZejR.qPgt5NP2lp4vH8JLlO1zq7TI1aTg8S1Y8Z",  # "Support@2024!Help"
+        "password_hash": "$2b$12$AgqPE73OcPnBKMmpgCQ3IOiShGsj8AuBo.TLETjIUJgS.AD9aFEd.",  # "Support@2024!Help"
         "is_active": True
     }
 }
