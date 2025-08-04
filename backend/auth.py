@@ -195,18 +195,66 @@ def get_company_info():
     """Get company legal information for payment processing"""
     return COMPANY_INFO
 
-def validate_password_strength(password: str) -> bool:
-    """Validate password meets security requirements"""
-    if len(password) < 8:
-        return False
+def get_user_permissions(role: str) -> Dict[str, bool]:
+    """Get user permissions based on role"""
+    permissions = {
+        "manager": {
+            "view_dashboard": True,
+            "view_leads": True,
+            "edit_leads": True,
+            "delete_leads": True,
+            "view_orders": True,
+            "edit_orders": True,
+            "view_stock": True,
+            "edit_stock": True,
+            "view_invoices": True,
+            "view_marketing": True,
+            "edit_marketing": True,
+            "view_campaigns": True,
+            "edit_campaigns": True,
+            "manage_users": True,
+            "view_analytics": True,
+            "export_data": True
+        },
+        "agent": {
+            "view_dashboard": True,
+            "view_leads": True,
+            "edit_leads": True,
+            "delete_leads": False,
+            "view_orders": True,
+            "edit_orders": False,
+            "view_stock": True,
+            "edit_stock": False,
+            "view_invoices": True,
+            "view_marketing": False,
+            "edit_marketing": False,
+            "view_campaigns": True,
+            "edit_campaigns": False,
+            "manage_users": False,
+            "view_analytics": True,
+            "export_data": False
+        },
+        "technique": {
+            "view_dashboard": True,
+            "view_leads": True,
+            "edit_leads": False,
+            "delete_leads": False,
+            "view_orders": True,
+            "edit_orders": False,
+            "view_stock": True,
+            "edit_stock": False,
+            "view_invoices": False,
+            "view_marketing": False,
+            "edit_marketing": False,
+            "view_campaigns": False,
+            "edit_campaigns": False,
+            "manage_users": False,
+            "view_analytics": False,
+            "export_data": False
+        }
+    }
     
-    # Check for uppercase, lowercase, numbers, and special characters
-    has_upper = any(c.isupper() for c in password)
-    has_lower = any(c.islower() for c in password)
-    has_digit = any(c.isdigit() for c in password)
-    has_special = any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password)
-    
-    return all([has_upper, has_lower, has_digit, has_special])
+    return permissions.get(role, permissions["technique"])
 
 # Initialize default users
 async def init_users_db():
