@@ -35,7 +35,7 @@ app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
 
 # Create routers
 api_router = APIRouter(prefix="/api")
-crm_router = APIRouter(prefix="/api/crm")
+crm_router = APIRouter(prefix="/crm")  # Pas de /api car sera inclus dans api_router
 
 # Security
 security = HTTPBearer()
