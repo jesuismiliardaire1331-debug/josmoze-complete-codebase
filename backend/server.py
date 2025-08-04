@@ -1145,6 +1145,7 @@ async def shutdown_db_client():
 @api_router.post("/auth/login")
 async def login(user_auth: UserAuth) -> Token:
     """Login endpoint for CRM access"""
+    # Authenticate user (now supports email login)
     user_data = authenticate_user(user_auth.username, user_auth.password)
     
     if not user_data:
