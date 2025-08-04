@@ -203,15 +203,18 @@ backend:
 
   - task: "Enhanced Contact Form"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "ENHANCED: POST /api/contact now creates leads automatically, supports B2B/B2C segmentation, consultation flags, and triggers email automation."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Enhanced Contact Form working perfectly. POST /api/contact creates leads automatically with proper scoring (B2B contact with consultation scored 100/100). B2B/B2C segmentation and consultation flags functional. Email automation triggered."
 
   - task: "Abandoned Cart Automation"
     implemented: true
