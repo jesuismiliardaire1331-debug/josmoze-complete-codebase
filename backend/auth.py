@@ -81,7 +81,7 @@ CRM_USERS = {
         "email": "aziza@josmose.com",
         "full_name": "Aziza - Directrice Adjointe",
         "role": "admin",  # Directrice adjointe = admin complet comme le directeur
-        "password_hash": "$2b$12$MKD8nF3.wULhV9XchP.oNer3LO0jm2tF6HJjL9xo5RG9yRe6Q9W6X",  # "Aziza@2024!Director"
+        "password_hash": "$2b$12$GHSiiMx03IQ81HMWinZUn.xvyi3MtGhg6k6mZG1QXqCwCZJT5b/vm",  # "Aziza@2024!Director"
         "is_active": True
     },
     "naima@josmose.com": {
