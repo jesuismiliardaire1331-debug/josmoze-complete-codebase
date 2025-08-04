@@ -10,8 +10,6 @@ const CRMDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [leads, setLeads] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [automationLogs, setAutomationLogs] = useState(null);
-  const [campaigns, setCampaigns] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [filters, setFilters] = useState({
     status: '',
@@ -21,19 +19,17 @@ const CRMDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAdvancedDashboard();
+    fetchDashboardData();
     fetchLeads();
     fetchOrders();
-    fetchCampaigns();
-    fetchAutomationLogs();
   }, []);
 
-  const fetchAdvancedDashboard = async () => {
+  const fetchDashboardData = async () => {
     try {
-      const response = await axios.get(`${API}/crm/dashboard/advanced`);
+      const response = await axios.get(`${API}/crm/dashboard`);
       setDashboardData(response.data);
     } catch (error) {
-      console.error('Failed to fetch advanced dashboard:', error);
+      console.error('Erreur lors du chargement du dashboard:', error);
       if (error.response?.status === 401) {
         logout();
       }
