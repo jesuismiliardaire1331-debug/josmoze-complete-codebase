@@ -95,9 +95,16 @@ const CRMLogin = ({ onLogin }) => {
     setLoading(false);
   };
 
-  const handleDemoLogin = async (username) => {
+  const handleDemoLogin = async (userEmail) => {
     setLoading(true);
-    const result = await login(username, `${username}123`);
+    const passwordMap = {
+      'antonio@josmose.com': 'Antonio@2024!Secure',
+      'aziza@josmose.com': 'Aziza@2024!Director',
+      'naima@josmose.com': 'Naima@2024!Commerce',
+      'support@josmose.com': 'Support@2024!Help'
+    };
+    
+    const result = await login(userEmail, passwordMap[userEmail]);
     if (result.success) {
       onLogin();
     } else {
