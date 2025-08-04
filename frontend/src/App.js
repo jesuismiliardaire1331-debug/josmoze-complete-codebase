@@ -360,10 +360,10 @@ const Hero = () => {
           <div className="relative">
             <img
               src={customerType === 'B2B' 
-                ? "https://images.unsplash.com/photo-1616996691604-26dfd478cbbc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHx3YXRlciUyMGZpbHRlciUyMHN5c3RlbXxlbnwwfHx8d2hpdGV8MTc1NDMzMDkxMnww&ixlib=rb-4.1.0&q=85"
-                : "https://images.unsplash.com/photo-1596180737956-00cb917e382b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHx1bmRlciUyMHNpbmslMjB3YXRlciUyMGZpbHRyYXRpb258ZW58MHx8fHdoaXRlfDE3NTQzMzA5MDR8MA&ixlib=rb-4.1.0&q=85"
+                ? "https://www.josmose.fr/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg"
+                : "https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png"
               }
-              alt={customerType === 'B2B' ? "Système professionnel" : "Système d'osmose inverse"}
+              alt={customerType === 'B2B' ? "Fontaine à eau pour entreprise" : "Fontaine intelligente"}
               className="w-full h-auto rounded-lg shadow-2xl"
             />
             <div className="absolute inset-0 bg-blue-600 bg-opacity-20 rounded-lg"></div>
