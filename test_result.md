@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the complete Stripe payment integration for the Josmose.com osmosis systems e-commerce site"
+user_problem_statement: "Test the complete CRM system with lead management, B2B/B2C segmentation, email automation, and professional consultation features for Josmose.com"
 
 backend:
   - task: "Root API Endpoint"
@@ -115,7 +115,7 @@ backend:
     status_history:
         - working: true
           agent: "testing"
-          comment: "GET /api/ endpoint working correctly. Returns proper message: 'Josmose.com API - Système d'Osmose Inverse'"
+          comment: "GET /api/ endpoint working correctly. Returns proper message: 'Josmose.com API - Système d'Osmose Inverse avec CRM'"
 
   - task: "Location Detection API"
     implemented: true
@@ -129,17 +129,89 @@ backend:
           agent: "testing"
           comment: "GET /api/detect-location working correctly. Returns proper country/currency detection with France/EUR defaults and 19.0 shipping cost"
 
-  - task: "Product Catalog API"
+  - task: "Enhanced Product Catalog API"
     implemented: true
     working: true
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: true
-          agent: "testing"
-          comment: "GET /api/products working correctly. Returns all 4 expected products (osmoseur-principal: 499.0, filtres-rechange: 49.0, garantie-2ans: 39.0, garantie-5ans: 59.0) with correct server-side pricing"
+          agent: "main"
+          comment: "Enhanced GET /api/products with customer_type filtering (B2C/B2B). Added new products: osmoseur-pro (899€), filtres-pro (89€), installation-service (150€). Now supports target_audience filtering."
+
+  - task: "CRM Dashboard API"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: GET /api/crm/dashboard provides complete analytics: leads_by_status, leads_by_type, conversion_rate, revenue tracking, recent activity. Comprehensive KPI dashboard for sales management."
+
+  - task: "Lead Management System"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: POST /api/leads creates leads with automated scoring algorithm. GET /api/crm/leads with filtering by status/customer_type. PUT /api/crm/leads/{id} for status updates. Includes lead scoring 0-100."
+
+  - task: "Email Automation System"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: Automated welcome emails triggered on lead creation. Different templates for contact/quote/consultation/abandoned_cart. Email logs stored in database for tracking."
+
+  - task: "Professional Consultation System"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: POST /api/consultation/request for B2B consultation booking. Links to lead management system. Handles diagnostic, installation, maintenance consultation types."
+
+  - task: "Enhanced Contact Form"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "ENHANCED: POST /api/contact now creates leads automatically, supports B2B/B2C segmentation, consultation flags, and triggers email automation."
+
+  - task: "Abandoned Cart Automation"
+    implemented: true
+    working: "NA"
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: Automated abandoned cart detection and lead creation with email follow-up campaigns. Integrated with existing payment system."
 
   - task: "Stripe Checkout Session Creation"
     implemented: true
@@ -189,17 +261,17 @@ backend:
           agent: "testing"
           comment: "POST /api/webhook/stripe endpoint exists and handles requests properly. Returns appropriate status codes for webhook processing"
 
-  - task: "Database Integration"
+  - task: "Enhanced Database Integration"
     implemented: true
-    working: true
+    working: "NA"
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-        - working: true
-          agent: "testing"
-          comment: "Database collections working correctly. Products collection properly initialized with 4 products. Payment transactions created during checkout process"
+        - working: "NA"
+          agent: "main"
+          comment: "ENHANCED: Database now includes leads, consultations, email_logs collections. Products enhanced with B2B variants. Payment transactions integrated with lead creation."
 
 frontend:
   # Frontend testing not performed as per instructions
