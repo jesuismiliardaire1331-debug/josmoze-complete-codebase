@@ -1018,7 +1018,7 @@ async def initialize_products():
 
 # Include both routers in the main app
 app.include_router(api_router)
-app.include_router(crm_router)
+api_router.include_router(crm_router)  # Inclure crm_router dans api_router
 
 app.add_middleware(
     CORSMiddleware,
