@@ -12,8 +12,7 @@ from collections import defaultdict, deque
 import redis
 import asyncio
 from fastapi import Request, Response, HTTPException, status
-from fastapi.middleware.base import BaseHTTPMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware as StarletteBaseMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request as StarletteRequest
 from starlette.responses import Response as StarletteResponse
 import ipaddress
