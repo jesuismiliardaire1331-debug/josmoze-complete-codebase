@@ -18,8 +18,9 @@ from emergentintegrations.payments.stripe.checkout import StripeCheckout, Checko
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role
 from ai_agents import get_marketing_automation, MarketingAutomation
 
-# Import new inventory management system
+# Import new inventory management and social media automation systems
 from inventory_manager import get_inventory_manager, StockItem, CustomerProfile, OrderTracking, Invoice
+from social_media_automation import get_social_media_automation, SocialMediaAutomation, Campaign, AdCreative
 
 
 ROOT_DIR = Path(__file__).parent
