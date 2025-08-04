@@ -1233,7 +1233,7 @@ async def get_product_stock(product_id: str):
 
 @crm_router.get("/inventory/dashboard")
 async def get_inventory_dashboard(
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Dashboard de gestion des stocks pour le CRM"""
     try:
