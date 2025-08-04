@@ -121,13 +121,22 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     
     try:
         payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        email_or_username: str = payload.get("sub")
+        if email_or_username is None:
             raise credentials_exception
     except jwt.PyJWTError:
         raise credentials_exception
     
-    user_data = CRM_USERS.get(username.lower())
+    # Try to find user by email first
+    user_data = CRM_USERS.get(email_or_username.lower())
+    
+    # If not found by email, try legacy username search
+    if not user_data:
+        for email, data in CRM_USERS.items():
+            if data.get("username", "").lower() == email_or_username.lower():
+                user_data = data
+                break
+    
     if user_data is None or not user_data["is_active"]:
         raise credentials_exception
     
