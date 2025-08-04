@@ -30,6 +30,10 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
+# Initialize marketing automation and inventory manager as global variables
+marketing_automation = None
+inventory_manager = None
+
 # Create the main app
 app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
 
