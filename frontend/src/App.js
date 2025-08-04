@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -68,6 +68,10 @@ const AppProvider = ({ children }) => {
     );
   };
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   const getCartTotal = () => {
     const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
     const shipping = userLocation ? userLocation.shipping_cost : 19;
@@ -95,6 +99,7 @@ const AppProvider = ({ children }) => {
       addToCart,
       removeFromCart,
       updateCartQuantity,
+      clearCart,
       getCartTotal,
       formatPrice,
       loading
@@ -112,10 +117,54 @@ const useApp = () => {
   return context;
 };
 
+// ========== UTILITY FUNCTIONS ==========
+
+const getUrlParameter = (name) => {
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+  const results = regex.exec(window.location.search);
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+};
+
+// ========== PAYMENT FUNCTIONS ==========
+
+const pollPaymentStatus = async (sessionId, attempts = 0) => {
+  const maxAttempts = 10;
+  const pollInterval = 2000; // 2 seconds
+
+  if (attempts >= maxAttempts) {
+    return { success: false, message: 'Payment status check timed out. Please check your email for confirmation.' };
+  }
+
+  try {
+    const response = await fetch(`${API}/checkout/status/${sessionId}`);
+    if (!response.ok) {
+      throw new Error('Failed to check payment status');
+    }
+
+    const data = await response.json();
+    
+    if (data.payment_status === 'paid') {
+      return { success: true, message: 'Payment successful! Thank you for your purchase.', data };
+    } else if (data.status === 'expired') {
+      return { success: false, message: 'Payment session expired. Please try again.' };
+    }
+
+    // If payment is still pending, continue polling
+    await new Promise(resolve => setTimeout(resolve, pollInterval));
+    return await pollPaymentStatus(sessionId, attempts + 1);
+    
+  } catch (error) {
+    console.error('Error checking payment status:', error);
+    return { success: false, message: 'Error checking payment status. Please try again.' };
+  }
+};
+
 // ========== COMPONENTS ==========
 
 const Header = () => {
-  const { cart, userLocation, formatPrice } = useApp();
+  const { cart, userLocation } = useApp();
+  const navigate = useNavigate();
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   const getGreeting = () => {
@@ -136,7 +185,7 @@ const Header = () => {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
             <h1 className="text-2xl font-bold text-blue-600">
               Josmose.com
             </h1>
@@ -152,7 +201,10 @@ const Header = () => {
               </div>
             )}
             
-            <button className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors">
+            <button 
+              onClick={() => navigate('/panier')}
+              className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors"
+            >
               🛒
               {cartItemsCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center">
@@ -169,6 +221,7 @@ const Header = () => {
 
 const Hero = () => {
   const { userLocation, formatPrice } = useApp();
+  const navigate = useNavigate();
 
   const getHeroText = () => {
     if (!userLocation) return {
@@ -229,7 +282,12 @@ const Hero = () => {
               </div>
             </div>
             
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors shadow-lg">
+            <button 
+              onClick={() => {
+                document.querySelector('#products-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors shadow-lg"
+            >
               Découvrir nos Produits 🏠
             </button>
           </div>
@@ -272,7 +330,7 @@ const ProductGrid = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div id="products-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
         Nos Produits 💧
       </h2>
@@ -380,19 +438,30 @@ const Features = () => {
 };
 
 const CartSummary = () => {
-  const { cart, getCartTotal, formatPrice, removeFromCart, updateCartQuantity } = useApp();
+  const { cart, getCartTotal, formatPrice, removeFromCart, updateCartQuantity, clearCart } = useApp();
+  const navigate = useNavigate();
   
   if (cart.length === 0) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
         <div className="text-4xl mb-4">🛒</div>
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Votre panier est vide</h2>
-        <p className="text-gray-600">Découvrez nos systèmes d'osmose inverse</p>
+        <p className="text-gray-600 mb-6">Découvrez nos systèmes d'osmose inverse</p>
+        <button
+          onClick={() => navigate('/')}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+        >
+          Voir nos produits
+        </button>
       </div>
     );
   }
 
   const { subtotal, shipping, total } = getCartTotal();
+
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
@@ -456,10 +525,310 @@ const CartSummary = () => {
             </div>
           </div>
           
-          <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+          <button 
+            onClick={handleCheckout}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-2"
+          >
             Procéder au Paiement 💳
           </button>
+          
+          <button
+            onClick={clearCart}
+            className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors text-sm"
+          >
+            Vider le panier
+          </button>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const CheckoutForm = () => {
+  const { cart, getCartTotal, formatPrice, clearCart } = useApp();
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  if (cart.length === 0) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+        <div className="text-4xl mb-4">🛒</div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Votre panier est vide</h2>
+        <button
+          onClick={() => navigate('/')}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+        >
+          Voir nos produits
+        </button>
+      </div>
+    );
+  }
+
+  const { subtotal, shipping, total } = getCartTotal();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    if (!customerInfo.name || !customerInfo.email) {
+      setError('Veuillez remplir tous les champs obligatoires');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Prepare cart items for backend
+      const cartItems = cart.map(item => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        price: item.price
+      }));
+
+      // Create checkout session
+      const response = await axios.post(`${API}/checkout/session`, {
+        cart_items: cartItems,
+        customer_info: customerInfo,
+        origin_url: window.location.origin
+      });
+
+      if (response.data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = response.data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+
+    } catch (error) {
+      console.error('Checkout error:', error);
+      setError(error.response?.data?.detail || 'Erreur lors du paiement. Veuillez réessayer.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-16">
+      <h2 className="text-3xl font-bold text-gray-900 mb-8">Finaliser la Commande 💳</h2>
+      
+      <div className="grid lg:grid-cols-2 gap-8">
+        <div>
+          <h3 className="text-xl font-semibold mb-4">Informations de Contact</h3>
+          
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nom complet *
+              </label>
+              <input
+                type="text"
+                required
+                value={customerInfo.name}
+                onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email *
+              </label>
+              <input
+                type="email"
+                required
+                value={customerInfo.email}
+                onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Téléphone
+              </label>
+              <input
+                type="tel"
+                value={customerInfo.phone}
+                onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+            >
+              {loading ? 'Redirection vers le paiement...' : 'Payer maintenant 💳'}
+            </button>
+          </form>
+          
+          <div className="mt-4 text-xs text-gray-500">
+            <p>🔒 Paiement sécurisé avec Stripe</p>
+            <p>💳 Cartes acceptées, Apple Pay, Google Pay</p>
+            <p>🏦 Paiement en plusieurs fois disponible</p>
+          </div>
+        </div>
+        
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-4">Récapitulatif de la commande</h3>
+          
+          <div className="space-y-4 mb-4">
+            {cart.map(item => (
+              <div key={item.id} className="flex justify-between items-center">
+                <div>
+                  <div className="font-medium text-sm">{item.name}</div>
+                  <div className="text-gray-600 text-xs">Quantité: {item.quantity}</div>
+                </div>
+                <div className="text-sm font-medium">
+                  {formatPrice(item.price * item.quantity)}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <hr className="mb-4" />
+          
+          <div className="space-y-2 mb-4">
+            <div className="flex justify-between text-sm">
+              <span>Sous-total:</span>
+              <span>{formatPrice(subtotal)}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span>Livraison:</span>
+              <span>{formatPrice(shipping)}</span>
+            </div>
+            <div className="flex justify-between font-semibold text-lg">
+              <span>Total:</span>
+              <span>{formatPrice(total)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PaymentSuccess = () => {
+  const [status, setStatus] = useState({ message: 'Vérification du paiement...', type: 'pending' });
+  const { clearCart } = useApp();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    
+    if (sessionId) {
+      const checkPayment = async () => {
+        const result = await pollPaymentStatus(sessionId);
+        setStatus({
+          message: result.message,
+          type: result.success ? 'success' : 'error'
+        });
+        
+        if (result.success) {
+          // Clear cart on successful payment
+          clearCart();
+        }
+      };
+      
+      checkPayment();
+    } else {
+      setStatus({
+        message: 'Session de paiement non trouvée',
+        type: 'error'
+      });
+    }
+  }, [searchParams, clearCart]);
+
+  return (
+    <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <div className="text-6xl mb-6">
+        {status.type === 'success' ? '✅' : status.type === 'error' ? '❌' : '⏳'}
+      </div>
+      
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        {status.type === 'success' ? 'Paiement Réussi!' : 
+         status.type === 'error' ? 'Problème de Paiement' : 'Vérification...'}
+      </h2>
+      
+      <p className={`text-lg mb-8 ${
+        status.type === 'success' ? 'text-green-600' : 
+        status.type === 'error' ? 'text-red-600' : 'text-gray-600'
+      }`}>
+        {status.message}
+      </p>
+      
+      {status.type === 'success' && (
+        <div className="bg-green-50 rounded-lg p-6 mb-8">
+          <h3 className="text-lg font-semibold text-green-800 mb-2">Prochaines étapes:</h3>
+          <ul className="text-green-700 text-sm space-y-1">
+            <li>📧 Vous recevrez un email de confirmation</li>
+            <li>📦 Votre commande sera préparée sous 24-48h</li>
+            <li>🚚 Livraison gratuite à votre domicile</li>
+            <li>🔧 Instructions d'installation incluses</li>
+          </ul>
+        </div>
+      )}
+      
+      <div className="space-x-4">
+        <button
+          onClick={() => navigate('/')}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+        >
+          Retour à l'accueil
+        </button>
+        
+        {status.type === 'error' && (
+          <button
+            onClick={() => navigate('/panier')}
+            className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
+          >
+            Retour au panier
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const PaymentCancelled = () => {
+  const navigate = useNavigate();
+  
+  return (
+    <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <div className="text-6xl mb-6">😕</div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">Paiement Annulé</h2>
+      <p className="text-gray-600 mb-8">
+        Votre paiement a été annulé. Vos articles sont toujours dans votre panier.
+      </p>
+      
+      <div className="space-x-4">
+        <button
+          onClick={() => navigate('/panier')}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+        >
+          Retour au panier
+        </button>
+        
+        <button
+          onClick={() => navigate('/')}
+          className="bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-700 transition-colors"
+        >
+          Continuer les achats
+        </button>
       </div>
     </div>
   );
@@ -657,6 +1026,10 @@ const Cart = () => {
   return <CartSummary />;
 };
 
+const Checkout = () => {
+  return <CheckoutForm />;
+};
+
 const Contact = () => {
   return <ContactForm />;
 };
@@ -671,7 +1044,10 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/panier" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/payment-cancelled" element={<PaymentCancelled />} />
             </Routes>
           </main>
           <Footer />
