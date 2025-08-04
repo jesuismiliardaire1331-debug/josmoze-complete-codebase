@@ -680,6 +680,98 @@ async def get_user_info(current_user: User = Depends(get_current_user)):
             detail="Failed to retrieve user information"
         )
 
+# ========== ADVANCED ANALYTICS & BI ENDPOINTS ==========
+
+@crm_router.get("/analytics/dashboard")
+async def get_comprehensive_analytics(
+    date_range: int = 30,
+    current_user: User = Depends(require_role(["manager", "agent"]))
+):
+    """Get comprehensive business intelligence dashboard"""
+    try:
+        analytics_engine = AnalyticsEngine(db)
+        dashboard_data = await analytics_engine.get_comprehensive_dashboard(date_range)
+        
+        return {
+            "success": True,
+            "data": dashboard_data
+        }
+    except Exception as e:
+        logging.error(f"Analytics dashboard error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to generate analytics dashboard"
+        )
+
+@crm_router.get("/analytics/export/csv")
+async def export_analytics_data(
+    date_range: int = 30,
+    current_user: User = Depends(require_role(["manager"]))
+):
+    """Export analytics data as CSV (Manager only)"""
+    try:
+        csv_data = await export_analytics_csv(db, date_range)
+        
+        from io import StringIO
+        csv_io = StringIO(csv_data)
+        
+        response = StreamingResponse(
+            iter([csv_data]),
+            media_type="text/csv",
+            headers={"Content-Disposition": "attachment; filename=josmose_analytics.csv"}
+        )
+        
+        return response
+        
+    except Exception as e:
+        logging.error(f"CSV export error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to export analytics data"
+        )
+
+@crm_router.get("/security/stats")
+async def get_security_statistics(
+    current_user: User = Depends(require_role(["manager", "technique"]))
+):
+    """Get security and performance statistics"""
+    try:
+        security_stats = get_security_stats()
+        
+        return {
+            "success": True,
+            "security_stats": security_stats,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logging.error(f"Security stats error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve security statistics"
+        )
+
+@crm_router.post("/cache/clear")
+async def clear_system_cache(
+    pattern: str = "*",
+    current_user: User = Depends(require_role(["manager"]))
+):
+    """Clear system cache (Manager only)"""
+    try:
+        result = await clear_cache(pattern)
+        
+        return {
+            "success": True,
+            "result": result
+        }
+        
+    except Exception as e:
+        logging.error(f"Cache clear error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to clear cache"
+        )
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
