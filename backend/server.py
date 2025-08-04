@@ -1032,11 +1032,11 @@ async def initialize_products():
             "in_stock": True
         },
         {
-            "id": "garantie-2ans",
+            "id": "garantie-2ans", 
             "name": "Extension Garantie 2 ans - 39€",
             "description": "Étendez votre garantie à 2 ans selon tarif CDC. Tranquillité d'esprit totale avec support technique.",
             "price": 39.0,
-            "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
+            "image": "https://www.josmose.fr/themes/josmose/img/outils.png",
             "category": "service",
             "target_audience": "both",
             "specifications": {
@@ -1046,7 +1046,7 @@ async def initialize_products():
             },
             "features": [
                 "Support téléphonique prioritaire",
-                "Remplacement gratuit des pièces défectueuses",
+                "Remplacement gratuit des pièces défectueuses", 
                 "Service après-vente dédié"
             ],
             "in_stock": True
