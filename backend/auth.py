@@ -17,8 +17,37 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
 
 class UserAuth(BaseModel):
-    username: str
+    username: str  # Now accepts email addresses
     password: str
+
+# Company legal information for payment compliance
+COMPANY_INFO = {
+    "legal_name": "JOSMOSE SARL",
+    "siret": "12345678901234",  # SIRET français (14 chiffres)
+    "siren": "123456789",       # SIREN français (9 chiffres) 
+    "vat_number": "FR12123456789",  # TVA intracommunautaire française
+    "legal_form": "SARL",
+    "capital": "10000",  # Capital social en euros
+    "address": {
+        "street": "123 Avenue de la République",
+        "city": "Paris",
+        "postal_code": "75011",
+        "country": "France"
+    },
+    "contact": {
+        "email": "legal@josmose.com",
+        "phone": "+33 1 23 45 67 89"
+    },
+    "stripe": {
+        "account_id": None,  # À configurer avec votre Stripe Account ID
+        "mcc": "5999",      # Merchant Category Code pour vente de produits divers
+        "business_profile": {
+            "product_description": "Systèmes de purification d'eau par osmose inverse",
+            "business_type": "company",
+            "url": "https://josmose.com"
+        }
+    }
+}
 
 class User(BaseModel):
     id: str
