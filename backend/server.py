@@ -502,8 +502,8 @@ async def submit_contact_form(form: ContactForm, request: Request):
         
         await db.leads.insert_one(lead.dict())
         
-        # Send welcome email
-        await send_welcome_email(form.email, form.name, form.request_type)
+        # Trigger welcome automation
+        await marketing_automation.trigger_welcome_sequence({"email": form.email, "name": form.name, "customer_type": form.customer_type})
         
         logging.info(f"Contact form submitted: {form.email} - {form.request_type}")
         
