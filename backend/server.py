@@ -950,36 +950,37 @@ async def initialize_products():
         },
         {
             "id": "osmoseur-pro",
-            "name": "Système Osmose Inverse Professionnel",
-            "description": "Solution industrielle pour restaurants, bureaux et commerces. Système RO haute performance avec technologie avancée.",
+            "name": "Système Osmose Inverse Professionnel BlueMountain Grand Format",
+            "description": "Solution professionnelle BlueMountain grand format pour restaurants, bureaux et commerces. Dimensions 1040×330×300mm avec même performance 15L/h.",
             "price": 899.0,
             "original_price": 1199.0,
-            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/42b6ab849fa57e513598468e79939c978cb4cc2d5d8902586c8f2dfad205a851.jpg",
+            "image": "https://www.josmose.fr/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
             "category": "osmoseur",
             "target_audience": "B2B",
             "specifications": {
-                "Type": "Osmose Inverse Professionnelle",
-                "Capacité": "Usage intensif commercial",
-                "Filtration": "Multi-étapes renforcées", 
-                "Installation": "Professionnelle incluse",
+                "Type": "BlueMountain Grand Format",
+                "Dimensions": "1040×330×300mm",
+                "Production": "15 litres/heure identique",
+                "Installation": "Professionnelle incluse", 
                 "Garantie": "5 ans pièces et main-d'œuvre",
-                "Support": "Technique dédié"
+                "Support": "Technique dédié professionnel"
             },
             "features": [
-                "Système RO professionnel haute capacité",
-                "Membrane semi-perméable avancée",
-                "Élimine contaminants industriels",
-                "Pré-filtration et post-filtration",
-                "Monitoring qualité en temps réel",
-                "Installation par technicien certifié",
+                "Système BlueMountain grand format pour entreprises",
+                "Même performance que petit format: 15L/h",
+                "Production eau froide <10° - 4 litres/heure",
+                "Production eau chaude >90° - 5 litres/heure",
+                "Dimensions optimisées: 1040×330×300mm",
+                "Installation professionnelle par technicien certifié",
                 "Maintenance préventive incluse",
-                "Formation du personnel",
-                "Support technique prioritaire",
-                "Certification sanitaire complète"
+                "Formation du personnel à l'utilisation",
+                "Support technique prioritaire B2B",
+                "Certification sanitaire entreprise"
             ],
             "images_gallery": [
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/42b6ab849fa57e513598468e79939c978cb4cc2d5d8902586c8f2dfad205a851.jpg",
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/d3d3d1eebf0370a53ed1acfdc3d6364b02f78205a23c1d2428fa69fda91cccf5.jpg"
+                "https://www.josmose.fr/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
+                "https://www.josmose.fr/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
+                "https://www.josmose.fr/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png"
             ],
             "in_stock": True
         },
