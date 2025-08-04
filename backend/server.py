@@ -1324,6 +1324,236 @@ async def public_tracking(tracking_number: str):
         raise HTTPException(status_code=500, detail="Erreur lors du suivi")
 
 
+# ========== SOCIAL MEDIA AUTOMATION ENDPOINTS ==========
+
+@crm_router.get("/social-media/dashboard")
+async def get_social_media_dashboard(
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Dashboard des réseaux sociaux et marketing automation"""
+    try:
+        dashboard_data = await social_media_automation.get_social_media_dashboard()
+        return dashboard_data
+        
+    except Exception as e:
+        logging.error(f"Error getting social media dashboard: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement du dashboard social media")
+
+@crm_router.get("/campaigns")
+async def get_all_campaigns(
+    platform: str = None,
+    status: str = None,
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir toutes les campagnes publicitaires"""
+    try:
+        query = {}
+        if platform:
+            query["platform"] = platform
+        if status:
+            query["status"] = status
+            
+        campaigns = await db.campaigns.find(query).sort("created_at", -1).to_list(100)
+        
+        # Enrichir avec les performances
+        performance_data = await social_media_automation.get_campaign_performance()
+        
+        for campaign in campaigns:
+            perf = next((p for p in performance_data if p["campaign_id"] == campaign["campaign_id"]), {})
+            campaign["performance"] = perf
+        
+        return campaigns
+        
+    except Exception as e:
+        logging.error(f"Error getting campaigns: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement des campagnes")
+
+@crm_router.post("/campaigns")
+async def create_campaign(
+    campaign_data: Dict[str, Any],
+    current_user: User = Depends(require_role(["admin", "manager"]))
+):
+    """Créer une nouvelle campagne publicitaire"""
+    try:
+        result = await social_media_automation.create_campaign(
+            name=campaign_data.get("name"),
+            platform=campaign_data.get("platform"),
+            objective=campaign_data.get("objective", "conversions"),
+            budget=campaign_data.get("budget", 50.0),
+            target_country=campaign_data.get("target_country", "FR"),
+            target_language=campaign_data.get("target_language", "fr")
+        )
+        
+        if result.get("success"):
+            return {"message": "Campagne créée avec succès", **result}
+        else:
+            raise HTTPException(status_code=400, detail=result.get("error", "Erreur lors de la création"))
+            
+    except Exception as e:
+        logging.error(f"Error creating campaign: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la création de la campagne")
+
+@crm_router.post("/campaigns/optimize-budget")
+async def optimize_campaign_budgets(
+    current_user: User = Depends(require_role(["admin", "manager"]))
+):
+    """Optimiser automatiquement l'allocation du budget des campagnes"""
+    try:
+        result = await social_media_automation.optimize_budget_allocation()
+        
+        if result.get("success"):
+            return {"message": "Budget optimisé avec succès", **result}
+        else:
+            raise HTTPException(status_code=400, detail=result.get("error", "Erreur lors de l'optimisation"))
+            
+    except Exception as e:
+        logging.error(f"Error optimizing budget: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'optimisation du budget")
+
+@crm_router.post("/content/generate")
+async def generate_social_content(
+    content_request: Dict[str, Any],
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Générer du contenu pour les réseaux sociaux avec AI"""
+    try:
+        content = await social_media_automation.generate_content_ai(
+            content_type=content_request.get("type", "post"),
+            platform=content_request.get("platform", "facebook"),
+            language=content_request.get("language", "fr"),
+            product_focus=content_request.get("product_focus", "osmoseur")
+        )
+        
+        return {"content_generated": True, "content": content}
+        
+    except Exception as e:
+        logging.error(f"Error generating content: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la génération de contenu")
+
+@crm_router.get("/creatives")
+async def get_ad_creatives(
+    campaign_id: str = None,
+    platform: str = None,
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir les créatifs publicitaires"""
+    try:
+        query = {}
+        if campaign_id:
+            query["campaign_id"] = campaign_id
+        if platform:
+            query["platform"] = platform
+            
+        creatives = await db.ad_creatives.find(query).sort("created_at", -1).to_list(100)
+        return creatives
+        
+    except Exception as e:
+        logging.error(f"Error getting creatives: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement des créatifs")
+
+@crm_router.get("/performance")
+async def get_campaign_performance(
+    campaign_id: str = None,
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir les performances des campagnes"""
+    try:
+        performance_data = await social_media_automation.get_campaign_performance(campaign_id)
+        return performance_data
+        
+    except Exception as e:
+        logging.error(f"Error getting performance data: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement des performances")
+
+@api_router.post("/abandoned-cart-retargeting")
+async def setup_abandoned_cart_retargeting(retargeting_data: Dict[str, Any]):
+    """Configurer le retargeting pour panier abandonné (endpoint public)"""
+    try:
+        result = await social_media_automation.setup_abandoned_cart_retargeting(
+            customer_email=retargeting_data.get("customer_email"),
+            cart_items=retargeting_data.get("cart_items", []),
+            platform=retargeting_data.get("platform", "facebook")
+        )
+        
+        if result.get("success"):
+            logging.info(f"Abandoned cart retargeting setup for {retargeting_data.get('customer_email')}")
+        
+        return result
+        
+    except Exception as e:
+        logging.error(f"Error setting up abandoned cart retargeting: {e}")
+        return {"success": False, "error": str(e)}
+
+@crm_router.post("/landing-page")
+async def create_campaign_landing_page(
+    landing_data: Dict[str, Any],
+    current_user: User = Depends(require_role(["admin", "manager"]))
+):
+    """Créer une landing page pour une campagne"""
+    try:
+        result = await social_media_automation.create_landing_page(
+            campaign_id=landing_data.get("campaign_id"),
+            target_audience=landing_data.get("target_audience", {}),
+            language=landing_data.get("language", "fr")
+        )
+        
+        if result.get("success"):
+            return {"message": "Landing page créée avec succès", **result}
+        else:
+            raise HTTPException(status_code=400, detail=result.get("error", "Erreur lors de la création"))
+            
+    except Exception as e:
+        logging.error(f"Error creating landing page: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la création de la landing page")
+
+@crm_router.get("/abandoned-cart-campaigns")
+async def get_abandoned_cart_campaigns(
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir les campagnes de panier abandonné actives"""
+    try:
+        campaigns = await db.abandoned_cart_campaigns.find({"status": "active"}).sort("created_at", -1).to_list(100)
+        return campaigns
+        
+    except Exception as e:
+        logging.error(f"Error getting abandoned cart campaigns: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement des campagnes panier abandonné")
+
+@crm_router.get("/social-accounts")
+async def get_social_media_accounts(
+    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+):
+    """Obtenir les comptes de réseaux sociaux"""
+    try:
+        accounts = await db.social_media_accounts.find().sort("platform", 1).to_list(100)
+        return accounts
+        
+    except Exception as e:
+        logging.error(f"Error getting social media accounts: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement des comptes")
+
+@crm_router.put("/social-accounts/{account_id}")
+async def update_social_media_account(
+    account_id: str,
+    account_data: Dict[str, Any],
+    current_user: User = Depends(require_role(["admin", "manager"]))
+):
+    """Mettre à jour un compte de réseau social"""
+    try:
+        account_data["updated_at"] = datetime.utcnow()
+        
+        await db.social_media_accounts.update_one(
+            {"account_id": account_id},
+            {"$set": account_data}
+        )
+        
+        return {"message": "Compte mis à jour avec succès"}
+        
+    except Exception as e:
+        logging.error(f"Error updating social media account: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour du compte")
+
+
 # ========== PROTECTED CRM ENDPOINTS ==========
 
 @crm_router.get("/dashboard/advanced")
