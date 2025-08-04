@@ -10,6 +10,8 @@ const CRMDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [leads, setLeads] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [stockData, setStockData] = useState(null);
+  const [invoices, setInvoices] = useState([]);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [filters, setFilters] = useState({
     status: '',
