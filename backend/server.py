@@ -1625,7 +1625,7 @@ async def get_abandoned_cart_campaigns(
 
 @crm_router.get("/social-accounts")
 async def get_social_media_accounts(
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir les comptes de réseaux sociaux"""
     try:
