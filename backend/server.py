@@ -878,37 +878,38 @@ async def initialize_products():
     products = [
         {
             "id": "osmoseur-principal",
-            "name": "Fontaine à Eau Osmosée - Système RO",
-            "description": "Système d'osmose inverse professionnel 4 étapes. Élimine 98% des bactéries, nitrates, virus et 99% des éléments chimiques et radioactifs. Prix spécial : 499€ au lieu de 599€.",
+            "name": "Fontaine à Eau Osmosée BlueMountain",
+            "description": "Système d'osmose inverse professionnel BlueMountain. Production 380L/jour (16L/h). Eau chaude, froide et tempérée. Membrane 100GPD encapsulée. Prix spécial : 499€ au lieu de 599€.",
             "price": 499.0,
             "original_price": 599.0,
-            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/1843d1a7bb6ee2ef603cb6643030b152e210ac626e53e56dd6482d4afdaaf454.jpg",
+            "image": "https://www.josmose.fr/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
             "category": "osmoseur",
             "target_audience": "both",
             "specifications": {
-                "Étapes de filtration": "4 étapes complètes",
-                "Efficacité": "98% bactéries, 99% chimiques",
+                "Production d'eau": "Jusqu'à 380 litres/jour (16L/h)",
+                "Membrane": "100GPD encapsulée",
+                "Filtration": "PP et CTO pré-filtres",
                 "Type": "Osmose Inverse (RO)",
-                "Installation": "Simple sans professionnel",
+                "Installation": "Raccordement et évacuation réseau",
                 "Garantie": "1 à 5 ans selon option",
-                "Économie annuelle": "500-700€ vs bouteilles"
+                "Températures": "Eau chaude, froide et tempérée"
             },
             "features": [
-                "Élimine 98% des bactéries et virus",
-                "Supprime 99% des éléments chimiques et radioactifs",  
-                "Filtre PP - élimination grosses particules",
-                "Filtre GAC - charbon actif pour chlore",
-                "Filtre CTO - charbon bloc anti-organiques",
-                "Membrane osmose inverse haute performance",
-                "Installation simple incluse",
-                "Plus d'achat de bouteilles plastiques",
-                "Service après-vente et ligne directe"
+                "Production jusqu'à 380 litres/jour (16 litres/heure)",
+                "Membrane 100GPD encapsulée haute performance",
+                "Pré-filtres PP et CTO inclus",
+                "Eau chaude, froide et tempérée disponible",
+                "Installation avec raccordement réseau",
+                "Dimensions compactes: 56×41×30 cm",
+                "Technologie BlueMountain avancée",
+                "Service après-vente professionnel",
+                "Compatible usage domestique et bureau"
             ],
             "images_gallery": [
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/1843d1a7bb6ee2ef603cb6643030b152e210ac626e53e56dd6482d4afdaaf454.jpg",
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/aa40011818db931a48574e321615f2b2a44cba606662b35201c63f3ea34c65a3.jpg", 
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/aee59062efe4915f468b1b67b44853d748cb66026217747cc3bee84b4c9d1129.jpg",
-                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/d3d3d1eebf0370a53ed1acfdc3d6364b02f78205a23c1d2428fa69fda91cccf5.jpg"
+                "https://www.josmose.fr/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
+                "https://www.josmose.fr/2566-small_default/fontaine-osmoseur-minibluesea.jpg",
+                "https://www.josmose.fr/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png",
+                "https://www.josmose.fr/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg"
             ],
             "in_stock": True
         },
