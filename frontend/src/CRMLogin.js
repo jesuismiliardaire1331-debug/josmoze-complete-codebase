@@ -227,13 +227,13 @@ const CRMLogin = ({ onLogin }) => {
           {/* Info */}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <h4 className="text-sm font-medium text-gray-900 mb-2">
-              🔒 Accès Sécurisé
+              🔒 Nouveaux Identifiants Sécurisés
             </h4>
             <ul className="text-xs text-gray-600 space-y-1">
-              <li>• Session chiffrée 8 heures</li>
-              <li>• Permissions par rôle</li>
-              <li>• Logs d'activité complets</li>
-              <li>• Protection données RGPD</li>
+              <li>• Connexion par email professionnel</li>
+              <li>• Mots de passe renforcés (8+ caractères)</li>
+              <li>• Session chiffrée JWT 8 heures</li>
+              <li>• Permissions par rôle & logs RGPD</li>
             </ul>
           </div>
         </div>
