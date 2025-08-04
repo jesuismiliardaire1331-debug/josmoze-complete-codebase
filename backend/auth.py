@@ -37,31 +37,31 @@ class Token(BaseModel):
 
 # Predefined users for CRM access
 CRM_USERS = {
-    "naima": {
-        "id": "user_naima",
-        "username": "naima",
-        "email": "naima@josmose.com",
-        "full_name": "Naima",
-        "role": "manager",
-        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "naima123"
+    "antonio": {
+        "id": "user_antonio",
+        "username": "antonio",
+        "email": "antonio@josmose.com",
+        "full_name": "Antonio - Directeur Général",
+        "role": "admin",  # Directeur = admin complet
+        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "antonio123"
         "is_active": True
     },
     "aziza": {
         "id": "user_aziza", 
         "username": "aziza",
         "email": "aziza@josmose.com",
-        "full_name": "Aziza",
-        "role": "agent",
+        "full_name": "Aziza - Directrice Adjointe",
+        "role": "manager",  # Directrice adjointe = manager
         "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "aziza123"
         "is_active": True
     },
-    "antonio": {
-        "id": "user_antonio",
-        "username": "antonio", 
-        "email": "antonio@josmose.com",
-        "full_name": "Antonio",
-        "role": "agent",
-        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "antonio123"
+    "naima": {
+        "id": "user_naima",
+        "username": "naima",
+        "email": "naima@josmose.com",
+        "full_name": "Naima - Directrice Commerciale",
+        "role": "manager",  # Directrice commerciale = manager
+        "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "naima123"
         "is_active": True
     },
     "support": {
@@ -69,7 +69,7 @@ CRM_USERS = {
         "username": "support",
         "email": "support@josmose.com", 
         "full_name": "Support Technique",
-        "role": "support",
+        "role": "agent",  # Support = agent (accès limité)
         "password_hash": "$2b$12$LQv3c1yqBwWdPcA5.VWLGuoFZ8z1d1i1G2vWF.R7H9oL9I4QO3B22",  # "support123"
         "is_active": True
     }
