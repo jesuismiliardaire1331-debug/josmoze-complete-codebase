@@ -857,78 +857,137 @@ async def create_order_from_payment(transaction_data: Dict, payment_status: Chec
 # ========== INITIALIZATION ==========
 
 async def initialize_products():
-    """Initialize products in database"""
+    """Initialize products with real data from CDC"""
     products = [
         {
             "id": "osmoseur-principal",
-            "name": "Fontaine à Eau Osmosée - Système d'Ultrafiltration",
-            "description": "Système de filtration d'eau par osmose inverse avec 4 étapes de filtration. Élimine virus, bactéries, chlore et particules organiques. Installation simple sans électricité.",
+            "name": "Fontaine à Eau Osmosée - Système RO",
+            "description": "Système d'osmose inverse professionnel 4 étapes. Élimine 98% des bactéries, nitrates, virus et 99% des éléments chimiques et radioactifs. Prix spécial : 499€ au lieu de 599€.",
             "price": 499.0,
             "original_price": 599.0,
-            "image": "https://images.unsplash.com/photo-1596180737956-00cb917e382b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHx1bmRlciUyMHNpbmslMjB3YXRlciUyMGZpbHRyYXRpb258ZW58MHx8fHdoaXRlfDE3NTQzMzA5MDR8MA&ixlib=rb-4.1.0&q=85",
+            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/1843d1a7bb6ee2ef603cb6643030b152e210ac626e53e56dd6482d4afdaaf454.jpg",
             "category": "osmoseur",
             "target_audience": "both",
             "specifications": {
-                "Débit": "Variable selon pression réseau",
-                "Filtration": "4 étapes (PP, GAC, CTO, Ultrafiltration)",
-                "Taille des pores": "0,01 micron",
-                "Installation": "Sans électricité",
-                "Garantie": "1 an incluse"
+                "Étapes de filtration": "4 étapes complètes",
+                "Efficacité": "98% bactéries, 99% chimiques",
+                "Type": "Osmose Inverse (RO)",
+                "Installation": "Simple sans professionnel",
+                "Garantie": "1 à 5 ans selon option",
+                "Économie annuelle": "500-700€ vs bouteilles"
             },
             "features": [
-                "Élimination des virus et bactéries",
-                "Réduction du chlore et particules organiques",
-                "Installation simple sans professionnel",
-                "Design compact et élégant",
-                "Aucun rejet d'eau",
-                "Cartouches à baïonnette faciles à changer"
+                "Élimine 98% des bactéries et virus",
+                "Supprime 99% des éléments chimiques et radioactifs",  
+                "Filtre PP - élimination grosses particules",
+                "Filtre GAC - charbon actif pour chlore",
+                "Filtre CTO - charbon bloc anti-organiques",
+                "Membrane osmose inverse haute performance",
+                "Installation simple incluse",
+                "Plus d'achat de bouteilles plastiques",
+                "Service après-vente et ligne directe"
+            ],
+            "images_gallery": [
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/1843d1a7bb6ee2ef603cb6643030b152e210ac626e53e56dd6482d4afdaaf454.jpg",
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/aa40011818db931a48574e321615f2b2a44cba606662b35201c63f3ea34c65a3.jpg", 
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/aee59062efe4915f468b1b67b44853d748cb66026217747cc3bee84b4c9d1129.jpg",
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/d3d3d1eebf0370a53ed1acfdc3d6364b02f78205a23c1d2428fa69fda91cccf5.jpg"
+            ],
+            "in_stock": True
+        },
+        {
+            "id": "fontaine-ultrafiltration",
+            "name": "Fontaine d'Ultrafiltration Compacte",
+            "description": "Fontaine d'ultrafiltration compacte et élégante. Sans électricité, aucun rejet d'eau. Technologie 0.01 micron pour éliminer bactéries et virus.",
+            "price": 399.0,
+            "original_price": 499.0,
+            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/4c4845180c928079072df07e0fad5c1c2618e3c7926c1539e69c08cc561e02c7.jpg",
+            "category": "osmoseur", 
+            "target_audience": "both",
+            "specifications": {
+                "Type": "Ultrafiltration (UF)",
+                "Taille pores": "0.01 micron",
+                "Électricité": "Non requise",
+                "Rejet d'eau": "Aucun - écologique",
+                "Design": "Compact et élégant",
+                "Installation": "Ultra-simple"
+            },
+            "features": [
+                "Technologie ultrafiltration 0.01 micron",
+                "Supprime bactéries et virus",
+                "Aucun rejet d'eau - 100% écologique", 
+                "Fonctionne sans électricité",
+                "Utilise uniquement pression réseau",
+                "Design compact pour toute cuisine",
+                "Cartouches à baïonnette faciles",
+                "Installation facilitée",
+                "Impact environnemental minimal",
+                "Entretien rapide et simple"
+            ],
+            "images_gallery": [
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/4c4845180c928079072df07e0fad5c1c2618e3c7926c1539e69c08cc561e02c7.jpg",
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/c5bf2f115baca18848b8ff6b97d8d3c310186696b9dfc776e80de7587c5061ef.jpg"
             ],
             "in_stock": True
         },
         {
             "id": "osmoseur-pro",
             "name": "Système Osmose Inverse Professionnel",
-            "description": "Solution industrielle pour restaurants, bureaux et commerces. Capacité élevée et filtration premium.",
+            "description": "Solution industrielle pour restaurants, bureaux et commerces. Système RO haute performance avec technologie avancée.",
             "price": 899.0,
             "original_price": 1199.0,
-            "image": "https://images.unsplash.com/photo-1616996691604-26dfd478cbbc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHx3YXRlciUyMGZpbHRlciUyMHN5c3RlbXxlbnwwfHx8d2hpdGV8MTc1NDMzMDkxMnww&ixlib=rb-4.1.0&q=85",
+            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/42b6ab849fa57e513598468e79939c978cb4cc2d5d8902586c8f2dfad205a851.jpg",
             "category": "osmoseur",
             "target_audience": "B2B",
             "specifications": {
-                "Débit": "Jusqu'à 500L/jour",
-                "Filtration": "6 étapes de purification",
-                "Pression": "Jusqu'à 8 bars",
-                "Installation": "Installation professionnelle incluse",
-                "Garantie": "3 ans pièces et main-d'œuvre"
+                "Type": "Osmose Inverse Professionnelle",
+                "Capacité": "Usage intensif commercial",
+                "Filtration": "Multi-étapes renforcées", 
+                "Installation": "Professionnelle incluse",
+                "Garantie": "5 ans pièces et main-d'œuvre",
+                "Support": "Technique dédié"
             },
             "features": [
-                "Capacité industrielle",
-                "Monitoring en temps réel",
+                "Système RO professionnel haute capacité",
+                "Membrane semi-perméable avancée",
+                "Élimine contaminants industriels",
+                "Pré-filtration et post-filtration",
+                "Monitoring qualité en temps réel",
+                "Installation par technicien certifié",
                 "Maintenance préventive incluse",
-                "Certification sanitaire",
-                "Support technique dédié",
-                "Formation du personnel incluse"
+                "Formation du personnel",
+                "Support technique prioritaire",
+                "Certification sanitaire complète"
+            ],
+            "images_gallery": [
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/42b6ab849fa57e513598468e79939c978cb4cc2d5d8902586c8f2dfad205a851.jpg",
+                "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/d3d3d1eebf0370a53ed1acfdc3d6364b02f78205a23c1d2428fa69fda91cccf5.jpg"
             ],
             "in_stock": True
         },
         {
             "id": "filtres-rechange",
-            "name": "Lot de Filtres de Rechange",
-            "description": "Set complet de filtres de rechange pour votre système d'osmose. Durée recommandée : 6 mois.",
+            "name": "Kit Filtres de Rechange - 4 Étapes",
+            "description": "Lot complet de filtres de rechange selon CDC. Kit 4 étapes : PP + GAC + CTO + Membrane UF. À partir du 6ème mois - 49€.",
             "price": 49.0,
-            "image": "https://images.unsplash.com/photo-1560130111-eea3a29b7b0e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHx3YXRlciUyMGZpbHRlciUyMHN5c3RlbXxlbnwwfHx8d2hpdGV8MTc1NDMzMDkxMnww&ixlib=rb-4.1.0&q=85",
+            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/c5bf2f115baca18848b8ff6b97d8d3c310186696b9dfc776e80de7587c5061ef.jpg",
             "category": "accessoire",
             "target_audience": "both",
             "specifications": {
-                "Compatibilité": "Système osmoseur principal",
-                "Durée de vie": "6 mois",
-                "Contenu": "4 cartouches (PP, GAC, CTO, UF)"
+                "Contenu": "4 cartouches complètes",
+                "Compatibilité": "Tous systèmes Josmose",
+                "Fréquence": "Changement tous les 6 mois",
+                "Qualité": "Filtres certifiés d'origine"
             },
             "features": [
-                "Cartouches haute qualité",
-                "Installation facile",
-                "Maintient l'efficacité de filtration",
-                "Compatible avec tous nos systèmes"
+                "Filtre PP - Polypropylène (grosses particules >5 microns)",
+                "Filtre GAC - Charbon actif granulés (chlore + organiques)", 
+                "Filtre CTO - Charbon actif bloc (reste chlore)",
+                "Membrane Ultrafiltration (virus, bactéries, 0.01 micron)",
+                "Compatible avec système principal",
+                "Installation facile avec instructions",
+                "Maintient efficacité optimale",
+                "Cartouches à baïonnette"
             ],
             "in_stock": True
         },
@@ -937,7 +996,7 @@ async def initialize_products():
             "name": "Filtres Professionnels - Pack Annuel",
             "description": "Pack de filtres professionnels pour systèmes industriels. Qualité supérieure avec suivi de maintenance.",
             "price": 89.0,
-            "image": "https://images.pexels.com/photos/12726229/pexels-photo-12726229.jpeg",
+            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/c5bf2f115baca18848b8ff6b97d8d3c310186696b9dfc776e80de7587c5061ef.jpg",
             "category": "accessoire",
             "target_audience": "B2B",
             "specifications": {
@@ -955,8 +1014,8 @@ async def initialize_products():
         },
         {
             "id": "garantie-2ans",
-            "name": "Extension Garantie 2 ans",
-            "description": "Étendez votre garantie à 2 ans pour une tranquillité d'esprit totale.",
+            "name": "Extension Garantie 2 ans - 39€",
+            "description": "Étendez votre garantie à 2 ans selon tarif CDC. Tranquillité d'esprit totale avec support technique.",
             "price": 39.0,
             "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
             "category": "service",
@@ -974,9 +1033,9 @@ async def initialize_products():
             "in_stock": True
         },
         {
-            "id": "garantie-5ans",
-            "name": "Extension Garantie 5 ans",
-            "description": "Protection maximale avec garantie étendue à 5 ans.",
+            "id": "garantie-5ans", 
+            "name": "Extension Garantie 5 ans - 59€",
+            "description": "Protection maximale avec garantie étendue à 5 ans selon tarif CDC. Couverture complète premium.",
             "price": 59.0,
             "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
             "category": "service",
@@ -997,7 +1056,7 @@ async def initialize_products():
         {
             "id": "installation-service",
             "name": "Service d'Installation Professionnel",
-            "description": "Installation complète par nos techniciens certifiés. Mise en service et formation incluses.",
+            "description": "Installation complète par nos techniciens certifiés. Mise en service et formation incluses. Service après-vente garanti.",
             "price": 150.0,
             "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
             "category": "service",
@@ -1005,13 +1064,15 @@ async def initialize_products():
             "specifications": {
                 "Durée": "2-3 heures",
                 "Inclus": "Installation, test, formation",
-                "Zone": "France métropolitaine"
+                "Zone": "France et Espagne"
             },
             "features": [
                 "Technicien certifié à domicile",
-                "Test complet du système",
-                "Formation à l'utilisation",
-                "Garantie installation 2 ans"
+                "Installation simple sans électricité",
+                "Test complet du système 4 étapes",
+                "Formation complète à l'utilisation", 
+                "Garantie installation 2 ans",
+                "Support technique post-installation"
             ],
             "in_stock": True
         }
@@ -1020,7 +1081,7 @@ async def initialize_products():
     for product in products:
         await db.products.replace_one({"id": product["id"]}, product, upsert=True)
     
-    logging.info("Products initialized with new images and B2B options")
+    logging.info("Products initialized with real CDC images and specifications")
 
 # Router inclusion moved to end of file after all routes are defined
 
