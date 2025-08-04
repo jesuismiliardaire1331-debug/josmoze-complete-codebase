@@ -542,7 +542,7 @@ class BackendTester:
     def run_all_tests(self):
         """Run all backend tests"""
         print("=" * 80)
-        print("JOSMOSE.COM BACKEND API TESTING")
+        print("JOSMOSE.COM BACKEND API TESTING - CRM & LEAD MANAGEMENT")
         print("=" * 80)
         print(f"Backend URL: {BACKEND_URL}")
         print(f"Test started at: {datetime.now().isoformat()}")
@@ -554,6 +554,18 @@ class BackendTester:
         self.test_root_endpoint()
         self.test_location_detection()
         self.test_product_catalog()
+        self.test_enhanced_product_catalog()
+        print()
+        
+        # CRM and Lead Management tests
+        print("🎯 CRM & LEAD MANAGEMENT TESTS")
+        print("-" * 40)
+        self.test_lead_creation()
+        self.test_crm_dashboard()
+        self.test_lead_management()
+        self.test_lead_update()
+        self.test_consultation_request()
+        self.test_enhanced_contact_form()
         print()
         
         # Stripe payment tests
