@@ -637,6 +637,31 @@ async def get_contact_forms():
     return [ContactForm(**form) for form in forms_data]
 
 
+@api_router.get("/auth/user-info")
+async def get_user_info(current_user: User = Depends(get_current_user)):
+    """Get current user information and permissions"""
+    try:
+        permissions = get_user_permissions(current_user.role)
+        
+        return {
+            "success": True,
+            "user": {
+                "id": current_user.id,
+                "username": current_user.username,
+                "email": current_user.email,
+                "full_name": current_user.full_name,
+                "role": current_user.role,
+                "is_active": current_user.is_active
+            },
+            "permissions": permissions
+        }
+    except Exception as e:
+        logging.error(f"Error getting user info: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve user information"
+        )
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
