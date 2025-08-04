@@ -1591,7 +1591,7 @@ async def setup_abandoned_cart_retargeting(retargeting_data: Dict[str, Any]):
 @crm_router.post("/landing-page")
 async def create_campaign_landing_page(
     landing_data: Dict[str, Any],
-    current_user: User = Depends(require_role(["admin", "manager"]))
+    current_user: User = Depends(require_role(["manager"]))
 ):
     """Créer une landing page pour une campagne"""
     try:
