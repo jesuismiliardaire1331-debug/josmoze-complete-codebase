@@ -969,8 +969,9 @@ async def initialize_products():
     
     logging.info("Products initialized with new images and B2B options")
 
-# Include the router in the main app
+# Include both routers in the main app
 app.include_router(api_router)
+app.include_router(crm_router)
 
 app.add_middleware(
     CORSMiddleware,
