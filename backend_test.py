@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Josmose.com Osmosis Systems E-commerce Site
-Tests the complete Stripe payment integration and all backend endpoints.
+Backend API Testing for Josmose.com - Social Media Marketing Automation System
+Tests the complete social media automation, CRM, and backend endpoints.
+Focus on new marketing automation features for France/Spain targeting.
 """
 
 import requests
