@@ -989,12 +989,12 @@ async def initialize_products():
             "name": "Kit Filtres de Rechange - 4 Étapes",
             "description": "Lot complet de filtres de rechange selon CDC. Kit 4 étapes : PP + GAC + CTO + Membrane UF. À partir du 6ème mois - 49€.",
             "price": 49.0,
-            "image": "https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/c5bf2f115baca18848b8ff6b97d8d3c310186696b9dfc776e80de7587c5061ef.jpg",
+            "image": "https://static.wixstatic.com/media/6af6bd_1b0ed5e9b180466baeee7436019f6fef~mv2.png/v1/fill/w_520,h_692,al_c,lg_1,q_85,enc_avif,quality_auto/H10e839a4d05e44ab881e05d9aeb3e0d80_jpg_720x720q50-removebg-preview.png",
             "category": "accessoire",
             "target_audience": "both",
             "specifications": {
                 "Contenu": "4 cartouches complètes",
-                "Compatibilité": "Tous systèmes Josmose",
+                "Compatibilité": "Tous systèmes Josmose", 
                 "Fréquence": "Changement tous les 6 mois",
                 "Qualité": "Filtres certifiés d'origine"
             },
