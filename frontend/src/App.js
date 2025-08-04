@@ -3,6 +3,11 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, useNavigate, useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
 
+// Import CRM components
+import CRMDashboard from "./CRM";
+import { AuthProvider } from "./CRMLogin";
+import CRMLogin from "./CRMLogin";
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
