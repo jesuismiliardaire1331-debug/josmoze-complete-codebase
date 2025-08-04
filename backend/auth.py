@@ -64,41 +64,41 @@ class Token(BaseModel):
     token_type: str
     user: User
 
-# Predefined users for CRM access - Updated with email login and stronger passwords
+# Predefined users for CRM access - Updated with correct roles from user interface
 CRM_USERS = {
-    "antonio@josmose.com": {
-        "id": "user_antonio",
-        "username": "antonio@josmose.com",
-        "email": "antonio@josmose.com",
-        "full_name": "Antonio - Directeur Général",
-        "role": "admin",  # Directeur = admin complet
-        "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
+    "naima@josmose.com": {
+        "id": "user_naima",
+        "username": "naima@josmose.com",
+        "email": "naima@josmose.com",
+        "full_name": "Naima - Manager",
+        "role": "manager",  # Manager role - highest level
+        "password_hash": "$2b$12$T3.CqIsUwLAcFv8lM2fyGOBlYKAIJB0TZXXmWrYg2SFim/jgW1Cd2",  # "Naima@2024!Commerce"
         "is_active": True
     },
     "aziza@josmose.com": {
         "id": "user_aziza", 
         "username": "aziza@josmose.com",
         "email": "aziza@josmose.com",
-        "full_name": "Aziza - Directrice Adjointe",
-        "role": "admin",  # Directrice adjointe = admin complet comme le directeur
+        "full_name": "Aziza - Agent",
+        "role": "agent",  # Agent role - standard access
         "password_hash": "$2b$12$GHSiiMx03IQ81HMWinZUn.xvyi3MtGhg6k6mZG1QXqCwCZJT5b/vm",  # "Aziza@2024!Director"
         "is_active": True
     },
-    "naima@josmose.com": {
-        "id": "user_naima",
-        "username": "naima@josmose.com",
-        "email": "naima@josmose.com",
-        "full_name": "Naima - Directrice Commerciale",
-        "role": "admin",  # Directrice commerciale = admin complet aussi
-        "password_hash": "$2b$12$T3.CqIsUwLAcFv8lM2fyGOBlYKAIJB0TZXXmWrYg2SFim/jgW1Cd2",  # "Naima@2024!Commerce"
+    "antonio@josmose.com": {
+        "id": "user_antonio",
+        "username": "antonio@josmose.com",
+        "email": "antonio@josmose.com",
+        "full_name": "Antonio - Agent",
+        "role": "agent",  # Agent role - standard access
+        "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
         "is_active": True
     },
     "support@josmose.com": {
         "id": "user_support",
         "username": "support@josmose.com",
         "email": "support@josmose.com", 
-        "full_name": "Support Technique",
-        "role": "agent",  # Support = agent (accès limité)
+        "full_name": "Support - Technique",
+        "role": "technique",  # Technical support role - limited access
         "password_hash": "$2b$12$AgqPE73OcPnBKMmpgCQ3IOiShGsj8AuBo.TLETjIUJgS.AD9aFEd.",  # "Support@2024!Help"
         "is_active": True
     }
