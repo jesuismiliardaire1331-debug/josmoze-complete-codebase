@@ -1335,7 +1335,7 @@ async def get_invoice(
 @crm_router.get("/orders/{order_id}/tracking")
 async def get_order_tracking(
     order_id: str,
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir le suivi d'une commande"""
     try:
