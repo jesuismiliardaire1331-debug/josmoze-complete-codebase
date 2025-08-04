@@ -258,8 +258,8 @@ const ProductExplanation = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="https://customer-assets.emergentagent.com/job_water-purifier-hub/artifacts/images/4c4845180c928079072df07e0fad5c1c2618e3c7926c1539e69c08cc561e02c7.jpg"
-                  alt="Fontaine d'ultrafiltration"
+                  src="https://static.wixstatic.com/media/6af6bd_1b0ed5e9b180466baeee7436019f6fef~mv2.png/v1/fill/w_520,h_692,al_c,lg_1,q_85,enc_avif,quality_auto/H10e839a4d05e44ab881e05d9aeb3e0d80_jpg_720x720q50-removebg-preview.png"
+                  alt="Fontaine d'ultrafiltration design"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
