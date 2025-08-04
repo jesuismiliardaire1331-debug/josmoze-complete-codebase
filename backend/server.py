@@ -1517,7 +1517,7 @@ async def optimize_campaign_budgets(
 @crm_router.post("/content/generate")
 async def generate_social_content(
     content_request: Dict[str, Any],
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Générer du contenu pour les réseaux sociaux avec AI"""
     try:
