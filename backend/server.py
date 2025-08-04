@@ -1447,7 +1447,7 @@ async def get_social_media_dashboard(
 async def get_all_campaigns(
     platform: str = None,
     status: str = None,
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir toutes les campagnes publicitaires"""
     try:
