@@ -1318,7 +1318,7 @@ async def get_all_invoices(
 @crm_router.get("/invoices/{invoice_id}")
 async def get_invoice(
     invoice_id: str,
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir une facture spécifique"""
     try:
