@@ -94,13 +94,14 @@ class BackendTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                if isinstance(data, list) and len(data) == 4:
-                    # Check for expected products
+                if isinstance(data, list) and len(data) >= 4:
+                    # Check for expected products including new B2B products
                     expected_products = {
                         "osmoseur-principal": 499.0,
                         "filtres-rechange": 49.0,
                         "garantie-2ans": 39.0,
-                        "garantie-5ans": 59.0
+                        "garantie-5ans": 59.0,
+                        "installation-service": 150.0
                     }
                     
                     found_products = {}
@@ -119,18 +120,53 @@ class BackendTester:
                             self.log_test("Product Catalog", False, f"Wrong price for {product_id}: expected {expected_price}, got {found_products[product_id]}")
                     
                     if all_correct:
-                        self.log_test("Product Catalog", True, f"All 4 products found with correct prices")
+                        self.log_test("Product Catalog", True, f"All expected products found with correct prices")
                         return True
                     else:
                         return False
                 else:
-                    self.log_test("Product Catalog", False, f"Expected 4 products, got {len(data) if isinstance(data, list) else 'non-list'}", data)
+                    self.log_test("Product Catalog", False, f"Expected at least 4 products, got {len(data) if isinstance(data, list) else 'non-list'}", data)
                     return False
             else:
                 self.log_test("Product Catalog", False, f"Status: {response.status_code}", response.text)
                 return False
         except Exception as e:
             self.log_test("Product Catalog", False, f"Exception: {str(e)}")
+            return False
+
+    def test_enhanced_product_catalog(self):
+        """Test GET /api/products with customer_type filtering (B2C/B2B)"""
+        try:
+            # Test B2C products
+            response_b2c = self.session.get(f"{BACKEND_URL}/products?customer_type=B2C")
+            if response_b2c.status_code == 200:
+                b2c_data = response_b2c.json()
+                b2c_products = [p["id"] for p in b2c_data if isinstance(p, dict) and "id" in p]
+                
+                # Test B2B products
+                response_b2b = self.session.get(f"{BACKEND_URL}/products?customer_type=B2B")
+                if response_b2b.status_code == 200:
+                    b2b_data = response_b2b.json()
+                    b2b_products = [p["id"] for p in b2b_data if isinstance(p, dict) and "id" in p]
+                    
+                    # Check for B2B specific products
+                    expected_b2b = ["osmoseur-pro", "filtres-pro"]
+                    b2b_found = any(prod in b2b_products for prod in expected_b2b)
+                    
+                    if b2b_found:
+                        self.log_test("Enhanced Product Catalog", True, f"B2C: {len(b2c_products)} products, B2B: {len(b2b_products)} products with B2B-specific items")
+                        return True
+                    else:
+                        self.log_test("Enhanced Product Catalog", False, f"B2B products missing expected items: {expected_b2b}")
+                        return False
+                else:
+                    self.log_test("Enhanced Product Catalog", False, f"B2B request failed: {response_b2b.status_code}")
+                    return False
+            else:
+                self.log_test("Enhanced Product Catalog", False, f"B2C request failed: {response_b2c.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Enhanced Product Catalog", False, f"Exception: {str(e)}")
             return False
     
     def test_checkout_session_creation(self):
