@@ -1612,7 +1612,7 @@ async def create_campaign_landing_page(
 
 @crm_router.get("/abandoned-cart-campaigns")
 async def get_abandoned_cart_campaigns(
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir les campagnes de panier abandonné actives"""
     try:
