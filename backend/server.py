@@ -637,6 +637,23 @@ async def get_contact_forms():
     return [ContactForm(**form) for form in forms_data]
 
 
+# ========== COMPANY LEGAL INFO ENDPOINT ==========
+
+@api_router.get("/company/legal-info")
+async def get_legal_info():
+    """Get company legal information for payment compliance"""
+    try:
+        return {
+            "success": True,
+            "company_info": get_company_info()
+        }
+    except Exception as e:
+        logging.error(f"Error getting company legal info: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve company information"
+        )
+
 # ========== STRIPE PAYMENT ENDPOINTS ==========
 
 @api_router.post("/checkout/session")
