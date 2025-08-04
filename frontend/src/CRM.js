@@ -82,6 +82,18 @@ const CRMDashboard = () => {
     }
   };
 
+  const updateLeadStatus = async (leadId, newStatus) => {
+    try {
+      await axios.put(`${API}/crm/leads/${leadId}`, { status: newStatus });
+      fetchLeads();
+      fetchDashboardData();
+      alert('✅ Statut mis à jour avec succès !');
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour:', error);
+      alert('❌ Erreur lors de la mise à jour');
+    }
+  };
+
   const updateOrderStatus = async (orderId, newStatus, message = '') => {
     try {
       await axios.put(`${API}/crm/orders/${orderId}/status`, { 
