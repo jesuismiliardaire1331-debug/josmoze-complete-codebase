@@ -1692,7 +1692,7 @@ async def get_advanced_crm_dashboard(
 
 @crm_router.get("/marketing/campaigns")
 async def get_marketing_campaigns(
-    current_user: User = Depends(require_role(["admin", "manager"]))
+    current_user: User = Depends(require_role(["manager"]))
 ):
     """Get all marketing campaigns"""
     campaigns_data = await db.marketing_campaigns.find().sort("created_at", -1).to_list(100)
