@@ -362,12 +362,7 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus:
-    - "CRM Dashboard API"
-    - "Lead Management System"
-    - "Professional Consultation System"
-    - "Enhanced Contact Form"
-    - "Enhanced Product Catalog API"
+  current_focus: []
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
