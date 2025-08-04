@@ -1198,6 +1198,369 @@ class BackendTester:
             self.log_test("Company Legal Info", False, f"Exception: {str(e)}")
             return False
 
+    # ========== NEW SECURITY AND ANALYTICS TESTS ==========
+    
+    def authenticate_with_role(self, email, password, expected_role):
+        """Authenticate with specific role credentials"""
+        try:
+            auth_data = {
+                "username": email,
+                "password": password
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=auth_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                token = data.get("access_token")
+                user = data.get("user", {})
+                role = user.get("role")
+                
+                if role == expected_role:
+                    self.log_test(f"Auth {email} ({expected_role})", True, f"Successfully authenticated as {expected_role}")
+                    return token
+                else:
+                    self.log_test(f"Auth {email} ({expected_role})", False, f"Expected role {expected_role}, got {role}")
+                    return None
+            else:
+                self.log_test(f"Auth {email} ({expected_role})", False, f"Auth failed: {response.status_code}")
+                return None
+        except Exception as e:
+            self.log_test(f"Auth {email} ({expected_role})", False, f"Exception: {str(e)}")
+            return None
+
+    def test_new_role_authentication(self):
+        """Test authentication with new role-based credentials"""
+        test_credentials = [
+            ("naima@josmose.com", "Naima@2024!Commerce", "manager"),
+            ("aziza@josmose.com", "Aziza@2024!Director", "agent"),
+            ("antonio@josmose.com", "Antonio@2024!Secure", "agent"),
+            ("support@josmose.com", "Support@2024!Help", "technique")
+        ]
+        
+        successful_auths = 0
+        self.role_tokens = {}
+        
+        for email, password, expected_role in test_credentials:
+            token = self.authenticate_with_role(email, password, expected_role)
+            if token:
+                successful_auths += 1
+                self.role_tokens[expected_role] = token
+        
+        if successful_auths == len(test_credentials):
+            self.log_test("New Role Authentication System", True, f"All {successful_auths}/{len(test_credentials)} role-based logins successful")
+            return True
+        else:
+            self.log_test("New Role Authentication System", False, f"Only {successful_auths}/{len(test_credentials)} role-based logins successful")
+            return False
+
+    def test_user_info_endpoint(self):
+        """Test GET /api/auth/user-info with different roles"""
+        if not hasattr(self, 'role_tokens') or not self.role_tokens:
+            self.log_test("User Info Endpoint", False, "No role tokens available from authentication tests")
+            return False
+        
+        successful_tests = 0
+        total_tests = len(self.role_tokens)
+        
+        for role, token in self.role_tokens.items():
+            try:
+                headers = {"Authorization": f"Bearer {token}"}
+                response = self.session.get(f"{BACKEND_URL}/auth/user-info", headers=headers)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") and "user" in data and "permissions" in data:
+                        user = data["user"]
+                        permissions = data["permissions"]
+                        
+                        if user.get("role") == role:
+                            self.log_test(f"User Info {role}", True, f"Role: {role}, Permissions: {len(permissions)} items")
+                            successful_tests += 1
+                        else:
+                            self.log_test(f"User Info {role}", False, f"Role mismatch: expected {role}, got {user.get('role')}")
+                    else:
+                        self.log_test(f"User Info {role}", False, "Invalid response structure", data)
+                else:
+                    self.log_test(f"User Info {role}", False, f"Status: {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test(f"User Info {role}", False, f"Exception: {str(e)}")
+        
+        if successful_tests == total_tests:
+            self.log_test("User Info Endpoint System", True, f"All {successful_tests}/{total_tests} user info tests successful")
+            return True
+        else:
+            self.log_test("User Info Endpoint System", False, f"Only {successful_tests}/{total_tests} user info tests successful")
+            return False
+
+    def test_analytics_dashboard_permissions(self):
+        """Test GET /api/crm/analytics/dashboard with Manager/Agent roles"""
+        if not hasattr(self, 'role_tokens') or not self.role_tokens:
+            self.log_test("Analytics Dashboard Permissions", False, "No role tokens available")
+            return False
+        
+        # Test Manager access
+        manager_token = self.role_tokens.get("manager")
+        if manager_token:
+            try:
+                headers = {"Authorization": f"Bearer {manager_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/analytics/dashboard", headers=headers)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") and "data" in data:
+                        self.log_test("Analytics Dashboard (Manager)", True, "Manager can access analytics dashboard")
+                        manager_success = True
+                    else:
+                        self.log_test("Analytics Dashboard (Manager)", False, "Invalid response structure", data)
+                        manager_success = False
+                else:
+                    self.log_test("Analytics Dashboard (Manager)", False, f"Manager access failed: {response.status_code}")
+                    manager_success = False
+            except Exception as e:
+                self.log_test("Analytics Dashboard (Manager)", False, f"Exception: {str(e)}")
+                manager_success = False
+        else:
+            self.log_test("Analytics Dashboard (Manager)", False, "No manager token available")
+            manager_success = False
+        
+        # Test Agent access
+        agent_token = self.role_tokens.get("agent")
+        if agent_token:
+            try:
+                headers = {"Authorization": f"Bearer {agent_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/analytics/dashboard", headers=headers)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") and "data" in data:
+                        self.log_test("Analytics Dashboard (Agent)", True, "Agent can access analytics dashboard")
+                        agent_success = True
+                    else:
+                        self.log_test("Analytics Dashboard (Agent)", False, "Invalid response structure", data)
+                        agent_success = False
+                else:
+                    self.log_test("Analytics Dashboard (Agent)", False, f"Agent access failed: {response.status_code}")
+                    agent_success = False
+            except Exception as e:
+                self.log_test("Analytics Dashboard (Agent)", False, f"Exception: {str(e)}")
+                agent_success = False
+        else:
+            self.log_test("Analytics Dashboard (Agent)", False, "No agent token available")
+            agent_success = False
+        
+        # Test Technique access (should fail)
+        technique_token = self.role_tokens.get("technique")
+        if technique_token:
+            try:
+                headers = {"Authorization": f"Bearer {technique_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/analytics/dashboard", headers=headers)
+                
+                if response.status_code in [401, 403]:
+                    self.log_test("Analytics Dashboard (Technique)", True, "Technique correctly denied access to analytics")
+                    technique_success = True
+                else:
+                    self.log_test("Analytics Dashboard (Technique)", False, f"Technique should be denied access, got: {response.status_code}")
+                    technique_success = False
+            except Exception as e:
+                self.log_test("Analytics Dashboard (Technique)", False, f"Exception: {str(e)}")
+                technique_success = False
+        else:
+            self.log_test("Analytics Dashboard (Technique)", False, "No technique token available")
+            technique_success = False
+        
+        return manager_success and agent_success and technique_success
+
+    def test_analytics_csv_export_permissions(self):
+        """Test GET /api/crm/analytics/export/csv (Manager only)"""
+        if not hasattr(self, 'role_tokens') or not self.role_tokens:
+            self.log_test("Analytics CSV Export Permissions", False, "No role tokens available")
+            return False
+        
+        # Test Manager access (should work)
+        manager_token = self.role_tokens.get("manager")
+        if manager_token:
+            try:
+                headers = {"Authorization": f"Bearer {manager_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/analytics/export/csv", headers=headers)
+                
+                if response.status_code == 200:
+                    # Check if it's a CSV response
+                    content_type = response.headers.get('content-type', '')
+                    if 'text/csv' in content_type or 'application/csv' in content_type:
+                        self.log_test("CSV Export (Manager)", True, "Manager can export CSV analytics")
+                        manager_success = True
+                    else:
+                        self.log_test("CSV Export (Manager)", True, f"Manager access granted (content-type: {content_type})")
+                        manager_success = True
+                else:
+                    self.log_test("CSV Export (Manager)", False, f"Manager access failed: {response.status_code}")
+                    manager_success = False
+            except Exception as e:
+                self.log_test("CSV Export (Manager)", False, f"Exception: {str(e)}")
+                manager_success = False
+        else:
+            self.log_test("CSV Export (Manager)", False, "No manager token available")
+            manager_success = False
+        
+        # Test Agent access (should fail)
+        agent_token = self.role_tokens.get("agent")
+        if agent_token:
+            try:
+                headers = {"Authorization": f"Bearer {agent_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/analytics/export/csv", headers=headers)
+                
+                if response.status_code in [401, 403]:
+                    self.log_test("CSV Export (Agent)", True, "Agent correctly denied CSV export access")
+                    agent_success = True
+                else:
+                    self.log_test("CSV Export (Agent)", False, f"Agent should be denied access, got: {response.status_code}")
+                    agent_success = False
+            except Exception as e:
+                self.log_test("CSV Export (Agent)", False, f"Exception: {str(e)}")
+                agent_success = False
+        else:
+            self.log_test("CSV Export (Agent)", False, "No agent token available")
+            agent_success = False
+        
+        return manager_success and agent_success
+
+    def test_security_stats_permissions(self):
+        """Test GET /api/crm/security/stats (Manager/Technique roles)"""
+        if not hasattr(self, 'role_tokens') or not self.role_tokens:
+            self.log_test("Security Stats Permissions", False, "No role tokens available")
+            return False
+        
+        # Test Manager access
+        manager_token = self.role_tokens.get("manager")
+        if manager_token:
+            try:
+                headers = {"Authorization": f"Bearer {manager_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/security/stats", headers=headers)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") and "security_stats" in data:
+                        self.log_test("Security Stats (Manager)", True, "Manager can access security stats")
+                        manager_success = True
+                    else:
+                        self.log_test("Security Stats (Manager)", False, "Invalid response structure", data)
+                        manager_success = False
+                else:
+                    self.log_test("Security Stats (Manager)", False, f"Manager access failed: {response.status_code}")
+                    manager_success = False
+            except Exception as e:
+                self.log_test("Security Stats (Manager)", False, f"Exception: {str(e)}")
+                manager_success = False
+        else:
+            self.log_test("Security Stats (Manager)", False, "No manager token available")
+            manager_success = False
+        
+        # Test Technique access
+        technique_token = self.role_tokens.get("technique")
+        if technique_token:
+            try:
+                headers = {"Authorization": f"Bearer {technique_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/security/stats", headers=headers)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") and "security_stats" in data:
+                        self.log_test("Security Stats (Technique)", True, "Technique can access security stats")
+                        technique_success = True
+                    else:
+                        self.log_test("Security Stats (Technique)", False, "Invalid response structure", data)
+                        technique_success = False
+                else:
+                    self.log_test("Security Stats (Technique)", False, f"Technique access failed: {response.status_code}")
+                    technique_success = False
+            except Exception as e:
+                self.log_test("Security Stats (Technique)", False, f"Exception: {str(e)}")
+                technique_success = False
+        else:
+            self.log_test("Security Stats (Technique)", False, "No technique token available")
+            technique_success = False
+        
+        # Test Agent access (should fail)
+        agent_token = self.role_tokens.get("agent")
+        if agent_token:
+            try:
+                headers = {"Authorization": f"Bearer {agent_token}"}
+                response = self.session.get(f"{BACKEND_URL}/crm/security/stats", headers=headers)
+                
+                if response.status_code in [401, 403]:
+                    self.log_test("Security Stats (Agent)", True, "Agent correctly denied security stats access")
+                    agent_success = True
+                else:
+                    self.log_test("Security Stats (Agent)", False, f"Agent should be denied access, got: {response.status_code}")
+                    agent_success = False
+            except Exception as e:
+                self.log_test("Security Stats (Agent)", False, f"Exception: {str(e)}")
+                agent_success = False
+        else:
+            self.log_test("Security Stats (Agent)", False, "No agent token available")
+            agent_success = False
+        
+        return manager_success and technique_success and agent_success
+
+    def test_cache_clear_permissions(self):
+        """Test POST /api/crm/cache/clear (Manager only)"""
+        if not hasattr(self, 'role_tokens') or not self.role_tokens:
+            self.log_test("Cache Clear Permissions", False, "No role tokens available")
+            return False
+        
+        # Test Manager access (should work)
+        manager_token = self.role_tokens.get("manager")
+        if manager_token:
+            try:
+                headers = {"Authorization": f"Bearer {manager_token}", "Content-Type": "application/json"}
+                response = self.session.post(f"{BACKEND_URL}/crm/cache/clear", json={"pattern": "*"}, headers=headers)
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success"):
+                        self.log_test("Cache Clear (Manager)", True, "Manager can clear cache")
+                        manager_success = True
+                    else:
+                        self.log_test("Cache Clear (Manager)", False, "Cache clear failed", data)
+                        manager_success = False
+                else:
+                    self.log_test("Cache Clear (Manager)", False, f"Manager access failed: {response.status_code}")
+                    manager_success = False
+            except Exception as e:
+                self.log_test("Cache Clear (Manager)", False, f"Exception: {str(e)}")
+                manager_success = False
+        else:
+            self.log_test("Cache Clear (Manager)", False, "No manager token available")
+            manager_success = False
+        
+        # Test Agent access (should fail)
+        agent_token = self.role_tokens.get("agent")
+        if agent_token:
+            try:
+                headers = {"Authorization": f"Bearer {agent_token}", "Content-Type": "application/json"}
+                response = self.session.post(f"{BACKEND_URL}/crm/cache/clear", json={"pattern": "*"}, headers=headers)
+                
+                if response.status_code in [401, 403]:
+                    self.log_test("Cache Clear (Agent)", True, "Agent correctly denied cache clear access")
+                    agent_success = True
+                else:
+                    self.log_test("Cache Clear (Agent)", False, f"Agent should be denied access, got: {response.status_code}")
+                    agent_success = False
+            except Exception as e:
+                self.log_test("Cache Clear (Agent)", False, f"Exception: {str(e)}")
+                agent_success = False
+        else:
+            self.log_test("Cache Clear (Agent)", False, "No agent token available")
+            agent_success = False
+        
+        return manager_success and agent_success
+
     # ========== NEW SOCIAL MEDIA AUTOMATION TESTS ==========
     
     def authenticate_crm(self):
