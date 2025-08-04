@@ -8,7 +8,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 import httpx
 import re
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
@@ -42,6 +42,7 @@ class Product(BaseModel):
     specifications: Dict[str, str] = {}
     features: List[str] = []
     in_stock: bool = True
+    target_audience: str = "B2C"  # B2C or B2B
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class CartItem(BaseModel):
@@ -55,6 +56,7 @@ class Order(BaseModel):
     customer_name: str
     customer_phone: str
     customer_address: Dict[str, str]
+    customer_type: str = "B2C"  # B2C or B2B
     items: List[CartItem]
     subtotal: float
     shipping_cost: float
@@ -62,14 +64,39 @@ class Order(BaseModel):
     currency: str
     status: str = "pending"
     payment_method: Optional[str] = None
+    lead_source: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class Lead(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    name: str
+    phone: Optional[str] = None
+    company: Optional[str] = None
+    lead_type: str = "contact"  # contact, quote, consultation, abandoned_cart
+    customer_type: str = "B2C"  # B2C or B2B
+    source: str = "website"  # website, facebook, google, etc.
+    status: str = "new"  # new, contacted, qualified, converted, lost
+    score: int = 0  # Lead scoring 0-100
+    country_code: Optional[str] = None
+    message: Optional[str] = None
+    consultation_requested: bool = False
+    preferred_contact_time: Optional[str] = None
+    last_activity: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    follow_up_date: Optional[datetime] = None
+    notes: List[str] = []
 
 class ContactForm(BaseModel):
     name: str
     email: str
-    phone: str
+    phone: Optional[str] = None
+    company: Optional[str] = None
     message: str
-    request_type: str = "quote"  # quote, support, general
+    request_type: str = "quote"  # quote, support, general, consultation
+    customer_type: str = "B2C"  # B2C or B2B
+    consultation_requested: bool = False
+    preferred_contact_time: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class CountryDetection(BaseModel):
@@ -97,6 +124,25 @@ class CheckoutRequest(BaseModel):
     customer_info: Dict[str, str]
     origin_url: str
 
+class EmailCampaign(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    subject: str
+    content: str
+    recipient_emails: List[str]
+    status: str = "draft"  # draft, scheduled, sent, failed
+    scheduled_at: Optional[datetime] = None
+    sent_at: Optional[datetime] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ConsultationRequest(BaseModel):
+    lead_id: str
+    consultation_type: str = "diagnostic"  # diagnostic, installation, maintenance
+    preferred_date: Optional[str] = None
+    preferred_time: str
+    notes: Optional[str] = None
+    status: str = "requested"  # requested, scheduled, completed, cancelled
+
 
 # ========== STRIPE INTEGRATION ==========
 
@@ -107,9 +153,13 @@ if not stripe_api_key:
 # Product packages with fixed pricing (security)
 PRODUCT_PACKAGES = {
     "osmoseur-principal": 499.0,
+    "osmoseur-pro": 899.0,  # B2B version
     "filtres-rechange": 49.0,
+    "filtres-pro": 89.0,  # B2B version
     "garantie-2ans": 39.0,
-    "garantie-5ans": 59.0
+    "garantie-5ans": 59.0,
+    "installation-service": 150.0,
+    "consultation-expert": 0.0  # Free consultation
 }
 
 def get_stripe_checkout(request: Request) -> StripeCheckout:
@@ -117,6 +167,111 @@ def get_stripe_checkout(request: Request) -> StripeCheckout:
     host_url = str(request.base_url).rstrip('/')
     webhook_url = f"{host_url}/api/webhook/stripe"
     return StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+
+
+# ========== LEAD SCORING SYSTEM ==========
+
+def calculate_lead_score(lead_data: Dict) -> int:
+    """Calculate lead score based on various factors"""
+    score = 0
+    
+    # Base score for having contact info
+    score += 10
+    
+    # Email provided
+    if lead_data.get("email"):
+        score += 15
+    
+    # Phone provided
+    if lead_data.get("phone"):
+        score += 20
+    
+    # Company (B2B leads are more valuable)
+    if lead_data.get("company"):
+        score += 25
+    
+    # Lead type scoring
+    lead_type = lead_data.get("lead_type", "contact")
+    if lead_type == "quote":
+        score += 30
+    elif lead_type == "consultation":
+        score += 40
+    elif lead_type == "abandoned_cart":
+        score += 35
+    
+    # Consultation requested
+    if lead_data.get("consultation_requested"):
+        score += 20
+    
+    return min(score, 100)  # Cap at 100
+
+
+# ========== EMAIL AUTOMATION SYSTEM ==========
+
+async def send_welcome_email(lead_email: str, lead_name: str, lead_type: str):
+    """Send welcome email based on lead type"""
+    try:
+        email_templates = {
+            "contact": "Merci pour votre intérêt ! Un expert vous contactera sous 24h.",
+            "quote": "Votre demande de devis a été reçue. Calcul en cours...",
+            "consultation": "Consultation gratuite confirmée ! Un expert vous appellera.",
+            "abandoned_cart": "Votre osmoseur vous attend ! -10% avec le code RETOUR10"
+        }
+        
+        subject = f"Josmose.com - {email_templates.get(lead_type, 'Bienvenue')}"
+        content = f"Bonjour {lead_name},\n\n{email_templates.get(lead_type)}\n\nÀ bientôt,\nL'équipe Josmose"
+        
+        # Store email in database for tracking
+        email_record = {
+            "recipient": lead_email,
+            "subject": subject,
+            "content": content,
+            "type": "welcome",
+            "status": "sent",
+            "sent_at": datetime.utcnow()
+        }
+        
+        await db.email_logs.insert_one(email_record)
+        logging.info(f"Welcome email sent to {lead_email}")
+        
+    except Exception as e:
+        logging.error(f"Failed to send welcome email to {lead_email}: {e}")
+
+async def process_abandoned_cart(customer_email: str, cart_items: List[Dict]):
+    """Process abandoned cart and create lead"""
+    try:
+        # Create abandoned cart lead
+        lead_data = {
+            "email": customer_email,
+            "name": "Prospect Panier",
+            "lead_type": "abandoned_cart",
+            "status": "new",
+            "score": calculate_lead_score({"email": customer_email, "lead_type": "abandoned_cart"}),
+            "message": f"Panier abandonné: {len(cart_items)} articles",
+            "last_activity": datetime.utcnow(),
+            "follow_up_date": datetime.utcnow() + timedelta(hours=2)  # Follow up in 2 hours
+        }
+        
+        # Check if lead already exists
+        existing_lead = await db.leads.find_one({"email": customer_email})
+        if existing_lead:
+            await db.leads.update_one(
+                {"email": customer_email},
+                {"$set": {
+                    "lead_type": "abandoned_cart",
+                    "last_activity": datetime.utcnow(),
+                    "score": lead_data["score"]
+                }}
+            )
+        else:
+            lead = Lead(**lead_data)
+            await db.leads.insert_one(lead.dict())
+        
+        # Send abandoned cart email
+        await send_welcome_email(customer_email, "Prospect", "abandoned_cart")
+        
+    except Exception as e:
+        logging.error(f"Failed to process abandoned cart for {customer_email}: {e}")
 
 
 # ========== COUNTRY/CURRENCY/LANGUAGE DETECTION ==========
@@ -177,7 +332,7 @@ def detect_language_from_header(accept_language: str) -> str:
 
 @api_router.get("/")
 async def root():
-    return {"message": "Josmose.com API - Système d'Osmose Inverse"}
+    return {"message": "Josmose.com API - Système d'Osmose Inverse avec CRM"}
 
 @api_router.get("/detect-location")
 async def detect_location(request: Request):
@@ -205,13 +360,13 @@ async def detect_location(request: Request):
     )
 
 @api_router.get("/products")
-async def get_products():
-    """Get all products"""
-    products_data = await db.products.find().to_list(1000)
+async def get_products(customer_type: str = "B2C"):
+    """Get products filtered by customer type (B2C/B2B)"""
+    products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
     if not products_data:
         # Initialize with default products if empty
         await initialize_products()
-        products_data = await db.products.find().to_list(1000)
+        products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
     
     return [Product(**product) for product in products_data]
 
@@ -224,26 +379,213 @@ async def get_product(product_id: str):
     
     return Product(**product_data)
 
+@api_router.post("/leads")
+async def create_lead(lead: Lead, request: Request):
+    """Create new lead and trigger automation"""
+    # Detect country for lead
+    location = await detect_location(request)
+    lead.country_code = location.country_code
+    
+    # Calculate lead score
+    lead.score = calculate_lead_score(lead.dict())
+    
+    # Set follow-up date based on lead type
+    if lead.lead_type == "consultation":
+        lead.follow_up_date = datetime.utcnow() + timedelta(hours=1)
+    elif lead.lead_type == "quote":
+        lead.follow_up_date = datetime.utcnow() + timedelta(hours=4)
+    else:
+        lead.follow_up_date = datetime.utcnow() + timedelta(days=1)
+    
+    # Store lead in database
+    await db.leads.insert_one(lead.dict())
+    
+    # Trigger welcome email
+    await send_welcome_email(lead.email, lead.name, lead.lead_type)
+    
+    logging.info(f"New lead created: {lead.email} (score: {lead.score})")
+    
+    return {"message": "Lead créé avec succès!", "lead_id": lead.id, "score": lead.score}
+
+@api_router.post("/consultation/request")
+async def request_consultation(consultation: ConsultationRequest):
+    """Request consultation with expert"""
+    try:
+        # Store consultation request
+        await db.consultations.insert_one(consultation.dict())
+        
+        # Update lead status
+        await db.leads.update_one(
+            {"id": consultation.lead_id},
+            {"$set": {
+                "consultation_requested": True,
+                "status": "qualified",
+                "last_activity": datetime.utcnow()
+            }}
+        )
+        
+        logging.info(f"Consultation requested for lead: {consultation.lead_id}")
+        
+        return {"message": "Consultation programmée ! Un expert vous contactera dans les prochaines heures."}
+        
+    except Exception as e:
+        logging.error(f"Consultation request failed: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la programmation")
+
 @api_router.post("/orders")
 async def create_order(order: Order):
     """Create new order"""
     order_dict = order.dict()
     await db.orders.insert_one(order_dict)
     
-    # Send order confirmation (placeholder)
+    # Create lead from order if not exists
+    existing_lead = await db.leads.find_one({"email": order.customer_email})
+    if not existing_lead:
+        lead_data = {
+            "email": order.customer_email,
+            "name": order.customer_name,
+            "phone": order.customer_phone,
+            "lead_type": "converted",
+            "customer_type": order.customer_type,
+            "status": "converted",
+            "score": 100,
+            "source": order.lead_source or "website"
+        }
+        lead = Lead(**lead_data)
+        await db.leads.insert_one(lead.dict())
+    else:
+        # Update existing lead
+        await db.leads.update_one(
+            {"email": order.customer_email},
+            {"$set": {"status": "converted", "score": 100}}
+        )
+    
     logging.info(f"New order created: {order.id} for {order.customer_email}")
     
     return order
 
 @api_router.post("/contact")
-async def submit_contact_form(form: ContactForm):
-    """Submit contact form"""
-    form_dict = form.dict()
-    await db.contact_forms.insert_one(form_dict)
+async def submit_contact_form(form: ContactForm, request: Request):
+    """Submit contact form and create lead"""
+    try:
+        # Store contact form
+        form_dict = form.dict()
+        await db.contact_forms.insert_one(form_dict)
+        
+        # Create lead from contact form
+        location = await detect_location(request)
+        lead_data = {
+            "email": form.email,
+            "name": form.name,
+            "phone": form.phone,
+            "company": form.company,
+            "lead_type": form.request_type,
+            "customer_type": form.customer_type,
+            "message": form.message,
+            "consultation_requested": form.consultation_requested,
+            "preferred_contact_time": form.preferred_contact_time,
+            "country_code": location.country_code,
+            "source": "contact_form"
+        }
+        
+        lead = Lead(**lead_data)
+        lead.score = calculate_lead_score(lead_data)
+        
+        await db.leads.insert_one(lead.dict())
+        
+        # Send welcome email
+        await send_welcome_email(form.email, form.name, form.request_type)
+        
+        logging.info(f"Contact form submitted: {form.email} - {form.request_type}")
+        
+        return {"message": "Votre demande a été envoyée avec succès!", "lead_score": lead.score}
+        
+    except Exception as e:
+        logging.error(f"Contact form submission failed: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'envoi")
+
+# ========== CRM ENDPOINTS ==========
+
+@api_router.get("/crm/leads")
+async def get_leads(status: Optional[str] = None, customer_type: Optional[str] = None):
+    """Get all leads with optional filtering"""
+    query = {}
+    if status:
+        query["status"] = status
+    if customer_type:
+        query["customer_type"] = customer_type
     
-    logging.info(f"New contact form: {form.email} - {form.request_type}")
-    
-    return {"message": "Votre demande a été envoyée avec succès!"}
+    leads_data = await db.leads.find(query).sort("created_at", -1).limit(500).to_list(500)
+    return [Lead(**lead) for lead in leads_data]
+
+@api_router.get("/crm/dashboard")
+async def get_crm_dashboard():
+    """Get CRM dashboard statistics"""
+    try:
+        # Count leads by status
+        leads_by_status = {}
+        for status in ["new", "contacted", "qualified", "converted", "lost"]:
+            count = await db.leads.count_documents({"status": status})
+            leads_by_status[status] = count
+        
+        # Count leads by type
+        leads_by_type = {}
+        for lead_type in ["contact", "quote", "consultation", "abandoned_cart"]:
+            count = await db.leads.count_documents({"lead_type": lead_type})
+            leads_by_type[lead_type] = count
+        
+        # Recent activity
+        recent_leads = await db.leads.find().sort("created_at", -1).limit(10).to_list(10)
+        recent_orders = await db.orders.find().sort("created_at", -1).limit(10).to_list(10)
+        
+        # Revenue stats
+        today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+        week_ago = today - timedelta(days=7)
+        
+        daily_orders = await db.orders.count_documents({"created_at": {"$gte": today}})
+        weekly_orders = await db.orders.count_documents({"created_at": {"$gte": week_ago}})
+        
+        # Calculate revenue
+        weekly_revenue_pipeline = [
+            {"$match": {"created_at": {"$gte": week_ago}, "status": "paid"}},
+            {"$group": {"_id": None, "total": {"$sum": "$total"}}}
+        ]
+        
+        revenue_result = await db.orders.aggregate(weekly_revenue_pipeline).to_list(1)
+        weekly_revenue = revenue_result[0]["total"] if revenue_result else 0
+        
+        return {
+            "leads_by_status": leads_by_status,
+            "leads_by_type": leads_by_type,
+            "total_leads": sum(leads_by_status.values()),
+            "recent_leads": [Lead(**lead) for lead in recent_leads],
+            "recent_orders": [Order(**order) for order in recent_orders],
+            "daily_orders": daily_orders,
+            "weekly_orders": weekly_orders,
+            "weekly_revenue": weekly_revenue,
+            "conversion_rate": round((leads_by_status.get("converted", 0) / max(sum(leads_by_status.values()), 1)) * 100, 2)
+        }
+        
+    except Exception as e:
+        logging.error(f"Dashboard query failed: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors du chargement du dashboard")
+
+@api_router.put("/crm/leads/{lead_id}")
+async def update_lead(lead_id: str, update_data: Dict[str, Any]):
+    """Update lead information"""
+    try:
+        update_data["last_activity"] = datetime.utcnow()
+        
+        await db.leads.update_one(
+            {"id": lead_id},
+            {"$set": update_data}
+        )
+        
+        return {"message": "Lead mis à jour avec succès"}
+        
+    except Exception as e:
+        logging.error(f"Lead update failed: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour")
 
 @api_router.get("/orders")
 async def get_orders():
@@ -439,7 +781,8 @@ async def create_order_from_payment(transaction_data: Dict, payment_status: Chec
             total=transaction_data.get("amount", 0.0),
             currency=transaction_data.get("currency", "eur"),
             status="paid",
-            payment_method="stripe"
+            payment_method="stripe",
+            lead_source="website"
         )
         
         await db.orders.insert_one(order.dict())
@@ -460,8 +803,9 @@ async def initialize_products():
             "description": "Système de filtration d'eau par osmose inverse avec 4 étapes de filtration. Élimine virus, bactéries, chlore et particules organiques. Installation simple sans électricité.",
             "price": 499.0,
             "original_price": 599.0,
-            "image": "https://images.unsplash.com/photo-1610312973684-e47446aa260b",
+            "image": "https://images.unsplash.com/photo-1596180737956-00cb917e382b?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHx1bmRlciUyMHNpbmslMjB3YXRlciUyMGZpbHRyYXRpb258ZW58MHx8fHdoaXRlfDE3NTQzMzA5MDR8MA&ixlib=rb-4.1.0&q=85",
             "category": "osmoseur",
+            "target_audience": "both",
             "specifications": {
                 "Débit": "Variable selon pression réseau",
                 "Filtration": "4 étapes (PP, GAC, CTO, Ultrafiltration)",
@@ -480,12 +824,39 @@ async def initialize_products():
             "in_stock": True
         },
         {
+            "id": "osmoseur-pro",
+            "name": "Système Osmose Inverse Professionnel",
+            "description": "Solution industrielle pour restaurants, bureaux et commerces. Capacité élevée et filtration premium.",
+            "price": 899.0,
+            "original_price": 1199.0,
+            "image": "https://images.unsplash.com/photo-1616996691604-26dfd478cbbc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHx3YXRlciUyMGZpbHRlciUyMHN5c3RlbXxlbnwwfHx8d2hpdGV8MTc1NDMzMDkxMnww&ixlib=rb-4.1.0&q=85",
+            "category": "osmoseur",
+            "target_audience": "B2B",
+            "specifications": {
+                "Débit": "Jusqu'à 500L/jour",
+                "Filtration": "6 étapes de purification",
+                "Pression": "Jusqu'à 8 bars",
+                "Installation": "Installation professionnelle incluse",
+                "Garantie": "3 ans pièces et main-d'œuvre"
+            },
+            "features": [
+                "Capacité industrielle",
+                "Monitoring en temps réel",
+                "Maintenance préventive incluse",
+                "Certification sanitaire",
+                "Support technique dédié",
+                "Formation du personnel incluse"
+            ],
+            "in_stock": True
+        },
+        {
             "id": "filtres-rechange",
             "name": "Lot de Filtres de Rechange",
             "description": "Set complet de filtres de rechange pour votre système d'osmose. Durée recommandée : 6 mois.",
             "price": 49.0,
-            "image": "https://images.unsplash.com/photo-1586509595512-800193191f79",
+            "image": "https://images.unsplash.com/photo-1560130111-eea3a29b7b0e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHx3YXRlciUyMGZpbHRlciUyMHN5c3RlbXxlbnwwfHx8d2hpdGV8MTc1NDMzMDkxMnww&ixlib=rb-4.1.0&q=85",
             "category": "accessoire",
+            "target_audience": "both",
             "specifications": {
                 "Compatibilité": "Système osmoseur principal",
                 "Durée de vie": "6 mois",
@@ -500,12 +871,34 @@ async def initialize_products():
             "in_stock": True
         },
         {
+            "id": "filtres-pro",
+            "name": "Filtres Professionnels - Pack Annuel",
+            "description": "Pack de filtres professionnels pour systèmes industriels. Qualité supérieure avec suivi de maintenance.",
+            "price": 89.0,
+            "image": "https://images.pexels.com/photos/12726229/pexels-photo-12726229.jpeg",
+            "category": "accessoire",
+            "target_audience": "B2B",
+            "specifications": {
+                "Compatibilité": "Systèmes professionnels",
+                "Durée de vie": "12 mois",
+                "Contenu": "8 cartouches premium + indicateurs"
+            },
+            "features": [
+                "Filtres industriels haute performance",
+                "Indicateurs de remplacement intelligent",
+                "Maintenance programmée incluse",
+                "Certification qualité professionnelle"
+            ],
+            "in_stock": True
+        },
+        {
             "id": "garantie-2ans",
             "name": "Extension Garantie 2 ans",
             "description": "Étendez votre garantie à 2 ans pour une tranquillité d'esprit totale.",
             "price": 39.0,
-            "image": "https://cdn.pixabay.com/photo/2018/07/17/21/59/water-3545115_640.jpg",
+            "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
             "category": "service",
+            "target_audience": "both",
             "specifications": {
                 "Durée": "2 ans à partir de l'achat",
                 "Couverture": "Pièces et main d'œuvre",
@@ -523,8 +916,9 @@ async def initialize_products():
             "name": "Extension Garantie 5 ans",
             "description": "Protection maximale avec garantie étendue à 5 ans.",
             "price": 59.0,
-            "image": "https://cdn.pixabay.com/photo/2018/07/17/21/59/water-3545115_640.jpg",
+            "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
             "category": "service",
+            "target_audience": "both",
             "specifications": {
                 "Durée": "5 ans à partir de l'achat",
                 "Couverture": "Pièces et main d'œuvre",
@@ -537,13 +931,34 @@ async def initialize_products():
                 "Service après-vente premium"
             ],
             "in_stock": True
+        },
+        {
+            "id": "installation-service",
+            "name": "Service d'Installation Professionnel",
+            "description": "Installation complète par nos techniciens certifiés. Mise en service et formation incluses.",
+            "price": 150.0,
+            "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
+            "category": "service",
+            "target_audience": "both",
+            "specifications": {
+                "Durée": "2-3 heures",
+                "Inclus": "Installation, test, formation",
+                "Zone": "France métropolitaine"
+            },
+            "features": [
+                "Technicien certifié à domicile",
+                "Test complet du système",
+                "Formation à l'utilisation",
+                "Garantie installation 2 ans"
+            ],
+            "in_stock": True
         }
     ]
     
     for product in products:
         await db.products.replace_one({"id": product["id"]}, product, upsert=True)
     
-    logging.info("Products initialized")
+    logging.info("Products initialized with new images and B2B options")
 
 # Include the router in the main app
 app.include_router(api_router)
