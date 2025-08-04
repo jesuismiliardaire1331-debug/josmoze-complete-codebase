@@ -998,6 +998,417 @@ class BackendTester:
         except Exception as e:
             self.log_test("Stock Thresholds", False, f"Exception: {str(e)}")
             return False
+
+    # ========== NEW SOCIAL MEDIA AUTOMATION TESTS ==========
+    
+    def authenticate_crm(self):
+        """Authenticate for CRM endpoints"""
+        try:
+            auth_data = {
+                "username": "naima",
+                "password": "naima123"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=auth_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                self.auth_token = data.get("access_token")
+                self.log_test("CRM Authentication", True, f"Authenticated successfully")
+                return True
+            else:
+                self.log_test("CRM Authentication", False, f"Auth failed: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("CRM Authentication", False, f"Exception: {str(e)}")
+            return False
+    
+    def get_auth_headers(self):
+        """Get authentication headers"""
+        if hasattr(self, 'auth_token') and self.auth_token:
+            return {"Authorization": f"Bearer {self.auth_token}"}
+        return {}
+
+    def test_social_media_dashboard(self):
+        """Test GET /api/crm/social-media/dashboard - Dashboard complet avec KPIs"""
+        try:
+            headers = self.get_auth_headers()
+            response = self.session.get(f"{BACKEND_URL}/crm/social-media/dashboard", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = ["accounts", "campaigns", "performance", "platforms"]
+                
+                if all(field in data for field in required_fields):
+                    performance = data.get("performance", {})
+                    # Vérifier métriques spécifiques
+                    metrics = ["total_impressions", "total_conversions", "total_roas", "budget_used"]
+                    
+                    if all(metric in performance for metric in metrics):
+                        impressions = performance.get("total_impressions", 0)
+                        conversions = performance.get("total_conversions", 0)
+                        roas = performance.get("total_roas", 0)
+                        budget = performance.get("budget_used", 0)
+                        
+                        self.log_test("Social Media Dashboard", True, 
+                                    f"Dashboard loaded: {impressions} impressions, {conversions} conversions, ROAS: {roas}, Budget: €{budget}")
+                        return True
+                    else:
+                        missing_metrics = [m for m in metrics if m not in performance]
+                        self.log_test("Social Media Dashboard", False, f"Missing metrics: {missing_metrics}")
+                        return False
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_test("Social Media Dashboard", False, f"Missing fields: {missing}")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Social Media Dashboard", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Social Media Dashboard", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Social Media Dashboard", False, f"Exception: {str(e)}")
+            return False
+
+    def test_campaign_creation(self):
+        """Test POST /api/crm/campaigns - Création automatique de campagnes"""
+        try:
+            headers = self.get_auth_headers()
+            campaign_data = {
+                "name": "Test Campagne France - Osmoseur Marketing",
+                "platform": "facebook",
+                "objective": "conversions",
+                "budget": 100.0,
+                "target_country": "FR",
+                "target_language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/crm/campaigns",
+                json=campaign_data,
+                headers={**headers, "Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "campaign_id" in data and data.get("success"):
+                    self.test_campaign_id = data["campaign_id"]  # Store for other tests
+                    self.log_test("Campaign Creation", True, f"Campaign created: {data['campaign_id']}")
+                    return True
+                else:
+                    self.log_test("Campaign Creation", False, "Missing campaign_id or success flag", data)
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Campaign Creation", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Campaign Creation", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Campaign Creation", False, f"Exception: {str(e)}")
+            return False
+
+    def test_campaigns_list(self):
+        """Test GET /api/crm/campaigns - Liste des campagnes avec performances"""
+        try:
+            headers = self.get_auth_headers()
+            response = self.session.get(f"{BACKEND_URL}/crm/campaigns", headers=headers)
+            
+            if response.status_code == 200:
+                campaigns = response.json()
+                if isinstance(campaigns, list):
+                    # Vérifier structure des campagnes
+                    if campaigns:
+                        campaign = campaigns[0]
+                        required_fields = ["campaign_id", "name", "platform", "status"]
+                        
+                        if all(field in campaign for field in required_fields):
+                            self.log_test("Campaigns List", True, f"Retrieved {len(campaigns)} campaigns with performance data")
+                            return True
+                        else:
+                            missing = [f for f in required_fields if f not in campaign]
+                            self.log_test("Campaigns List", False, f"Campaign missing fields: {missing}")
+                            return False
+                    else:
+                        self.log_test("Campaigns List", True, f"No campaigns found (empty list)")
+                        return True
+                else:
+                    self.log_test("Campaigns List", False, "Response is not a list")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Campaigns List", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Campaigns List", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Campaigns List", False, f"Exception: {str(e)}")
+            return False
+
+    def test_budget_optimization(self):
+        """Test POST /api/crm/campaigns/optimize-budget - Optimisation automatique"""
+        try:
+            headers = self.get_auth_headers()
+            response = self.session.post(f"{BACKEND_URL}/crm/campaigns/optimize-budget", headers=headers)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and "optimization_actions" in data:
+                    actions = data["optimization_actions"]
+                    total_budget = data.get("total_budget", 0)
+                    
+                    self.log_test("Budget Optimization", True, 
+                                f"Budget optimized: {len(actions)} actions, Total budget: €{total_budget}")
+                    return True
+                else:
+                    self.log_test("Budget Optimization", False, "Missing success flag or optimization_actions")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Budget Optimization", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Budget Optimization", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Budget Optimization", False, f"Exception: {str(e)}")
+            return False
+
+    def test_ai_content_generation(self):
+        """Test POST /api/crm/content/generate - Génération contenu Facebook/Instagram/TikTok"""
+        try:
+            headers = self.get_auth_headers()
+            
+            # Test génération contenu Facebook
+            content_request = {
+                "type": "post",
+                "platform": "facebook",
+                "language": "fr",
+                "product_focus": "osmoseur"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/crm/content/generate",
+                json=content_request,
+                headers={**headers, "Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("content_generated") and "content" in data:
+                    content = data["content"]
+                    if "headline" in content and "description" in content:
+                        headline = content.get("headline", "")[:50]
+                        self.log_test("AI Content Generation", True, f"Content generated: {headline}...")
+                        return True
+                    else:
+                        self.log_test("AI Content Generation", False, "Content missing headline or description")
+                        return False
+                else:
+                    self.log_test("AI Content Generation", False, "Missing content_generated flag or content")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("AI Content Generation", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("AI Content Generation", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("AI Content Generation", False, f"Exception: {str(e)}")
+            return False
+
+    def test_creatives_list(self):
+        """Test GET /api/crm/creatives - Liste des créatifs générés"""
+        try:
+            headers = self.get_auth_headers()
+            response = self.session.get(f"{BACKEND_URL}/crm/creatives", headers=headers)
+            
+            if response.status_code == 200:
+                creatives = response.json()
+                if isinstance(creatives, list):
+                    self.log_test("Creatives List", True, f"Retrieved {len(creatives)} creatives")
+                    return True
+                else:
+                    self.log_test("Creatives List", False, "Response is not a list")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Creatives List", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Creatives List", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Creatives List", False, f"Exception: {str(e)}")
+            return False
+
+    def test_abandoned_cart_retargeting_setup(self):
+        """Test POST /api/abandoned-cart-retargeting - Configuration automatique"""
+        try:
+            retargeting_data = {
+                "customer_email": "marie.dupont@example.com",
+                "cart_items": [
+                    {
+                        "product_id": "osmoseur-principal",
+                        "quantity": 1,
+                        "price": 499.0
+                    }
+                ],
+                "platform": "facebook"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/abandoned-cart-retargeting",
+                json=retargeting_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and "campaign_id" in data:
+                    campaign_id = data["campaign_id"]
+                    self.log_test("Abandoned Cart Retargeting Setup", True, f"Retargeting configured: {campaign_id}")
+                    return True
+                else:
+                    self.log_test("Abandoned Cart Retargeting Setup", False, "Missing success flag or campaign_id")
+                    return False
+            else:
+                self.log_test("Abandoned Cart Retargeting Setup", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Abandoned Cart Retargeting Setup", False, f"Exception: {str(e)}")
+            return False
+
+    def test_abandoned_cart_campaigns(self):
+        """Test GET /api/crm/abandoned-cart-campaigns - Campagnes actives"""
+        try:
+            headers = self.get_auth_headers()
+            response = self.session.get(f"{BACKEND_URL}/crm/abandoned-cart-campaigns", headers=headers)
+            
+            if response.status_code == 200:
+                campaigns = response.json()
+                if isinstance(campaigns, list):
+                    self.log_test("Abandoned Cart Campaigns", True, f"Retrieved {len(campaigns)} abandoned cart campaigns")
+                    return True
+                else:
+                    self.log_test("Abandoned Cart Campaigns", False, "Response is not a list")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Abandoned Cart Campaigns", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Abandoned Cart Campaigns", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Abandoned Cart Campaigns", False, f"Exception: {str(e)}")
+            return False
+
+    def test_landing_page_creation(self):
+        """Test POST /api/crm/landing-page - Création pages d'atterrissage"""
+        try:
+            headers = self.get_auth_headers()
+            landing_data = {
+                "campaign_id": getattr(self, 'test_campaign_id', 'CAMP-TEST123'),
+                "target_audience": {
+                    "age_min": 25,
+                    "age_max": 55,
+                    "interests": ["family", "health"]
+                },
+                "language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/crm/landing-page",
+                json=landing_data,
+                headers={**headers, "Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and "landing_url" in data:
+                    landing_url = data["landing_url"]
+                    self.log_test("Landing Page Creation", True, f"Landing page created: {landing_url}")
+                    return True
+                else:
+                    self.log_test("Landing Page Creation", False, "Missing success flag or landing_url")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Landing Page Creation", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Landing Page Creation", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Landing Page Creation", False, f"Exception: {str(e)}")
+            return False
+
+    def test_performance_metrics(self):
+        """Test GET /api/crm/performance - Métriques de performance"""
+        try:
+            headers = self.get_auth_headers()
+            response = self.session.get(f"{BACKEND_URL}/crm/performance", headers=headers)
+            
+            if response.status_code == 200:
+                performance_data = response.json()
+                if isinstance(performance_data, list):
+                    self.log_test("Performance Metrics", True, f"Retrieved performance data for {len(performance_data)} campaigns")
+                    return True
+                else:
+                    self.log_test("Performance Metrics", False, "Response is not a list")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Performance Metrics", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Performance Metrics", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Performance Metrics", False, f"Exception: {str(e)}")
+            return False
+
+    def test_social_accounts(self):
+        """Test GET /api/crm/social-accounts - Comptes configurés (France, Espagne)"""
+        try:
+            headers = self.get_auth_headers()
+            response = self.session.get(f"{BACKEND_URL}/crm/social-accounts", headers=headers)
+            
+            if response.status_code == 200:
+                accounts = response.json()
+                if isinstance(accounts, list):
+                    # Vérifier les plateformes attendues
+                    platforms = [acc.get("platform") for acc in accounts]
+                    expected_platforms = ["facebook", "instagram", "tiktok"]
+                    
+                    platforms_found = [p for p in expected_platforms if p in platforms]
+                    
+                    # Vérifier les pays cibles
+                    countries = [acc.get("country_target") for acc in accounts]
+                    france_spain = ["FR", "ES"]
+                    countries_found = [c for c in france_spain if c in countries]
+                    
+                    if len(platforms_found) >= 2 and len(countries_found) >= 1:
+                        self.log_test("Social Accounts", True, 
+                                    f"Found {len(accounts)} accounts: platforms {platforms_found}, countries {countries_found}")
+                        return True
+                    else:
+                        self.log_test("Social Accounts", False, 
+                                    f"Missing expected platforms or countries. Found: {platforms_found}, {countries_found}")
+                        return False
+                else:
+                    self.log_test("Social Accounts", False, "Response is not a list")
+                    return False
+            elif response.status_code in [401, 403]:
+                self.log_test("Social Accounts", False, f"Authentication required: {response.status_code}")
+                return False
+            else:
+                self.log_test("Social Accounts", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Social Accounts", False, f"Exception: {str(e)}")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests"""
