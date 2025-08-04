@@ -15,7 +15,7 @@ import re
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
 
 # Import authentication and AI agents
-from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role
+from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info
 from ai_agents import get_marketing_automation, MarketingAutomation
 
 # Import new inventory management and social media automation systems
