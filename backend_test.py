@@ -670,6 +670,8 @@ class BackendTester:
         self.test_lead_update()
         self.test_consultation_request()
         self.test_enhanced_contact_form()
+        self.test_abandoned_cart_automation()
+        self.test_email_automation_logs()
         print()
         
         # Stripe payment tests
