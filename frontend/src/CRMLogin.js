@@ -187,7 +187,7 @@ const CRMLogin = ({ onLogin }) => {
             
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => handleDemoLogin('naima')}
+                onClick={() => handleDemoLogin('naima@josmose.com')}
                 disabled={loading}
                 className="bg-purple-100 text-purple-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors disabled:opacity-50"
               >
@@ -196,7 +196,7 @@ const CRMLogin = ({ onLogin }) => {
               </button>
               
               <button
-                onClick={() => handleDemoLogin('aziza')}
+                onClick={() => handleDemoLogin('aziza@josmose.com')}
                 disabled={loading}
                 className="bg-green-100 text-green-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors disabled:opacity-50"
               >
@@ -205,7 +205,7 @@ const CRMLogin = ({ onLogin }) => {
               </button>
               
               <button
-                onClick={() => handleDemoLogin('antonio')}
+                onClick={() => handleDemoLogin('antonio@josmose.com')}
                 disabled={loading}
                 className="bg-blue-100 text-blue-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors disabled:opacity-50"
               >
@@ -214,7 +214,7 @@ const CRMLogin = ({ onLogin }) => {
               </button>
               
               <button
-                onClick={() => handleDemoLogin('support')}
+                onClick={() => handleDemoLogin('support@josmose.com')}
                 disabled={loading}
                 className="bg-orange-100 text-orange-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-orange-200 transition-colors disabled:opacity-50"
               >
