@@ -998,6 +998,11 @@ async def startup_db():
     # Initialize marketing automation
     global marketing_automation
     marketing_automation = get_marketing_automation(db)
+    
+    # Initialize inventory management
+    global inventory_manager
+    inventory_manager = get_inventory_manager(db)
+    await inventory_manager.initialize_stock()
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
