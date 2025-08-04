@@ -797,8 +797,33 @@ async def create_order_from_payment(transaction_data: Dict, payment_status: Chec
             lead_source="website"
         )
         
+        # Sauvegarder la commande
         await db.orders.insert_one(order.dict())
-        logging.info(f"Order created from payment: {order.id} for {order.customer_email}")
+        
+        # 🔥 NOUVELLES FONCTIONNALITÉS AUTOMATIQUES 🔥
+        
+        # 1. Confirmer l'utilisation du stock pour chaque produit
+        for item in order.items:
+            if item.product_id not in ["garantie-2ans", "garantie-5ans", "installation-service"]:  # Services illimités
+                await inventory_manager.confirm_stock_usage(item.product_id, item.quantity)
+        
+        # 2. Générer automatiquement la facture PDF
+        try:
+            invoice_result = await inventory_manager.create_invoice_for_order(order.dict())
+            if invoice_result.get("success"):
+                logging.info(f"✅ Invoice created for order {order.id}: {invoice_result.get('invoice_id')}")
+        except Exception as e:
+            logging.error(f"❌ Failed to create invoice for order {order.id}: {e}")
+        
+        # 3. Créer le suivi de commande automatiquement
+        try:
+            tracking_result = await inventory_manager.create_order_tracking(order.dict())
+            if tracking_result.get("success"):
+                logging.info(f"✅ Tracking created for order {order.id}: {tracking_result.get('tracking_number')}")
+        except Exception as e:
+            logging.error(f"❌ Failed to create tracking for order {order.id}: {e}")
+        
+        logging.info(f"🎉 Order created with all automation: {order.id} for {order.customer_email}")
         
     except Exception as e:
         logging.error(f"Failed to create order from payment: {e}")
