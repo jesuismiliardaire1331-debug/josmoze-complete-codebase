@@ -82,16 +82,40 @@ const CRMDashboard = () => {
     }
   };
 
-  const updateLeadStatus = async (leadId, newStatus) => {
+  const updateOrderStatus = async (orderId, newStatus, message = '') => {
     try {
-      await axios.put(`${API}/crm/leads/${leadId}`, { status: newStatus });
-      fetchLeads();
+      await axios.put(`${API}/crm/orders/${orderId}/status`, { 
+        status: newStatus, 
+        message: message 
+      });
+      fetchOrders();
       fetchDashboardData();
-      alert('✅ Statut mis à jour avec succès !');
+      alert('✅ Statut commande mis à jour avec succès !');
     } catch (error) {
       console.error('Erreur lors de la mise à jour:', error);
-      alert('❌ Erreur lors de la mise à jour');
+      alert('❌ Erreur lors de la mise à jour du statut');
     }
+  };
+
+  const restockProduct = async (productId, quantity) => {
+    try {
+      await axios.post(`${API}/crm/inventory/restock/${productId}`, { quantity: parseInt(quantity) });
+      fetchStockData();
+      alert('✅ Stock mis à jour avec succès !');
+    } catch (error) {
+      console.error('Erreur lors du réapprovisionnement:', error);
+      alert('❌ Erreur lors du réapprovisionnement');
+    }
+  };
+
+  const getStockAlertColor = (alertLevel) => {
+    const colors = {
+      critical: 'bg-gradient-to-r from-red-500 to-red-600 text-white',
+      warning: 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white',
+      normal: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white',
+      optimal: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
+    };
+    return colors[alertLevel] || colors.normal;
   };
 
   const formatDate = (dateString) => {
