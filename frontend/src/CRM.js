@@ -24,6 +24,8 @@ const CRMDashboard = () => {
     fetchDashboardData();
     fetchLeads();
     fetchOrders();
+    fetchStockData();
+    fetchInvoices();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -35,6 +37,24 @@ const CRMDashboard = () => {
       if (error.response?.status === 401) {
         logout();
       }
+    }
+  };
+
+  const fetchStockData = async () => {
+    try {
+      const response = await axios.get(`${API}/crm/inventory/dashboard`);
+      setStockData(response.data);
+    } catch (error) {
+      console.error('Erreur lors du chargement du stock:', error);
+    }
+  };
+
+  const fetchInvoices = async () => {
+    try {
+      const response = await axios.get(`${API}/crm/invoices`);
+      setInvoices(response.data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des factures:', error);
     }
   };
 
