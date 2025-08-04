@@ -83,9 +83,18 @@ def get_password_hash(password: str) -> str:
     """Generate password hash"""
     return pwd_context.hash(password)
 
-def authenticate_user(username: str, password: str) -> Optional[dict]:
-    """Authenticate user credentials"""
-    user_data = CRM_USERS.get(username.lower())
+def authenticate_user(email_or_username: str, password: str) -> Optional[dict]:
+    """Authenticate user credentials - now supports email login"""
+    # Try to find user by email first (new primary method)
+    user_data = CRM_USERS.get(email_or_username.lower())
+    
+    # If not found by email, try legacy username search for backward compatibility
+    if not user_data:
+        for email, data in CRM_USERS.items():
+            if data.get("username", "").lower() == email_or_username.lower():
+                user_data = data
+                break
+    
     if not user_data or not user_data["is_active"]:
         return None
     
