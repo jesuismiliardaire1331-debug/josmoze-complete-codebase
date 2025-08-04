@@ -213,6 +213,9 @@ const Header = () => {
             <Link to="/professionnels" className={`transition-colors ${customerType === 'B2B' ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}`}>
               Professionnels
             </Link>
+            <Link to="/comment-ca-marche" className="text-gray-700 hover:text-blue-600 transition-colors">
+              Comment ça marche
+            </Link>
             <Link to="/installation" className="text-gray-700 hover:text-blue-600 transition-colors">
               Installation
             </Link>
