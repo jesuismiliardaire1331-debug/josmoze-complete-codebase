@@ -286,6 +286,8 @@ const CRMDashboard = () => {
               { id: 'orders', name: 'Commandes', icon: '🛒', color: 'from-purple-500 to-violet-600' },
               { id: 'stock', name: 'Stock', icon: '📦', color: 'from-indigo-500 to-purple-600' },
               { id: 'invoices', name: 'Factures', icon: '🧾', color: 'from-teal-500 to-cyan-600' },
+              { id: 'marketing', name: 'Marketing', icon: '📱', color: 'from-pink-500 to-rose-600' },
+              { id: 'campaigns', name: 'Campagnes', icon: '🎯', color: 'from-red-500 to-pink-600' },
               { id: 'analytics', name: 'Analytics', icon: '📈', color: 'from-orange-500 to-red-500' }
             ].map((tab) => (
               <button
