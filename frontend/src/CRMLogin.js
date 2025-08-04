@@ -70,13 +70,14 @@ export const useAuth = () => {
   return context;
 };
 
-const CRMLogin = ({ onLogin }) => {
+const CRMLogin = () => {
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const { login } = useAuth();
 
@@ -88,7 +89,8 @@ const CRMLogin = ({ onLogin }) => {
     const result = await login(credentials.username, credentials.password);
     
     if (result.success) {
-      onLogin();
+      // Redirect to CRM dashboard after successful login
+      navigate('/crm');
     } else {
       setError(result.error);
     }
@@ -107,7 +109,8 @@ const CRMLogin = ({ onLogin }) => {
     
     const result = await login(userEmail, passwordMap[userEmail]);
     if (result.success) {
-      onLogin();
+      // Redirect to CRM dashboard after successful demo login
+      navigate('/crm');
     } else {
       setError(result.error);
     }
