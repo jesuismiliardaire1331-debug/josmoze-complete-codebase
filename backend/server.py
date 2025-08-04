@@ -1304,7 +1304,7 @@ async def restock_product(
 @crm_router.get("/invoices")
 async def get_all_invoices(
     limit: int = 100,
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir toutes les factures"""
     try:
