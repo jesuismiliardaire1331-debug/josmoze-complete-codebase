@@ -28,10 +28,14 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # Create the main app
-app = FastAPI()
+app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
 
-# Create a router with the /api prefix
+# Create routers
 api_router = APIRouter(prefix="/api")
+crm_router = APIRouter(prefix="/api/crm")
+
+# Security
+security = HTTPBearer()
 
 
 # ========== MODELS ==========
