@@ -624,18 +624,25 @@ const InstallationGuide = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <h3 className="text-2xl font-semibold mb-6">Vidéo d'Installation</h3>
-            <div className="bg-gray-100 rounded-lg p-8 text-center">
-              <div className="text-6xl mb-4">🎥</div>
-              <h4 className="text-lg font-medium mb-2">Guide Vidéo Complet</h4>
-              <p className="text-gray-600 mb-4">
-                Tutoriel détaillé pour installer votre osmoseur en 30 minutes
-              </p>
-              <button className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">
-                ▶️ Regarder la Vidéo
-              </button>
-              <p className="text-xs text-gray-500 mt-2">
-                *Vidéo bientôt disponible - En cours de production
-              </p>
+            <div className="bg-gray-100 rounded-lg p-4">
+              <div className="aspect-w-16 aspect-h-9">
+                <iframe 
+                  width="100%" 
+                  height="300"
+                  src="https://www.youtube.com/embed/jP8H2CfV2Z8"
+                  title="Installation fontaine osmoseur OJA Mini Bluesea"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="rounded-lg"
+                ></iframe>
+              </div>
+              <div className="text-center mt-4">
+                <h4 className="text-lg font-medium mb-2">Guide Vidéo Complet</h4>
+                <p className="text-gray-600 text-sm">
+                  Installation étape par étape de votre fontaine osmoseur en quelques minutes
+                </p>
+              </div>
             </div>
           </div>
 
