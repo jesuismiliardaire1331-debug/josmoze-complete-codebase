@@ -1701,7 +1701,7 @@ async def get_marketing_campaigns(
 @crm_router.post("/marketing/campaigns")
 async def create_marketing_campaign(
     campaign_data: Dict[str, Any],
-    current_user: User = Depends(require_role(["admin", "manager"]))
+    current_user: User = Depends(require_role(["manager"]))
 ):
     """Create new marketing campaign"""
     campaign = {
