@@ -90,7 +90,7 @@ CRM_USERS = {
         "email": "naima@josmose.com",
         "full_name": "Naima - Directrice Commerciale",
         "role": "admin",  # Directrice commerciale = admin complet aussi
-        "password_hash": "$2b$12$RKF9pG4.xVMiW0YdiQ.pOfs4MO1ko3uG7IKkN0yp6SH0zSf7R0X7Y",  # "Naima@2024!Commerce"
+        "password_hash": "$2b$12$T3.CqIsUwLAcFv8lM2fyGOBlYKAIJB0TZXXmWrYg2SFim/jgW1Cd2",  # "Naima@2024!Commerce"
         "is_active": True
     },
     "support@josmose.com": {
