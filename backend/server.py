@@ -1538,7 +1538,7 @@ async def generate_social_content(
 async def get_ad_creatives(
     campaign_id: str = None,
     platform: str = None,
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir les créatifs publicitaires"""
     try:
