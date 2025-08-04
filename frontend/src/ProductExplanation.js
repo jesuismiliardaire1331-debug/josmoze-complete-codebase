@@ -341,9 +341,21 @@ const ProductExplanation = () => {
 
         {/* Contaminants Éliminés */}
         <div className="mb-16">
-          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
+          <h3 className="text-3xl font-bold text-center text-gray-900 mb-8">
             🛡️ Contaminants Efficacement Éliminés
           </h3>
+          
+          {/* Image des bactéries */}
+          <div className="text-center mb-8">
+            <img 
+              src="https://www.josmose.fr/img/cms/bacteries-dans-leau.png"
+              alt="Bactéries et micro-organismes dans l'eau"
+              className="mx-auto h-48 object-contain rounded-lg shadow-md"
+            />
+            <p className="text-gray-600 text-sm mt-2">
+              Visualisation microscopique des contaminants éliminés par nos systèmes
+            </p>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-red-50 p-6 rounded-xl">
