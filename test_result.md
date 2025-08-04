@@ -161,15 +161,18 @@ backend:
 
   - task: "Lead Management System"
     implemented: true
-    working: "NA"
+    working: true
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "NEW: POST /api/leads creates leads with automated scoring algorithm. GET /api/crm/leads with filtering by status/customer_type. PUT /api/crm/leads/{id} for status updates. Includes lead scoring 0-100."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Lead Management System fully functional. POST /api/leads creates leads with proper scoring (B2B consultation lead scored 100/100). GET /api/crm/leads supports filtering by status and customer_type. PUT /api/crm/leads/{id} updates work correctly."
 
   - task: "Email Automation System"
     implemented: true
