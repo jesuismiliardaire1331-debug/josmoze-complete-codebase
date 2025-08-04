@@ -1558,7 +1558,7 @@ async def get_ad_creatives(
 @crm_router.get("/performance")
 async def get_campaign_performance(
     campaign_id: str = None,
-    current_user: User = Depends(require_role(["admin", "manager", "agent"]))
+    current_user: User = Depends(require_role(["manager", "agent"]))
 ):
     """Obtenir les performances des campagnes"""
     try:
