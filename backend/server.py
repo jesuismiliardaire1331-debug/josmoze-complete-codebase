@@ -409,8 +409,8 @@ async def create_lead(lead: Lead, request: Request):
     # Store lead in database
     await db.leads.insert_one(lead.dict())
     
-    # Trigger welcome email
-    await send_welcome_email(lead.email, lead.name, lead.lead_type)
+    # Trigger welcome automation
+    await marketing_automation.trigger_welcome_sequence(lead.dict())
     
     logging.info(f"New lead created: {lead.email} (score: {lead.score})")
     
