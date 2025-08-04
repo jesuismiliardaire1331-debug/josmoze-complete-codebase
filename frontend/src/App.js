@@ -462,15 +462,24 @@ const ProductGrid = () => {
                     </span>
                   )}
                   {customerType === 'B2B' && (
-                    <div className="text-xs text-gray-500">HT</div>
+                    <div className="text-xs text-purple-600 font-medium">Prix Professionnel HT</div>
                   )}
                 </div>
                 
-                {product.in_stock ? (
-                  <span className="text-green-600 text-sm">✅ En stock</span>
-                ) : (
-                  <span className="text-red-600 text-sm">❌ Rupture</span>
-                )}
+                <div className="text-right">
+                  {product.stock_info?.in_stock ? (
+                    <div>
+                      <span className="text-green-600 text-sm">✅ En stock</span>
+                      {product.stock_info?.show_stock_warning && (
+                        <div className="text-orange-600 text-xs font-semibold mt-1 bg-orange-50 px-2 py-1 rounded-full">
+                          ⚠️ Stock limité !
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-red-600 text-sm">❌ Rupture</span>
+                  )}
+                </div>
               </div>
               
               {product.features && product.features.length > 0 && (
