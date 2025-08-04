@@ -1733,3 +1733,8 @@ async def get_customer_segments():
     ]).to_list(10)
     
     return segments
+
+# ========== ROUTER INCLUSION ==========
+# Include all routers after all routes are defined
+app.include_router(api_router)
+api_router.include_router(crm_router)  # Include crm_router in api_router
