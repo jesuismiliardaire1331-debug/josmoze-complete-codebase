@@ -1499,7 +1499,7 @@ async def create_campaign(
 
 @crm_router.post("/campaigns/optimize-budget")
 async def optimize_campaign_budgets(
-    current_user: User = Depends(require_role(["admin", "manager"]))
+    current_user: User = Depends(require_role(["manager"]))
 ):
     """Optimiser automatiquement l'allocation du budget des campagnes"""
     try:
