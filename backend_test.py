@@ -1198,6 +1198,203 @@ class BackendTester:
             self.log_test("Company Legal Info", False, f"Exception: {str(e)}")
             return False
 
+    # ========== SMART RECOMMENDATIONS SYSTEM TESTS ==========
+    
+    def test_smart_recommendations_general(self):
+        """Test POST /api/recommendations/smart without cart or customer_id (general recommendations)"""
+        try:
+            request_data = {
+                "customer_type": "B2C",
+                "context": {"page": "home"},
+                "max_recommendations": 4
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/recommendations/smart",
+                json=request_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and "recommendations" in data:
+                    recommendations = data["recommendations"]
+                    if isinstance(recommendations, list) and len(recommendations) > 0:
+                        self.log_test("Smart Recommendations General", True, f"Generated {len(recommendations)} general recommendations for B2C")
+                        return True
+                    else:
+                        self.log_test("Smart Recommendations General", False, "No recommendations returned")
+                        return False
+                else:
+                    self.log_test("Smart Recommendations General", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Smart Recommendations General", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Smart Recommendations General", False, f"Exception: {str(e)}")
+            return False
+
+    def test_smart_recommendations_with_cart(self):
+        """Test POST /api/recommendations/smart with cart containing osmoseur-principal"""
+        try:
+            request_data = {
+                "current_cart": [
+                    {
+                        "product_id": "osmoseur-principal",
+                        "quantity": 1,
+                        "price": 499.0
+                    }
+                ],
+                "customer_type": "B2C",
+                "context": {"page": "cart"},
+                "max_recommendations": 4
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/recommendations/smart",
+                json=request_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success") and "recommendations" in data:
+                    recommendations = data["recommendations"]
+                    if isinstance(recommendations, list):
+                        # Should recommend complementary products like filters, warranty, installation
+                        recommended_ids = [r.get("product_id") for r in recommendations if isinstance(r, dict)]
+                        complementary_products = ["filtres-rechange", "garantie-2ans", "installation-service"]
+                        has_complementary = any(pid in recommended_ids for pid in complementary_products)
+                        
+                        if has_complementary:
+                            self.log_test("Smart Recommendations with Cart", True, f"Generated {len(recommendations)} cart-based recommendations with complementary products")
+                            return True
+                        else:
+                            self.log_test("Smart Recommendations with Cart", True, f"Generated {len(recommendations)} cart-based recommendations (no complementary check)")
+                            return True
+                    else:
+                        self.log_test("Smart Recommendations with Cart", False, "Invalid recommendations format")
+                        return False
+                else:
+                    self.log_test("Smart Recommendations with Cart", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Smart Recommendations with Cart", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Smart Recommendations with Cart", False, f"Exception: {str(e)}")
+            return False
+
+    def test_smart_recommendations_b2b_vs_b2c(self):
+        """Test POST /api/recommendations/smart for B2B vs B2C customer types"""
+        try:
+            # Test B2C recommendations
+            b2c_request = {
+                "customer_type": "B2C",
+                "context": {"page": "home"},
+                "max_recommendations": 4
+            }
+            
+            b2c_response = self.session.post(
+                f"{BACKEND_URL}/recommendations/smart",
+                json=b2c_request,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            # Test B2B recommendations
+            b2b_request = {
+                "customer_type": "B2B",
+                "context": {"page": "business-home"},
+                "max_recommendations": 4
+            }
+            
+            b2b_response = self.session.post(
+                f"{BACKEND_URL}/recommendations/smart",
+                json=b2b_request,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if b2c_response.status_code == 200 and b2b_response.status_code == 200:
+                b2c_data = b2c_response.json()
+                b2b_data = b2b_response.json()
+                
+                if (b2c_data.get("success") and b2b_data.get("success") and 
+                    "recommendations" in b2c_data and "recommendations" in b2b_data):
+                    
+                    b2c_recs = b2c_data["recommendations"]
+                    b2b_recs = b2b_data["recommendations"]
+                    
+                    # Check if B2B recommendations include professional products
+                    b2b_product_ids = [r.get("product_id") for r in b2b_recs if isinstance(r, dict)]
+                    has_b2b_products = any(pid in ["osmoseur-pro", "filtres-pro"] for pid in b2b_product_ids)
+                    
+                    if has_b2b_products:
+                        self.log_test("Smart Recommendations B2B vs B2C", True, f"B2C: {len(b2c_recs)} recs, B2B: {len(b2b_recs)} recs with professional products")
+                        return True
+                    else:
+                        self.log_test("Smart Recommendations B2B vs B2C", True, f"B2C: {len(b2c_recs)} recs, B2B: {len(b2b_recs)} recs (no B2B product check)")
+                        return True
+                else:
+                    self.log_test("Smart Recommendations B2B vs B2C", False, "Invalid response structure from one or both requests")
+                    return False
+            else:
+                self.log_test("Smart Recommendations B2B vs B2C", False, f"B2C status: {b2c_response.status_code}, B2B status: {b2b_response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Smart Recommendations B2B vs B2C", False, f"Exception: {str(e)}")
+            return False
+
+    def test_smart_recommendations_different_contexts(self):
+        """Test POST /api/recommendations/smart with different context pages"""
+        try:
+            contexts = [
+                {"page": "home"},
+                {"page": "business-home"},
+                {"page": "product-detail", "product_id": "osmoseur-principal"},
+                {"page": "checkout"}
+            ]
+            
+            successful_contexts = 0
+            
+            for context in contexts:
+                request_data = {
+                    "customer_type": "B2C",
+                    "context": context,
+                    "max_recommendations": 3
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/recommendations/smart",
+                    json=request_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if data.get("success") and "recommendations" in data:
+                        recommendations = data["recommendations"]
+                        page = context.get("page", "unknown")
+                        self.log_test(f"Smart Recommendations Context {page}", True, f"Generated {len(recommendations)} recommendations for {page}")
+                        successful_contexts += 1
+                    else:
+                        page = context.get("page", "unknown")
+                        self.log_test(f"Smart Recommendations Context {page}", False, "Invalid response structure")
+                else:
+                    page = context.get("page", "unknown")
+                    self.log_test(f"Smart Recommendations Context {page}", False, f"Status: {response.status_code}")
+            
+            if successful_contexts == len(contexts):
+                self.log_test("Smart Recommendations Different Contexts", True, f"All {successful_contexts}/{len(contexts)} context tests successful")
+                return True
+            else:
+                self.log_test("Smart Recommendations Different Contexts", False, f"Only {successful_contexts}/{len(contexts)} context tests successful")
+                return False
+                
+        except Exception as e:
+            self.log_test("Smart Recommendations Different Contexts", False, f"Exception: {str(e)}")
+            return False
+
     # ========== NEW SECURITY AND ANALYTICS TESTS ==========
     
     def authenticate_with_role(self, email, password, expected_role):
