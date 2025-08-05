@@ -1198,6 +1198,172 @@ class BackendTester:
             self.log_test("Company Legal Info", False, f"Exception: {str(e)}")
             return False
 
+    # ========== CRM USER PERMISSIONS VERIFICATION TESTS ==========
+    
+    def test_crm_user_permissions_verification(self):
+        """Test CRM user permissions verification for all manager accounts"""
+        manager_credentials = [
+            ("naima@josmose.com", "Naima@2024!Commerce", "Naima - Manager"),
+            ("aziza@josmose.com", "Aziza@2024!Director", "Aziza - Manager"),
+            ("antonio@josmose.com", "Antonio@2024!Secure", "Antonio - Manager")
+        ]
+        
+        support_credentials = ("support@josmose.com", "Support@2024!Help", "Support - Technique")
+        
+        manager_permissions = []
+        successful_manager_logins = 0
+        
+        # Test all three manager accounts
+        for email, password, expected_name in manager_credentials:
+            try:
+                # Test login
+                auth_data = {
+                    "username": email,
+                    "password": password
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=auth_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data and "user" in data:
+                        user = data["user"]
+                        token = data["access_token"]
+                        
+                        # Verify user has manager role
+                        if user.get("role") == "manager":
+                            self.log_test(f"Manager Login {email}", True, f"Successfully authenticated as {expected_name} with manager role")
+                            successful_manager_logins += 1
+                            
+                            # Test user permissions endpoint
+                            headers = {"Authorization": f"Bearer {token}"}
+                            permissions_response = self.session.get(f"{BACKEND_URL}/auth/user-info", headers=headers)
+                            
+                            if permissions_response.status_code == 200:
+                                permissions_data = permissions_response.json()
+                                if "permissions" in permissions_data:
+                                    manager_permissions.append({
+                                        "user": email,
+                                        "permissions": permissions_data["permissions"]
+                                    })
+                                    self.log_test(f"Manager Permissions {email}", True, f"Retrieved permissions for {email}")
+                                else:
+                                    self.log_test(f"Manager Permissions {email}", False, "No permissions in response")
+                            else:
+                                self.log_test(f"Manager Permissions {email}", False, f"Permissions request failed: {permissions_response.status_code}")
+                            
+                            # Test CRM dashboard access
+                            dashboard_response = self.session.get(f"{BACKEND_URL}/crm/dashboard", headers=headers)
+                            if dashboard_response.status_code == 200:
+                                self.log_test(f"Manager Dashboard Access {email}", True, f"Can access CRM dashboard")
+                            else:
+                                self.log_test(f"Manager Dashboard Access {email}", False, f"Cannot access CRM dashboard: {dashboard_response.status_code}")
+                            
+                            # Test lead management access
+                            leads_response = self.session.get(f"{BACKEND_URL}/crm/leads", headers=headers)
+                            if leads_response.status_code == 200:
+                                self.log_test(f"Manager Leads Access {email}", True, f"Can access leads management")
+                            else:
+                                self.log_test(f"Manager Leads Access {email}", False, f"Cannot access leads: {leads_response.status_code}")
+                                
+                        else:
+                            self.log_test(f"Manager Login {email}", False, f"Wrong role: expected 'manager', got '{user.get('role')}'")
+                    else:
+                        self.log_test(f"Manager Login {email}", False, "Missing access_token or user in response")
+                else:
+                    self.log_test(f"Manager Login {email}", False, f"Login failed: {response.status_code}")
+                    
+            except Exception as e:
+                self.log_test(f"Manager Login {email}", False, f"Exception: {str(e)}")
+        
+        # Test support account (should have limited permissions)
+        try:
+            support_email, support_password, support_name = support_credentials
+            auth_data = {
+                "username": support_email,
+                "password": support_password
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=auth_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "access_token" in data and "user" in data:
+                    user = data["user"]
+                    token = data["access_token"]
+                    
+                    # Verify user has technique role
+                    if user.get("role") == "technique":
+                        self.log_test("Support Login", True, f"Successfully authenticated as {support_name} with technique role")
+                        
+                        # Test user permissions endpoint
+                        headers = {"Authorization": f"Bearer {token}"}
+                        permissions_response = self.session.get(f"{BACKEND_URL}/auth/user-info", headers=headers)
+                        
+                        if permissions_response.status_code == 200:
+                            permissions_data = permissions_response.json()
+                            if "permissions" in permissions_data:
+                                support_permissions = permissions_data["permissions"]
+                                self.log_test("Support Permissions", True, f"Retrieved limited permissions for support account")
+                                
+                                # Verify support has limited permissions compared to managers
+                                if manager_permissions:
+                                    manager_perms = manager_permissions[0]["permissions"]
+                                    limited_access = (
+                                        not support_permissions.get("edit_leads", True) and
+                                        not support_permissions.get("delete_leads", True) and
+                                        not support_permissions.get("manage_users", True) and
+                                        not support_permissions.get("export_data", True)
+                                    )
+                                    
+                                    if limited_access:
+                                        self.log_test("Support Limited Access", True, "Support account has properly limited permissions")
+                                    else:
+                                        self.log_test("Support Limited Access", False, "Support account has too many permissions")
+                            else:
+                                self.log_test("Support Permissions", False, "No permissions in response")
+                        else:
+                            self.log_test("Support Permissions", False, f"Permissions request failed: {permissions_response.status_code}")
+                    else:
+                        self.log_test("Support Login", False, f"Wrong role: expected 'technique', got '{user.get('role')}'")
+                else:
+                    self.log_test("Support Login", False, "Missing access_token or user in response")
+            else:
+                self.log_test("Support Login", False, f"Login failed: {response.status_code}")
+                
+        except Exception as e:
+            self.log_test("Support Login", False, f"Exception: {str(e)}")
+        
+        # Compare manager permissions to ensure they are identical
+        if len(manager_permissions) >= 2:
+            first_manager_perms = manager_permissions[0]["permissions"]
+            identical_permissions = True
+            
+            for i in range(1, len(manager_permissions)):
+                current_perms = manager_permissions[i]["permissions"]
+                if first_manager_perms != current_perms:
+                    identical_permissions = False
+                    self.log_test("Manager Permissions Comparison", False, 
+                                f"Permissions differ between {manager_permissions[0]['user']} and {manager_permissions[i]['user']}")
+                    break
+            
+            if identical_permissions:
+                self.log_test("Manager Permissions Comparison", True, "All manager accounts have identical permissions")
+                return True
+            else:
+                return False
+        else:
+            self.log_test("Manager Permissions Comparison", False, f"Could not compare permissions - only {len(manager_permissions)} manager accounts tested")
+            return False
+
     # ========== SMART RECOMMENDATIONS SYSTEM TESTS ==========
     
     def test_smart_recommendations_general(self):
