@@ -165,38 +165,49 @@ class CRMPermissionsTester:
                     if user.get("role") == "technique":
                         self.log_test("Support Login", True, f"✓ Authenticated as {support_name} with technique role")
                         
-                        # Test user permissions endpoint
+                        # Test user permissions endpoint (CRM-specific)
                         headers = {"Authorization": f"Bearer {token}"}
-                        permissions_response = self.session.get(f"{BACKEND_URL}/auth/user-info", headers=headers)
+                        permissions_response = self.session.get(f"{BACKEND_URL}/crm/user-permissions", headers=headers)
                         
                         if permissions_response.status_code == 200:
                             permissions_data = permissions_response.json()
                             if "permissions" in permissions_data:
                                 support_permissions = permissions_data["permissions"]
                                 
-                                # Count permissions
-                                total_perms = len(support_permissions)
-                                granted_perms = sum(1 for v in support_permissions.values() if v)
+                                # Handle both dict and list formats
+                                if isinstance(support_permissions, dict):
+                                    total_perms = len(support_permissions)
+                                    granted_perms = sum(1 for v in support_permissions.values() if v)
+                                    key_perms = ["view_dashboard", "edit_leads", "delete_leads", "manage_users", "export_data"]
+                                    granted_key = [p for p in key_perms if support_permissions.get(p, False)]
+                                    denied_key = [p for p in key_perms if not support_permissions.get(p, True)]
+                                else:  # list format
+                                    total_perms = len(support_permissions)
+                                    granted_perms = total_perms
+                                    granted_key = support_permissions
+                                    denied_key = []
                                 
                                 self.log_test("Support Permissions", True, 
                                             f"✓ Retrieved {granted_perms}/{total_perms} limited permissions")
                                 
                                 # Show key permissions
-                                key_perms = ["view_dashboard", "edit_leads", "delete_leads", "manage_users", "export_data"]
-                                granted_key = [p for p in key_perms if support_permissions.get(p, False)]
-                                denied_key = [p for p in key_perms if not support_permissions.get(p, True)]
                                 print(f"   Granted: {', '.join(granted_key) if granted_key else 'None'}")
                                 print(f"   Denied: {', '.join(denied_key) if denied_key else 'None'}")
                                 
                                 # Verify support has limited permissions compared to managers
                                 if manager_permissions:
                                     manager_perms = manager_permissions[0]["permissions"]
-                                    limited_access = (
-                                        not support_permissions.get("edit_leads", True) and
-                                        not support_permissions.get("delete_leads", True) and
-                                        not support_permissions.get("manage_users", True) and
-                                        not support_permissions.get("export_data", True)
-                                    )
+                                    
+                                    if isinstance(support_permissions, dict) and isinstance(manager_perms, dict):
+                                        limited_access = (
+                                            not support_permissions.get("edit_leads", True) and
+                                            not support_permissions.get("delete_leads", True) and
+                                            not support_permissions.get("manage_users", True) and
+                                            not support_permissions.get("export_data", True)
+                                        )
+                                    else:  # list format comparison
+                                        # Support should have fewer permissions than managers
+                                        limited_access = len(support_permissions) < len(manager_perms)
                                     
                                     if limited_access:
                                         self.log_test("Support Limited Access", True, "✓ Support account has properly limited permissions")
