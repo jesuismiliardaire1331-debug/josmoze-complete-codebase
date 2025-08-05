@@ -681,6 +681,11 @@ async def get_user_info(current_user: User = Depends(get_current_user)):
             detail="Failed to retrieve user information"
         )
 
+async def get_all_products():
+    """Get all products from the products database"""
+    products_data = await db.products.find().to_list(1000)
+    return [Product(**product) for product in products_data]
+
 # ========== SMART PRODUCT RECOMMENDATIONS ==========
 
 class RecommendationRequest(BaseModel):
