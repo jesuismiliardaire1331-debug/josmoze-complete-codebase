@@ -52,8 +52,17 @@ export const AuthProvider = ({ children }) => {
   // Set auth header on app load
   React.useEffect(() => {
     const token = localStorage.getItem('crm_token');
-    if (token) {
+    const userData = localStorage.getItem('crm_user');
+    
+    if (token && userData) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser({ ...parsedUser, token });
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+        logout();
+      }
     }
   }, []);
 
