@@ -59,7 +59,7 @@ app.add_middleware(
 
 # Create routers
 api_router = APIRouter(prefix="/api")
-crm_router = APIRouter(prefix="/crm")  # Pas de /api car sera inclus dans api_router
+crm_router = APIRouter()  # No prefix since it will be included in api_router with /crm prefix
 
 # Security
 security = HTTPBearer()
