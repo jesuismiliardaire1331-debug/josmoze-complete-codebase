@@ -18,6 +18,7 @@ from emergentintegrations.payments.stripe.checkout import StripeCheckout, Checko
 # Import security and performance middleware
 from security_middleware import SecurityMiddleware, CacheMiddleware, get_security_stats, clear_cache
 from analytics_dashboard import AnalyticsEngine, export_analytics_csv
+from recommendation_engine import get_smart_recommendations
 
 # Import authentication and AI agents
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info, get_user_permissions
