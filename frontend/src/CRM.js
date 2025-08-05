@@ -1148,37 +1148,10 @@ const CRMDashboard = () => {
 
         {/* Onglet Analytics */}
         {activeTab === 'analytics' && (
-          <div className="text-center py-16">
-            <div className="bg-white p-12 rounded-2xl shadow-xl max-w-2xl mx-auto">
-              <div className="text-8xl mb-6">📈</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Analytics Avancées</h3>
-              <p className="text-gray-600 text-lg mb-8">
-                Fonctionnalité en développement - Graphiques détaillés et rapports personnalisés arrivent bientôt !
-              </p>
-              <div className="grid grid-cols-2 gap-4 text-left">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <div className="text-2xl mb-2">📊</div>
-                  <h4 className="font-semibold text-gray-800">Graphiques Interactifs</h4>
-                  <p className="text-sm text-gray-600">Visualisation avancée des données</p>
-                </div>
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <div className="text-2xl mb-2">📋</div>
-                  <h4 className="font-semibold text-gray-800">Rapports Exportables</h4>
-                  <p className="text-sm text-gray-600">PDF et Excel disponibles</p>
-                </div>
-                <div className="bg-purple-50 p-4 rounded-lg">
-                  <div className="text-2xl mb-2">🎯</div>
-                  <h4 className="font-semibold text-gray-800">Prédictions IA</h4>
-                  <p className="text-sm text-gray-600">Analyse prédictive des ventes</p>
-                </div>
-                <div className="bg-orange-50 p-4 rounded-lg">
-                  <div className="text-2xl mb-2">⚡</div>
-                  <h4 className="font-semibold text-gray-800">Temps Réel</h4>
-                  <p className="text-sm text-gray-600">Données en direct</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <AnalyticsDashboard 
+            userRole={user?.role} 
+            userToken={user?.token}
+          />
         )}
       </div>
     </div>
