@@ -41,8 +41,20 @@ const CRMDashboard = () => {
     try {
       const response = await axios.get(`${API}/crm/dashboard`);
       setDashboardData(response.data);
+      
+      // Check for critical alerts
+      if (response.data.total_leads > 0) {
+        notifications.success(
+          '📊 Dashboard Actualisé',
+          `${response.data.total_leads} leads actifs trouvés`
+        );
+      }
     } catch (error) {
       console.error('Erreur lors du chargement du dashboard:', error);
+      notifications.error(
+        '❌ Erreur Dashboard',
+        'Impossible de charger les données du tableau de bord'
+      );
       if (error.response?.status === 401) {
         logout();
       }
