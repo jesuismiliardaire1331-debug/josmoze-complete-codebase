@@ -243,19 +243,26 @@ class CRMPermissionsTester:
                                 f"Permissions differ between {manager_permissions[0]['user']} and {manager_permissions[i]['user']}")
                     
                     # Show differences
-                    for perm, value in first_manager_perms.items():
-                        if current_perms.get(perm) != value:
-                            print(f"   Difference in {perm}: {manager_permissions[0]['user']} = {value}, {manager_permissions[i]['user']} = {current_perms.get(perm)}")
+                    if isinstance(first_manager_perms, dict) and isinstance(current_perms, dict):
+                        for perm, value in first_manager_perms.items():
+                            if current_perms.get(perm) != value:
+                                print(f"   Difference in {perm}: {manager_permissions[0]['user']} = {value}, {manager_permissions[i]['user']} = {current_perms.get(perm)}")
+                    else:  # list format
+                        print(f"   {manager_permissions[0]['user']}: {first_manager_perms}")
+                        print(f"   {manager_permissions[i]['user']}: {current_perms}")
                     break
             
             if identical_permissions:
                 self.log_test("Manager Permissions Comparison", True, "✓ All manager accounts have identical permissions")
                 
                 # Show the common permissions
-                granted_perms = [k for k, v in first_manager_perms.items() if v]
-                denied_perms = [k for k, v in first_manager_perms.items() if not v]
-                print(f"   Common granted permissions: {', '.join(granted_perms)}")
-                print(f"   Common denied permissions: {', '.join(denied_perms) if denied_perms else 'None'}")
+                if isinstance(first_manager_perms, dict):
+                    granted_perms = [k for k, v in first_manager_perms.items() if v]
+                    denied_perms = [k for k, v in first_manager_perms.items() if not v]
+                    print(f"   Common granted permissions: {', '.join(granted_perms)}")
+                    print(f"   Common denied permissions: {', '.join(denied_perms) if denied_perms else 'None'}")
+                else:  # list format
+                    print(f"   Common permissions: {', '.join(first_manager_perms)}")
                 
                 return True
             else:
