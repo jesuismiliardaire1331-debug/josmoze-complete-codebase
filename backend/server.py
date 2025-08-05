@@ -1171,7 +1171,7 @@ async def initialize_products():
             "name": "Extension Garantie 2 ans - 39€",
             "description": "Étendez votre garantie à 2 ans selon tarif CDC. Tranquillité d'esprit totale avec support technique.",
             "price": 39.0,
-            "image": "https://www.josmose.fr/themes/josmose/img/outils.png",
+            "image": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=400&h=300&fit=crop&auto=format",
             "category": "service",
             "target_audience": "both",
             "specifications": {
