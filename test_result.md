@@ -282,20 +282,17 @@ backend:
           agent: "testing"
           comment: "POST /api/webhook/stripe endpoint exists and handles requests properly. Returns appropriate status codes for webhook processing"
 
-  - task: "Enhanced Database Integration"
+  - task: "CRM User Permissions Verification"
     implemented: true
-    working: true
-    file: "backend/server.py"
+    working: "NA"
+    file: "backend/auth.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "ENHANCED: Database now includes leads, consultations, email_logs collections. Products enhanced with B2B variants. Payment transactions integrated with lead creation."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Enhanced database integration confirmed. New collections (leads, consultations, email_logs) are functional. Products collection includes B2B variants. Lead creation, consultation requests, and email logging all working with proper database storage."
+          comment: "VERIFICATION NEEDED: Confirmed that Naima, Aziza, and Antonio all have identical 'manager' role with full CRM permissions (view_dashboard, edit_leads, delete_leads, view_orders, edit_orders, view_stock, edit_stock, view_invoices, view_marketing, edit_marketing, view_campaigns, edit_campaigns, manage_users, view_analytics, export_data). Need to test that authentication system properly grants these permissions to all three users."
 
 frontend:
   - task: "CRM Dashboard Interface"
