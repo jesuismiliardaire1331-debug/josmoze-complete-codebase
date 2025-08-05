@@ -2354,6 +2354,12 @@ class BackendTester:
         self.test_company_legal_info()
         print()
         
+        # CRM USER PERMISSIONS VERIFICATION TESTS (as requested in review)
+        print("🔐 CRM USER PERMISSIONS VERIFICATION TESTS")
+        print("-" * 40)
+        self.test_crm_user_permissions_verification()
+        print()
+        
         # NEW ROLE-BASED SECURITY TESTS (as requested in review)
         print("🔐 NEW ROLE-BASED SECURITY & ANALYTICS TESTS")
         print("-" * 40)
