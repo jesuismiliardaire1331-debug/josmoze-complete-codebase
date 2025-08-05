@@ -76,9 +76,9 @@ class CRMPermissionsTester:
                             self.log_test(f"Manager Login {email}", True, f"✓ Authenticated as {expected_name} with manager role")
                             successful_manager_logins += 1
                             
-                            # Test user permissions endpoint
+                            # Test user permissions endpoint (CRM-specific)
                             headers = {"Authorization": f"Bearer {token}"}
-                            permissions_response = self.session.get(f"{BACKEND_URL}/auth/user-info", headers=headers)
+                            permissions_response = self.session.get(f"{BACKEND_URL}/crm/user-permissions", headers=headers)
                             
                             if permissions_response.status_code == 200:
                                 permissions_data = permissions_response.json()
@@ -89,16 +89,21 @@ class CRMPermissionsTester:
                                         "permissions": user_permissions
                                     })
                                     
-                                    # Count permissions
-                                    total_perms = len(user_permissions)
-                                    granted_perms = sum(1 for v in user_permissions.values() if v)
+                                    # Handle both dict and list formats
+                                    if isinstance(user_permissions, dict):
+                                        total_perms = len(user_permissions)
+                                        granted_perms = sum(1 for v in user_permissions.values() if v)
+                                        key_perms = ["view_dashboard", "edit_leads", "delete_leads", "manage_users", "export_data"]
+                                        granted_key = [p for p in key_perms if user_permissions.get(p, False)]
+                                    else:  # list format
+                                        total_perms = len(user_permissions)
+                                        granted_perms = total_perms
+                                        granted_key = user_permissions
                                     
                                     self.log_test(f"Manager Permissions {email}", True, 
                                                 f"✓ Retrieved {granted_perms}/{total_perms} permissions")
                                     
                                     # Show key permissions
-                                    key_perms = ["view_dashboard", "edit_leads", "delete_leads", "manage_users", "export_data"]
-                                    granted_key = [p for p in key_perms if user_permissions.get(p, False)]
                                     print(f"   Key permissions: {', '.join(granted_key)}")
                                 else:
                                     self.log_test(f"Manager Permissions {email}", False, "No permissions in response")
