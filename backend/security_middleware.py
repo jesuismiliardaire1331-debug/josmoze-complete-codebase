@@ -34,9 +34,9 @@ except:
 # Configuration sécurité
 SECURITY_CONFIG = {
     "rate_limit": {
-        "requests_per_minute": 60,
-        "requests_per_hour": 1000,
-        "burst_limit": 10
+        "requests_per_minute": 300,
+        "requests_per_hour": 5000,
+        "burst_limit": 50
     },
     "blocked_ips": set(),
     "suspicious_patterns": [
