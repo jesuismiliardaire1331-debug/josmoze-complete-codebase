@@ -747,6 +747,68 @@ async def get_all_products():
     ]
     return products
 
+# ========== LOYALTY PROGRAM ENDPOINTS ==========
+
+@api_router.get("/loyalty/status/{customer_id}")
+async def get_loyalty_status(customer_id: str):
+    """Get customer loyalty program status"""
+    try:
+        status = await get_customer_loyalty_status(db, customer_id)
+        return status
+    except Exception as e:
+        logging.error(f"Get loyalty status error: {str(e)}")
+        return {
+            "success": False,
+            "error": "Failed to retrieve loyalty status"
+        }
+
+class RedeemRewardRequest(BaseModel):
+    customer_id: str
+    reward_id: str
+
+@api_router.post("/loyalty/redeem")
+async def redeem_loyalty_reward(request: RedeemRewardRequest):
+    """Redeem a loyalty reward"""
+    try:
+        loyalty_manager = LoyaltyProgramManager(db)
+        result = await loyalty_manager.redeem_reward(
+            request.customer_id, 
+            request.reward_id
+        )
+        return result
+    except Exception as e:
+        logging.error(f"Redeem loyalty reward error: {str(e)}")
+        return {
+            "success": False,
+            "error": "Failed to redeem reward"
+        }
+
+@api_router.post("/loyalty/award-points")
+async def award_loyalty_points(
+    customer_id: str,
+    points: int,
+    description: str,
+    order_id: Optional[str] = None,
+    current_user: User = Depends(require_role(["manager", "agent"]))
+):
+    """Award points to a customer (CRM only)"""
+    try:
+        loyalty_manager = LoyaltyProgramManager(db)
+        result = await loyalty_manager.award_points(
+            customer_id, points, description, order_id
+        )
+        
+        return {
+            "success": result,
+            "message": f"Points awarded to {customer_id}" if result else "Failed to award points"
+        }
+    except Exception as e:
+        logging.error(f"Award loyalty points error: {str(e)}")
+        return {
+            "success": False,
+            "error": "Failed to award points"
+        }
+
 # ========== SMART PRODUCT RECOMMENDATIONS ==========
 
 class RecommendationRequest(BaseModel):
