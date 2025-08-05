@@ -2199,6 +2199,15 @@ class BackendTester:
         self.test_cache_clear_permissions()
         print()
         
+        # SMART RECOMMENDATIONS SYSTEM TESTS (NEW - as requested)
+        print("🤖 SMART PRODUCT RECOMMENDATIONS TESTS")
+        print("-" * 40)
+        self.test_smart_recommendations_general()
+        self.test_smart_recommendations_with_cart()
+        self.test_smart_recommendations_b2b_vs_b2c()
+        self.test_smart_recommendations_different_contexts()
+        print()
+        
         # Basic functionality tests
         print("🔍 BASIC FUNCTIONALITY TESTS")
         print("-" * 40)
