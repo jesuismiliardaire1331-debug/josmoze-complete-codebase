@@ -65,8 +65,22 @@ const CRMDashboard = () => {
     try {
       const response = await axios.get(`${API}/crm/inventory/dashboard`);
       setStockData(response.data);
+      
+      // Check for low stock alerts
+      const lowStockItems = response.data.products?.filter(p => p.current_stock < 10) || [];
+      if (lowStockItems.length > 0) {
+        notifications.warning(
+          '📦 Stock Critique',
+          `${lowStockItems.length} produits en rupture de stock`,
+          8000
+        );
+      }
     } catch (error) {
       console.error('Erreur lors du chargement du stock:', error);
+      notifications.error(
+        '❌ Erreur Stock',
+        'Impossible de charger les données de stock'
+      );
     }
   };
 
