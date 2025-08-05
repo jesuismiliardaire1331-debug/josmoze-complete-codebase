@@ -45,8 +45,8 @@ social_media_automation = None
 app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
 
 # Add Security and Performance Middleware (Critical for Production)
-app.add_middleware(SecurityMiddleware)
-app.add_middleware(CacheMiddleware)
+# app.add_middleware(SecurityMiddleware)
+# app.add_middleware(CacheMiddleware)
 
 # CORS middleware
 app.add_middleware(
