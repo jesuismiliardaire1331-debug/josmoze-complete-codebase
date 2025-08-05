@@ -7,7 +7,7 @@ import requests
 import json
 
 # Backend URL
-BACKEND_URL = "https://1c073e61-17ce-4025-b38e-c822c7ab6961.preview.emergentagent.com/api"
+BACKEND_URL = "https://api.josmose.com/api"
 
 def test_analytics_endpoint():
     # First authenticate as manager
