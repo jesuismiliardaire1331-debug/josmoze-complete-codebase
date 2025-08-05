@@ -9,6 +9,7 @@ const API = `${BACKEND_URL}/api`;
 
 const CRMDashboard = () => {
   const { user, logout } = useAuth();
+  const notifications = useNotifications();
   const [dashboardData, setDashboardData] = useState(null);
   const [leads, setLeads] = useState([]);
   const [orders, setOrders] = useState([]);
