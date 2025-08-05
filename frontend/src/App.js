@@ -9,6 +9,7 @@ import { AuthProvider } from "./CRMLogin";
 import CRMLogin from "./CRMLogin";
 import ProductExplanation from "./ProductExplanation";
 import { NotificationProvider } from "./NotificationSystem";
+import ProductRecommendations from "./ProductRecommendations";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
