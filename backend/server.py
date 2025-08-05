@@ -681,6 +681,46 @@ async def get_user_info(current_user: User = Depends(get_current_user)):
             detail="Failed to retrieve user information"
         )
 
+# ========== SMART PRODUCT RECOMMENDATIONS ==========
+
+class RecommendationRequest(BaseModel):
+    customer_id: Optional[str] = None
+    current_cart: List[Dict] = []
+    customer_type: str = "B2C"
+    context: Dict = {}
+    max_recommendations: int = 4
+
+@api_router.post("/recommendations/smart")
+async def get_product_recommendations(request: RecommendationRequest):
+    """Get intelligent product recommendations"""
+    try:
+        recommendations = await get_smart_recommendations(
+            db=db,
+            customer_id=request.customer_id,
+            current_cart=request.current_cart,
+            customer_type=request.customer_type,
+            context=request.context
+        )
+        
+        # Limit results
+        limited_recommendations = recommendations[:request.max_recommendations]
+        
+        return {
+            "success": True,
+            "recommendations": limited_recommendations,
+            "total_available": len(recommendations),
+            "algorithm_version": "1.0",
+            "generated_at": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logging.error(f"Product recommendations error: {str(e)}")
+        return {
+            "success": False,
+            "error": "Failed to generate recommendations",
+            "recommendations": []
+        }
+
 # ========== ADVANCED ANALYTICS & BI ENDPOINTS ==========
 
 @crm_router.get("/analytics/dashboard")
