@@ -1212,7 +1212,7 @@ async def initialize_products():
             "name": "Service d'Installation Professionnel",
             "description": "Installation complète par nos techniciens certifiés. Mise en service et formation incluses. Service après-vente garanti.",
             "price": 150.0,
-            "image": "https://images.pexels.com/photos/12242508/pexels-photo-12242508.jpeg",
+            "image": "https://images.unsplash.com/photo-1589652717406-1c69efaf1ff8?w=400&h=300&fit=crop&auto=format",
             "category": "service",
             "target_audience": "both",
             "specifications": {
