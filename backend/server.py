@@ -1191,7 +1191,7 @@ async def initialize_products():
             "name": "Extension Garantie 5 ans - 59€",
             "description": "Protection maximale avec garantie étendue à 5 ans selon tarif CDC. Couverture complète premium.",
             "price": 59.0,
-            "image": "https://images.unsplash.com/photo-1589652717406-1c69efaf1ff8?w=400&h=300&fit=crop&auto=format",
+            "image": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop&auto=format",
             "category": "service",
             "target_audience": "both",
             "specifications": {
