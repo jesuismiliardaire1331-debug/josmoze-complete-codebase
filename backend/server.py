@@ -1953,4 +1953,4 @@ async def get_customer_segments():
 # ========== ROUTER INCLUSION ==========
 # Include all routers after all routes are defined
 app.include_router(api_router)
-api_router.include_router(crm_router)  # Include crm_router in api_router
+api_router.include_router(crm_router, prefix="/crm")  # Include crm_router in api_router with /crm prefix
