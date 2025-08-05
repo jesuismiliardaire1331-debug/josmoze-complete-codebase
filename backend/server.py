@@ -657,6 +657,33 @@ async def get_contact_forms():
     return [ContactForm(**form) for form in forms_data]
 
 
+@api_router.get("/crm/user-permissions")
+async def get_crm_user_permissions(current_user: User = Depends(get_current_user)):
+    """Get current user CRM permissions (detailed permissions for CRM interface)"""
+    try:
+        # Import the detailed permissions function from auth.py
+        from auth import get_user_permissions as get_detailed_permissions
+        permissions = get_detailed_permissions(current_user.role)
+        
+        return {
+            "success": True,
+            "user": {
+                "id": current_user.id,
+                "username": current_user.username,
+                "email": current_user.email,
+                "full_name": current_user.full_name,
+                "role": current_user.role,
+                "is_active": current_user.is_active
+            },
+            "permissions": permissions
+        }
+    except Exception as e:
+        logging.error(f"Error getting CRM user permissions: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve user permissions"
+        )
+
 @api_router.get("/auth/user-info")
 async def get_user_info(current_user: User = Depends(get_current_user)):
     """Get current user information and permissions"""
