@@ -1618,11 +1618,34 @@ const Home = () => {
 };
 
 const BusinessHome = () => {
+  const { cart, customerType } = useApp();
+  
+  const handleProductClick = (product) => {
+    // Navigate to product or add to cart
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div>
       <Hero />
       <Features />
       <ProductGrid />
+      
+      {/* Recommandations B2B */}
+      <div className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <ProductRecommendations
+            customerId={null}
+            currentCart={cart}
+            customerType="B2B"
+            context={{ page: 'business-home', section: 'b2b-recommendations' }}
+            onProductClick={handleProductClick}
+            maxRecommendations={4}
+            title="🏢 Solutions Professionnelles Recommandées"
+          />
+        </div>
+      </div>
+      
       <ConsultationExpert />
     </div>
   );
