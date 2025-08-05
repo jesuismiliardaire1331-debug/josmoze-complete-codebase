@@ -79,8 +79,8 @@ CRM_USERS = {
         "id": "user_aziza", 
         "username": "aziza@josmose.com",
         "email": "aziza@josmose.com",
-        "full_name": "Aziza - Agent",
-        "role": "agent",  # Agent role - standard access
+        "full_name": "Aziza - Manager",
+        "role": "manager",  # Manager role - same as Naima
         "password_hash": "$2b$12$GHSiiMx03IQ81HMWinZUn.xvyi3MtGhg6k6mZG1QXqCwCZJT5b/vm",  # "Aziza@2024!Director"
         "is_active": True
     },
@@ -88,8 +88,8 @@ CRM_USERS = {
         "id": "user_antonio",
         "username": "antonio@josmose.com",
         "email": "antonio@josmose.com",
-        "full_name": "Antonio - Agent",
-        "role": "agent",  # Agent role - standard access
+        "full_name": "Antonio - Manager",
+        "role": "manager",  # Manager role - same as Naima
         "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
         "is_active": True
     },
