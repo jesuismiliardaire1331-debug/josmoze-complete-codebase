@@ -1276,8 +1276,7 @@ async def get_inbox(current_user: dict = Depends(require_role(["manager", "comme
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des emails")
 
 @api_router.get("/crm/emails/stats")
-@require_role(["manager", "commercial", "technique"])
-async def get_inbox_stats(current_user: dict = Depends(get_current_user)):
+async def get_inbox_stats(current_user: dict = Depends(require_role(["manager", "commercial", "technique"]))):
     """
     Récupère les statistiques de la boîte mail
     """
