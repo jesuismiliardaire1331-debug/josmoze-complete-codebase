@@ -121,8 +121,8 @@ CRM_USERS = {
     "commercial@josmose.com": {
         "id": "user_commercial",
         "username": "commercial@josmose.com", 
-        "email": "commercial@osmose.com",  # Email professionnel pour prospects
-        "professional_email": "commercial@osmose.com",
+        "email": "commercial@josmose.com",  # Email professionnel pour prospects
+        "professional_email": "commercial@josmose.com",
         "full_name": "Service Commercial",
         "role": "commercial",  # Role commercial pour prospects
         "password_hash": "$2b$12$JUSY1Xvr16sYMyxClk5m0.JQhAqylyzBZy4I/LPHyR4q9ESP9353G",  # "Commercial@2024!Sales"
