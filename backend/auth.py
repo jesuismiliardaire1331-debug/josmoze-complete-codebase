@@ -96,8 +96,8 @@ CRM_USERS = {
     "antonio@josmose.com": {
         "id": "user_antonio",
         "username": "antonio@josmose.com",
-        "email": "antonio@osmose.com",  # Email professionnel pour clients
-        "professional_email": "antonio@osmose.com",
+        "email": "antonio@josmose.com",  # Email professionnel pour clients
+        "professional_email": "antonio@josmose.com",
         "full_name": "Antonio - Manager",
         "role": "manager",  # Manager role - same as Naima
         "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
