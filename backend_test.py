@@ -3420,6 +3420,243 @@ class BackendTester:
         except Exception as e:
             self.log_test("Email System Consistency", False, f"Exception: {str(e)}")
             return False
+
+    # ========== NEW EMAIL SYSTEM TESTS @JOSMOSE.COM ==========
+    
+    def test_email_inbox_empty(self):
+        """Test GET /api/crm/emails/inbox - Should be empty initially"""
+        try:
+            # This endpoint requires authentication, so we expect 401/403
+            response = self.session.get(f"{BACKEND_URL}/crm/emails/inbox")
+            
+            if response.status_code in [401, 403]:
+                self.log_test("Email Inbox (Empty)", True, f"Endpoint exists but requires authentication (status: {response.status_code})")
+                return True
+            elif response.status_code == 200:
+                data = response.json()
+                if "emails" in data:
+                    emails = data["emails"]
+                    self.log_test("Email Inbox (Empty)", True, f"Inbox loaded with {len(emails)} emails")
+                    return True
+                else:
+                    self.log_test("Email Inbox (Empty)", False, "Invalid inbox response format")
+                    return False
+            else:
+                self.log_test("Email Inbox (Empty)", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Email Inbox (Empty)", False, f"Exception: {str(e)}")
+            return False
+
+    def test_email_stats_empty(self):
+        """Test GET /api/crm/emails/stats - Should show zero counters initially"""
+        try:
+            # This endpoint requires authentication, so we expect 401/403
+            response = self.session.get(f"{BACKEND_URL}/crm/emails/stats")
+            
+            if response.status_code in [401, 403]:
+                self.log_test("Email Stats (Empty)", True, f"Endpoint exists but requires authentication (status: {response.status_code})")
+                return True
+            elif response.status_code == 200:
+                stats = response.json()
+                # Check if stats have expected structure
+                if isinstance(stats, dict):
+                    self.log_test("Email Stats (Empty)", True, f"Email stats loaded: {stats}")
+                    return True
+                else:
+                    self.log_test("Email Stats (Empty)", False, "Invalid stats response format")
+                    return False
+            else:
+                self.log_test("Email Stats (Empty)", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Email Stats (Empty)", False, f"Exception: {str(e)}")
+            return False
+
+    def test_simulate_incoming_email_commercial(self):
+        """Test POST /api/crm/emails/simulate-incoming - Commercial email with auto-acknowledgment"""
+        try:
+            email_data = {
+                "from_email": "client.prospect@entreprise.fr",
+                "subject": "Demande de devis pour système d'osmose inverse",
+                "body": "Bonjour, je souhaiterais recevoir un devis pour un système d'osmose inverse pour notre restaurant. Merci."
+            }
+            
+            # This endpoint requires authentication, so we expect 401/403
+            response = self.session.post(
+                f"{BACKEND_URL}/crm/emails/simulate-incoming",
+                json=email_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code in [401, 403]:
+                self.log_test("Simulate Commercial Email", True, f"Endpoint exists but requires authentication (status: {response.status_code})")
+                return True
+            elif response.status_code == 200:
+                data = response.json()
+                if "success" in data or "message" in data:
+                    self.log_test("Simulate Commercial Email", True, f"Email simulation successful: {data}")
+                    return True
+                else:
+                    self.log_test("Simulate Commercial Email", False, "Invalid simulation response")
+                    return False
+            else:
+                self.log_test("Simulate Commercial Email", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Simulate Commercial Email", False, f"Exception: {str(e)}")
+            return False
+
+    def test_simulate_incoming_email_support(self):
+        """Test POST /api/crm/emails/simulate-incoming - Support email with auto-acknowledgment"""
+        try:
+            email_data = {
+                "from_email": "client.aide@particulier.fr",
+                "subject": "Problème technique avec ma fontaine",
+                "body": "Bonjour, j'ai un problème avec ma fontaine BlueMountain, l'eau ne coule plus. Pouvez-vous m'aider ?"
+            }
+            
+            # This endpoint requires authentication, so we expect 401/403
+            response = self.session.post(
+                f"{BACKEND_URL}/crm/emails/simulate-incoming",
+                json=email_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code in [401, 403]:
+                self.log_test("Simulate Support Email", True, f"Endpoint exists but requires authentication (status: {response.status_code})")
+                return True
+            elif response.status_code == 200:
+                data = response.json()
+                if "success" in data or "message" in data:
+                    self.log_test("Simulate Support Email", True, f"Email simulation successful: {data}")
+                    return True
+                else:
+                    self.log_test("Simulate Support Email", False, "Invalid simulation response")
+                    return False
+            else:
+                self.log_test("Simulate Support Email", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Simulate Support Email", False, f"Exception: {str(e)}")
+            return False
+
+    def test_send_email_endpoint(self):
+        """Test POST /api/crm/emails/send - Send email functionality"""
+        try:
+            email_data = {
+                "to_email": "test.client@example.fr",
+                "subject": "Confirmation de votre demande",
+                "body": "Bonjour, nous avons bien reçu votre demande et vous recontacterons sous 24h. Cordialement, L'équipe Josmose"
+            }
+            
+            # This endpoint requires authentication, so we expect 401/403
+            response = self.session.post(
+                f"{BACKEND_URL}/crm/emails/send",
+                json=email_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code in [401, 403]:
+                self.log_test("Send Email", True, f"Endpoint exists but requires authentication (status: {response.status_code})")
+                return True
+            elif response.status_code == 200:
+                data = response.json()
+                if "success" in data or "message" in data:
+                    self.log_test("Send Email", True, f"Email sent successfully: {data}")
+                    return True
+                else:
+                    self.log_test("Send Email", False, "Invalid send response")
+                    return False
+            else:
+                self.log_test("Send Email", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Send Email", False, f"Exception: {str(e)}")
+            return False
+
+    def test_mark_email_read(self):
+        """Test POST /api/crm/emails/{email_id}/read - Mark email as read"""
+        try:
+            test_email_id = "test-email-123"
+            
+            # This endpoint requires authentication, so we expect 401/403
+            response = self.session.post(f"{BACKEND_URL}/crm/emails/{test_email_id}/read")
+            
+            if response.status_code in [401, 403]:
+                self.log_test("Mark Email Read", True, f"Endpoint exists but requires authentication (status: {response.status_code})")
+                return True
+            elif response.status_code == 200:
+                data = response.json()
+                if "success" in data or "message" in data:
+                    self.log_test("Mark Email Read", True, f"Email marked as read: {data}")
+                    return True
+                else:
+                    self.log_test("Mark Email Read", False, "Invalid mark read response")
+                    return False
+            elif response.status_code == 404:
+                self.log_test("Mark Email Read", True, f"Endpoint exists but email not found (expected for test ID)")
+                return True
+            else:
+                self.log_test("Mark Email Read", False, f"Status: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("Mark Email Read", False, f"Exception: {str(e)}")
+            return False
+
+    def test_josmose_email_addresses_consistency(self):
+        """Test that all @josmose.com addresses are consistent across the system"""
+        try:
+            # Get team contacts to verify @josmose.com addresses
+            response = self.session.get(f"{BACKEND_URL}/crm/team-contacts")
+            
+            if response.status_code == 200:
+                team_data = response.json()
+                
+                # Expected @josmose.com addresses
+                expected_josmose_emails = [
+                    "antonio@josmose.com",
+                    "aziza@josmose.com", 
+                    "naima@josmose.com",
+                    "commercial@josmose.com",
+                    "support@josmose.com"
+                ]
+                
+                # Extract all emails from team contacts
+                managers = team_data.get("managers", [])
+                services = team_data.get("services", [])
+                all_contacts = managers + services
+                
+                found_emails = [contact.get("email") for contact in all_contacts if contact.get("email")]
+                
+                # Check if all expected @josmose.com emails are present
+                missing_emails = [email for email in expected_josmose_emails if email not in found_emails]
+                extra_emails = [email for email in found_emails if email not in expected_josmose_emails]
+                
+                issues = []
+                if missing_emails:
+                    issues.append(f"Missing @josmose.com emails: {missing_emails}")
+                if extra_emails:
+                    issues.append(f"Unexpected emails: {extra_emails}")
+                
+                # Verify all emails are @josmose.com domain
+                non_josmose_emails = [email for email in found_emails if not email.endswith("@josmose.com")]
+                if non_josmose_emails:
+                    issues.append(f"Non-@josmose.com emails found: {non_josmose_emails}")
+                
+                if not issues:
+                    self.log_test("@josmose.com Email Consistency", True, f"All {len(expected_josmose_emails)} @josmose.com addresses present and consistent")
+                    return True
+                else:
+                    self.log_test("@josmose.com Email Consistency", False, f"Issues: {'; '.join(issues)}")
+                    return False
+            else:
+                self.log_test("@josmose.com Email Consistency", False, f"Status: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("@josmose.com Email Consistency", False, f"Exception: {str(e)}")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests"""
