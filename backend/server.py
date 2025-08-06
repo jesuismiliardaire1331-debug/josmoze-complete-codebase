@@ -605,62 +605,6 @@ async def get_available_languages():
     """
     return translation_service.get_available_languages()
 
-@api_router.get("/products/translated")
-async def get_translated_products(
-    customer_type: str = "B2C", 
-    language: str = "FR",
-    request: Request = None
-):
-    """
-    Récupère les produits traduits automatiquement
-    Si pas de langue spécifiée, détecte automatiquement via IP
-    """
-    try:
-        # Si pas de langue spécifiée, détecter automatiquement
-        if language == "FR" and request:
-            client_ip = translation_service.get_client_ip(request)
-            language = translation_service.get_user_language_from_ip(client_ip)
-        
-        # Récupérer les produits originaux
-        products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
-        if not products_data:
-            await initialize_products()
-            products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
-        
-        # Traduire chaque produit si nécessaire
-        translated_products = []
-        for product in products_data:
-            if language != "FR":
-                # Traduire le produit
-                translated_product = await translation_service.translate_object(product, language)
-            else:
-                translated_product = product
-            
-            # Ajouter les informations de stock
-            product_obj = Product(**translated_product)
-            stock_status = await inventory_manager.get_stock_status(product["id"])
-            
-            product_dict = product_obj.dict()
-            product_dict["stock_info"] = {
-                "in_stock": stock_status.get("available_stock", 0) > 0,
-                "show_stock_warning": stock_status.get("show_stock_warning", False),
-                "stock_warning_text": stock_status.get("stock_warning_text"),
-                "available_stock": stock_status.get("available_stock", 0) if stock_status.get("available_stock", 0) > 5 else "Quelques unités disponibles"
-            }
-            
-            translated_products.append(product_dict)
-        
-        return {
-            "products": translated_products,
-            "language": language,
-            "customer_type": customer_type
-        }
-        
-    except Exception as e:
-        logging.error(f"Error in translated products: {str(e)}")
-        # Fallback vers les produits originaux
-        return await get_products(customer_type)
-
 @api_router.post("/localization/translate-bulk")
 async def translate_bulk_content(
     content: Dict[str, Any],
