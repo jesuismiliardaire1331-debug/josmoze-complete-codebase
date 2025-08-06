@@ -368,7 +368,7 @@ const ProductGrid = () => {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              🏠 Particuliers
+              {t('customer.individuals')}
             </button>
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('changeCustomerType', { detail: 'B2B' }))}
@@ -378,20 +378,17 @@ const ProductGrid = () => {
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              🏢 Professionnels
+              {t('customer.professionals')}
             </button>
           </div>
         </div>
         
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          {customerType === 'B2B' ? 'Solutions Professionnelles 💼' : 'Nos Produits 💧'}
+          {customerType === 'B2B' ? t('products.title.b2b') : t('products.title.b2c')}
         </h2>
         
         <p className="text-gray-600">
-          {customerType === 'B2B' 
-            ? 'Systèmes industriels pour restaurants, bureaux et commerces'
-            : 'Systèmes d\'osmose inverse pour votre foyer'
-          }
+          {customerType === 'B2B' ? t('products.subtitle.b2b') : t('products.subtitle.b2c')}
         </p>
       </div>
       
