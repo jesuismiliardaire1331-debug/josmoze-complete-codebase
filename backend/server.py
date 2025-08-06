@@ -1173,21 +1173,21 @@ async def get_team_contacts():
             {
                 "name": "Antonio",
                 "position": "Directeur Général", 
-                "email": "antonio@osmose.com",
+                "email": "antonio@josmose.com",
                 "department": "Direction Générale",
                 "speciality": "Direction stratégique et développement"
             },
             {
                 "name": "Aziza",
                 "position": "Directrice Adjointe",
-                "email": "aziza@osmose.com", 
+                "email": "aziza@josmose.com", 
                 "department": "Direction Adjointe",
                 "speciality": "Gestion opérationnelle et coordination"
             },
             {
                 "name": "Naima", 
                 "position": "Directrice Commerciale",
-                "email": "naima@osmose.com",
+                "email": "naima@josmose.com",
                 "department": "Direction Commerciale", 
                 "speciality": "Développement commercial et relations clients"
             }
@@ -1196,14 +1196,14 @@ async def get_team_contacts():
             {
                 "name": "Service Commercial",
                 "position": "Équipe Commerciale",
-                "email": "commercial@osmose.com",
+                "email": "commercial@josmose.com",
                 "department": "Service Commercial",
                 "speciality": "Prospection et ventes, devis personnalisés"
             },
             {
                 "name": "Support Technique",
                 "position": "Technicien Support", 
-                "email": "support@osmose.com",
+                "email": "support@josmose.com",
                 "department": "Support Technique",
                 "speciality": "Installation, maintenance et support technique"
             }
