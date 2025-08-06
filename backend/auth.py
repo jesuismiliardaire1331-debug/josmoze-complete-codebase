@@ -282,6 +282,24 @@ def get_user_permissions(role: str) -> Dict[str, bool]:
             "manage_users": False,
             "view_analytics": False,
             "export_data": False
+        },
+        "commercial": {
+            "view_dashboard": True,
+            "view_leads": True,
+            "edit_leads": True,
+            "delete_leads": False,
+            "view_orders": True,
+            "edit_orders": True,
+            "view_stock": True,
+            "edit_stock": False,
+            "view_invoices": True,
+            "view_marketing": True,
+            "edit_marketing": True,
+            "view_campaigns": True,
+            "edit_campaigns": True,
+            "manage_users": False,
+            "view_analytics": True,
+            "export_data": True
         }
     }
     
