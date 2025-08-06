@@ -308,6 +308,10 @@ const Hero = () => {
                 </button>
               )}
             </div>
+            
+            <div className="mt-8 text-sm text-blue-100">
+              {t('hero.guarantee')}
+            </div>
           </div>
           
           <div className="relative">
