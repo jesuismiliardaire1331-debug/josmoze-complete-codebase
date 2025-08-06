@@ -2822,6 +2822,19 @@ class BackendTester:
         self.test_enhanced_product_catalog()
         print()
         
+        # 🌍 NEW TRANSLATION SYSTEM TESTS 🌍
+        print("🌍 AUTOMATIC TRANSLATION SYSTEM TESTS (DeepL API)")
+        print("-" * 40)
+        self.test_localization_detect()
+        self.test_individual_text_translation()
+        self.test_available_languages_list()
+        self.test_translated_products()
+        self.test_bulk_translation()
+        self.test_deepl_api_integration()
+        self.test_translation_caching()
+        self.test_translation_error_handling()
+        print()
+        
         # CRM Authentication for protected endpoints
         print("🔐 CRM AUTHENTICATION")
         print("-" * 40)
