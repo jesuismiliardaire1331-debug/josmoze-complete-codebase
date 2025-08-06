@@ -2936,6 +2936,22 @@ class BackendTester:
         print(f"Social Media Success Rate: {(social_passed/len(social_results))*100:.1f}%" if social_results else "No social media tests")
         print()
         
+        # Translation system summary
+        translation_tests = [
+            "Localization Detection", "Individual Text Translation", "Available Languages List",
+            "Translated Products", "Bulk Translation", "DeepL API Integration", 
+            "Translation Caching", "Translation Error Handling"
+        ]
+        
+        translation_results = [r for r in self.test_results if r["test"] in translation_tests]
+        translation_passed = sum(1 for r in translation_results if r["success"])
+        
+        print("🌍 TRANSLATION SYSTEM SUMMARY:")
+        print(f"Translation Tests: {len(translation_results)}")
+        print(f"Translation Passed: {translation_passed}")
+        print(f"Translation Success Rate: {(translation_passed/len(translation_results))*100:.1f}%" if translation_results else "No translation tests")
+        print()
+        
         # Advanced features summary
         advanced_tests = [
             "Product Stock Info", "Inventory Dashboard", "Product Restock", 
