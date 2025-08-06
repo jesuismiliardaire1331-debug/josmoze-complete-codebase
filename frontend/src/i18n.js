@@ -184,6 +184,10 @@ i18n
     
     supportedLngs: supportedLanguages,
     
+    // Configuration pour accepter les codes avec tirets
+    load: 'languageOnly',
+    cleanCode: false,
+    
     debug: process.env.NODE_ENV === 'development',
     
     detection: {
