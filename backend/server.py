@@ -1304,8 +1304,7 @@ async def mark_email_read(email_id: str, current_user: dict = Depends(require_ro
         raise HTTPException(status_code=500, detail="Erreur lors du marquage de l'email")
 
 @api_router.post("/crm/emails/simulate-incoming")
-@require_role(["manager"])  # Seulement pour les managers (démo)
-async def simulate_incoming_email(email_data: EmailSimulationRequest, current_user: dict = Depends(get_current_user)):
+async def simulate_incoming_email(email_data: EmailSimulationRequest, current_user: dict = Depends(require_role(["manager"]))):
     """
     Simule la réception d'un email (pour démonstration)
     Déclenche automatiquement un accusé de réception
