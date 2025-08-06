@@ -3117,6 +3117,309 @@ class BackendTester:
         except Exception as e:
             self.log_test("Translation Error Handling", False, f"Exception: {str(e)}")
             return False
+
+    # ========== NEW @OSMOSE.COM EMAIL SYSTEM TESTS ==========
+    
+    def test_team_contacts_endpoint(self):
+        """Test GET /api/crm/team-contacts - New professional email addresses @osmose.com"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/crm/team-contacts")
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_sections = ["managers", "services", "contact_general"]
+                
+                if all(section in data for section in required_sections):
+                    managers = data["managers"]
+                    services = data["services"]
+                    
+                    # Check for expected @osmose.com email addresses
+                    expected_manager_emails = [
+                        "antonio@osmose.com",
+                        "aziza@osmose.com", 
+                        "naima@osmose.com"
+                    ]
+                    
+                    expected_service_emails = [
+                        "commercial@osmose.com",
+                        "support@osmose.com"
+                    ]
+                    
+                    # Verify manager emails
+                    manager_emails = [manager.get("email") for manager in managers]
+                    managers_found = all(email in manager_emails for email in expected_manager_emails)
+                    
+                    # Verify service emails
+                    service_emails = [service.get("email") for service in services]
+                    services_found = all(email in service_emails for email in expected_service_emails)
+                    
+                    if managers_found and services_found:
+                        self.log_test("Team Contacts Endpoint", True, 
+                                    f"All @osmose.com emails found: {len(manager_emails)} managers, {len(service_emails)} services")
+                        
+                        # Verify data structure completeness
+                        manager_complete = all(
+                            all(field in manager for field in ["name", "position", "email", "department", "speciality"])
+                            for manager in managers
+                        )
+                        
+                        service_complete = all(
+                            all(field in service for field in ["name", "position", "email", "department", "speciality"])
+                            for service in services
+                        )
+                        
+                        if manager_complete and service_complete:
+                            self.log_test("Team Contacts Data Structure", True, "All required fields present for managers and services")
+                            return True
+                        else:
+                            self.log_test("Team Contacts Data Structure", False, "Missing required fields in team data")
+                            return False
+                    else:
+                        missing_managers = [email for email in expected_manager_emails if email not in manager_emails]
+                        missing_services = [email for email in expected_service_emails if email not in service_emails]
+                        self.log_test("Team Contacts Endpoint", False, 
+                                    f"Missing emails - Managers: {missing_managers}, Services: {missing_services}")
+                        return False
+                else:
+                    missing = [section for section in required_sections if section not in data]
+                    self.log_test("Team Contacts Endpoint", False, f"Missing sections: {missing}")
+                    return False
+            else:
+                self.log_test("Team Contacts Endpoint", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Team Contacts Endpoint", False, f"Exception: {str(e)}")
+            return False
+
+    def test_authentication_with_professional_emails(self):
+        """Test authentication system with new @josmose.com login -> @osmose.com professional emails"""
+        try:
+            # Test credentials mapping: login@josmose.com -> professional@osmose.com
+            test_credentials = [
+                {
+                    "login_email": "antonio@josmose.com",
+                    "password": "Antonio@2024!Secure",
+                    "expected_professional_email": "antonio@osmose.com",
+                    "expected_role": "manager",
+                    "expected_name": "Antonio"
+                },
+                {
+                    "login_email": "aziza@josmose.com", 
+                    "password": "Aziza@2024!Director",
+                    "expected_professional_email": "aziza@osmose.com",
+                    "expected_role": "manager",
+                    "expected_name": "Aziza"
+                },
+                {
+                    "login_email": "naima@josmose.com",
+                    "password": "Naima@2024!Commerce", 
+                    "expected_professional_email": "naima@osmose.com",
+                    "expected_role": "manager",
+                    "expected_name": "Naima"
+                },
+                {
+                    "login_email": "commercial@josmose.com",
+                    "password": "Commercial@2024!Sales",
+                    "expected_professional_email": "commercial@osmose.com", 
+                    "expected_role": "commercial",
+                    "expected_name": "Commercial"
+                }
+            ]
+            
+            successful_auths = 0
+            
+            for cred in test_credentials:
+                try:
+                    # Test login
+                    login_data = {
+                        "username": cred["login_email"],
+                        "password": cred["password"]
+                    }
+                    
+                    response = self.session.post(
+                        f"{BACKEND_URL}/auth/login",
+                        data=login_data,  # Form data for OAuth2
+                        headers={"Content-Type": "application/x-www-form-urlencoded"}
+                    )
+                    
+                    if response.status_code == 200:
+                        data = response.json()
+                        if "access_token" in data:
+                            # Get user info with token
+                            token = data["access_token"]
+                            headers = {"Authorization": f"Bearer {token}"}
+                            
+                            user_response = self.session.get(f"{BACKEND_URL}/auth/user-info", headers=headers)
+                            
+                            if user_response.status_code == 200:
+                                user_data = user_response.json()
+                                user_info = user_data.get("user", {})
+                                
+                                # Check if professional email mapping is correct
+                                professional_email = user_info.get("email")
+                                role = user_info.get("role")
+                                name = user_info.get("full_name", "")
+                                
+                                if (professional_email == cred["expected_professional_email"] and 
+                                    role == cred["expected_role"]):
+                                    self.log_test(f"Auth {cred['expected_name']}", True, 
+                                                f"Login: {cred['login_email']} -> Professional: {professional_email}, Role: {role}")
+                                    successful_auths += 1
+                                else:
+                                    self.log_test(f"Auth {cred['expected_name']}", False, 
+                                                f"Wrong mapping: expected {cred['expected_professional_email']}/{cred['expected_role']}, got {professional_email}/{role}")
+                            else:
+                                self.log_test(f"Auth {cred['expected_name']}", False, f"User info failed: {user_response.status_code}")
+                        else:
+                            self.log_test(f"Auth {cred['expected_name']}", False, "No access token in response")
+                    else:
+                        self.log_test(f"Auth {cred['expected_name']}", False, f"Login failed: {response.status_code}")
+                        
+                except Exception as auth_e:
+                    self.log_test(f"Auth {cred['expected_name']}", False, f"Exception: {str(auth_e)}")
+            
+            if successful_auths >= 3:  # At least 3 out of 4 should work
+                self.log_test("Professional Email Authentication", True, f"{successful_auths}/4 authentications successful")
+                return True
+            else:
+                self.log_test("Professional Email Authentication", False, f"Only {successful_auths}/4 authentications successful")
+                return False
+                
+        except Exception as e:
+            self.log_test("Professional Email Authentication", False, f"Exception: {str(e)}")
+            return False
+
+    def test_commercial_role_permissions(self):
+        """Test that commercial@josmose.com has appropriate permissions"""
+        try:
+            # Login as commercial user
+            login_data = {
+                "username": "commercial@josmose.com",
+                "password": "Commercial@2024!Sales"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                data=login_data,
+                headers={"Content-Type": "application/x-www-form-urlencoded"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "access_token" in data:
+                    token = data["access_token"]
+                    headers = {"Authorization": f"Bearer {token}"}
+                    
+                    # Test CRM permissions
+                    crm_response = self.session.get(f"{BACKEND_URL}/crm/user-permissions", headers=headers)
+                    
+                    if crm_response.status_code == 200:
+                        permissions_data = crm_response.json()
+                        permissions = permissions_data.get("permissions", {})
+                        user_info = permissions_data.get("user", {})
+                        
+                        # Check if commercial role has appropriate permissions
+                        expected_permissions = [
+                            "view_dashboard", "edit_leads", "view_orders", 
+                            "view_marketing", "edit_campaigns"
+                        ]
+                        
+                        has_permissions = all(permissions.get(perm, False) for perm in expected_permissions)
+                        
+                        if has_permissions and user_info.get("role") == "commercial":
+                            self.log_test("Commercial Role Permissions", True, 
+                                        f"Commercial role has appropriate permissions: {list(permissions.keys())}")
+                            return True
+                        else:
+                            missing_perms = [perm for perm in expected_permissions if not permissions.get(perm, False)]
+                            self.log_test("Commercial Role Permissions", False, 
+                                        f"Missing permissions: {missing_perms}, Role: {user_info.get('role')}")
+                            return False
+                    else:
+                        self.log_test("Commercial Role Permissions", False, f"Permissions check failed: {crm_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Commercial Role Permissions", False, "No access token received")
+                    return False
+            else:
+                self.log_test("Commercial Role Permissions", False, f"Commercial login failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Commercial Role Permissions", False, f"Exception: {str(e)}")
+            return False
+
+    def test_email_system_consistency(self):
+        """Test consistency between team contacts and authentication system"""
+        try:
+            # Get team contacts
+            contacts_response = self.session.get(f"{BACKEND_URL}/crm/team-contacts")
+            
+            if contacts_response.status_code == 200:
+                contacts_data = contacts_response.json()
+                
+                # Extract all professional emails
+                all_contacts = []
+                all_contacts.extend(contacts_data.get("managers", []))
+                all_contacts.extend(contacts_data.get("services", []))
+                
+                # Check consistency of names, positions, and departments
+                consistency_checks = []
+                
+                for contact in all_contacts:
+                    email = contact.get("email", "")
+                    name = contact.get("name", "")
+                    position = contact.get("position", "")
+                    department = contact.get("department", "")
+                    speciality = contact.get("speciality", "")
+                    
+                    # Verify expected mappings
+                    if email == "antonio@osmose.com":
+                        expected = {"name": "Antonio", "position": "Directeur Général", "department": "Direction Générale"}
+                        actual = {"name": name, "position": position, "department": department}
+                        consistency_checks.append(("Antonio", expected == actual, f"Expected: {expected}, Got: {actual}"))
+                    
+                    elif email == "aziza@osmose.com":
+                        expected = {"name": "Aziza", "position": "Directrice Adjointe", "department": "Direction Adjointe"}
+                        actual = {"name": name, "position": position, "department": department}
+                        consistency_checks.append(("Aziza", expected == actual, f"Expected: {expected}, Got: {actual}"))
+                    
+                    elif email == "naima@osmose.com":
+                        expected = {"name": "Naima", "position": "Directrice Commerciale", "department": "Direction Commerciale"}
+                        actual = {"name": name, "position": position, "department": department}
+                        consistency_checks.append(("Naima", expected == actual, f"Expected: {expected}, Got: {actual}"))
+                    
+                    elif email == "commercial@osmose.com":
+                        expected = {"name": "Service Commercial", "position": "Équipe Commerciale", "department": "Service Commercial"}
+                        actual = {"name": name, "position": position, "department": department}
+                        consistency_checks.append(("Commercial", expected == actual, f"Expected: {expected}, Got: {actual}"))
+                    
+                    elif email == "support@osmose.com":
+                        expected = {"name": "Support Technique", "position": "Technicien Support", "department": "Support Technique"}
+                        actual = {"name": name, "position": position, "department": department}
+                        consistency_checks.append(("Support", expected == actual, f"Expected: {expected}, Got: {actual}"))
+                
+                # Check results
+                all_consistent = all(check[1] for check in consistency_checks)
+                
+                if all_consistent:
+                    self.log_test("Email System Consistency", True, 
+                                f"All {len(consistency_checks)} contacts have consistent information")
+                    return True
+                else:
+                    failed_checks = [check for check in consistency_checks if not check[1]]
+                    self.log_test("Email System Consistency", False, 
+                                f"Inconsistent data for: {[check[0] for check in failed_checks]}")
+                    for check in failed_checks:
+                        print(f"   {check[0]}: {check[2]}")
+                    return False
+            else:
+                self.log_test("Email System Consistency", False, f"Could not get team contacts: {contacts_response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Email System Consistency", False, f"Exception: {str(e)}")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests"""
