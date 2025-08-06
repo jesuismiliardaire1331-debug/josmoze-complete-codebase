@@ -53,8 +53,11 @@ class User(BaseModel):
     id: str
     username: str
     email: str
-    role: str  # admin, manager, agent, support
+    professional_email: Optional[str] = None
+    role: str  # admin, manager, agent, support, commercial
     full_name: str
+    department: Optional[str] = None
+    position: Optional[str] = None
     is_active: bool = True
     created_at: datetime
     last_login: Optional[datetime] = None
