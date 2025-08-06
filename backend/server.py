@@ -1235,8 +1235,7 @@ class EmailSimulationRequest(BaseModel):
     body: str
 
 @api_router.post("/crm/emails/send")
-@require_role(["manager", "commercial", "technique"])
-async def send_email(email_data: EmailSendRequest, current_user: dict = Depends(get_current_user)):
+async def send_email(email_data: EmailSendRequest, current_user: dict = Depends(require_role(["manager", "commercial", "technique"]))):
     """
     Envoie un email depuis l'adresse professionnelle de l'utilisateur
     """
