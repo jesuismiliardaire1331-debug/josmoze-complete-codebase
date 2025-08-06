@@ -84,10 +84,13 @@ CRM_USERS = {
     "aziza@josmose.com": {
         "id": "user_aziza", 
         "username": "aziza@josmose.com",
-        "email": "aziza@josmose.com",
+        "email": "aziza@osmose.com",  # Email professionnel pour clients
+        "professional_email": "aziza@osmose.com", 
         "full_name": "Aziza - Manager",
         "role": "manager",  # Manager role - same as Naima
         "password_hash": "$2b$12$GHSiiMx03IQ81HMWinZUn.xvyi3MtGhg6k6mZG1QXqCwCZJT5b/vm",  # "Aziza@2024!Director"
+        "department": "Direction Adjointe",
+        "position": "Directrice Adjointe",
         "is_active": True
     },
     "antonio@josmose.com": {
