@@ -101,6 +101,8 @@ CRM_USERS = {
         "full_name": "Antonio - Manager",
         "role": "manager",  # Manager role - same as Naima
         "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
+        "department": "Direction Générale", 
+        "position": "Directeur Général",
         "is_active": True
     },
     "support@josmose.com": {
