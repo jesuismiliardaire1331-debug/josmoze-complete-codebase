@@ -125,7 +125,7 @@ CRM_USERS = {
         "professional_email": "commercial@osmose.com",
         "full_name": "Service Commercial",
         "role": "commercial",  # Role commercial pour prospects
-        "password_hash": "$2b$12$T3.CqIsUwLAcFv8lM2fyGOBlYKAIJB0TZXXmWrYg2SFim/jgW1Cd2",  # "Commercial@2024!Sales"
+        "password_hash": "$2b$12$JUSY1Xvr16sYMyxClk5m0.JQhAqylyzBZy4I/LPHyR4q9ESP9353G",  # "Commercial@2024!Sales"
         "department": "Service Commercial",
         "position": "Équipe Commerciale",
         "is_active": True
