@@ -342,12 +342,14 @@ const ProductGrid = () => {
         // Utiliser l'endpoint de traduction automatique
         const response = await axios.get(`${API}/products/translated?customer_type=${customerType}`);
         setProducts(response.data.products || response.data);
+        console.log('✅ Produits traduits chargés pour langue:', i18n.language);
       } catch (error) {
         console.error('Failed to fetch translated products:', error);
         // Fallback vers l'ancien endpoint
         try {
           const fallbackResponse = await axios.get(`${API}/products?customer_type=${customerType}`);
           setProducts(fallbackResponse.data);
+          console.log('⚠️ Utilisation du fallback pour les produits');
         } catch (fallbackError) {
           console.error('Failed to fetch products:', fallbackError);
         }
@@ -355,6 +357,20 @@ const ProductGrid = () => {
     };
 
     fetchProducts();
+
+    // Écouter les changements de langue
+    const handleLanguageChange = () => {
+      console.log('🔄 Changement de langue détecté, rechargement des produits...');
+      fetchProducts();
+    };
+
+    window.addEventListener('languageChanged', handleLanguageChange);
+    window.addEventListener('autoLanguageChanged', handleLanguageChange);
+
+    return () => {
+      window.removeEventListener('languageChanged', handleLanguageChange);
+      window.removeEventListener('autoLanguageChanged', handleLanguageChange);
+    };
   }, [customerType, i18n.language]); // Utiliser i18n.language
 
   const handleAddToCart = (product) => {
