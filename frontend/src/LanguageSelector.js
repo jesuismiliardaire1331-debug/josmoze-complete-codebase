@@ -14,42 +14,32 @@ const LanguageSelector = () => {
 
   // Charger les langues disponibles et détecter automatiquement
   useEffect(() => {
-    loadAvailableLanguages();
-    
-    // Détecter automatiquement seulement si la langue actuelle est FR et qu'on n'a pas encore détecté
-    const hasAutoDetected = localStorage.getItem('hasAutoDetected');
-    if (i18n.language === 'FR' && !hasAutoDetected) {
-      detectUserLocalization();
-    }
+    // Utiliser les langues prédéfinies
+    setAvailableLanguages(getAvailableLanguagesForDisplay());
   }, []);
 
   const detectUserLocalization = async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${backendUrl}/api/localization/detect`);
-      const { detected_language, currency, available_languages } = response.data;
+      const { detected_language, currency } = response.data;
       
       console.log('LanguageSelector - Détection automatique:', { detected_language, currency });
       
-      // Marquer qu'on a déjà fait la détection automatique
-      localStorage.setItem('hasAutoDetected', 'true');
+      // Convertir vers le code i18next
+      const i18nLanguageCode = convertDeepLToI18n(detected_language);
       
-      // Changer automatiquement la langue si différente de FR
-      if (detected_language && detected_language !== 'FR' && detected_language !== i18n.language) {
-        console.log('LanguageSelector - Changement automatique vers:', detected_language);
-        await i18n.changeLanguage(detected_language);
-        localStorage.setItem('i18nextLng', detected_language);
+      // Changer automatiquement la langue si différente
+      if (i18nLanguageCode !== i18n.language) {
+        console.log('LanguageSelector - Changement automatique vers:', i18nLanguageCode);
+        await i18n.changeLanguage(i18nLanguageCode);
+        localStorage.setItem('i18nextLng', i18nLanguageCode);
       }
       
       // Mettre à jour la devise
       if (currency) {
         setCurrentCurrency(currency);
         localStorage.setItem('userCurrency', JSON.stringify(currency));
-      }
-      
-      // Mettre à jour les langues disponibles
-      if (available_languages) {
-        setAvailableLanguages(available_languages);
       }
       
     } catch (error) {
