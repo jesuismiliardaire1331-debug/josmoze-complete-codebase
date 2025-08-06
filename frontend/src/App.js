@@ -133,7 +133,8 @@ const AppProvider = ({ children }) => {
       clearCart,
       getCartTotal,
       formatPrice,
-      loading
+      loading,
+      currentCurrency
     }}>
       {children}
     </AppContext.Provider>
