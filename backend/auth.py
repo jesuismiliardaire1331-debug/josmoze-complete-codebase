@@ -116,6 +116,19 @@ CRM_USERS = {
         "department": "Support Technique",
         "position": "Technicien Support",
         "is_active": True
+    },
+    # Nouvelle adresse email pour le service commercial
+    "commercial@josmose.com": {
+        "id": "user_commercial",
+        "username": "commercial@josmose.com", 
+        "email": "commercial@osmose.com",  # Email professionnel pour prospects
+        "professional_email": "commercial@osmose.com",
+        "full_name": "Service Commercial",
+        "role": "commercial",  # Role commercial pour prospects
+        "password_hash": "$2b$12$T3.CqIsUwLAcFv8lM2fyGOBlYKAIJB0TZXXmWrYg2SFim/jgW1Cd2",  # "Commercial@2024!Sales"
+        "department": "Service Commercial",
+        "position": "Équipe Commerciale",
+        "is_active": True
     }
 }
 
