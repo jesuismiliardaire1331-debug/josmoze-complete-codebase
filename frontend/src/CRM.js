@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "./CRMLogin";
 import AnalyticsDashboard from "./AnalyticsDashboard";
+import TeamContacts from "./TeamContacts";
 import { useNotifications } from "./NotificationSystem";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
