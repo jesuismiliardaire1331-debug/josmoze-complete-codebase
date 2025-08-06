@@ -113,6 +113,8 @@ CRM_USERS = {
         "full_name": "Support - Technique",
         "role": "technique",  # Technical support role - limited access
         "password_hash": "$2b$12$AgqPE73OcPnBKMmpgCQ3IOiShGsj8AuBo.TLETjIUJgS.AD9aFEd.",  # "Support@2024!Help"
+        "department": "Support Technique",
+        "position": "Technicien Support",
         "is_active": True
     }
 }
