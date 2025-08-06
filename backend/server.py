@@ -147,6 +147,29 @@ class CountryDetection(BaseModel):
     language: str
     shipping_cost: float
 
+class TranslationRequest(BaseModel):
+    text: str
+    target_language: str
+    source_language: str = "FR"
+
+class TranslationResponse(BaseModel):
+    original_text: str
+    translated_text: str
+    source_language: str
+    target_language: str
+
+class LanguageDetectionResponse(BaseModel):
+    detected_language: str
+    detected_country: str
+    currency: Dict[str, str]
+    available_languages: Dict[str, Dict[str, str]]
+    ip_address: str
+
+class LocalizationSettings(BaseModel):
+    language: str
+    country: str
+    currency: Dict[str, str]
+
 class PaymentTransaction(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     session_id: str
