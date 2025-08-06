@@ -13,8 +13,13 @@ const LanguageSelector = () => {
 
   // Charger les langues disponibles et détecter automatiquement
   useEffect(() => {
-    detectUserLocalization();
     loadAvailableLanguages();
+    
+    // Détecter automatiquement seulement si la langue actuelle est FR et qu'on n'a pas encore détecté
+    const hasAutoDetected = localStorage.getItem('hasAutoDetected');
+    if (i18n.language === 'FR' && !hasAutoDetected) {
+      detectUserLocalization();
+    }
   }, []);
 
   const detectUserLocalization = async () => {
@@ -23,10 +28,14 @@ const LanguageSelector = () => {
       const response = await axios.get(`${backendUrl}/api/localization/detect`);
       const { detected_language, currency, available_languages } = response.data;
       
-      console.log('Détection automatique:', { detected_language, currency });
+      console.log('LanguageSelector - Détection automatique:', { detected_language, currency });
       
-      // Changer automatiquement la langue si différente
-      if (detected_language && detected_language !== i18n.language) {
+      // Marquer qu'on a déjà fait la détection automatique
+      localStorage.setItem('hasAutoDetected', 'true');
+      
+      // Changer automatiquement la langue si différente de FR
+      if (detected_language && detected_language !== 'FR' && detected_language !== i18n.language) {
+        console.log('LanguageSelector - Changement automatique vers:', detected_language);
         await i18n.changeLanguage(detected_language);
         localStorage.setItem('i18nextLng', detected_language);
       }
