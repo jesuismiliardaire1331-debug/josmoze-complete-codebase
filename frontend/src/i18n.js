@@ -8,6 +8,19 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 // Configuration des langues disponibles
 const supportedLanguages = ['FR', 'EN-GB', 'EN-US', 'ES', 'IT', 'DE', 'NL', 'PT-PT', 'PL'];
 
+// Map DeepL language codes to i18next language codes
+const languageCodeMap = {
+  'EN-US': 'EN-US',
+  'EN-GB': 'EN-GB', 
+  'FR': 'FR',
+  'ES': 'ES',
+  'IT': 'IT',
+  'DE': 'DE',
+  'NL': 'NL',
+  'PT-PT': 'PT-PT',
+  'PL': 'PL'
+};
+
 // Ressources de traduction par défaut (fallback)
 const resources = {
   'FR': {
