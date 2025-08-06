@@ -203,6 +203,14 @@ const LanguageSelector = () => {
             <div className="text-xs text-gray-400 mt-1">
               La devise change automatiquement selon votre région
             </div>
+            {process.env.NODE_ENV === 'development' && (
+              <button
+                onClick={forceDetection}
+                className="mt-2 text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+              >
+                🔄 Forcer détection
+              </button>
+            )}
           </div>
         </div>
       )}
