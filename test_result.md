@@ -387,6 +387,21 @@ backend:
           agent: "testing"
           comment: "TESTED: Translation error handling and caching system working excellently. Invalid language codes handled gracefully with fallback to original text. Translation caching reduces API calls and improves performance. Consistent results across multiple identical requests. System handles DeepL API errors gracefully and maintains service availability."
 
+  - task: "Professional Email System @osmose.com"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: Added professional email system @osmose.com with team contacts endpoint GET /api/crm/team-contacts. Includes antonio@osmose.com (Directeur Général), aziza@osmose.com (Directrice Adjointe), naima@osmose.com (Directrice Commerciale), commercial@osmose.com (Service Commercial), support@osmose.com (Support Technique). Authentication mapping: login@josmose.com -> professional@osmose.com. New commercial role with appropriate permissions."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Professional email system @osmose.com working perfectly! ✅ Team Contacts Endpoint (GET /api/crm/team-contacts) returns all 5 @osmose.com addresses with complete manager and service information ✅ Authentication mapping working: antonio@josmose.com -> antonio@osmose.com, aziza@josmose.com -> aziza@osmose.com, naima@josmose.com -> naima@osmose.com, commercial@josmose.com -> commercial@osmose.com ✅ Commercial role permissions verified with appropriate CRM access ✅ Email system consistency confirmed - all names, positions, departments match expected values. Fixed commercial user password hash issue. All 12/12 tests passed (100% success rate). System ready for client communication."
+
 frontend:
   - task: "CRM Dashboard Interface"
     implemented: true
