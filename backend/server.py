@@ -462,6 +462,161 @@ async def get_product(product_id: str):
     
     return Product(**product_data)
 
+
+# ========== TRANSLATION AND LOCALIZATION ENDPOINTS ==========
+
+@api_router.get("/localization/detect")
+async def detect_user_localization(request: Request) -> LanguageDetectionResponse:
+    """
+    Détecte automatiquement la langue et la devise de l'utilisateur basé sur l'IP
+    """
+    try:
+        # Obtenir l'IP du client
+        client_ip = translation_service.get_client_ip(request)
+        
+        # Détecter la langue basée sur l'IP
+        detected_language = translation_service.get_user_language_from_ip(client_ip)
+        
+        # Détecter la devise basée sur l'IP
+        currency = translation_service.get_user_currency_from_ip(client_ip)
+        
+        # Détecter le pays
+        detected_country = translation_service.detect_country_from_ip(client_ip)
+        
+        # Obtenir les langues disponibles
+        available_languages = translation_service.get_available_languages()
+        
+        return LanguageDetectionResponse(
+            detected_language=detected_language,
+            detected_country=detected_country,
+            currency=currency,
+            available_languages=available_languages,
+            ip_address=client_ip
+        )
+        
+    except Exception as e:
+        logging.error(f"Error in localization detection: {str(e)}")
+        # Fallback vers les valeurs par défaut
+        return LanguageDetectionResponse(
+            detected_language="FR",
+            detected_country="FR", 
+            currency={"code": "EUR", "symbol": "€", "name": "Euro"},
+            available_languages=translation_service.get_available_languages(),
+            ip_address="unknown"
+        )
+
+@api_router.post("/localization/translate")
+async def translate_text(translation_request: TranslationRequest) -> TranslationResponse:
+    """
+    Traduit un texte vers la langue cible
+    """
+    try:
+        translated_text = await translation_service.translate_text(
+            text=translation_request.text,
+            target_language=translation_request.target_language,
+            source_language=translation_request.source_language
+        )
+        
+        return TranslationResponse(
+            original_text=translation_request.text,
+            translated_text=translated_text,
+            source_language=translation_request.source_language,
+            target_language=translation_request.target_language
+        )
+        
+    except Exception as e:
+        logging.error(f"Translation error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Translation failed")
+
+@api_router.get("/localization/languages")
+async def get_available_languages():
+    """
+    Retourne toutes les langues disponibles avec leurs métadonnées
+    """
+    return translation_service.get_available_languages()
+
+@api_router.get("/products/translated")
+async def get_translated_products(
+    customer_type: str = "B2C", 
+    language: str = "FR",
+    request: Request = None
+):
+    """
+    Récupère les produits traduits automatiquement
+    Si pas de langue spécifiée, détecte automatiquement via IP
+    """
+    try:
+        # Si pas de langue spécifiée, détecter automatiquement
+        if language == "FR" and request:
+            client_ip = translation_service.get_client_ip(request)
+            language = translation_service.get_user_language_from_ip(client_ip)
+        
+        # Récupérer les produits originaux
+        products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
+        if not products_data:
+            await initialize_products()
+            products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
+        
+        # Traduire chaque produit si nécessaire
+        translated_products = []
+        for product in products_data:
+            if language != "FR":
+                # Traduire le produit
+                translated_product = await translation_service.translate_object(product, language)
+            else:
+                translated_product = product
+            
+            # Ajouter les informations de stock
+            product_obj = Product(**translated_product)
+            stock_status = await inventory_manager.get_stock_status(product["id"])
+            
+            product_dict = product_obj.dict()
+            product_dict["stock_info"] = {
+                "in_stock": stock_status.get("available_stock", 0) > 0,
+                "show_stock_warning": stock_status.get("show_stock_warning", False),
+                "stock_warning_text": stock_status.get("stock_warning_text"),
+                "available_stock": stock_status.get("available_stock", 0) if stock_status.get("available_stock", 0) > 5 else "Quelques unités disponibles"
+            }
+            
+            translated_products.append(product_dict)
+        
+        return {
+            "products": translated_products,
+            "language": language,
+            "customer_type": customer_type
+        }
+        
+    except Exception as e:
+        logging.error(f"Error in translated products: {str(e)}")
+        # Fallback vers les produits originaux
+        return await get_products(customer_type)
+
+@api_router.post("/localization/translate-bulk")
+async def translate_bulk_content(
+    content: Dict[str, Any],
+    target_language: str,
+    source_language: str = "FR"
+):
+    """
+    Traduit un objet complexe (dictionnaire) récursivement
+    Utile pour traduire plusieurs éléments à la fois
+    """
+    try:
+        translated_content = await translation_service.translate_object(
+            content, target_language, source_language
+        )
+        
+        return {
+            "original": content,
+            "translated": translated_content,
+            "source_language": source_language,
+            "target_language": target_language
+        }
+        
+    except Exception as e:
+        logging.error(f"Bulk translation error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Bulk translation failed")
+
 @api_router.post("/leads")
 async def create_lead(lead: Lead, request: Request):
     """Create new lead and trigger automation"""
