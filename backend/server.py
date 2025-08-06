@@ -1163,6 +1163,61 @@ async def clear_system_cache(
             detail="Failed to clear cache"
         )
 
+@api_router.get("/crm/team-contacts")
+async def get_team_contacts():
+    """
+    Récupère les adresses email professionnelles de l'équipe pour les clients et prospects
+    """
+    team_contacts = {
+        "managers": [
+            {
+                "name": "Antonio",
+                "position": "Directeur Général", 
+                "email": "antonio@osmose.com",
+                "department": "Direction Générale",
+                "speciality": "Direction stratégique et développement"
+            },
+            {
+                "name": "Aziza",
+                "position": "Directrice Adjointe",
+                "email": "aziza@osmose.com", 
+                "department": "Direction Adjointe",
+                "speciality": "Gestion opérationnelle et coordination"
+            },
+            {
+                "name": "Naima", 
+                "position": "Directrice Commerciale",
+                "email": "naima@osmose.com",
+                "department": "Direction Commerciale", 
+                "speciality": "Développement commercial et relations clients"
+            }
+        ],
+        "services": [
+            {
+                "name": "Service Commercial",
+                "position": "Équipe Commerciale",
+                "email": "commercial@osmose.com",
+                "department": "Service Commercial",
+                "speciality": "Prospection et ventes, devis personnalisés"
+            },
+            {
+                "name": "Support Technique",
+                "position": "Technicien Support", 
+                "email": "support@osmose.com",
+                "department": "Support Technique",
+                "speciality": "Installation, maintenance et support technique"
+            }
+        ],
+        "contact_general": {
+            "website": "josmose.com",
+            "domain": "@osmose.com",
+            "headquarters": "France",
+            "business_hours": "Lundi-Vendredi 9h-18h"
+        }
+    }
+    
+    return team_contacts
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
