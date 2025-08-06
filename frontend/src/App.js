@@ -945,20 +945,20 @@ const CartSummary = () => {
         </div>
         
         <div className="bg-white rounded-lg shadow-md p-6 h-fit">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Récapitulatif</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">{t('cart.summary')}</h3>
           
           <div className="space-y-2 mb-4">
             <div className="flex justify-between">
-              <span>Sous-total:</span>
+              <span>{t('cart.subtotal')}</span>
               <span>{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between">
-              <span>Livraison:</span>
+              <span>{t('cart.shipping')}</span>
               <span>{formatPrice(shipping)}</span>
             </div>
             <hr />
             <div className="flex justify-between font-semibold text-lg">
-              <span>Total:</span>
+              <span>{t('cart.total')}</span>
               <span>{formatPrice(total)}</span>
             </div>
           </div>
@@ -967,14 +967,14 @@ const CartSummary = () => {
             onClick={handleCheckout}
             className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors mb-2"
           >
-            Procéder au Paiement 💳
+            {t('cart.checkout')}
           </button>
           
           <button
             onClick={clearCart}
             className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-400 transition-colors text-sm"
           >
-            Vider le panier
+            {t('cart.continueShop')}
           </button>
         </div>
       </div>
