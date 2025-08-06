@@ -1666,6 +1666,7 @@ function App() {
           <AuthProvider>
             <div className="App min-h-screen bg-gray-50">
               <BrowserRouter>
+                <AutoLanguageDetector />
                 <CustomerTypeHandler />
                 <Header />
                 <main>
