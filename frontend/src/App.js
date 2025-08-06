@@ -304,7 +304,7 @@ const Hero = () => {
                   onClick={() => navigate('/consultation')}
                   className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors"
                 >
-                  Consultation Gratuite 📞
+                  {t('consultation.title').replace(' avec un Expert 📞', '')} 📞
                 </button>
               )}
             </div>
