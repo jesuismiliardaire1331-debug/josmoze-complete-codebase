@@ -405,7 +405,7 @@ const ProductGrid = () => {
               {customerType === 'B2B' && product.target_audience === 'B2B' && (
                 <div className="mb-2">
                   <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2 py-1 rounded-full">
-                    Solution Pro
+                    {t('products.professionalBadge')}
                   </span>
                 </div>
               )}
@@ -429,22 +429,22 @@ const ProductGrid = () => {
                     </span>
                   )}
                   {customerType === 'B2B' && (
-                    <div className="text-xs text-purple-600 font-medium">Prix Professionnel HT</div>
+                    <div className="text-xs text-purple-600 font-medium">{t('products.professionalPrice')}</div>
                   )}
                 </div>
                 
                 <div className="text-right">
                   {product.stock_info?.in_stock ? (
                     <div>
-                      <span className="text-green-600 text-sm">✅ En stock</span>
+                      <span className="text-green-600 text-sm">{t('products.inStock')}</span>
                       {product.stock_info?.show_stock_warning && (
                         <div className="text-orange-600 text-xs font-semibold mt-1 bg-orange-50 px-2 py-1 rounded-full">
-                          ⚠️ Stock limité !
+                          {t('products.stockLimited')}
                         </div>
                       )}
                     </div>
                   ) : (
-                    <span className="text-red-600 text-sm">❌ Rupture</span>
+                    <span className="text-red-600 text-sm">{t('products.outOfStockStatus')}</span>
                   )}
                 </div>
               </div>
@@ -467,8 +467,8 @@ const ProductGrid = () => {
                 }`}
               >
                 {product.stock_info?.in_stock 
-                  ? (customerType === 'B2B' ? 'Demander un Devis 📋' : 'Ajouter au Panier 🛒')
-                  : 'Indisponible'
+                  ? (customerType === 'B2B' ? t('products.addToCart.b2b') : t('products.addToCart.b2c'))
+                  : t('products.outOfStock')
                 }
               </button>
             </div>
