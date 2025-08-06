@@ -1,7 +1,13 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext, Suspense } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, useNavigate, useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
+
+// Import traduction
+import './i18n';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+import useTranslationService from './useTranslationService';
 
 // Import CRM components
 import CRMDashboard from "./CRM";
