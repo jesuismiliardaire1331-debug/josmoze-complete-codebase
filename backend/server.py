@@ -400,28 +400,42 @@ async def root():
 
 @api_router.get("/detect-location")
 async def detect_location(request: Request):
-    """Detect user location, currency, and language"""
-    client_ip = get_client_ip(request)
-    country_code = await detect_country_from_ip(client_ip)
-    
-    if not country_code:
-        # Fallback to Accept-Language header
-        accept_language = request.headers.get("accept-language", "")
-        detected_language = detect_language_from_header(accept_language)
+    """Detect user location, currency, and language using enhanced IP detection"""
+    try:
+        # Utiliser le nouveau service de traduction pour la détection
+        client_ip = translation_service.get_client_ip(request)
         
-        # Default country based on language
-        lang_country_map = {"fr": "FR", "es": "ES", "de": "DE", "it": "IT"}
-        country_code = lang_country_map.get(detected_language, "FR")
-    
-    config = COUNTRY_CONFIG.get(country_code, COUNTRY_CONFIG["FR"])
-    
-    return CountryDetection(
-        country_code=country_code,
-        country_name=config["name"],
-        currency=config["currency"],
-        language=config["language"],
-        shipping_cost=config["shipping"]
-    )
+        # Détecter le pays via le service de traduction
+        country_code = translation_service.detect_country_from_ip(client_ip)
+        
+        # Obtenir la devise via le service de traduction
+        currency_info = translation_service.get_user_currency_from_ip(client_ip)
+        
+        # Obtenir la langue via le service de traduction
+        language_code = translation_service.get_user_language_from_ip(client_ip)
+        
+        # Mapping pour compatibilité avec l'ancien format
+        config = COUNTRY_CONFIG.get(country_code, COUNTRY_CONFIG["FR"])
+        
+        return CountryDetection(
+            country_code=country_code,
+            country_name=config["name"],
+            currency=currency_info["code"],
+            language=language_code,
+            shipping_cost=config["shipping"]
+        )
+        
+    except Exception as e:
+        logging.error(f"Location detection error: {str(e)}")
+        # Fallback vers la configuration par défaut
+        config = COUNTRY_CONFIG["FR"]
+        return CountryDetection(
+            country_code="FR",
+            country_name=config["name"],
+            currency="EUR",
+            language="FR",
+            shipping_cost=config["shipping"]
+        )
 
 @api_router.get("/products")
 async def get_products(customer_type: str = "B2C"):
