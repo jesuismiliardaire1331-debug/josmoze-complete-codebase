@@ -5,19 +5,31 @@ import Backend from 'i18next-http-backend';
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
-// Configuration des langues disponibles
-const supportedLanguages = ['FR', 'EN-GB', 'EN-US', 'ES', 'IT', 'DE', 'NL', 'PT-PT', 'PL'];
+// Configuration des langues disponibles - utiliser des codes compatibles i18next
+const supportedLanguages = ['FR', 'EN', 'ES', 'IT', 'DE', 'NL', 'PT', 'PL'];
 
 // Map DeepL language codes to i18next language codes
-const languageCodeMap = {
-  'EN-US': 'EN-US',
-  'EN-GB': 'EN-GB', 
+const deepLToI18nMap = {
   'FR': 'FR',
+  'EN-US': 'EN', 
+  'EN-GB': 'EN',
   'ES': 'ES',
   'IT': 'IT',
   'DE': 'DE',
   'NL': 'NL',
-  'PT-PT': 'PT-PT',
+  'PT-PT': 'PT',
+  'PL': 'PL'
+};
+
+// Map inverse pour l'affichage
+const i18nToDeepLMap = {
+  'FR': 'FR',
+  'EN': 'EN-GB', // Par défaut britannique pour l'Europe
+  'ES': 'ES',
+  'IT': 'IT', 
+  'DE': 'DE',
+  'NL': 'NL',
+  'PT': 'PT-PT',
   'PL': 'PL'
 };
 
