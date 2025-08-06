@@ -121,20 +121,6 @@ const AppProvider = ({ children }) => {
     return { subtotal, shipping, total: subtotal + shipping };
   };
 
-  const formatPrice = (price) => {
-    if (!userLocation) return `€${price}`;
-    
-    const currency = userLocation.currency;
-    
-    // Simple currency conversion (in real app, use live rates)
-    let convertedPrice = price;
-    if (currency === 'GBP') convertedPrice = price * 0.86;
-    if (currency === 'CHF') convertedPrice = price * 1.08;
-    
-    const currencySymbols = { EUR: '€', GBP: '£', CHF: 'CHF' };
-    return `${currencySymbols[currency] || '€'}${convertedPrice.toFixed(2)}`;
-  };
-
   return (
     <AppContext.Provider value={{
       userLocation,
