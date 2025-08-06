@@ -102,6 +102,89 @@ COUNTRY_TO_CURRENCY = {
     "CA": {"code": "CAD", "symbol": "C$", "name": "Dollar Canadien"},
 }
 
+# Traductions prédéfinies pour les produits (fallback quand DeepL n'est pas disponible)
+PRODUCT_TRANSLATIONS = {
+    "ES": {
+        "Fontaine à Eau Osmosée": "Fuente de Agua Osmótica",
+        "Kit Filtres de Rechange": "Kit de Filtros de Repuesto", 
+        "Extension Garantie 2 ans": "Extensión de Garantía 2 años",
+        "Extension Garantie 5 ans": "Extensión de Garantía 5 años",
+        "Système d'osmose inverse professionnel avec technologie Blue Mountain": "Sistema de ósmosis inversa profesional con tecnología Blue Mountain",
+        "Filtres haute qualité avec certifications européennes": "Filtros de alta calidad con certificaciones europeas",
+        "Protection étendue avec intervention à domicile": "Protección extendida con intervención a domicilio",
+        "Couverture totale avec pièces et main d'œuvre": "Cobertura total con piezas y mano de obra",
+        "En stock": "En stock",
+        "Rupture": "Sin stock",
+        "Stock limité": "Stock limitado"
+    },
+    "EN": {
+        "Fontaine à Eau Osmosée": "Osmotic Water Fountain",
+        "Kit Filtres de Rechange": "Replacement Filter Kit",
+        "Extension Garantie 2 ans": "2-Year Warranty Extension", 
+        "Extension Garantie 5 ans": "5-Year Warranty Extension",
+        "Système d'osmose inverse professionnel avec technologie Blue Mountain": "Professional reverse osmosis system with Blue Mountain technology",
+        "Filtres haute qualité avec certifications européennes": "High quality filters with European certifications",
+        "Protection étendue avec intervention à domicile": "Extended protection with home intervention",
+        "Couverture totale avec pièces et main d'œuvre": "Total coverage with parts and labor",
+        "En stock": "In stock",
+        "Rupture": "Out of stock", 
+        "Stock limité": "Limited stock"
+    },
+    "DE": {
+        "Fontaine à Eau Osmosée": "Umkehrosmose-Wasserbrunnen",
+        "Kit Filtres de Rechange": "Ersatzfilter-Set",
+        "Extension Garantie 2 ans": "2-Jahres-Garantieverlängerung",
+        "Extension Garantie 5 ans": "5-Jahres-Garantieverlängerung",
+        "Système d'osmose inverse professionnel avec technologie Blue Mountain": "Professionelle Umkehrosmoseanlage mit Blue Mountain Technologie",
+        "Filtres haute qualité avec certifications européennes": "Hochwertige Filter mit europäischen Zertifizierungen",
+        "Protection étendue avec intervention à domicile": "Erweiterte Schutz mit Hausinjektion",
+        "Couverture totale avec pièces et main d'œuvre": "Vollständige Abdeckung mit Teilen und Arbeit",
+        "En stock": "Auf Lager",
+        "Rupture": "Nicht auf Lager",
+        "Stock limité": "Begrenzter Bestand"
+    },
+    "IT": {
+        "Fontaine à Eau Osmosée": "Fontana d'Acqua Osmotica",
+        "Kit Filtres de Rechange": "Kit Filtri di Ricambio",
+        "Extension Garantie 2 ans": "Estensione Garanzia 2 anni",
+        "Extension Garantie 5 ans": "Estensione Garanzia 5 anni",
+        "Système d'osmose inverse professionnel avec technologie Blue Mountain": "Sistema di osmosi inversa professionale con tecnologia Blue Mountain",
+        "Filtres haute qualité avec certifications européennes": "Filtri di alta qualità con certificazioni europee",
+        "Protection étendue avec intervention à domicile": "Protezione estesa con intervento a domicilio",
+        "Couverture totale avec pièces et main d'œuvre": "Copertura totale con parti e manodopera",
+        "En stock": "Disponibile",
+        "Rupture": "Esaurito",
+        "Stock limité": "Stock limitato"
+    },
+    "NL": {
+        "Fontaine à Eau Osmosée": "Osmotische Waterbron",
+        "Kit Filtres de Rechange": "Vervangingsfilter Kit",
+        "Extension Garantie 2 ans": "2-Jaar Garantie Uitbreiding",
+        "Extension Garantie 5 ans": "5-Jaar Garantie Uitbreiding",
+        "En stock": "Op voorraad",
+        "Rupture": "Uitverkocht",
+        "Stock limité": "Beperkte voorraad"
+    },
+    "PT-PT": {
+        "Fontaine à Eau Osmosée": "Fonte de Água Osmótica", 
+        "Kit Filtres de Rechange": "Kit de Filtros de Substituição",
+        "Extension Garantie 2 ans": "Extensão de Garantia 2 anos",
+        "Extension Garantie 5 ans": "Extensão de Garantia 5 anos",
+        "En stock": "Em stock",
+        "Rupture": "Esgotado",
+        "Stock limité": "Stock limitado"
+    },
+    "PL": {
+        "Fontaine à Eau Osmosée": "Fontanna Wody Osmotycznej",
+        "Kit Filtres de Rechange": "Zestaw Filtrów Zamiennych",
+        "Extension Garantie 2 ans": "Rozszerzenie Gwarancji 2 lata",
+        "Extension Garantie 5 ans": "Rozszerzenie Gwarancji 5 lat",
+        "En stock": "W magazynie",
+        "Rupture": "Brak w magazynie", 
+        "Stock limité": "Ograniczony zapas"
+    }
+}
+
 # Langues disponibles avec leurs noms natifs
 AVAILABLE_LANGUAGES = {
     "FR": {"name": "Français", "native_name": "Français", "flag": "🇫🇷"},
