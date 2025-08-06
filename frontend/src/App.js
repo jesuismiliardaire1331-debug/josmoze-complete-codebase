@@ -238,43 +238,12 @@ const Header = () => {
 
 const Hero = () => {
   const { userLocation, formatPrice, customerType } = useApp();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const getHeroText = () => {
-    const isB2B = customerType === 'B2B';
-    
-    if (!userLocation) return {
-      title: isB2B ? "Solutions Professionnelles d'Osmose Inverse" : "Eau Pure avec Système d'Osmose Inverse",
-      subtitle: isB2B ? "Équipez votre entreprise avec nos systèmes industriels" : "Éliminez 99% des contaminants avec notre technologie avancée"
-    };
-
-    const texts = {
-      fr: {
-        title: isB2B ? "Solutions Professionnelles d'Osmose Inverse" : "Eau Pure avec Système d'Osmose Inverse",
-        subtitle: isB2B ? "Équipez votre entreprise avec nos systèmes industriels" : "Éliminez 99% des contaminants avec notre technologie avancée"
-      },
-      es: {
-        title: isB2B ? "Soluciones Profesionales de Ósmosis Inversa" : "Agua Pura con Sistema de Ósmosis Inversa",
-        subtitle: isB2B ? "Equipe su empresa con nuestros sistemas industriales" : "Elimina el 99% de los contaminantes con nuestra tecnología avanzada"
-      },
-      de: {
-        title: isB2B ? "Professionelle Umkehrosmose-Lösungen" : "Reines Wasser mit Umkehrosmose-System",
-        subtitle: isB2B ? "Statten Sie Ihr Unternehmen mit unseren Industriesystemen aus" : "Beseitigen Sie 99% der Schadstoffe mit unserer fortschrittlichen Technologie"
-      },
-      it: {
-        title: isB2B ? "Soluzioni Professionali a Osmosi Inversa" : "Acqua Pura con Sistema a Osmosi Inversa",
-        subtitle: isB2B ? "Equipaggia la tua azienda con i nostri sistemi industriali" : "Elimina il 99% dei contaminanti con la nostra tecnologia avanzata"
-      },
-      en: {
-        title: isB2B ? "Professional Reverse Osmosis Solutions" : "Pure Water with Reverse Osmosis System",
-        subtitle: isB2B ? "Equip your business with our industrial systems" : "Remove 99% of contaminants with our advanced technology"
-      }
-    };
-
-    return texts[userLocation.language] || texts.fr;
-  };
-
-  const heroText = getHeroText();
+  const heroTitle = customerType === 'B2B' ? t('hero.title.b2b') : t('hero.title.b2c');
+  const heroSubtitle = customerType === 'B2B' ? t('hero.subtitle.b2b') : t('hero.subtitle.b2c');
+  
   const basePrice = customerType === 'B2B' ? 899 : 499;
   const originalPrice = customerType === 'B2B' ? 1199 : 599;
 
