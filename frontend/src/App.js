@@ -195,23 +195,11 @@ const pollPaymentStatus = async (sessionId, attempts = 0) => {
 // ========== COMPONENTS ==========
 
 const Header = () => {
-  const { cart, userLocation, customerType, setCustomerType } = useApp();
+  const { cart, userLocation } = useApp();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
-
-  const getGreeting = () => {
-    if (!userLocation) return "Bienvenue";
-    
-    const greetings = {
-      fr: "Bienvenue",
-      es: "Bienvenido", 
-      de: "Willkommen",
-      it: "Benvenuto",
-      en: "Welcome"
-    };
-    
-    return greetings[userLocation.language] || "Bienvenue";
-  };
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -222,44 +210,40 @@ const Header = () => {
               Josmose.com
             </h1>
             <span className="ml-3 text-sm text-gray-600">
-              {getGreeting()} 🇪🇺
+              💧 {t('hero.subtitle', 'Filtration professionnelle')}
             </span>
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Accueil
+              {t('nav.home', 'Accueil')}
             </Link>
-            <Link to="/particuliers" className={`transition-colors ${customerType === 'B2C' ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}`}>
-              Particuliers
+            <Link to="/particuliers" className="text-gray-700 hover:text-blue-600 transition-colors">
+              {t('nav.individuals', 'Particuliers')}
             </Link>
-            <Link to="/professionnels" className={`transition-colors ${customerType === 'B2B' ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}`}>
-              Professionnels
-            </Link>
-            <Link to="/comment-ca-marche" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Comment ça marche
+            <Link to="/professionnels" className="text-gray-700 hover:text-blue-600 transition-colors">
+              {t('nav.professionals', 'Professionnels')}
             </Link>
             <Link to="/installation" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Installation
+              {t('nav.installation', 'Installation')}
             </Link>
             <Link to="/contact" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Contact
+              {t('nav.contact', 'Contact')}
             </Link>
             <Link to="/crm-login" className="text-gray-500 hover:text-blue-600 transition-colors text-sm">
               📊 CRM
             </Link>
           </nav>
           
-          <div className="flex items-center space-x-6">
-            {userLocation && (
-              <div className="text-sm text-gray-600">
-                📍 {userLocation.country_name} | 💱 {userLocation.currency}
-              </div>
-            )}
+          <div className="flex items-center space-x-4">
+            {/* Sélecteur de langue */}
+            <LanguageSelector />
             
+            {/* Panier */}
             <button 
               onClick={() => navigate('/panier')}
               className="relative p-2 text-gray-600 hover:text-blue-600 transition-colors"
+              title={t('nav.cart', 'Panier')}
             >
               🛒
               {cartItemsCount > 0 && (
