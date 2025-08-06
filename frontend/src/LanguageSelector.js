@@ -123,6 +123,12 @@ const LanguageSelector = () => {
     }
   };
 
+  // Fonction pour forcer une nouvelle détection (utile pour debug)
+  const forceDetection = async () => {
+    localStorage.removeItem('hasAutoDetected');
+    await detectUserLocalization();
+  };
+
   const currentLanguage = i18n.language || 'FR';
   const currentLanguageData = availableLanguages[currentLanguage] || { 
     name: 'Français', 
