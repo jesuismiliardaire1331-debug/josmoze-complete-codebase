@@ -108,7 +108,7 @@ CRM_USERS = {
     "support@josmose.com": {
         "id": "user_support",
         "username": "support@josmose.com",
-        "email": "support@josmose.com", 
+        "email": "support@osmose.com",  # Email professionnel pour clients 
         "full_name": "Support - Technique",
         "role": "technique",  # Technical support role - limited access
         "password_hash": "$2b$12$AgqPE73OcPnBKMmpgCQ3IOiShGsj8AuBo.TLETjIUJgS.AD9aFEd.",  # "Support@2024!Help"
