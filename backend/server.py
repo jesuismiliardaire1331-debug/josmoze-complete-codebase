@@ -1221,6 +1221,115 @@ async def get_team_contacts():
     
     return team_contacts
 
+# ========== EMAIL SYSTEM ENDPOINTS ==========
+
+class EmailSendRequest(BaseModel):
+    to_email: str
+    subject: str
+    body: str
+    attachments: Optional[List[Dict]] = None
+
+class EmailSimulationRequest(BaseModel):
+    from_email: str
+    subject: str
+    body: str
+
+@api_router.post("/crm/emails/send")
+@require_role(["manager", "commercial", "technique"])
+async def send_email(email_data: EmailSendRequest, current_user: dict = Depends(get_current_user)):
+    """
+    Envoie un email depuis l'adresse professionnelle de l'utilisateur
+    """
+    try:
+        user_email = current_user.get("email")
+        
+        result = await email_service.send_email(
+            from_email=user_email,
+            to_email=email_data.to_email,
+            subject=email_data.subject,
+            body=email_data.body,
+            attachments=email_data.attachments,
+            email_password="demo_password"  # En production, utiliser les vrais mots de passe
+        )
+        
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur envoi email: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'envoi de l'email")
+
+@api_router.get("/crm/emails/inbox")
+@require_role(["manager", "commercial", "technique"])
+async def get_inbox(current_user: dict = Depends(get_current_user)):
+    """
+    Récupère les emails de la boîte mail de l'utilisateur
+    """
+    try:
+        user_email = current_user.get("email")
+        emails = await email_service.receive_emails(user_email, "demo_password")
+        
+        return {
+            "emails": emails,
+            "user_email": user_email
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération inbox: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des emails")
+
+@api_router.get("/crm/emails/stats")
+@require_role(["manager", "commercial", "technique"])
+async def get_inbox_stats(current_user: dict = Depends(get_current_user)):
+    """
+    Récupère les statistiques de la boîte mail
+    """
+    try:
+        user_email = current_user.get("email")
+        stats = await email_service.get_inbox_stats(user_email)
+        
+        return stats
+        
+    except Exception as e:
+        logging.error(f"Erreur stats inbox: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des statistiques")
+
+@api_router.post("/crm/emails/{email_id}/read")
+@require_role(["manager", "commercial", "technique"])
+async def mark_email_read(email_id: str):
+    """
+    Marque un email comme lu
+    """
+    try:
+        result = await email_service.mark_email_as_read(email_id)
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur marquage email lu: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors du marquage de l'email")
+
+@api_router.post("/crm/emails/simulate-incoming")
+@require_role(["manager"])  # Seulement pour les managers (démo)
+async def simulate_incoming_email(email_data: EmailSimulationRequest, current_user: dict = Depends(get_current_user)):
+    """
+    Simule la réception d'un email (pour démonstration)
+    Déclenche automatiquement un accusé de réception
+    """
+    try:
+        user_email = current_user.get("email")
+        
+        result = await email_service.simulate_incoming_email(
+            to_email=user_email,
+            from_email=email_data.from_email,
+            subject=email_data.subject,
+            body=email_data.body
+        )
+        
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur simulation email: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la simulation")
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
