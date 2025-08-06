@@ -50,49 +50,33 @@ const LanguageSelector = () => {
   };
 
   const loadAvailableLanguages = async () => {
-    try {
-      const response = await axios.get(`${backendUrl}/api/localization/languages`);
-      setAvailableLanguages(response.data);
-    } catch (error) {
-      console.error('Erreur chargement langues:', error);
-      // Fallback vers les langues par défaut
-      setAvailableLanguages({
-        'FR': { name: 'Français', native_name: 'Français', flag: '🇫🇷' },
-        'EN-GB': { name: 'English', native_name: 'English', flag: '🇬🇧' },
-        'ES': { name: 'Español', native_name: 'Español', flag: '🇪🇸' },
-        'IT': { name: 'Italiano', native_name: 'Italiano', flag: '🇮🇹' },
-        'DE': { name: 'Deutsch', native_name: 'Deutsch', flag: '🇩🇪' },
-        'NL': { name: 'Nederlands', native_name: 'Nederlands', flag: '🇳🇱' },
-        'PT-PT': { name: 'Português', native_name: 'Português', flag: '🇵🇹' },
-        'PL': { name: 'Polski', native_name: 'Polski', flag: '🇵🇱' }
-      });
-    }
+    // Fonction conservée pour compatibilité mais utilise maintenant les données locales
+    setAvailableLanguages(getAvailableLanguagesForDisplay());
   };
 
-  const changeLanguage = async (languageCode) => {
+  const changeLanguage = async (i18nLanguageCode) => {
     try {
       setLoading(true);
       
       // Changer la langue dans i18next
-      await i18n.changeLanguage(languageCode);
+      await i18n.changeLanguage(i18nLanguageCode);
       
       // Sauvegarder dans localStorage
-      localStorage.setItem('i18nextLng', languageCode);
+      localStorage.setItem('i18nextLng', i18nLanguageCode);
       
-      // Mettre à jour la devise selon la langue/pays
+      // Mettre à jour la devise selon la langue
       const currencyMap = {
         'FR': { code: 'EUR', symbol: '€', name: 'Euro' },
-        'EN-GB': { code: 'GBP', symbol: '£', name: 'Livre Sterling' },
-        'EN-US': { code: 'USD', symbol: '$', name: 'Dollar US' },
+        'EN': { code: 'GBP', symbol: '£', name: 'Livre Sterling' },
         'ES': { code: 'EUR', symbol: '€', name: 'Euro' },
         'IT': { code: 'EUR', symbol: '€', name: 'Euro' },
         'DE': { code: 'EUR', symbol: '€', name: 'Euro' },
         'NL': { code: 'EUR', symbol: '€', name: 'Euro' },
-        'PT-PT': { code: 'EUR', symbol: '€', name: 'Euro' },
+        'PT': { code: 'EUR', symbol: '€', name: 'Euro' },
         'PL': { code: 'PLN', symbol: 'zł', name: 'Złoty' }
       };
       
-      const newCurrency = currencyMap[languageCode] || { code: 'EUR', symbol: '€', name: 'Euro' };
+      const newCurrency = currencyMap[i18nLanguageCode] || { code: 'EUR', symbol: '€', name: 'Euro' };
       setCurrentCurrency(newCurrency);
       localStorage.setItem('userCurrency', JSON.stringify(newCurrency));
       
@@ -101,11 +85,11 @@ const LanguageSelector = () => {
       
       // Trigger un event personnalisé pour que d'autres composants réagissent
       const event = new CustomEvent('languageChanged', {
-        detail: { language: languageCode, currency: newCurrency }
+        detail: { language: i18nLanguageCode, currency: newCurrency }
       });
       window.dispatchEvent(event);
       
-      console.log(`Langue changée vers: ${languageCode}, Devise: ${newCurrency.code}`);
+      console.log(`Langue changée vers: ${i18nLanguageCode}, Devise: ${newCurrency.code}`);
       
     } catch (error) {
       console.error('Erreur changement de langue:', error);
