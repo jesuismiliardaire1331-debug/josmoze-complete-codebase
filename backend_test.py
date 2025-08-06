@@ -3579,6 +3579,18 @@ class BackendTester:
         self.test_email_system_consistency()
         print()
         
+        # NEW EMAIL SYSTEM WITH ACKNOWLEDGMENTS @JOSMOSE.COM
+        print("📧 NEW EMAIL SYSTEM WITH ACKNOWLEDGMENTS @JOSMOSE.COM")
+        print("-" * 40)
+        self.test_email_inbox_empty()
+        self.test_email_stats_empty()
+        self.test_simulate_incoming_email_commercial()
+        self.test_simulate_incoming_email_support()
+        self.test_send_email_endpoint()
+        self.test_mark_email_read()
+        self.test_josmose_email_addresses_consistency()
+        print()
+        
         # Summary
         print("=" * 80)
         print("TEST SUMMARY - SOCIAL MEDIA MARKETING AUTOMATION")
