@@ -334,6 +334,7 @@ const Hero = () => {
 const ProductGrid = () => {
   const [products, setProducts] = useState([]);
   const { addToCart, formatPrice, customerType } = useApp();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
