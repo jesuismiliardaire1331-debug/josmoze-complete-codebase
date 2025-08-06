@@ -876,6 +876,7 @@ const ConsultationExpert = () => {
 
 const CartSummary = () => {
   const { cart, getCartTotal, formatPrice, removeFromCart, updateCartQuantity, clearCart } = useApp();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   
   if (cart.length === 0) {
