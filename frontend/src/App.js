@@ -273,7 +273,7 @@ const Hero = () => {
               <div className="bg-white bg-opacity-20 rounded-lg p-4 text-center">
                 <div className="text-3xl font-bold">{formatPrice(basePrice)}</div>
                 <div className="text-sm line-through opacity-75">{formatPrice(originalPrice)}</div>
-                <div className="text-sm">{customerType === 'B2B' ? 'Prix Pro HT' : 'Prix spécial Europe'}</div>
+                <div className="text-sm">{customerType === 'B2B' ? 'Prix Pro HT' : t('hero.special_price')}</div>
               </div>
               
               <div className="bg-white bg-opacity-20 rounded-lg p-4 text-center">
