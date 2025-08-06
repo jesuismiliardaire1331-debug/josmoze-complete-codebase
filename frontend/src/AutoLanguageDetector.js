@@ -36,29 +36,37 @@ const AutoLanguageDetector = () => {
         });
         
         // Forcer le changement de langue si différente
-        if (detected_language && detected_language !== i18n.language) {
-          console.log(`🔄 Changement de langue: ${i18n.language} → ${detected_language}`);
+        if (detected_language && detected_language !== 'FR') {
+          // Convertir le code DeepL vers le code i18next
+          const i18nLanguageCode = convertDeepLToI18n(detected_language);
           
-          // Changer la langue dans i18next
-          await i18n.changeLanguage(detected_language);
-          
-          // Sauvegarder dans localStorage
-          localStorage.setItem('i18nextLng', detected_language);
-          localStorage.setItem('userCurrency', JSON.stringify(currency));
-          
-          // Déclencher un événement personnalisé pour d'autres composants
-          const event = new CustomEvent('autoLanguageChanged', {
-            detail: { 
-              language: detected_language, 
-              country: detected_country,
-              currency: currency 
-            }
-          });
-          window.dispatchEvent(event);
-          
-          console.log('✅ Langue changée automatiquement vers:', detected_language);
+          if (i18nLanguageCode !== i18n.language) {
+            console.log(`🔄 Changement de langue: ${i18n.language} → ${i18nLanguageCode} (DeepL: ${detected_language})`);
+            
+            // Changer la langue dans i18next
+            await i18n.changeLanguage(i18nLanguageCode);
+            
+            // Sauvegarder dans localStorage
+            localStorage.setItem('i18nextLng', i18nLanguageCode);
+            localStorage.setItem('userCurrency', JSON.stringify(currency));
+            
+            // Déclencher un événement personnalisé pour d'autres composants
+            const event = new CustomEvent('autoLanguageChanged', {
+              detail: { 
+                language: i18nLanguageCode, 
+                deepl_language: detected_language,
+                country: detected_country,
+                currency: currency 
+              }
+            });
+            window.dispatchEvent(event);
+            
+            console.log('✅ Langue changée automatiquement vers:', i18nLanguageCode);
+          } else {
+            console.log('ℹ️ Langue déjà correcte:', i18nLanguageCode);
+          }
         } else {
-          console.log('ℹ️ Langue détectée identique à la langue actuelle:', detected_language);
+          console.log('ℹ️ Langue détectée est le français, pas de changement nécessaire');
         }
         
       } catch (error) {
