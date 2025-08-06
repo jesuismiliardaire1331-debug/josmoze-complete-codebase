@@ -3172,7 +3172,19 @@ class BackendTester:
         self.test_enhanced_product_catalog()
         print()
         
-        # 🌍 NEW TRANSLATION SYSTEM TESTS 🌍
+        # 🌍 TRANSLATION SYSTEM DEBUGGING TESTS 🌍
+        print("🌍 TRANSLATION SYSTEM DEBUGGING - IP DETECTION ISSUES")
+        print("-" * 40)
+        self.test_ip_detection_localization_endpoint()
+        self.test_old_location_detection_endpoint()
+        self.test_deepl_translation_service()
+        self.test_ip_geolocation_functionality()
+        self.test_translation_service_logs()
+        self.test_country_language_mapping()
+        self.test_automatic_product_translation()
+        print()
+        
+        # 🌍 ORIGINAL TRANSLATION SYSTEM TESTS 🌍
         print("🌍 AUTOMATIC TRANSLATION SYSTEM TESTS (DeepL API)")
         print("-" * 40)
         self.test_localization_detect()
