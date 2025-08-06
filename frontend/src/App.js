@@ -883,13 +883,13 @@ const CartSummary = () => {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
         <div className="text-4xl mb-4">🛒</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Votre panier est vide</h2>
-        <p className="text-gray-600 mb-6">Découvrez nos systèmes d'osmose inverse</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('cart.empty')}</h2>
+        <p className="text-gray-600 mb-6">{t('cart.emptySubtitle')}</p>
         <button
           onClick={() => navigate('/')}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
         >
-          Voir nos produits
+          {t('cart.viewProducts')}
         </button>
       </div>
     );
