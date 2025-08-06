@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { convertDeepLToI18n, convertI18nToDeepL, getAvailableLanguagesForDisplay } from './i18n';
 import axios from 'axios';
 
 const LanguageSelector = () => {
