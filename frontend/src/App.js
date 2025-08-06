@@ -903,7 +903,7 @@ const CartSummary = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
-      <h2 className="text-3xl font-bold text-gray-900 mb-8">Votre Panier 🛒</h2>
+      <h2 className="text-3xl font-bold text-gray-900 mb-8">{t('cart.title')}</h2>
       
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
