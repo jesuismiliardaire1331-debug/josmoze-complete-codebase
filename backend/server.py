@@ -21,6 +21,9 @@ from analytics_dashboard import AnalyticsEngine, export_analytics_csv
 from recommendation_engine import get_smart_recommendations
 from loyalty_program import LoyaltyProgramManager, process_order_loyalty_points, get_customer_loyalty_status
 
+# Import translation service
+from translation_service import translation_service
+
 # Import authentication and AI agents
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info, get_user_permissions
 from ai_agents import get_marketing_automation, MarketingAutomation
