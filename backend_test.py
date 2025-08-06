@@ -3267,6 +3267,15 @@ class BackendTester:
         self.test_database_collections()
         print()
         
+        # NEW @OSMOSE.COM EMAIL SYSTEM TESTS
+        print("📧 NEW @OSMOSE.COM PROFESSIONAL EMAIL SYSTEM TESTS")
+        print("-" * 40)
+        self.test_team_contacts_endpoint()
+        self.test_authentication_with_professional_emails()
+        self.test_commercial_role_permissions()
+        self.test_email_system_consistency()
+        print()
+        
         # Summary
         print("=" * 80)
         print("TEST SUMMARY - SOCIAL MEDIA MARKETING AUTOMATION")
