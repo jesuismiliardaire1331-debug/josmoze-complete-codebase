@@ -141,12 +141,12 @@ const LanguageSelector = () => {
             <div className="px-4 py-2 text-sm text-gray-500 border-b border-gray-200">
               {t('language.selector', 'Choisir la langue')}
             </div>
-            {Object.entries(availableLanguages).map(([code, data]) => (
+            {Object.entries(availableLanguages).map(([i18nCode, data]) => (
               <button
-                key={code}
-                onClick={() => changeLanguage(code)}
+                key={i18nCode}
+                onClick={() => changeLanguage(i18nCode)}
                 className={`block w-full text-left px-4 py-3 text-sm hover:bg-gray-100 transition-colors duration-150 ${
-                  currentLanguage === code 
+                  currentLanguage === i18nCode 
                     ? 'bg-blue-50 text-blue-700 font-medium' 
                     : 'text-gray-700'
                 }`}
@@ -160,7 +160,7 @@ const LanguageSelector = () => {
                       <div className="text-xs text-gray-500">{data.name}</div>
                     </div>
                   </div>
-                  {currentLanguage === code && (
+                  {currentLanguage === i18nCode && (
                     <svg className="h-4 w-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
