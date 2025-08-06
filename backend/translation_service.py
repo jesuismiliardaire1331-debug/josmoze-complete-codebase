@@ -279,10 +279,9 @@ class TranslationService:
     async def translate_text(self, text: str, target_language: str, source_language: str = "FR") -> str:
         """
         Traduit un texte vers la langue cible
-        Utilise le cache pour éviter les appels répétés à l'API
+        Utilise d'abord DeepL, puis fallback vers traductions prédéfinies
         """
-        if not self.translator:
-            self.logger.error("DeepL translator not initialized - API key missing")
+        if not text or type(text) != str:
             return text
 
         if target_language == source_language:
@@ -293,6 +292,18 @@ class TranslationService:
         
         if cache_key in self.cache:
             return self.cache[cache_key]
+
+        # Vérifier d'abord les traductions prédéfinies
+        if target_language in PRODUCT_TRANSLATIONS and text.strip() in PRODUCT_TRANSLATIONS[target_language]:
+            translated_text = PRODUCT_TRANSLATIONS[target_language][text.strip()]
+            self.cache[cache_key] = translated_text
+            self.logger.info(f"Traduction prédéfinie utilisée: {text} -> {translated_text}")
+            return translated_text
+
+        # Essayer DeepL si disponible
+        if not self.translator:
+            self.logger.error("DeepL translator not initialized - API key missing")
+            return text
 
         try:
             result = await asyncio.to_thread(
@@ -305,11 +316,27 @@ class TranslationService:
             translated_text = result.text
             self.cache[cache_key] = translated_text
             
-            self.logger.info(f"Traduction: {source_language} -> {target_language}")
+            self.logger.info(f"Traduction DeepL: {source_language} -> {target_language}")
             return translated_text
             
         except Exception as e:
-            self.logger.error(f"Erreur traduction DeepL: {str(e)}")
+            error_msg = str(e).lower()
+            if "too many requests" in error_msg or "429" in error_msg or "high load" in error_msg:
+                self.logger.warning(f"DeepL rate limited, tentative traduction prédéfinie pour: {text}")
+                
+                # Fallback vers traductions prédéfinies si DeepL est surchargé
+                if target_language in PRODUCT_TRANSLATIONS:
+                    # Recherche approximative dans les traductions prédéfinies
+                    for french_text, translated_text in PRODUCT_TRANSLATIONS[target_language].items():
+                        if french_text.lower() in text.lower() or text.lower() in french_text.lower():
+                            self.cache[cache_key] = translated_text
+                            self.logger.info(f"Traduction fallback utilisée: {text} -> {translated_text}")
+                            return translated_text
+                
+                self.logger.warning(f"Aucune traduction fallback trouvée pour: {text}")
+            else:
+                self.logger.error(f"Erreur traduction DeepL: {str(e)}")
+            
             return text  # Retourner le texte original en cas d'erreur
 
     async def translate_object(self, obj: Dict, target_language: str, source_language: str = "FR") -> Dict:
