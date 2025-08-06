@@ -339,15 +339,23 @@ const ProductGrid = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${API}/products?customer_type=${customerType}`);
-        setProducts(response.data);
+        // Utiliser l'endpoint de traduction automatique
+        const response = await axios.get(`${API}/products/translated?customer_type=${customerType}`);
+        setProducts(response.data.products || response.data);
       } catch (error) {
-        console.error('Failed to fetch products:', error);
+        console.error('Failed to fetch translated products:', error);
+        // Fallback vers l'ancien endpoint
+        try {
+          const fallbackResponse = await axios.get(`${API}/products?customer_type=${customerType}`);
+          setProducts(fallbackResponse.data);
+        } catch (fallbackError) {
+          console.error('Failed to fetch products:', fallbackError);
+        }
       }
     };
 
     fetchProducts();
-  }, [customerType]);
+  }, [customerType, t.i18n?.language]); // Ajouter la langue comme dépendance
 
   const handleAddToCart = (product) => {
     addToCart(product);
