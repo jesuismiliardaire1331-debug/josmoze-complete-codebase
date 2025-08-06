@@ -28,30 +28,58 @@ const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
+  const { i18n } = useTranslation();
+  const { currentCurrency, formatPrice } = useTranslationService();
 
-  // Detect user location on app start
+  // Detect user location and language on app start
   useEffect(() => {
     const detectLocation = async () => {
       try {
-        const response = await axios.get(`${API}/detect-location`);
-        setUserLocation(response.data);
+        // Utiliser le nouvel endpoint de détection
+        const response = await axios.get(`${API}/localization/detect`);
+        const { detected_language, detected_country, currency } = response.data;
+        
+        console.log('Détection automatique:', { detected_language, detected_country, currency });
+        
+        // Changer automatiquement la langue si détectée différente
+        if (detected_language && detected_language !== i18n.language) {
+          await i18n.changeLanguage(detected_language);
+          localStorage.setItem('i18nextLng', detected_language);
+        }
+        
+        // Mettre à jour la localisation pour compatibilité
+        setUserLocation({
+          country_code: detected_country,
+          country_name: detected_country, // Sera traduit par le composant
+          currency: currency.code,
+          language: detected_language,
+          shipping_cost: 19 // Valeur par défaut, peut être ajustée selon le pays
+        });
+        
       } catch (error) {
         console.error('Location detection failed:', error);
-        // Fallback
-        setUserLocation({
-          country_code: 'FR',
-          country_name: 'France',
-          currency: 'EUR',
-          language: 'fr',
-          shipping_cost: 19
-        });
+        // Fallback vers l'ancien endpoint
+        try {
+          const fallbackResponse = await axios.get(`${API}/detect-location`);
+          setUserLocation(fallbackResponse.data);
+        } catch (fallbackError) {
+          console.error('Fallback detection failed:', fallbackError);
+          // Valeurs par défaut
+          setUserLocation({
+            country_code: 'FR',
+            country_name: 'France',
+            currency: 'EUR',
+            language: 'FR',
+            shipping_cost: 19
+          });
+        }
       } finally {
         setLoading(false);
       }
     };
 
     detectLocation();
-  }, []);
+  }, [i18n]);
 
   const addToCart = (product, quantity = 1) => {
     setCart(prevCart => {
