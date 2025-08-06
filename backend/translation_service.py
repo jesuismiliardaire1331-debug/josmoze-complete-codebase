@@ -14,6 +14,10 @@ from ip2geotools.databases.noncommercial import DbIpCity
 from fastapi import Request
 import requests
 from functools import lru_cache
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Configuration
 DEEPL_API_KEY = os.getenv("DEEPL_API_KEY")
