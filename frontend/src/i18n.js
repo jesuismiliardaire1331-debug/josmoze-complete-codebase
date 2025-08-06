@@ -86,7 +86,7 @@ const resources = {
       'shipping.cost': 'Frais de port'
     }
   },
-  'EN-GB': {
+  'EN': {
     translation: {
       // Navigation  
       'nav.home': 'Home',
