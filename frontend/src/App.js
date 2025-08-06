@@ -1678,37 +1678,44 @@ const Consultation = () => {
 
 function App() {
   return (
-    <NotificationProvider>
-      <AppProvider>
-        <AuthProvider>
-          <div className="App min-h-screen bg-gray-50">
-            <BrowserRouter>
-              <CustomerTypeHandler />
-              <Header />
-              <main>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/particuliers" element={<Home />} />
-                  <Route path="/professionnels" element={<BusinessHome />} />
-                  <Route path="/panier" element={<Cart />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/installation" element={<Installation />} />
-                  <Route path="/consultation" element={<Consultation />} />
-                  <Route path="/comment-ca-marche" element={<ProductExplanation />} />
-                  <Route path="/payment-success" element={<PaymentSuccess />} />
-                  <Route path="/payment-cancelled" element={<PaymentCancelled />} />
-                  {/* CRM Routes */}
-                  <Route path="/crm-login" element={<CRMLogin />} />
-                  <Route path="/crm" element={<CRMDashboard />} />
-                </Routes>
-              </main>
-              <Footer />
-            </BrowserRouter>
-          </div>
-        </AuthProvider>
-      </AppProvider>
-    </NotificationProvider>
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+        <p className="mt-4 text-gray-600">Chargement de la traduction...</p>
+      </div>
+    </div>}>
+      <NotificationProvider>
+        <AppProvider>
+          <AuthProvider>
+            <div className="App min-h-screen bg-gray-50">
+              <BrowserRouter>
+                <CustomerTypeHandler />
+                <Header />
+                <main>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/particuliers" element={<Home />} />
+                    <Route path="/professionnels" element={<BusinessHome />} />
+                    <Route path="/panier" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/installation" element={<Installation />} />
+                    <Route path="/consultation" element={<Consultation />} />
+                    <Route path="/comment-ca-marche" element={<ProductExplanation />} />
+                    <Route path="/payment-success" element={<PaymentSuccess />} />
+                    <Route path="/payment-cancelled" element={<PaymentCancelled />} />
+                    {/* CRM Routes */}
+                    <Route path="/crm-login" element={<CRMLogin />} />
+                    <Route path="/crm" element={<CRMDashboard />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </BrowserRouter>
+            </div>
+          </AuthProvider>
+        </AppProvider>
+      </NotificationProvider>
+    </Suspense>
   );
 }
 
