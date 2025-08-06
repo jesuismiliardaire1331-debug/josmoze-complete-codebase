@@ -8,6 +8,7 @@ import './i18n';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 import useTranslationService from './useTranslationService';
+import AutoLanguageDetector from './AutoLanguageDetector';
 
 // Import CRM components
 import CRMDashboard from "./CRM";
