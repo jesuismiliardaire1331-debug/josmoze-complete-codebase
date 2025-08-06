@@ -1176,6 +1176,11 @@ const CRMDashboard = () => {
           </div>
         )}
 
+        {/* Onglet Contacts d'Équipe */}
+        {activeTab === 'contacts' && (
+          <TeamContacts />
+        )}
+
         {/* Onglet Analytics */}
         {activeTab === 'analytics' && (
           <AnalyticsDashboard 
