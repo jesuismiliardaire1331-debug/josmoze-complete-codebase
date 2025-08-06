@@ -296,7 +296,7 @@ const Hero = () => {
                 }}
                 className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors shadow-lg"
               >
-                {customerType === 'B2B' ? 'Voir Solutions Pro 🏢' : 'Découvrir nos Produits 🏠'}
+                {customerType === 'B2B' ? t('hero.cta') + ' 🏢' : t('hero.cta') + ' 🏠'}
               </button>
               
               {customerType === 'B2B' && (
