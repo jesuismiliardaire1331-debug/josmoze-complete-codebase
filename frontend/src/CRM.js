@@ -1178,6 +1178,11 @@ const CRMDashboard = () => {
           </div>
         )}
 
+        {/* Onglet Interface Email */}
+        {activeTab === 'emails' && (
+          <EmailInterface />
+        )}
+
         {/* Onglet Contacts d'Équipe */}
         {activeTab === 'contacts' && (
           <TeamContacts />
