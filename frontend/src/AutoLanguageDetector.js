@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { convertDeepLToI18n } from './i18n';
 import axios from 'axios';
 
 const AutoLanguageDetector = () => {
