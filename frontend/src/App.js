@@ -334,7 +334,7 @@ const Hero = () => {
 const ProductGrid = () => {
   const [products, setProducts] = useState([]);
   const { addToCart, formatPrice, customerType } = useApp();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -355,7 +355,7 @@ const ProductGrid = () => {
     };
 
     fetchProducts();
-  }, [customerType, t.i18n?.language]); // Ajouter la langue comme dépendance
+  }, [customerType, i18n.language]); // Utiliser i18n.language
 
   const handleAddToCart = (product) => {
     addToCart(product);
