@@ -276,4 +276,26 @@ i18n
     }
   });
 
+// Fonctions utilitaires pour la conversion des codes de langue
+export const convertDeepLToI18n = (deepLCode) => {
+  return deepLToI18nMap[deepLCode] || 'FR';
+};
+
+export const convertI18nToDeepL = (i18nCode) => {
+  return i18nToDeepLMap[i18nCode] || 'FR';
+};
+
+export const getAvailableLanguagesForDisplay = () => {
+  return {
+    'FR': { name: 'Français', native_name: 'Français', flag: '🇫🇷', deepl_code: 'FR' },
+    'EN': { name: 'English', native_name: 'English', flag: '🇬🇧', deepl_code: 'EN-GB' },
+    'ES': { name: 'Español', native_name: 'Español', flag: '🇪🇸', deepl_code: 'ES' },
+    'IT': { name: 'Italiano', native_name: 'Italiano', flag: '🇮🇹', deepl_code: 'IT' },
+    'DE': { name: 'Deutsch', native_name: 'Deutsch', flag: '🇩🇪', deepl_code: 'DE' },
+    'NL': { name: 'Nederlands', native_name: 'Nederlands', flag: '🇳🇱', deepl_code: 'NL' },
+    'PT': { name: 'Português', native_name: 'Português', flag: '🇵🇹', deepl_code: 'PT-PT' },
+    'PL': { name: 'Polski', native_name: 'Polski', flag: '🇵🇱', deepl_code: 'PL' }
+  };
+};
+
 export default i18n;
