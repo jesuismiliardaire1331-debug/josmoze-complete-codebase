@@ -310,13 +310,15 @@ const BrandMonitoring = () => {
       )}
 
       {/* Configuration de surveillance */}
-      <div className="bg-blue-50 rounded-lg p-4 mt-6">
-        <h3 className="font-semibold text-blue-900 mb-2">ℹ️ Configuration de l'Agent</h3>
-        <div className="text-sm text-blue-800 grid grid-cols-1 md:grid-cols-2 gap-2">
-          <div>• Vérification toutes les <strong>60 secondes</strong></div>
-          <div>• Surveillance : <strong>emergent, made with emergent</strong></div>
-          <div>• Scan des fichiers : <strong>.js, .py, .html, .css</strong></div>
-          <div>• Domaine surveillé : <strong>www.josmose.com</strong></div>
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
+        <h3 className="font-semibold text-red-900 mb-2">🚨 Configuration Agent - MODE RENFORCÉ</h3>
+        <div className="text-sm text-red-800 grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div>• Vérification : <strong>Toutes les 30 SECONDES ⚡</strong></div>
+          <div>• Surveillance : <strong>emergent, made with emergent, powered by emergent</strong></div>
+          <div>• Scan renforcé : <strong>.js, .py, .html, .css, .json, métadonnées</strong></div>
+          <div>• Domaine surveillé : <strong>www.josmose.com UNIQUEMENT</strong></div>
+          <div>• Mode alerte : <strong>IMMÉDIATE (dès 1ère détection)</strong></div>
+          <div>• URLs surveillées : <strong>5 points de contrôle web</strong></div>
         </div>
       </div>
     </div>
