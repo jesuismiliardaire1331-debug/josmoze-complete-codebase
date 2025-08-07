@@ -5,6 +5,7 @@ import AnalyticsDashboard from "./AnalyticsDashboard";
 import TeamContacts from "./TeamContacts";
 import EmailInterface from "./EmailInterface";
 import BrandMonitoring from "./BrandMonitoring";
+import AbandonedCarts from "./AbandonedCarts";
 import { useNotifications } from "./NotificationSystem";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
