@@ -1197,6 +1197,11 @@ const CRMDashboard = () => {
             userToken={user?.token}
           />
         )}
+
+        {/* Onglet Surveillance Marque */}
+        {activeTab === 'surveillance' && (
+          <BrandMonitoring />
+        )}
       </div>
     </div>
   );
