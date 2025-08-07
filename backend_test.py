@@ -6326,6 +6326,22 @@ class BackendTester:
         print(f"Abandoned Cart Success Rate: {(abandoned_cart_passed/len(abandoned_cart_results))*100:.1f}%" if abandoned_cart_results else "No abandoned cart tests")
         print()
         
+        # Security & Cybersecurity Audit Agent summary
+        security_tests = [
+            "Security Dashboard", "Manual Audit Trigger", "Security Threats Detection",
+            "Security Audits History", "Blocked IPs Management", "IP Unblock Functionality",
+            "24/7 Monitoring Status", "Automatic Threat Detection"
+        ]
+        
+        security_results = [r for r in self.test_results if r["test"] in security_tests]
+        security_passed = sum(1 for r in security_results if r["success"])
+        
+        print("🛡️ SECURITY & CYBERSECURITY AUDIT AGENT SUMMARY:")
+        print(f"Security Tests: {len(security_results)}")
+        print(f"Security Passed: {security_passed}")
+        print(f"Security Success Rate: {(security_passed/len(security_results))*100:.1f}%" if security_results else "No security tests")
+        print()
+        
         if total - passed > 0:
             print("❌ FAILED TESTS:")
             for result in self.test_results:
