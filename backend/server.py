@@ -1385,6 +1385,20 @@ async def get_recent_violations():
         logging.error(f"Erreur récupération violations: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des violations")
 
+@api_router.post("/crm/brand-monitoring/start")
+@require_role(["manager"])  # Seulement pour les managers
+async def start_brand_monitoring_agent():
+    """
+    Démarre l'agent de surveillance marque en arrière-plan
+    """
+    try:
+        result = start_monitoring_task()
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur démarrage surveillance: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors du démarrage de l'agent")
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
