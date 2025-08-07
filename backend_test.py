@@ -5011,6 +5011,14 @@ class BackendTester:
             "Payment Automation Integration", "Stock Thresholds"
         ]
         
+        # Abandoned cart system summary
+        abandoned_cart_tests = [
+            "Abandoned Cart Service Initialization", "Abandoned Cart Tracking", "Mandatory Address Validation",
+            "Abandoned Cart Dashboard", "Cart Recovery by Token", "Mark Cart Recovered",
+            "Delivery Note Generation", "Process Recovery Emails", "Progressive Discount Codes",
+            "Email Templates Functionality", "ReportLab PDF Generation"
+        ]
+        
         advanced_results = [r for r in self.test_results if r["test"] in advanced_tests]
         advanced_passed = sum(1 for r in advanced_results if r["success"])
         
