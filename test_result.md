@@ -102,10 +102,10 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the updated team structure with new role-based permissions: Naima as manager, Aziza and Antonio as agents, Support as technique"
+user_problem_statement: "Test the updated team structure with EQUAL MANAGER permissions: Naima, Aziza, and Antonio ALL have manager role with equal permissions"
 
 backend:
-  - task: "New Team Structure Implementation"
+  - task: "Equal Manager Permissions Implementation"
     implemented: true
     working: true
     file: "backend/auth.py"
@@ -115,12 +115,12 @@ backend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "TEAM STRUCTURE UPDATE: Updated team structure according to user requirements. Naima: Manager (only one with manager role), Aziza: Agent (changed from manager), Antonio: Agent (changed from manager), Support: Technique (unchanged). Updated CRM_USERS in auth.py with new role assignments."
+          comment: "EQUAL MANAGER STRUCTURE: Restored all three users to manager role. Naima: Manager, Aziza: Manager (restored from agent), Antonio: Manager (restored from agent), Support: Technique (unchanged). All three now have identical manager permissions."
         - working: true
           agent: "testing"
-          comment: "TESTED: New team structure working perfectly! All team members authenticate correctly with their new roles. Naima (manager) has full access, Aziza and Antonio (agents) have limited access, Support (technique) has very restricted access. Role-based permissions working as expected."
+          comment: "✅ TESTED: Equal manager permissions working perfectly! All 3 users (Naima, Aziza, Antonio) authenticate successfully with manager role. JWT tokens contain correct manager role for all three. All have identical permissions and equal access to all manager endpoints."
 
-  - task: "Team Contacts API Update"
+  - task: "Team Contacts API - Equal Managers Structure"
     implemented: true
     working: true
     file: "backend/server.py"
@@ -130,12 +130,12 @@ backend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "UPDATED: GET /api/crm/team-contacts endpoint updated to reflect new team structure. Managers section now only contains Naima, agents section contains Aziza and Antonio, services section unchanged."
+          comment: "UPDATED: GET /api/crm/team-contacts endpoint updated to reflect equal manager structure. Managers section now contains all 3: Naima, Aziza, Antonio (all with Manager position). No agents section anymore."
         - working: true
           agent: "testing"
-          comment: "TESTED: Team contacts structure correct! Returns proper hierarchy: 1 manager (Naima), 2 agents (Aziza, Antonio), 2 services (Commercial, Support). Structure matches new team organization."
+          comment: "✅ TESTED: Team contacts structure perfect! Returns all 3 as managers: Naima, Aziza, Antonio all with 'Manager' position. No agents section exists. Structure correctly reflects equal manager hierarchy."
 
-  - task: "Role-Based Access Control"
+  - task: "Brand Monitoring Access - All Managers"
     implemented: true
     working: true
     file: "backend/server.py"
@@ -145,9 +145,55 @@ backend:
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "IMPLEMENTED: Role-based access control properly configured. Manager-only endpoints (brand monitoring) restricted to Naima. Manager+Agent endpoints (abandoned carts, emails) accessible to both managers and agents. Technique role has very limited access."
+          comment: "UPDATED: Brand monitoring endpoints now accessible to all manager roles. All three managers (Naima, Aziza, Antonio) should have equal access to brand monitoring system."
         - working: true
           agent: "testing"
+          comment: "✅ TESTED: Brand monitoring access working for all managers! All 3 managers (Naima, Aziza, Antonio) can successfully access brand monitoring endpoints. Equal permissions confirmed."
+
+  - task: "Abandoned Cart Dashboard - All Managers Access"
+    implemented: true
+    working: true
+    file: "backend/abandoned_cart_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CONFIRMED: Abandoned cart dashboard accessible to manager role. All three managers should have equal access to abandoned cart CRM dashboard."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTED: Abandoned cart dashboard access working for all managers! All 3 managers (Naima, Aziza, Antonio) can successfully access the abandoned cart dashboard. Equal access confirmed."
+
+  - task: "Email System Access - All Managers"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CONFIRMED: Email system endpoints accessible to manager role. All three managers should have equal access to email sending, inbox, and stats."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTED: Email system access working for all managers! All 3 managers (Naima, Aziza, Antonio) can access email system endpoints. Equal permissions for email management confirmed."
+
+  - task: "Authentication System with Equal Manager Credentials"
+    implemented: true
+    working: true
+    file: "backend/auth.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "UPDATED: Authentication system updated with equal manager credentials. Naima: naima@josmose.com/Naima@2024!Commerce (manager), Aziza: aziza@josmose.com/Aziza@2024!Director (manager), Antonio: antonio@josmose.com/Antonio@2024!Secure (manager), Support: support@josmose.com/Support@2024!Help (technique)."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTED: Equal manager authentication working perfectly! All 3 users authenticate successfully with manager role. JWT tokens generated correctly with manager role for all three. Credentials working: Naima, Aziza, Antonio all as managers."
           comment: "TESTED: Role-based access control working perfectly! Manager (Naima) can access all endpoints including brand monitoring. Agents (Aziza, Antonio) can access shared endpoints like abandoned cart dashboard and email system but are denied access to manager-only functions. Support (technique) properly restricted."
 
   - task: "Authentication System with New Credentials"
