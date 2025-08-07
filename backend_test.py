@@ -4422,13 +4422,29 @@ class BackendTester:
         self.test_josmose_email_addresses_consistency()
         print()
         
-        # BRAND MONITORING AGENT TESTS
-        print("🔍 BRAND MONITORING AGENT TESTS")
+        # REINFORCED BRAND MONITORING AGENT TESTS
+        print("🚨 REINFORCED BRAND MONITORING AGENT TESTS")
         print("-" * 40)
-        self.test_brand_monitoring_status()
-        self.test_brand_monitoring_force_scan()
-        self.test_brand_monitoring_violations()
-        self.test_brand_monitoring_start_agent()
+        print("🔐 Authenticating as manager for brand monitoring tests...")
+        auth_success = self.authenticate_manager()
+        
+        if auth_success:
+            print("✅ Manager authentication successful - proceeding with reinforced brand monitoring tests")
+            self.test_brand_monitoring_status()
+            self.test_brand_monitoring_force_scan()
+            self.test_brand_monitoring_agent_start()
+            self.test_brand_monitoring_violations_detection()
+            self.test_reinforced_monitoring_frequency()
+            self.test_extended_scan_coverage()
+            self.test_immediate_alert_threshold()
+            self.test_high_intensity_24_7_mode()
+        else:
+            print("❌ Manager authentication failed - testing endpoints without authentication")
+            # Still test endpoints without authentication to check they exist
+            self.test_brand_monitoring_status()
+            self.test_brand_monitoring_force_scan()
+            self.test_brand_monitoring_agent_start()
+            self.test_brand_monitoring_violations_detection()
         print()
         
         # Summary
