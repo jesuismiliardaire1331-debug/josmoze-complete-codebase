@@ -1211,6 +1211,11 @@ const CRMDashboard = () => {
         {activeTab === 'abandoned-carts' && (
           <AbandonedCarts />
         )}
+
+        {/* Onglet Agent Sécurité & Audit */}
+        {activeTab === 'security-audit' && (
+          <SecurityAudit />
+        )}
       </div>
     </div>
   );
