@@ -1898,6 +1898,10 @@ async def startup_db():
     global social_media_automation
     social_media_automation = get_social_media_automation(db)
     await social_media_automation.initialize_accounts()
+    
+    # 🛡️ Démarrage automatique de l'agent de surveillance marque 24/7
+    logging.info("🛡️ Démarrage automatique de l'agent de surveillance marque...")
+    start_monitoring_task()
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
