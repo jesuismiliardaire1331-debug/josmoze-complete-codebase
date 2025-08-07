@@ -1344,8 +1344,7 @@ async def get_brand_monitoring_status(current_user: User = Depends(require_role(
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération du statut")
 
 @api_router.post("/crm/brand-monitoring/force-scan")
-@require_role(["manager"])  # Seulement pour les managers
-async def force_brand_monitoring_scan():
+async def force_brand_monitoring_scan(current_user: User = Depends(require_role(["manager"]))):
     """
     Force un scan immédiat de surveillance marque
     """
