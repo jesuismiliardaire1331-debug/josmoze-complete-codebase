@@ -164,6 +164,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "✅ TESTED: Abandoned cart dashboard access working for all managers! All 3 managers (Naima, Aziza, Antonio) can successfully access the abandoned cart dashboard. Equal access confirmed."
+        - working: true
+          agent: "testing"
+          comment: "🔧 BUG FIX VERIFIED: Fixed 401 Unauthorized error on GET /api/crm/abandoned-carts/dashboard. Issue was in server.py line 1435 where current_user.get('email') was used instead of current_user.email (User object vs dict). All 3 managers (Naima, Aziza, Antonio) now successfully access dashboard with 200 OK response. Service properly initialized and returns statistics + recent_carts structure."
 
   - task: "Email System Access - All Managers"
     implemented: true
