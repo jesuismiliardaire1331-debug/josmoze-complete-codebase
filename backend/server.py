@@ -1432,7 +1432,7 @@ async def get_abandoned_carts_dashboard(current_user: dict = Depends(require_rol
             logging.error("abandoned_cart_service is None - not initialized")
             raise HTTPException(status_code=500, detail="Service non initialisé")
         
-        logging.info(f"Getting abandoned carts dashboard for user: {current_user.get('email', 'Unknown')}")
+        logging.info(f"Getting abandoned carts dashboard for user: {current_user.email}")
         dashboard_data = await abandoned_cart_service.get_abandoned_carts_dashboard()
         logging.info(f"Dashboard data retrieved successfully: {len(dashboard_data.get('recent_carts', []))} recent carts")
         return dashboard_data
