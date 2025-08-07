@@ -107,12 +107,17 @@ const BrandMonitoring = () => {
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          🛡️ Surveillance Marque JOSMOSE.COM
+          🛡️ Surveillance Marque JOSMOSE.COM - MODE RENFORCÉ ⚡
         </h2>
         <p className="text-gray-600">
-          Agent de surveillance 24/7 qui vérifie que toute mention "emergent" est supprimée 
-          et que le site reste www.josmose.com
+          Agent de surveillance HAUTE INTENSITÉ 24/7 qui vérifie <strong>toutes les 30 secondes</strong> 
+          que toute mention "emergent" est supprimée et que le site reste www.josmose.com
         </p>
+        <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-800 text-sm">
+            🚨 <strong>MODE SURVEILLANCE RENFORCÉE ACTIVÉ</strong> - Alerte immédiate dès détection
+          </p>
+        </div>
       </div>
 
       {/* Statut général */}
