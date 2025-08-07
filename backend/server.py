@@ -2047,9 +2047,17 @@ async def startup_db():
     global abandoned_cart_service
     abandoned_cart_service = AbandonedCartService(db)
     
+    # Initialize security audit agent
+    global security_audit_agent  
+    security_audit_agent = get_security_audit_agent(db)
+    
     # 🛡️ Démarrage automatique de l'agent de surveillance marque 24/7
     logging.info("🛡️ Démarrage automatique de l'agent de surveillance marque...")
     start_monitoring_task()
+    
+    # 🚀 Démarrage automatique de l'agent de sécurité et d'audit 24/7
+    logging.critical("🚀🛡️ Démarrage automatique de l'agent de sécurité et d'audit...")
+    start_security_monitoring_task(db)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
