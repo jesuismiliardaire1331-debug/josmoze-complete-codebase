@@ -3828,6 +3828,15 @@ class BackendTester:
         self.test_josmose_email_addresses_consistency()
         print()
         
+        # BRAND MONITORING AGENT TESTS
+        print("🔍 BRAND MONITORING AGENT TESTS")
+        print("-" * 40)
+        self.test_brand_monitoring_status()
+        self.test_brand_monitoring_force_scan()
+        self.test_brand_monitoring_violations()
+        self.test_brand_monitoring_start_agent()
+        print()
+        
         # Summary
         print("=" * 80)
         print("TEST SUMMARY - SOCIAL MEDIA MARKETING AUTOMATION")
