@@ -1515,6 +1515,81 @@ class BackendTester:
             self.log_test("Abandoned Cart Dashboard - All Managers Access", False, f"Exception: {str(e)}")
             return False
 
+    def test_abandoned_cart_authentication_fix(self):
+        """Test the specific authentication fix for abandoned cart endpoints - Antonio credentials"""
+        try:
+            # Test with Antonio's credentials specifically mentioned in the review
+            login_data = {
+                "username": "antonio@josmose.com",
+                "password": "Antonio@2024!Secure"
+            }
+            
+            # Authenticate
+            login_response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=login_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if login_response.status_code == 200:
+                login_data_response = login_response.json()
+                if "access_token" in login_data_response:
+                    # Set authorization header
+                    self.session.headers.update({
+                        "Authorization": f"Bearer {login_data_response['access_token']}"
+                    })
+                    
+                    # Test 1: GET /api/crm/abandoned-carts/dashboard (should return 200, not 401)
+                    dashboard_response = self.session.get(f"{BACKEND_URL}/crm/abandoned-carts/dashboard")
+                    
+                    if dashboard_response.status_code == 200:
+                        dashboard_data = dashboard_response.json()
+                        
+                        # Verify structure returns statistics and recent_carts
+                        if "statistics" in dashboard_data and "recent_carts" in dashboard_data:
+                            self.log_test("Authentication Fix - Dashboard Access", True, 
+                                        f"✅ Dashboard returns 200 OK with correct structure (statistics + recent_carts)")
+                            
+                            # Test 2: POST /api/crm/process-recovery-emails
+                            process_response = self.session.post(f"{BACKEND_URL}/crm/process-recovery-emails")
+                            
+                            if process_response.status_code == 200:
+                                process_data = process_response.json()
+                                if "success" in process_data and process_data["success"]:
+                                    self.log_test("Authentication Fix - Process Recovery Emails", True, 
+                                                f"✅ Process recovery emails returns 200 OK with success: true")
+                                    
+                                    # Clear auth header
+                                    self.session.headers.pop("Authorization", None)
+                                    return True
+                                else:
+                                    self.log_test("Authentication Fix - Process Recovery Emails", False, 
+                                                f"Process emails failed: {process_data}")
+                                    return False
+                            else:
+                                self.log_test("Authentication Fix - Process Recovery Emails", False, 
+                                            f"Process emails status: {process_response.status_code}, Response: {process_response.text}")
+                                return False
+                        else:
+                            self.log_test("Authentication Fix - Dashboard Access", False, 
+                                        f"Dashboard missing required structure. Got: {list(dashboard_data.keys())}")
+                            return False
+                    else:
+                        self.log_test("Authentication Fix - Dashboard Access", False, 
+                                    f"❌ Dashboard still returns {dashboard_response.status_code} instead of 200. Response: {dashboard_response.text}")
+                        return False
+                else:
+                    self.log_test("Authentication Fix - Login", False, "No access token in login response")
+                    return False
+            else:
+                self.log_test("Authentication Fix - Login", False, 
+                            f"Login failed with status: {login_response.status_code}, Response: {login_response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Authentication Fix - Exception", False, f"Exception: {str(e)}")
+            return False
+
     def test_email_system_access_all_managers(self):
         """Test that all 3 managers can access email system endpoints"""
         try:
