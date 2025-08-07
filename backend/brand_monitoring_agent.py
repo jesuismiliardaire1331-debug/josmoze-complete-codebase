@@ -377,38 +377,50 @@ class BrandMonitoringAgent:
 
     async def send_alert(self, violations: List[Dict]):
         """
-        Envoie une alerte en cas de détection de violations
+        🚨 Envoie une alerte RENFORCÉE en cas de détection de violations
         """
         try:
             if self.violation_count >= MONITORING_CONFIG["alert_threshold"]:
                 alert_message = f"""
-🚨 ALERTE SURVEILLANCE MARQUE - {datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S')}
+🚨🚨🚨 ALERTE SURVEILLANCE MARQUE RENFORCÉE - {datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S')} 🚨🚨🚨
 
-{len(violations)} violations détectées sur www.josmose.com :
+⚠️ VIOLATIONS CRITIQUES DÉTECTÉES SUR www.josmose.com ⚠️
+
+{len(violations)} violations détectées en mode surveillance renforcée (30 secondes) :
 
 """
-                for violation in violations[:5]:  # Montrer les 5 premières
-                    alert_message += f"• '{violation['term']}' dans {violation.get('file', violation.get('url', 'unknown'))}\n"
+                for violation in violations[:10]:  # Montrer les 10 premières
+                    alert_message += f"🔴 '{violation['term']}' dans {violation.get('file', violation.get('url', 'unknown'))}\n"
                 
-                if len(violations) > 5:
-                    alert_message += f"... et {len(violations) - 5} autres violations\n"
+                if len(violations) > 10:
+                    alert_message += f"... et {len(violations) - 10} autres violations\n"
                 
-                alert_message += "\n🔧 Action requise : Nettoyage immédiat nécessaire !"
+                alert_message += f"""
+🔧 ACTION REQUISE : NETTOYAGE IMMÉDIAT NÉCESSAIRE !
+📊 Mode surveillance : RENFORCÉ (30 secondes)
+🎯 Seuil d'alerte : IMMÉDIAT (1ère détection)
+🕒 Prochaine vérification dans 30 secondes
+
+⚡ SYSTÈME DE SURVEILLANCE HAUTE INTENSITÉ ACTIF ⚡
+"""
                 
-                # Log l'alerte (dans un vrai système, on enverrait un email/SMS)
+                # Log l'alerte avec niveau CRITIQUE
                 self.logger.critical(alert_message)
                 
-                # Sauvegarder l'alerte
+                # Sauvegarder l'alerte avec priorité élevée
                 await self.db.brand_monitoring_alerts.insert_one({
                     "timestamp": datetime.utcnow(),
                     "violation_count": len(violations),
                     "consecutive_violations": self.violation_count,
                     "message": alert_message,
-                    "violations": violations
+                    "violations": violations,
+                    "alert_level": "CRITICAL_REINFORCED",  # 🚨 Nouveau niveau d'alerte
+                    "scan_mode": "REINFORCED_MONITORING",
+                    "frequency": "30_SECONDS"
                 })
                 
         except Exception as e:
-            self.logger.error(f"Erreur envoi alerte: {str(e)}")
+            self.logger.error(f"Erreur envoi alerte renforcée: {str(e)}")
 
     async def run_monitoring_loop(self):
         """
