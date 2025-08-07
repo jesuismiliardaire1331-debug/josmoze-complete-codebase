@@ -31,15 +31,21 @@ MONITORING_CONFIG = {
     "alert_threshold": 1  # 🚨 ALERTE IMMÉDIATE - Alerter dès la première détection
 }
 
-# Mots interdits à surveiller (case-insensitive)
+# Mots interdits à surveiller (case-insensitive) - SURVEILLANCE RENFORCÉE
 FORBIDDEN_TERMS = [
     "emergent",
-    "made with emergent",
+    "made with emergent", 
     "emergentagent",
     "emergent.com",
     "preview.emergentagent.com",
     "osmose.com",  # Ancien domaine à éviter
-    "emergentagent.com"
+    "emergentagent.com",
+    # 🚨 TERMES SUPPLÉMENTAIRES SURVEILLÉS
+    "powered by emergent",
+    "built with emergent", 
+    "emergent ai",
+    "emergent platform",
+    "emergent solution"
 ]
 
 # Termes autorisés (pour éviter les faux positifs)
