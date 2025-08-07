@@ -1204,6 +1204,11 @@ const CRMDashboard = () => {
         {activeTab === 'surveillance' && (
           <BrandMonitoring />
         )}
+
+        {/* Onglet Paniers Abandonnés */}
+        {activeTab === 'abandoned-carts' && (
+          <AbandonedCarts />
+        )}
       </div>
     </div>
   );
