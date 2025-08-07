@@ -5611,6 +5611,10 @@ class BackendTester:
         # Test equal access to manager-only endpoints
         self.test_brand_monitoring_access_all_managers()
         self.test_abandoned_cart_dashboard_access_all_managers()
+        
+        # Test the specific authentication fix for abandoned cart endpoints
+        self.test_abandoned_cart_authentication_fix()
+        
         self.test_email_system_access_all_managers()
         
         print("\n" + "="*80)
