@@ -1054,6 +1054,37 @@ const CheckoutForm = () => {
     }
 
     try {
+      // 🛒 TRAQUER PANIER ABANDONNÉ avant checkout
+      if (cart.length > 0) {
+        const cartData = {
+          customer_email: customerInfo.email,
+          customer_name: customerInfo.name,
+          customer_phone: customerInfo.phone,
+          customer_address: customerInfo.address,
+          items: cart.map(item => ({
+            product_id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price
+          })),
+          total_value: total,
+          currency: "EUR",
+          source_page: "/checkout",
+          browser_info: {
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString()
+          }
+        };
+        
+        // Enregistrer le panier abandonné
+        try {
+          await axios.post(`${API}/abandoned-carts/track`, cartData);
+        } catch (abandonedCartError) {
+          console.log('Could not track abandoned cart:', abandonedCartError);
+          // Continue avec le checkout même si le tracking échoue
+        }
+      }
+
       // Prepare cart items for backend
       const cartItems = cart.map(item => ({
         product_id: item.id,
