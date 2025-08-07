@@ -4,6 +4,9 @@ Surveille en permanence que :
 1. Aucune mention "emergent" ou "made with emergent" n'apparaît
 2. Le site reste toujours www.josmose.com
 3. Aucune référence indésirable dans le code ou l'interface
+
+FONCTIONNEMENT 24/7 : Cet agent se lance automatiquement au démarrage du serveur
+et continue de surveiller indéfiniment chaque minute.
 """
 
 import os
