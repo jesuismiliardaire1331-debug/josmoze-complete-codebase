@@ -1398,6 +1398,130 @@ async def start_brand_monitoring_agent(current_user: User = Depends(require_role
         logging.error(f"Erreur démarrage surveillance: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors du démarrage de l'agent")
 
+# ========== ENDPOINTS PANIERS ABANDONNÉS ==========
+
+@api_router.post("/abandoned-carts/track")
+async def track_abandoned_cart(cart_data: dict):
+    """
+    Enregistrer un panier abandonné et programmer les emails de récupération
+    """
+    try:
+        result = await abandoned_cart_service.track_abandoned_cart(cart_data)
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur tracking panier abandonné: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'enregistrement du panier abandonné")
+
+@api_router.get("/crm/abandoned-carts/dashboard")
+async def get_abandoned_carts_dashboard(current_user: User = Depends(require_role(["manager"]))):
+    """
+    Récupérer les données du dashboard des paniers abandonnés pour le CRM
+    """
+    try:
+        dashboard_data = await abandoned_cart_service.get_abandoned_carts_dashboard()
+        return dashboard_data
+        
+    except Exception as e:
+        logging.error(f"Erreur dashboard paniers abandonnés: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des données")
+
+@api_router.get("/recovery")
+async def recover_cart_by_token(token: str):
+    """
+    Récupérer un panier via son token de récupération (pour les liens email)
+    """
+    try:
+        result = await abandoned_cart_service.recover_cart_by_token(token)
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération panier: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération du panier")
+
+@api_router.post("/orders/{order_id}/mark-cart-recovered")
+async def mark_cart_recovered(order_id: str, cart_data: dict):
+    """
+    Marquer un panier comme récupéré après finalisation de commande
+    """
+    try:
+        cart_id = cart_data.get("cart_id")
+        if cart_id:
+            result = await abandoned_cart_service.mark_cart_recovered(cart_id, order_id)
+            return result
+        
+        return {"success": True, "message": "Pas de panier à marquer"}
+        
+    except Exception as e:
+        logging.error(f"Erreur marquage panier récupéré: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors du marquage du panier")
+
+@api_router.post("/orders/{order_id}/delivery-note")
+async def generate_delivery_note(order_id: str, delivery_data: dict):
+    """
+    Générer un bon de livraison PDF pour une commande
+    """
+    try:
+        # Récupérer les détails de la commande
+        order = await db.orders.find_one({"id": order_id})
+        if not order:
+            raise HTTPException(status_code=404, detail="Commande non trouvée")
+        
+        # Préparer les données du bon de livraison
+        delivery_note_data = {
+            "delivery_id": f"BL-{datetime.now().strftime('%Y%m%d')}-{order_id[:6].upper()}",
+            "order_id": order_id,
+            "customer_name": order.get("customer_name", "Client"),
+            "customer_phone": order.get("customer_phone"),
+            "delivery_address": delivery_data.get("delivery_address", order.get("customer_address", {})),
+            "items": order.get("items", []),
+            "delivery_method": delivery_data.get("delivery_method", "standard"),
+            "delivery_date": delivery_data.get("delivery_date"),
+            "tracking_number": delivery_data.get("tracking_number"),
+            "carrier": delivery_data.get("carrier", "Transporteur Standard"),
+            "special_instructions": delivery_data.get("special_instructions", "")
+        }
+        
+        # Générer le PDF
+        pdf_base64 = await abandoned_cart_service.generate_delivery_note_pdf(delivery_note_data)
+        
+        if pdf_base64:
+            # Sauvegarder le bon de livraison
+            await db.delivery_notes.insert_one({
+                "delivery_id": delivery_note_data["delivery_id"],
+                "order_id": order_id,
+                "customer_email": order.get("customer_email"),
+                "pdf_base64": pdf_base64,
+                "delivery_data": delivery_note_data,
+                "created_at": datetime.utcnow(),
+                "status": "generated"
+            })
+            
+            return {
+                "success": True,
+                "delivery_id": delivery_note_data["delivery_id"],
+                "pdf_base64": pdf_base64
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Erreur lors de la génération du PDF")
+        
+    except Exception as e:
+        logging.error(f"Erreur génération bon de livraison: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la génération du bon de livraison")
+
+@api_router.post("/crm/process-recovery-emails")
+async def process_recovery_emails(current_user: User = Depends(require_role(["manager"]))):
+    """
+    Traiter les emails de récupération programmés (endpoint manuel pour tests)
+    """
+    try:
+        await abandoned_cart_service.process_scheduled_emails()
+        return {"success": True, "message": "Emails de récupération traités"}
+        
+    except Exception as e:
+        logging.error(f"Erreur traitement emails: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors du traitement des emails")
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
