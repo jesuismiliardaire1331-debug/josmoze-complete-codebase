@@ -44,3 +44,8 @@ maxminddb>=2.2.0
 
 # Additional dependencies for abandoned cart service
 aiofiles==23.2.1
+
+# Security and system monitoring dependencies
+psutil==5.9.6
+schedule==1.2.0
+pytz==2023.3
