@@ -37,7 +37,9 @@ FORBIDDEN_TERMS = [
     "made with emergent",
     "emergentagent",
     "emergent.com",
-    "preview.emergentagent.com"
+    "preview.emergentagent.com",
+    "osmose.com",  # Ancien domaine à éviter
+    "emergentagent.com"
 ]
 
 # Termes autorisés (pour éviter les faux positifs)
