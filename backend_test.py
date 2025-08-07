@@ -5220,6 +5220,18 @@ class BackendTester:
         self.test_cache_clear_permissions()
         print()
         
+        # NEW TEAM STRUCTURE TESTS (as requested in review)
+        print("👥 NEW TEAM STRUCTURE & ROLE PERMISSIONS TESTS")
+        print("-" * 40)
+        self.test_team_structure_authentication()
+        self.test_team_contacts_structure()
+        self.test_manager_only_endpoints()
+        self.test_manager_agent_shared_endpoints()
+        self.test_email_system_access()
+        self.test_role_permissions_verification()
+        self.test_technique_role_limitations()
+        print()
+        
         # SMART RECOMMENDATIONS SYSTEM TESTS (NEW - as requested)
         print("🤖 SMART PRODUCT RECOMMENDATIONS TESTS")
         print("-" * 40)
