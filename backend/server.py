@@ -36,6 +36,9 @@ from abandoned_cart_service import AbandonedCartService
 # Import security audit agent
 from security_audit_agent import get_security_audit_agent, start_security_monitoring_task
 
+# Import AI agents system
+from ai_agents_system import get_ai_agent_system, AgentStatus, ClientPersonality, ConversationStage
+
 # Initialize services
 abandoned_cart_service = None
 security_audit_agent = None
