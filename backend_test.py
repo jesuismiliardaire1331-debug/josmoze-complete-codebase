@@ -1019,6 +1019,7 @@ class BackendTester:
                 data = response.json()
                 if "access_token" in data:
                     # Set authorization header for subsequent requests
+                    self.auth_token = data['access_token']  # Store the token
                     self.session.headers.update({
                         "Authorization": f"Bearer {data['access_token']}"
                     })
