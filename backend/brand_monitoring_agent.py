@@ -225,6 +225,58 @@ class BrandMonitoringAgent:
                 self.logger.error(f"Erreur vérification domaine {config_file}: {str(e)}")
         
         return violations
+    
+    async def scan_system_configs(self) -> List[Dict]:
+        """
+        🆕 Scanner les fichiers de configuration système pour détecter les violations
+        """
+        violations = []
+        
+        system_config_files = [
+            "/app/package.json",
+            "/app/frontend/package.json", 
+            "/app/backend/requirements.txt",
+            "/app/README.md",
+            "/app/frontend/public/index.html",
+            "/app/frontend/public/manifest.json"
+        ]
+        
+        try:
+            for config_file in system_config_files:
+                if os.path.exists(config_file):
+                    config_violations = await self.scan_file_content(config_file)
+                    violations.extend(config_violations)
+                    
+        except Exception as e:
+            self.logger.error(f"Erreur scan configurations système: {str(e)}")
+        
+        return violations
+
+    async def scan_file_metadata(self) -> List[Dict]:
+        """
+        🆕 Scanner les métadonnées et noms de fichiers pour détecter les violations
+        """
+        violations = []
+        
+        try:
+            for root, dirs, files in os.walk("/app"):
+                # Exclure certains répertoires
+                dirs[:] = [d for d in dirs if not any(excluded in d for excluded in MONITORING_CONFIG["excluded_files"])]
+                
+                # Vérifier les noms de fichiers et dossiers
+                for name in dirs + files:
+                    name_violations = self.is_forbidden_term(name)
+                    for violation in name_violations:
+                        violations.append({
+                            **violation,
+                            "file": os.path.join(root, name),
+                            "type": "filename_metadata"
+                        })
+                        
+        except Exception as e:
+            self.logger.error(f"Erreur scan métadonnées: {str(e)}")
+        
+        return violations
 
     async def perform_full_scan(self) -> Dict:
         """
