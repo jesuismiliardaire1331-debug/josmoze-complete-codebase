@@ -98,11 +98,11 @@ CRM_USERS = {
         "username": "antonio@josmose.com",
         "email": "antonio@josmose.com",  # Email professionnel pour clients
         "professional_email": "antonio@josmose.com",
-        "full_name": "Antonio - Manager",
-        "role": "manager",  # Manager role - same as Naima
+        "full_name": "Antonio - Agent",
+        "role": "agent",  # 🔄 RÔLE MODIFIÉ : Agent (au lieu de manager)
         "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
-        "department": "Direction Générale", 
-        "position": "Directeur Général",
+        "department": "Équipe Commerciale", 
+        "position": "Agent Commercial",
         "is_active": True
     },
     "support@josmose.com": {
