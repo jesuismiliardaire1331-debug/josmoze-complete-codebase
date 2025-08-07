@@ -78,7 +78,7 @@ const TeamContacts = () => {
       {/* Managers */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-          👑 Management
+          👑 Management - Équipe Dirigeante
           <span className="ml-2 bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-sm">
             {contacts.managers.length}
           </span>
