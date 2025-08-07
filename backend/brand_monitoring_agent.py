@@ -229,34 +229,50 @@ class BrandMonitoringAgent:
     async def perform_full_scan(self) -> Dict:
         """
         Effectue un scan complet de tous les éléments surveillés
+        🚨 MODE SURVEILLANCE RENFORCÉE ACTIVÉ 🚨
         """
         scan_start = datetime.utcnow()
         all_violations = []
         
-        self.logger.info("🔍 Début du scan complet de surveillance marque...")
+        self.logger.info("🔍 Début du scan complet de surveillance marque RENFORCÉE...")
+        self.logger.info("⚡ FRÉQUENCE: Toutes les 30 secondes | ALERTE: Immédiate")
         
-        # 1. Scanner les répertoires de code
+        # 1. Scanner les répertoires de code - SCAN APPROFONDI
         for directory in MONITORING_CONFIG["scan_directories"]:
             if os.path.exists(directory):
-                self.logger.info(f"📂 Scan du répertoire: {directory}")
+                self.logger.info(f"📂 Scan INTENSIF du répertoire: {directory}")
                 dir_violations = await self.scan_directory(directory)
                 all_violations.extend(dir_violations)
         
-        # 2. Scanner le contenu web visible
+        # 2. Scanner le contenu web visible - VERIFICATION MULTIPLE
         web_urls = [
             MONITORING_CONFIG["frontend_url"],
-            MONITORING_CONFIG["crm_url"]
+            MONITORING_CONFIG["crm_url"],
+            # 🚨 URLs SUPPLÉMENTAIRES SURVEILLÉES
+            MONITORING_CONFIG["frontend_url"] + "/products",
+            MONITORING_CONFIG["frontend_url"] + "/contact",
+            MONITORING_CONFIG["frontend_url"] + "/installation"
         ]
         
         for url in web_urls:
-            self.logger.info(f"🌐 Scan de l'URL: {url}")
+            self.logger.info(f"🌐 Scan APPROFONDI de l'URL: {url}")
             web_violations = await self.scan_web_content(url)
             all_violations.extend(web_violations)
         
-        # 3. Vérifier la cohérence des domaines
-        self.logger.info("🏷️ Vérification cohérence domaines...")
+        # 3. Vérifier la cohérence des domaines - CONTRÔLE STRICT
+        self.logger.info("🏷️ Vérification STRICTE cohérence domaines...")
         domain_violations = await self.check_domain_consistency()
         all_violations.extend(domain_violations)
+        
+        # 4. 🆕 NOUVEAU : Scanner les configurations système
+        self.logger.info("⚙️ Scan des configurations système...")
+        config_violations = await self.scan_system_configs()
+        all_violations.extend(config_violations)
+        
+        # 5. 🆕 NOUVEAU : Vérifier les métadonnées des fichiers
+        self.logger.info("🔧 Vérification métadonnées des fichiers...")
+        metadata_violations = await self.scan_file_metadata()
+        all_violations.extend(metadata_violations)
         
         # Compilation des résultats
         scan_results = {
@@ -264,17 +280,19 @@ class BrandMonitoringAgent:
             "duration_seconds": (datetime.utcnow() - scan_start).total_seconds(),
             "violations_found": len(all_violations),
             "violations": all_violations,
-            "status": "CLEAN" if len(all_violations) == 0 else "VIOLATIONS_DETECTED"
+            "status": "CLEAN" if len(all_violations) == 0 else "VIOLATIONS_DETECTED",
+            "scan_mode": "REINFORCED_MONITORING",  # 🚨 Nouveau mode de surveillance
+            "scan_frequency": "30_SECONDS"
         }
         
-        # Log des résultats
+        # Log des résultats - PLUS DÉTAILLÉ
         if len(all_violations) == 0:
-            self.logger.info("✅ SCAN TERMINÉ - AUCUNE VIOLATION DÉTECTÉE")
+            self.logger.info("✅ SCAN RENFORCÉ TERMINÉ - AUCUNE VIOLATION DÉTECTÉE")
             self.violation_count = 0
         else:
-            self.logger.warning(f"⚠️ SCAN TERMINÉ - {len(all_violations)} VIOLATIONS DÉTECTÉES:")
+            self.logger.critical(f"🚨 ALERTE SURVEILLANCE RENFORCÉE - {len(all_violations)} VIOLATIONS DÉTECTÉES:")
             for violation in all_violations:
-                self.logger.warning(f"  - {violation['term']} trouvé dans {violation.get('file', violation.get('url', 'unknown'))}")
+                self.logger.critical(f"  ⚠️ {violation['term']} trouvé dans {violation.get('file', violation.get('url', 'unknown'))}")
             self.violation_count += 1
         
         # Sauvegarder les résultats
