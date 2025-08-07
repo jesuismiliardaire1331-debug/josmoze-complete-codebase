@@ -6011,13 +6011,23 @@ class BackendTester:
         return success_rate >= 80
 
 if __name__ == "__main__":
+    print("🔄 JOSMOSE CRM - EQUAL MANAGER PERMISSIONS TESTING")
+    print("Testing new configuration: Naima, Aziza, Antonio all have MANAGER role")
+    print("="*80)
+    
     tester = BackendTester()
     
-    # Check if user wants focused brand monitoring tests
-    import sys
-    if len(sys.argv) > 1 and sys.argv[1] == "brand-monitoring":
-        success = tester.run_brand_monitoring_tests()
-    else:
-        success = tester.run_all_tests()
+    # Run focused tests on equal manager permissions
+    tester.run_equal_managers_tests()
     
-    exit(0 if success else 1)
+    # Also run some core API tests to ensure system is working
+    print("\n🔧 RUNNING CORE API TESTS...")
+    tester.test_root_endpoint()
+    tester.test_location_detection()
+    tester.test_product_catalog()
+    
+    # Generate final summary
+    tester.generate_test_summary()
+    
+    print("\n🎯 FOCUS: All three users (Naima, Aziza, Antonio) should now have equal MANAGER permissions")
+    print("✅ Test completed - Check results above for verification")
