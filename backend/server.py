@@ -33,8 +33,12 @@ from brand_monitoring_agent import brand_monitor, start_brand_monitoring, get_br
 # Import abandoned cart service
 from abandoned_cart_service import AbandonedCartService
 
-# Initialize abandoned cart service
+# Import security audit agent
+from security_audit_agent import get_security_audit_agent, start_security_monitoring_task
+
+# Initialize services
 abandoned_cart_service = None
+security_audit_agent = None
 
 # Import authentication and AI agents
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info, get_user_permissions
