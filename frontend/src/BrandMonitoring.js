@@ -50,7 +50,7 @@ const BrandMonitoring = () => {
       const response = await axios.post(`${backendUrl}/api/crm/brand-monitoring/start`, {}, config);
       
       alert('Agent de surveillance démarré avec succès !');
-      await loadMonitoringData(); // Recharger les données
+      loadMonitoringData(); // Recharger les données
       
     } catch (error) {
       console.error('Erreur démarrage surveillance:', error);
