@@ -5028,6 +5028,15 @@ class BackendTester:
         print(f"Advanced Success Rate: {(advanced_passed/len(advanced_results))*100:.1f}%" if advanced_results else "No advanced tests")
         print()
         
+        abandoned_cart_results = [r for r in self.test_results if r["test"] in abandoned_cart_tests]
+        abandoned_cart_passed = sum(1 for r in abandoned_cart_results if r["success"])
+        
+        print("🛒 ABANDONED CART SYSTEM SUMMARY:")
+        print(f"Abandoned Cart Tests: {len(abandoned_cart_results)}")
+        print(f"Abandoned Cart Passed: {abandoned_cart_passed}")
+        print(f"Abandoned Cart Success Rate: {(abandoned_cart_passed/len(abandoned_cart_results))*100:.1f}%" if abandoned_cart_results else "No abandoned cart tests")
+        print()
+        
         if total - passed > 0:
             print("❌ FAILED TESTS:")
             for result in self.test_results:
