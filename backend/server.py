@@ -1383,8 +1383,7 @@ async def get_recent_violations(current_user: User = Depends(require_role(["mana
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des violations")
 
 @api_router.post("/crm/brand-monitoring/start")
-@require_role(["manager"])  # Seulement pour les managers
-async def start_brand_monitoring_agent():
+async def start_brand_monitoring_agent(current_user: User = Depends(require_role(["manager"]))):
     """
     Démarre l'agent de surveillance marque en arrière-plan
     """
