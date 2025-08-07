@@ -1328,6 +1328,63 @@ async def simulate_incoming_email(email_data: EmailSimulationRequest, current_us
         logging.error(f"Erreur simulation email: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors de la simulation")
 
+# ========== BRAND MONITORING AGENT ENDPOINTS ==========
+
+@api_router.get("/crm/brand-monitoring/status")
+@require_role(["manager"])  # Seulement pour les managers
+async def get_brand_monitoring_status():
+    """
+    Récupère le statut de l'agent de surveillance marque
+    """
+    try:
+        status = await get_brand_monitoring_status()
+        return status
+        
+    except Exception as e:
+        logging.error(f"Erreur statut surveillance: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération du statut")
+
+@api_router.post("/crm/brand-monitoring/force-scan")
+@require_role(["manager"])  # Seulement pour les managers
+async def force_brand_monitoring_scan():
+    """
+    Force un scan immédiat de surveillance marque
+    """
+    try:
+        results = await force_brand_scan()
+        return results
+        
+    except Exception as e:
+        logging.error(f"Erreur scan forcé: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors du scan forcé")
+
+@api_router.get("/crm/brand-monitoring/violations")
+@require_role(["manager"])  # Seulement pour les managers
+async def get_recent_violations():
+    """
+    Récupère les violations récentes détectées
+    """
+    try:
+        # Récupérer les 20 derniers scans avec violations
+        violations_cursor = db.brand_monitoring.find(
+            {"violations_found": {"$gt": 0}}
+        ).sort("scan_time", -1).limit(20)
+        
+        violations = await violations_cursor.to_list(length=20)
+        
+        # Convertir ObjectId en string pour JSON
+        for violation in violations:
+            violation["_id"] = str(violation["_id"])
+        
+        return {
+            "recent_violations": violations,
+            "total_found": len(violations)
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération violations: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des violations")
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
