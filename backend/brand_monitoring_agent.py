@@ -24,11 +24,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 # Configuration de l'agent
 MONITORING_CONFIG = {
     "check_interval": 60,  # Vérification toutes les 60 secondes (1 minute)
-    "frontend_url": "https://67c818fa-35d3-46a9-b7df-5b06cb23e4f4.preview.emergentagent.com",
-    "crm_url": "https://67c818fa-35d3-46a9-b7df-5b06cb23e4f4.preview.emergentagent.com/crm",
+    "frontend_url": os.environ.get("REACT_APP_BACKEND_URL", "https://67c818fa-35d3-46a9-b7df-5b06cb23e4f4.preview.emergentagent.com").replace("/api", ""),
+    "crm_url": os.environ.get("REACT_APP_BACKEND_URL", "https://67c818fa-35d3-46a9-b7df-5b06cb23e4f4.preview.emergentagent.com").replace("/api", "") + "/crm",
     "scan_directories": ["/app/frontend/src", "/app/backend", "/app"],
     "excluded_files": [".git", "node_modules", "__pycache__", ".emergent", "brand_monitoring_agent.py"],
-    "alert_threshold": 3  # Alerter après 3 détections consécutives
+    "alert_threshold": 1  # Alerter immédiatement après la première détection
 }
 
 # Mots interdits à surveiller (case-insensitive)
