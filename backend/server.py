@@ -31,7 +31,10 @@ from email_service import email_service
 from brand_monitoring_agent import brand_monitor, start_brand_monitoring, get_brand_monitoring_status, force_brand_scan, start_monitoring_task
 
 # Import abandoned cart service
-from abandoned_cart_service import abandoned_cart_service
+from abandoned_cart_service import AbandonedCartService
+
+# Initialize abandoned cart service
+abandoned_cart_service = None
 
 # Import authentication and AI agents
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info, get_user_permissions
