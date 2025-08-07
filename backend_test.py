@@ -6495,6 +6495,13 @@ class BackendTester:
                 if not result["success"]:
                     print(f"  - {result['test']}: {result['details']}")
         
+        # Show AI agents tests specifically
+        print("\n🤖 AI AGENTS SYSTEM TESTS:")
+        ai_tests = [r for r in self.test_results if "AI Agents" in r["test"] or "Agent" in r["test"] or "Schopenhauer" in r["test"] or "Performance Analytics" in r["test"]]
+        for result in ai_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test']}: {result['details']}")
+        
         # Show critical manager permission tests
         print("\n🔑 MANAGER PERMISSIONS TESTS:")
         manager_tests = [r for r in self.test_results if "Manager" in r["test"] or "Equal" in r["test"]]
