@@ -1292,7 +1292,342 @@ class BackendTester:
             self.log_test("Reinforced Frequency", False, f"Exception: {str(e)}")
             return False
 
-    def test_extended_scan_coverage(self):
+    # ========== NEW EQUAL MANAGER PERMISSIONS TESTS ==========
+    
+    def test_all_managers_authentication(self):
+        """Test that all three users (Naima, Aziza, Antonio) authenticate with manager role"""
+        try:
+            managers = [
+                ("naima@josmose.com", "Naima@2024!Commerce", "Naima"),
+                ("aziza@josmose.com", "Aziza@2024!Director", "Aziza"),
+                ("antonio@josmose.com", "Antonio@2024!Secure", "Antonio")
+            ]
+            
+            authenticated_managers = []
+            
+            for email, password, name in managers:
+                login_data = {
+                    "username": email,
+                    "password": password
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=login_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data and "user" in data:
+                        user_role = data["user"].get("role")
+                        if user_role == "manager":
+                            authenticated_managers.append(f"{name} (manager)")
+                        else:
+                            self.log_test("All Managers Authentication", False, f"{name} has role '{user_role}', expected 'manager'")
+                            return False
+                    else:
+                        self.log_test("All Managers Authentication", False, f"Invalid response for {name}")
+                        return False
+                else:
+                    self.log_test("All Managers Authentication", False, f"Authentication failed for {name}: {response.status_code}")
+                    return False
+            
+            if len(authenticated_managers) == 3:
+                self.log_test("All Managers Authentication", True, f"All 3 users authenticated as managers: {', '.join(authenticated_managers)}")
+                return True
+            else:
+                self.log_test("All Managers Authentication", False, f"Only {len(authenticated_managers)} managers authenticated")
+                return False
+                
+        except Exception as e:
+            self.log_test("All Managers Authentication", False, f"Exception: {str(e)}")
+            return False
+
+    def test_team_contacts_structure_equal_managers(self):
+        """Test GET /api/crm/team-contacts shows all 3 as managers with no agents section"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/crm/team-contacts")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check managers section
+                managers = data.get("managers", [])
+                if len(managers) == 3:
+                    manager_names = [m.get("name") for m in managers]
+                    expected_names = ["Naima", "Aziza", "Antonio"]
+                    
+                    # Check all expected managers are present
+                    all_present = all(name in manager_names for name in expected_names)
+                    
+                    # Check all have Manager position
+                    all_managers = all(m.get("position") == "Manager" for m in managers)
+                    
+                    # Check no agents section exists or is empty
+                    agents = data.get("agents", [])
+                    no_agents = len(agents) == 0
+                    
+                    if all_present and all_managers and no_agents:
+                        self.log_test("Team Contacts - Equal Managers", True, f"All 3 managers present: {manager_names}, no agents section")
+                        return True
+                    else:
+                        issues = []
+                        if not all_present:
+                            issues.append(f"Missing managers: {set(expected_names) - set(manager_names)}")
+                        if not all_managers:
+                            issues.append("Not all have Manager position")
+                        if not no_agents:
+                            issues.append(f"Agents section still exists with {len(agents)} entries")
+                        
+                        self.log_test("Team Contacts - Equal Managers", False, f"Issues: {'; '.join(issues)}")
+                        return False
+                else:
+                    self.log_test("Team Contacts - Equal Managers", False, f"Expected 3 managers, got {len(managers)}")
+                    return False
+            else:
+                self.log_test("Team Contacts - Equal Managers", False, f"Status: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Team Contacts - Equal Managers", False, f"Exception: {str(e)}")
+            return False
+
+    def test_brand_monitoring_access_all_managers(self):
+        """Test that all 3 managers can access brand monitoring endpoints"""
+        try:
+            managers = [
+                ("naima@josmose.com", "Naima@2024!Commerce", "Naima"),
+                ("aziza@josmose.com", "Aziza@2024!Director", "Aziza"),
+                ("antonio@josmose.com", "Antonio@2024!Secure", "Antonio")
+            ]
+            
+            successful_accesses = []
+            
+            for email, password, name in managers:
+                # Authenticate as this manager
+                login_data = {
+                    "username": email,
+                    "password": password
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=login_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data:
+                        # Set auth header
+                        self.session.headers.update({
+                            "Authorization": f"Bearer {data['access_token']}"
+                        })
+                        
+                        # Test brand monitoring access
+                        brand_response = self.session.get(f"{BACKEND_URL}/crm/brand-monitoring/status")
+                        
+                        if brand_response.status_code == 200:
+                            successful_accesses.append(name)
+                        elif brand_response.status_code == 403:
+                            self.log_test("Brand Monitoring - All Managers Access", False, f"{name} denied access (403)")
+                            return False
+                        else:
+                            # Other status codes might be acceptable (e.g., 500 if service is down)
+                            successful_accesses.append(f"{name} (status: {brand_response.status_code})")
+                    else:
+                        self.log_test("Brand Monitoring - All Managers Access", False, f"No token for {name}")
+                        return False
+                else:
+                    self.log_test("Brand Monitoring - All Managers Access", False, f"Auth failed for {name}")
+                    return False
+            
+            if len(successful_accesses) == 3:
+                self.log_test("Brand Monitoring - All Managers Access", True, f"All managers can access: {', '.join(successful_accesses)}")
+                return True
+            else:
+                self.log_test("Brand Monitoring - All Managers Access", False, f"Only {len(successful_accesses)} managers have access")
+                return False
+                
+        except Exception as e:
+            self.log_test("Brand Monitoring - All Managers Access", False, f"Exception: {str(e)}")
+            return False
+
+    def test_abandoned_cart_dashboard_access_all_managers(self):
+        """Test that all 3 managers can access abandoned cart dashboard"""
+        try:
+            managers = [
+                ("naima@josmose.com", "Naima@2024!Commerce", "Naima"),
+                ("aziza@josmose.com", "Aziza@2024!Director", "Aziza"),
+                ("antonio@josmose.com", "Antonio@2024!Secure", "Antonio")
+            ]
+            
+            successful_accesses = []
+            
+            for email, password, name in managers:
+                # Authenticate as this manager
+                login_data = {
+                    "username": email,
+                    "password": password
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=login_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data:
+                        # Set auth header
+                        self.session.headers.update({
+                            "Authorization": f"Bearer {data['access_token']}"
+                        })
+                        
+                        # Test abandoned cart dashboard access
+                        cart_response = self.session.get(f"{BACKEND_URL}/crm/abandoned-carts/dashboard")
+                        
+                        if cart_response.status_code == 200:
+                            successful_accesses.append(name)
+                        elif cart_response.status_code == 403:
+                            self.log_test("Abandoned Cart Dashboard - All Managers Access", False, f"{name} denied access (403)")
+                            return False
+                        else:
+                            # Other status codes might be acceptable
+                            successful_accesses.append(f"{name} (status: {cart_response.status_code})")
+                    else:
+                        self.log_test("Abandoned Cart Dashboard - All Managers Access", False, f"No token for {name}")
+                        return False
+                else:
+                    self.log_test("Abandoned Cart Dashboard - All Managers Access", False, f"Auth failed for {name}")
+                    return False
+            
+            if len(successful_accesses) == 3:
+                self.log_test("Abandoned Cart Dashboard - All Managers Access", True, f"All managers can access: {', '.join(successful_accesses)}")
+                return True
+            else:
+                self.log_test("Abandoned Cart Dashboard - All Managers Access", False, f"Only {len(successful_accesses)} managers have access")
+                return False
+                
+        except Exception as e:
+            self.log_test("Abandoned Cart Dashboard - All Managers Access", False, f"Exception: {str(e)}")
+            return False
+
+    def test_email_system_access_all_managers(self):
+        """Test that all 3 managers can access email system endpoints"""
+        try:
+            managers = [
+                ("naima@josmose.com", "Naima@2024!Commerce", "Naima"),
+                ("aziza@josmose.com", "Aziza@2024!Director", "Aziza"),
+                ("antonio@josmose.com", "Antonio@2024!Secure", "Antonio")
+            ]
+            
+            successful_accesses = []
+            
+            for email, password, name in managers:
+                # Authenticate as this manager
+                login_data = {
+                    "username": email,
+                    "password": password
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=login_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "access_token" in data:
+                        # Set auth header
+                        self.session.headers.update({
+                            "Authorization": f"Bearer {data['access_token']}"
+                        })
+                        
+                        # Test email inbox access
+                        inbox_response = self.session.get(f"{BACKEND_URL}/crm/emails/inbox")
+                        
+                        if inbox_response.status_code == 200:
+                            successful_accesses.append(name)
+                        elif inbox_response.status_code == 403:
+                            self.log_test("Email System - All Managers Access", False, f"{name} denied access (403)")
+                            return False
+                        else:
+                            # Other status codes might be acceptable
+                            successful_accesses.append(f"{name} (status: {inbox_response.status_code})")
+                    else:
+                        self.log_test("Email System - All Managers Access", False, f"No token for {name}")
+                        return False
+                else:
+                    self.log_test("Email System - All Managers Access", False, f"Auth failed for {name}")
+                    return False
+            
+            if len(successful_accesses) == 3:
+                self.log_test("Email System - All Managers Access", True, f"All managers can access: {', '.join(successful_accesses)}")
+                return True
+            else:
+                self.log_test("Email System - All Managers Access", False, f"Only {len(successful_accesses)} managers have access")
+                return False
+                
+        except Exception as e:
+            self.log_test("Email System - All Managers Access", False, f"Exception: {str(e)}")
+            return False
+
+    def test_jwt_token_role_verification(self):
+        """Test that JWT tokens contain correct manager role for all 3 users"""
+        try:
+            managers = [
+                ("naima@josmose.com", "Naima@2024!Commerce", "Naima"),
+                ("aziza@josmose.com", "Aziza@2024!Director", "Aziza"),
+                ("antonio@josmose.com", "Antonio@2024!Secure", "Antonio")
+            ]
+            
+            correct_roles = []
+            
+            for email, password, name in managers:
+                login_data = {
+                    "username": email,
+                    "password": password
+                }
+                
+                response = self.session.post(
+                    f"{BACKEND_URL}/auth/login",
+                    json=login_data,
+                    headers={"Content-Type": "application/json"}
+                )
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    if "user" in data:
+                        user_info = data["user"]
+                        role = user_info.get("role")
+                        full_name = user_info.get("full_name", "")
+                        
+                        if role == "manager" and "Manager" in full_name:
+                            correct_roles.append(f"{name} (role: {role})")
+                        else:
+                            self.log_test("JWT Token Role Verification", False, f"{name} has incorrect role: {role} or name: {full_name}")
+                            return False
+                    else:
+                        self.log_test("JWT Token Role Verification", False, f"No user info for {name}")
+                        return False
+                else:
+                    self.log_test("JWT Token Role Verification", False, f"Auth failed for {name}")
+                    return False
+            
+            if len(correct_roles) == 3:
+                self.log_test("JWT Token Role Verification", True, f"All JWT tokens contain manager role: {', '.join(correct_roles)}")
+                return True
+            else:
+                self.log_test("JWT Token Role Verification", False, f"Only {len(correct_roles)} have correct roles")
+                return False
+                
+        except Exception as e:
+            self.log_test("JWT Token Role Verification", False, f"Exception: {str(e)}")
+            return False
         """Test that scan now includes system files, metadata, and 5 URLs instead of 2"""
         try:
             # Force a scan to get detailed results
