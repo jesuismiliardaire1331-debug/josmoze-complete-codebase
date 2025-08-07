@@ -1204,6 +1204,11 @@ const CRMDashboard = () => {
           />
         )}
 
+        {/* Onglet Agents IA - Système Schopenhauer */}
+        {activeTab === 'ai-agents' && (
+          <AIAgentsManager />
+        )}
+
         {/* Onglet Surveillance Marque */}
         {activeTab === 'surveillance' && (
           <BrandMonitoring />
