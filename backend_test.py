@@ -4546,7 +4546,84 @@ class BackendTester:
         
         return passed == total
 
+    def run_brand_monitoring_tests(self):
+        """Run focused brand monitoring tests as requested by user"""
+        print("🚨 FOCUSED BRAND MONITORING TESTS - Post Badge Removal")
+        print("=" * 80)
+        print("Testing after removal of 'Made with Emergent' badge from index.html")
+        print("Expected: Agent should detect violations in test/config files but NOT in index.html")
+        print("-" * 80)
+        
+        # Authenticate first
+        if not self.authenticate_manager():
+            print("❌ Authentication failed - cannot proceed with brand monitoring tests")
+            return False
+        
+        # 1. Status Check
+        print("\n📊 1. STATUS CHECK - Agent Status and Statistics")
+        print("-" * 50)
+        self.test_brand_monitoring_status()
+        
+        # 2. Force Scan Immédiat
+        print("\n🔍 2. FORCE SCAN IMMÉDIAT - Complete Scan for Violations")
+        print("-" * 50)
+        start_time = time.time()
+        self.test_brand_monitoring_force_scan()
+        scan_duration = time.time() - start_time
+        print(f"   ⏱️ Scan Duration: {scan_duration:.2f} seconds")
+        
+        # 3. Violations Detection
+        print("\n⚠️ 3. VIOLATIONS DETECTION - Check Remaining Violations")
+        print("-" * 50)
+        self.test_brand_monitoring_violations_detection()
+        
+        # Additional verification tests
+        print("\n🔧 4. ADDITIONAL VERIFICATION")
+        print("-" * 50)
+        self.test_reinforced_monitoring_frequency()
+        self.test_extended_scan_coverage()
+        
+        # Print focused summary
+        print("\n" + "=" * 80)
+        print("📊 BRAND MONITORING TEST SUMMARY")
+        print("=" * 80)
+        
+        # Filter only brand monitoring related tests
+        brand_tests = [r for r in self.test_results if any(keyword in r["test"].lower() 
+                      for keyword in ["brand", "monitoring", "scan", "violation", "reinforced", "authentication"])]
+        
+        total_tests = len(brand_tests)
+        passed_tests = sum(1 for result in brand_tests if result["success"])
+        failed_tests = total_tests - passed_tests
+        success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
+        
+        print(f"Brand Monitoring Tests: {total_tests}")
+        print(f"✅ Passed: {passed_tests}")
+        print(f"❌ Failed: {failed_tests}")
+        print(f"📈 Success Rate: {success_rate:.1f}%")
+        
+        if failed_tests > 0:
+            print(f"\n❌ FAILED BRAND MONITORING TESTS:")
+            for result in brand_tests:
+                if not result["success"]:
+                    print(f"   • {result['test']}: {result['details']}")
+        
+        print(f"\n🎯 EXPECTED RESULTS:")
+        print(f"   • Agent should still detect violations in test/config files")
+        print(f"   • Agent should NO LONGER detect 'Made with Emergent' in index.html")
+        print(f"   • Scan should be very fast (< 1 second)")
+        print(f"   • Actual scan duration: {scan_duration:.2f} seconds")
+        
+        return success_rate >= 80
+
 if __name__ == "__main__":
     tester = BackendTester()
-    success = tester.run_all_tests()
+    
+    # Check if user wants focused brand monitoring tests
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "brand-monitoring":
+        success = tester.run_brand_monitoring_tests()
+    else:
+        success = tester.run_all_tests()
+    
     exit(0 if success else 1)
