@@ -1331,8 +1331,7 @@ async def simulate_incoming_email(email_data: EmailSimulationRequest, current_us
 # ========== BRAND MONITORING AGENT ENDPOINTS ==========
 
 @api_router.get("/crm/brand-monitoring/status")
-@require_role(["manager"])  # Seulement pour les managers
-async def get_brand_monitoring_status():
+async def get_brand_monitoring_status(current_user: User = Depends(require_role(["manager"]))):
     """
     Récupère le statut de l'agent de surveillance marque
     """
