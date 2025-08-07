@@ -1303,9 +1303,10 @@ async def get_inbox_stats(current_user: dict = Depends(require_role(["manager", 
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des statistiques")
 
 @api_router.post("/crm/emails/{email_id}/read")
-async def mark_email_read(email_id: str, current_user: dict = Depends(require_role(["manager", "commercial", "technique"]))):
+async def mark_email_read(email_id: str, current_user: dict = Depends(require_role(["manager", "agent", "commercial", "technique"]))):
     """
     Marque un email comme lu
+    Accessible aux managers, agents, commercial et technique
     """
     try:
         result = await email_service.mark_email_as_read(email_id)
