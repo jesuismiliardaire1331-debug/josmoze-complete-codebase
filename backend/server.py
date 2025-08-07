@@ -1543,6 +1543,151 @@ async def process_recovery_emails(current_user = Depends(require_role(["manager"
         logging.error(f"Erreur traitement emails: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur lors du traitement des emails")
 
+# ========== ENDPOINTS AGENT SÉCURITÉ & AUDIT ==========
+
+@api_router.get("/crm/security/dashboard")
+async def get_security_dashboard(current_user = Depends(require_role(["manager"]))):
+    """
+    Récupérer le dashboard de l'agent de sécurité et d'audit
+    Accessible aux managers uniquement pour des raisons de sécurité
+    """
+    try:
+        if security_audit_agent is None:
+            raise HTTPException(status_code=500, detail="Agent de sécurité non initialisé")
+        
+        dashboard_data = await security_audit_agent.get_security_dashboard()
+        return dashboard_data
+        
+    except Exception as e:
+        logging.error(f"Erreur dashboard sécurité: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération du dashboard sécurité")
+
+@api_router.post("/crm/security/manual-audit") 
+async def trigger_manual_audit(current_user = Depends(require_role(["manager"]))):
+    """
+    Déclencher un audit manuel du système
+    """
+    try:
+        if security_audit_agent is None:
+            raise HTTPException(status_code=500, detail="Agent de sécurité non initialisé")
+        
+        audit_result = await security_audit_agent.perform_daily_audit()
+        
+        if audit_result:
+            return {
+                "success": True,
+                "audit_id": audit_result.audit_id,
+                "overall_score": audit_result.overall_score,
+                "bugs_fixed": len(audit_result.bugs_fixed),
+                "security_issues": len(audit_result.security_issues),
+                "recommendations": len(audit_result.recommendations)
+            }
+        else:
+            raise HTTPException(status_code=500, detail="Échec de l'audit manuel")
+        
+    except Exception as e:
+        logging.error(f"Erreur audit manuel: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'audit manuel")
+
+@api_router.get("/crm/security/threats")
+async def get_security_threats(current_user = Depends(require_role(["manager"]))):
+    """
+    Récupérer les menaces de sécurité détectées récemment
+    """
+    try:
+        # Récupérer les menaces des dernières 24 heures
+        recent_threats = await db.security_threats.find({
+            "detected_at": {"$gte": datetime.utcnow() - timedelta(hours=24)}
+        }).sort("detected_at", -1).limit(50).to_list(50)
+        
+        # Convertir ObjectId en string
+        for threat in recent_threats:
+            threat["_id"] = str(threat["_id"])
+        
+        return {
+            "threats": recent_threats,
+            "total_count": len(recent_threats),
+            "critical_count": len([t for t in recent_threats if t.get("severity") == "CRITICAL"]),
+            "high_count": len([t for t in recent_threats if t.get("severity") == "HIGH"]),
+            "auto_mitigated": len([t for t in recent_threats if t.get("auto_fixed") == True])
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération menaces: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des menaces")
+
+@api_router.get("/crm/security/audits")
+async def get_security_audits(current_user = Depends(require_role(["manager"])), limit: int = 10):
+    """
+    Récupérer l'historique des audits système
+    """
+    try:
+        audits = await db.system_audits.find().sort("audit_date", -1).limit(limit).to_list(limit)
+        
+        # Convertir ObjectId en string
+        for audit in audits:
+            audit["_id"] = str(audit["_id"])
+        
+        return {
+            "audits": audits,
+            "total_count": len(audits)
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération audits: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des audits")
+
+@api_router.get("/crm/security/blocked-ips")
+async def get_blocked_ips(current_user = Depends(require_role(["manager"]))):
+    """
+    Récupérer la liste des IPs bloquées
+    """
+    try:
+        blocked_ips = await db.blocked_ips.find({
+            "expires_at": {"$gte": datetime.utcnow()}
+        }).sort("blocked_at", -1).to_list(100)
+        
+        # Convertir ObjectId en string
+        for ip_record in blocked_ips:
+            ip_record["_id"] = str(ip_record["_id"])
+        
+        return {
+            "blocked_ips": blocked_ips,
+            "total_count": len(blocked_ips)
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération IPs bloquées: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des IPs bloquées")
+
+@api_router.post("/crm/security/unblock-ip")
+async def unblock_ip(ip_data: dict, current_user = Depends(require_role(["manager"]))):
+    """
+    Débloquer manuellement une adresse IP
+    """
+    try:
+        ip_address = ip_data.get("ip")
+        if not ip_address:
+            raise HTTPException(status_code=400, detail="Adresse IP requise")
+        
+        # Supprimer de la base de données
+        result = await db.blocked_ips.delete_many({"ip": ip_address})
+        
+        # Supprimer du cache si l'agent est actif
+        if security_audit_agent:
+            security_audit_agent.blocked_ips.discard(ip_address)
+        
+        return {
+            "success": True,
+            "ip": ip_address,
+            "records_removed": result.deleted_count,
+            "message": f"IP {ip_address} débloquée avec succès"
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur déblocage IP: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur lors du déblocage de l'IP")
+
 # ========== COMPANY LEGAL INFO ENDPOINT ==========
 
 @api_router.get("/company/legal-info")
