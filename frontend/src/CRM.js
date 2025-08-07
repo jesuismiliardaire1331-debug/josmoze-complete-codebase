@@ -7,6 +7,7 @@ import EmailInterface from "./EmailInterface";
 import BrandMonitoring from "./BrandMonitoring";
 import AbandonedCarts from "./AbandonedCarts";
 import SecurityAudit from "./SecurityAudit";
+import AIAgentsManager from "./AIAgentsManager";
 import { useNotifications } from "./NotificationSystem";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
