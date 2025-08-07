@@ -676,7 +676,80 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
-  - task: "Checkout Address Validation System"
+agent_communication:
+    - agent: "main"
+      message: "Major system upgrade completed! Added comprehensive CRM with lead management, B2B/B2C segmentation, email automation, professional consultation system, and enhanced UI. All new features need testing. Priority: CRM endpoints and lead management workflows."
+    - agent: "testing"
+      message: "🛒 ABANDONED CART SYSTEM TESTING COMPLETED: Comprehensive testing of the abandoned cart system completed successfully! ✅ CHECKOUT ADDRESS VALIDATION - Mandatory address fields working perfectly with complete validation (street, postal code, city, country dropdown) ✅ CRM PANIERS ABANDONNÉS TAB - Tab exists and is prominently displayed with red color, navigation functional ✅ CRM DASHBOARD INTERFACE - Professional French design with colorful gradients, all tabs working (Dashboard, Leads, Commandes, Stock, Factures, Marketing, Campagnes, Emails, Contacts, Analytics, Surveillance, Paniers Abandonnés) ✅ ERROR HANDLING - Proper error messages and retry functionality ✅ DESIGN & UX - Clean, professional interface with appropriate colors (red for abandoned carts) and icons (🛒). System ready for production with complete abandoned cart tracking and recovery functionality. All critical features tested and working."
+    - agent: "main"
+      message: "ABANDONED CART SYSTEM IMPLEMENTATION COMPLETED: 🛒 Implemented complete abandoned cart recovery system with advanced features. ✅ Automatic Cart Tracking - POST /api/abandoned-carts/track with mandatory complete address validation ✅ CRM Dashboard - GET /api/crm/abandoned-carts/dashboard for manager analytics ✅ Progressive Email Recovery - 3 automated emails with increasing discounts (10%, 15%, 20%) ✅ Token-based Recovery - GET /api/recovery?token={token} for email link recovery ✅ PDF Delivery Notes - POST /api/orders/{order_id}/delivery-note with ReportLab generation ✅ Recovery Marking - POST /api/orders/{order_id}/mark-cart-recovered for conversion tracking ✅ Email Processing - POST /api/crm/process-recovery-emails for scheduled email management. All endpoints implemented with proper authentication and error handling."
+    - agent: "testing"
+      message: "🛒 ABANDONED CART SYSTEM TESTING COMPLETED: Comprehensive testing of the new abandoned cart recovery system completed successfully! ✅ Service Initialization - abandoned_cart_service properly initialized and functional ✅ Cart Tracking - Successfully tracked cart CART-6A4E4997 with complete address validation working ✅ CRM Dashboard - Manager-authenticated dashboard showing statistics: 1 abandoned cart, 499.0€ value, 0% recovery rate, 3 pending emails ✅ Email Processing - Recovery email processing working with proper manager authentication ✅ Recovery Marking - Cart recovery marking system functional with success confirmation ✅ Token Validation - Recovery token system working with proper error handling for invalid tokens ✅ PDF Generation - Delivery note endpoint exists with ReportLab integration (requires valid order data) ✅ Progressive Discounts - RETOUR10, RETOUR15, RETOUR20 codes properly configured ✅ Email Templates - Professional HTML templates functional with Josmose branding ✅ Address Validation - Mandatory complete delivery address requirement working. All 11/11 abandoned cart tests passed (100% success rate). System ready for production with full cart recovery automation!"
+    - agent: "main"
+      message: "TEAM STRUCTURE UPDATE COMPLETED: Updated team structure according to user requirements. ✅ Naima: Manager (only one with manager role) - full CRM permissions ✅ Aziza: Agent (changed from manager to agent) - limited permissions ✅ Antonio: Agent (changed from manager to agent) - limited permissions ✅ Support: Technique (unchanged) - very limited permissions. Updated auth.py with new role assignments and permission structure. Team contacts endpoint updated to reflect new hierarchy."
+    - agent: "testing"
+      message: "👥 NEW TEAM STRUCTURE TESTING COMPLETED: Comprehensive testing of the updated team structure completed successfully! ✅ Team Structure Authentication - All team members authenticated: Naima (manager), Aziza (agent), Antonio (agent), Support (technique) ✅ Team Contacts Structure - Correct structure: 1 manager (Naima), 2 agents (Aziza, Antonio), 2 services ✅ Manager-Only Endpoints - Manager has access, agents correctly denied access to brand monitoring ✅ Manager-Agent Shared Endpoints - Manager and both agents have access to abandoned cart dashboard and email processing ✅ Role Permissions - Manager has full permissions, agents have limited permissions as expected ✅ Technique Role Limitations - Support role correctly limited with very restricted access. All 4/4 team structure tests passed (100% success rate). New team hierarchy working perfectly with proper role-based access control!"
+
+backend:
+  - task: "New Team Structure Implementation"
+    implemented: true
+    working: true
+    file: "backend/auth.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "TEAM STRUCTURE UPDATE: Updated team structure according to user requirements. Naima: Manager (only one with manager role), Aziza: Agent (changed from manager), Antonio: Agent (changed from manager), Support: Technique (unchanged). Updated CRM_USERS in auth.py with new role assignments."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: New team structure working perfectly! All team members authenticate correctly with their new roles. Naima (manager) has full access, Aziza and Antonio (agents) have limited access, Support (technique) has very restricted access. Role-based permissions working as expected."
+
+  - task: "Team Contacts API Update"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "UPDATED: GET /api/crm/team-contacts endpoint updated to reflect new team structure. Managers section now only contains Naima, agents section contains Aziza and Antonio, services section unchanged."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Team contacts structure correct! Returns proper hierarchy: 1 manager (Naima), 2 agents (Aziza, Antonio), 2 services (Commercial, Support). Structure matches new team organization."
+
+  - task: "Role-Based Access Control"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "IMPLEMENTED: Role-based access control properly configured. Manager-only endpoints (brand monitoring) restricted to Naima. Manager+Agent endpoints (abandoned carts, emails) accessible to both managers and agents. Technique role has very limited access."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Role-based access control working perfectly! Manager (Naima) can access all endpoints including brand monitoring. Agents (Aziza, Antonio) can access shared endpoints like abandoned cart dashboard and email system but are denied access to manager-only functions. Support (technique) properly restricted."
+
+  - task: "Authentication System with New Credentials"
+    implemented: true
+    working: true
+    file: "backend/auth.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "UPDATED: Authentication system updated with new team credentials. Naima: naima@josmose.com/Naima@2024!Commerce (manager), Aziza: aziza@josmose.com/Aziza@2024!Director (agent), Antonio: antonio@josmose.com/Antonio@2024!Secure (agent), Support: support@josmose.com/Support@2024!Help (technique)."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: All new authentication credentials working correctly. All team members can log in with their respective email addresses and passwords. JWT tokens generated properly with correct role information."
     implemented: true
     working: true
     file: "frontend/src/App.js"
