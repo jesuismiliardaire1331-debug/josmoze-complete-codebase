@@ -2025,6 +2025,10 @@ async def startup_db():
     social_media_automation = get_social_media_automation(db)
     await social_media_automation.initialize_accounts()
     
+    # Initialize abandoned cart service
+    global abandoned_cart_service
+    abandoned_cart_service = AbandonedCartService(db)
+    
     # 🛡️ Démarrage automatique de l'agent de surveillance marque 24/7
     logging.info("🛡️ Démarrage automatique de l'agent de surveillance marque...")
     start_monitoring_task()
