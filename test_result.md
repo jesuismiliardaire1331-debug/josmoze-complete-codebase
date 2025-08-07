@@ -274,9 +274,9 @@ frontend:
 
 metadata:
   created_by: "main_agent"
-  version: "3.0"
-  test_sequence: 3
-  run_ui: true
+  version: "4.0"
+  test_sequence: 4
+  run_ui: false
 
 test_plan:
   current_focus: []
