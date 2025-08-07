@@ -4813,6 +4813,377 @@ class BackendTester:
             self.log_test("ReportLab PDF Generation", False, f"Exception: {str(e)}")
             return False
 
+    # ========== NEW TEAM STRUCTURE TESTS ==========
+    
+    def test_team_structure_authentication(self):
+        """Test authentication for all team members with new roles"""
+        try:
+            # Clear any existing auth
+            self.session.headers.pop("Authorization", None)
+            
+            # Test Naima (Manager)
+            naima_success = self.authenticate_manager()
+            
+            # Clear auth and test Aziza (Agent)
+            self.session.headers.pop("Authorization", None)
+            aziza_success = self.authenticate_agent_aziza()
+            
+            # Clear auth and test Antonio (Agent)
+            self.session.headers.pop("Authorization", None)
+            antonio_success = self.authenticate_agent_antonio()
+            
+            # Test Support (Technique)
+            self.session.headers.pop("Authorization", None)
+            support_login_data = {
+                "username": "support@josmose.com",
+                "password": "Support@2024!Help"
+            }
+            
+            support_response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=support_login_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            support_success = support_response.status_code == 200
+            
+            if naima_success and aziza_success and antonio_success and support_success:
+                self.log_test("Team Structure Authentication", True, 
+                            "All team members authenticated successfully: Naima (manager), Aziza (agent), Antonio (agent), Support (technique)")
+                return True
+            else:
+                failed_auths = []
+                if not naima_success: failed_auths.append("Naima")
+                if not aziza_success: failed_auths.append("Aziza")
+                if not antonio_success: failed_auths.append("Antonio")
+                if not support_success: failed_auths.append("Support")
+                
+                self.log_test("Team Structure Authentication", False, f"Failed authentications: {', '.join(failed_auths)}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Team Structure Authentication", False, f"Exception: {str(e)}")
+            return False
+
+    def test_team_contacts_structure(self):
+        """Test GET /api/crm/team-contacts returns new team structure"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/crm/team-contacts")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check structure
+                required_sections = ["managers", "agents", "services"]
+                if all(section in data for section in required_sections):
+                    
+                    # Check managers section - should only have Naima
+                    managers = data["managers"]
+                    if len(managers) == 1 and managers[0]["name"] == "Naima" and managers[0]["position"] == "Manager":
+                        managers_correct = True
+                    else:
+                        managers_correct = False
+                    
+                    # Check agents section - should have Aziza and Antonio
+                    agents = data["agents"]
+                    agent_names = [agent["name"] for agent in agents]
+                    agent_positions = [agent["position"] for agent in agents]
+                    
+                    if (len(agents) == 2 and 
+                        "Aziza" in agent_names and "Antonio" in agent_names and
+                        all(pos == "Agent" for pos in agent_positions)):
+                        agents_correct = True
+                    else:
+                        agents_correct = False
+                    
+                    # Check services section
+                    services = data["services"]
+                    service_names = [service["name"] for service in services]
+                    
+                    if "Service Commercial" in service_names and "Support" in service_names:
+                        services_correct = True
+                    else:
+                        services_correct = False
+                    
+                    if managers_correct and agents_correct and services_correct:
+                        self.log_test("Team Contacts Structure", True, 
+                                    f"Correct structure: 1 manager (Naima), 2 agents (Aziza, Antonio), 2 services")
+                        return True
+                    else:
+                        issues = []
+                        if not managers_correct: issues.append("managers section incorrect")
+                        if not agents_correct: issues.append("agents section incorrect")
+                        if not services_correct: issues.append("services section incorrect")
+                        
+                        self.log_test("Team Contacts Structure", False, f"Structure issues: {', '.join(issues)}")
+                        return False
+                else:
+                    missing = [s for s in required_sections if s not in data]
+                    self.log_test("Team Contacts Structure", False, f"Missing sections: {missing}")
+                    return False
+            else:
+                self.log_test("Team Contacts Structure", False, f"Status: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Team Contacts Structure", False, f"Exception: {str(e)}")
+            return False
+
+    def test_manager_only_endpoints(self):
+        """Test that only manager (Naima) can access manager-only endpoints"""
+        try:
+            # Test with manager authentication (Naima)
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_manager():
+                self.log_test("Manager-Only Endpoints", False, "Could not authenticate as manager")
+                return False
+            
+            # Test brand monitoring endpoints (manager-only)
+            brand_status_response = self.session.get(f"{BACKEND_URL}/crm/brand-monitoring/status")
+            brand_scan_response = self.session.post(f"{BACKEND_URL}/crm/brand-monitoring/force-scan")
+            
+            manager_access_success = (brand_status_response.status_code == 200 and 
+                                    brand_scan_response.status_code == 200)
+            
+            # Now test with agent authentication (Aziza) - should be denied
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_agent_aziza():
+                self.log_test("Manager-Only Endpoints", False, "Could not authenticate as agent")
+                return False
+            
+            # Test same endpoints with agent - should get 403
+            agent_brand_status = self.session.get(f"{BACKEND_URL}/crm/brand-monitoring/status")
+            agent_brand_scan = self.session.post(f"{BACKEND_URL}/crm/brand-monitoring/force-scan")
+            
+            agent_access_denied = (agent_brand_status.status_code == 403 and 
+                                 agent_brand_scan.status_code == 403)
+            
+            if manager_access_success and agent_access_denied:
+                self.log_test("Manager-Only Endpoints", True, 
+                            "Manager has access, agents correctly denied access to brand monitoring")
+                return True
+            else:
+                self.log_test("Manager-Only Endpoints", False, 
+                            f"Manager access: {manager_access_success}, Agent denied: {agent_access_denied}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Manager-Only Endpoints", False, f"Exception: {str(e)}")
+            return False
+
+    def test_manager_agent_shared_endpoints(self):
+        """Test that both manager and agents can access shared endpoints"""
+        try:
+            # Test with manager authentication (Naima)
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_manager():
+                self.log_test("Manager-Agent Shared Endpoints", False, "Could not authenticate as manager")
+                return False
+            
+            # Test abandoned cart dashboard (manager + agent access)
+            manager_abandoned_carts = self.session.get(f"{BACKEND_URL}/crm/abandoned-carts/dashboard")
+            manager_process_emails = self.session.post(f"{BACKEND_URL}/crm/process-recovery-emails")
+            
+            manager_shared_access = (manager_abandoned_carts.status_code == 200 and 
+                                   manager_process_emails.status_code == 200)
+            
+            # Test with agent authentication (Aziza)
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_agent_aziza():
+                self.log_test("Manager-Agent Shared Endpoints", False, "Could not authenticate as agent")
+                return False
+            
+            # Test same endpoints with agent - should also work
+            agent_abandoned_carts = self.session.get(f"{BACKEND_URL}/crm/abandoned-carts/dashboard")
+            agent_process_emails = self.session.post(f"{BACKEND_URL}/crm/process-recovery-emails")
+            
+            agent_shared_access = (agent_abandoned_carts.status_code == 200 and 
+                                 agent_process_emails.status_code == 200)
+            
+            # Test with Antonio as well
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_agent_antonio():
+                self.log_test("Manager-Agent Shared Endpoints", False, "Could not authenticate as Antonio")
+                return False
+            
+            antonio_abandoned_carts = self.session.get(f"{BACKEND_URL}/crm/abandoned-carts/dashboard")
+            antonio_shared_access = antonio_abandoned_carts.status_code == 200
+            
+            if manager_shared_access and agent_shared_access and antonio_shared_access:
+                self.log_test("Manager-Agent Shared Endpoints", True, 
+                            "Manager and both agents have access to abandoned cart dashboard and email processing")
+                return True
+            else:
+                self.log_test("Manager-Agent Shared Endpoints", False, 
+                            f"Manager: {manager_shared_access}, Aziza: {agent_shared_access}, Antonio: {antonio_shared_access}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Manager-Agent Shared Endpoints", False, f"Exception: {str(e)}")
+            return False
+
+    def test_email_system_access(self):
+        """Test that manager and agents can access email system endpoints"""
+        try:
+            # Test with manager authentication (Naima)
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_manager():
+                self.log_test("Email System Access", False, "Could not authenticate as manager")
+                return False
+            
+            # Test email endpoints
+            manager_inbox = self.session.get(f"{BACKEND_URL}/crm/emails/inbox")
+            manager_stats = self.session.get(f"{BACKEND_URL}/crm/emails/stats")
+            
+            manager_email_access = (manager_inbox.status_code == 200 and 
+                                  manager_stats.status_code == 200)
+            
+            # Test with agent authentication (Aziza)
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_agent_aziza():
+                self.log_test("Email System Access", False, "Could not authenticate as agent")
+                return False
+            
+            # Test same endpoints with agent
+            agent_inbox = self.session.get(f"{BACKEND_URL}/crm/emails/inbox")
+            agent_stats = self.session.get(f"{BACKEND_URL}/crm/emails/stats")
+            
+            agent_email_access = (agent_inbox.status_code == 200 and 
+                                agent_stats.status_code == 200)
+            
+            if manager_email_access and agent_email_access:
+                self.log_test("Email System Access", True, 
+                            "Both manager and agents have access to email system")
+                return True
+            else:
+                self.log_test("Email System Access", False, 
+                            f"Manager email access: {manager_email_access}, Agent email access: {agent_email_access}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Email System Access", False, f"Exception: {str(e)}")
+            return False
+
+    def test_role_permissions_verification(self):
+        """Test that user permissions are correctly returned based on roles"""
+        try:
+            # Test manager permissions (Naima)
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_manager():
+                self.log_test("Role Permissions Verification", False, "Could not authenticate as manager")
+                return False
+            
+            manager_permissions_response = self.session.get(f"{BACKEND_URL}/crm/user-permissions")
+            
+            if manager_permissions_response.status_code == 200:
+                manager_data = manager_permissions_response.json()
+                manager_permissions = manager_data.get("permissions", {})
+                
+                # Manager should have full permissions
+                manager_has_full_access = (
+                    manager_permissions.get("view_dashboard", False) and
+                    manager_permissions.get("edit_leads", False) and
+                    manager_permissions.get("delete_leads", False) and
+                    manager_permissions.get("manage_users", False) and
+                    manager_permissions.get("export_data", False)
+                )
+            else:
+                manager_has_full_access = False
+            
+            # Test agent permissions (Aziza)
+            self.session.headers.pop("Authorization", None)
+            if not self.authenticate_agent_aziza():
+                self.log_test("Role Permissions Verification", False, "Could not authenticate as agent")
+                return False
+            
+            agent_permissions_response = self.session.get(f"{BACKEND_URL}/crm/user-permissions")
+            
+            if agent_permissions_response.status_code == 200:
+                agent_data = agent_permissions_response.json()
+                agent_permissions = agent_data.get("permissions", {})
+                
+                # Agent should have limited permissions
+                agent_has_limited_access = (
+                    agent_permissions.get("view_dashboard", False) and
+                    agent_permissions.get("edit_leads", False) and
+                    not agent_permissions.get("delete_leads", True) and  # Should be False
+                    not agent_permissions.get("manage_users", True) and  # Should be False
+                    not agent_permissions.get("export_data", True)       # Should be False
+                )
+            else:
+                agent_has_limited_access = False
+            
+            if manager_has_full_access and agent_has_limited_access:
+                self.log_test("Role Permissions Verification", True, 
+                            "Manager has full permissions, agents have limited permissions as expected")
+                return True
+            else:
+                self.log_test("Role Permissions Verification", False, 
+                            f"Manager full access: {manager_has_full_access}, Agent limited access: {agent_has_limited_access}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Role Permissions Verification", False, f"Exception: {str(e)}")
+            return False
+
+    def test_technique_role_limitations(self):
+        """Test that technique role (Support) has very limited access"""
+        try:
+            # Authenticate as support (technique role)
+            self.session.headers.pop("Authorization", None)
+            support_login_data = {
+                "username": "support@josmose.com",
+                "password": "Support@2024!Help"
+            }
+            
+            support_response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=support_login_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if support_response.status_code == 200:
+                data = support_response.json()
+                if "access_token" in data:
+                    self.session.headers.update({
+                        "Authorization": f"Bearer {data['access_token']}"
+                    })
+                else:
+                    self.log_test("Technique Role Limitations", False, "No access token for support")
+                    return False
+            else:
+                self.log_test("Technique Role Limitations", False, "Could not authenticate as support")
+                return False
+            
+            # Test that support cannot access sensitive endpoints
+            brand_monitoring = self.session.get(f"{BACKEND_URL}/crm/brand-monitoring/status")
+            abandoned_carts = self.session.get(f"{BACKEND_URL}/crm/abandoned-carts/dashboard")
+            email_send = self.session.post(f"{BACKEND_URL}/crm/emails/send", json={
+                "to_email": "test@example.com",
+                "subject": "Test",
+                "body": "Test message"
+            })
+            
+            # Support should be denied access to most CRM functions
+            support_properly_limited = (
+                brand_monitoring.status_code == 403 and
+                abandoned_carts.status_code == 403 and
+                email_send.status_code == 403
+            )
+            
+            if support_properly_limited:
+                self.log_test("Technique Role Limitations", True, 
+                            "Support (technique) role correctly limited - denied access to sensitive endpoints")
+                return True
+            else:
+                self.log_test("Technique Role Limitations", False, 
+                            f"Support access not properly limited: brand={brand_monitoring.status_code}, carts={abandoned_carts.status_code}, email={email_send.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Technique Role Limitations", False, f"Exception: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests"""
         print("=" * 80)
