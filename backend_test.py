@@ -1035,8 +1035,8 @@ class BackendTester:
             self.log_test("Manager Authentication (Naima)", False, f"Exception: {str(e)}")
             return False
 
-    def authenticate_agent_aziza(self):
-        """Authenticate as agent (Aziza) for agent role tests"""
+    def authenticate_manager_aziza(self):
+        """Authenticate as manager (Aziza) for manager role tests"""
         try:
             login_data = {
                 "username": "aziza@josmose.com",
@@ -1057,20 +1057,20 @@ class BackendTester:
                     self.session.headers.update({
                         "Authorization": f"Bearer {data['access_token']}"
                     })
-                    self.log_test("Agent Authentication (Aziza)", True, f"Authenticated as aziza@josmose.com with agent role")
+                    self.log_test("Manager Authentication (Aziza)", True, f"Authenticated as aziza@josmose.com with manager role")
                     return True
                 else:
-                    self.log_test("Agent Authentication (Aziza)", False, "No access token in response", data)
+                    self.log_test("Manager Authentication (Aziza)", False, "No access token in response", data)
                     return False
             else:
-                self.log_test("Agent Authentication (Aziza)", False, f"Status: {response.status_code}", response.text)
+                self.log_test("Manager Authentication (Aziza)", False, f"Status: {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_test("Agent Authentication (Aziza)", False, f"Exception: {str(e)}")
+            self.log_test("Manager Authentication (Aziza)", False, f"Exception: {str(e)}")
             return False
 
-    def authenticate_agent_antonio(self):
-        """Authenticate as agent (Antonio) for agent role tests"""
+    def authenticate_manager_antonio(self):
+        """Authenticate as manager (Antonio) for manager role tests"""
         try:
             login_data = {
                 "username": "antonio@josmose.com",
@@ -1091,16 +1091,16 @@ class BackendTester:
                     self.session.headers.update({
                         "Authorization": f"Bearer {data['access_token']}"
                     })
-                    self.log_test("Agent Authentication (Antonio)", True, f"Authenticated as antonio@josmose.com with agent role")
+                    self.log_test("Manager Authentication (Antonio)", True, f"Authenticated as antonio@josmose.com with manager role")
                     return True
                 else:
-                    self.log_test("Agent Authentication (Antonio)", False, "No access token in response", data)
+                    self.log_test("Manager Authentication (Antonio)", False, "No access token in response", data)
                     return False
             else:
-                self.log_test("Agent Authentication (Antonio)", False, f"Status: {response.status_code}", response.text)
+                self.log_test("Manager Authentication (Antonio)", False, f"Status: {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_test("Agent Authentication (Antonio)", False, f"Exception: {str(e)}")
+            self.log_test("Manager Authentication (Antonio)", False, f"Exception: {str(e)}")
             return False
 
     def test_brand_monitoring_status(self):
