@@ -676,9 +676,20 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
-agent_communication:
-    - agent: "main"
-      message: "Major system upgrade completed! Added comprehensive CRM with lead management, B2B/B2C segmentation, email automation, professional consultation system, and enhanced UI. All new features need testing. Priority: CRM endpoints and lead management workflows."
+  - task: "Checkout Address Validation System"
+    implemented: true
+    working: true
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: Implemented mandatory address validation in checkout form. Complete delivery address required including street, postal code, city, and country dropdown. Form validation prevents submission without complete address information."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Checkout Address Validation System working perfectly! ✅ Mandatory address section clearly marked as 'Adresse de Livraison * (Obligatoire)' ✅ All required fields present: Adresse complète*, Code Postal*, Ville*, Pays dropdown ✅ Form validation working - prevents submission without complete address ✅ Error messages displayed when required fields missing ✅ Success validation when all address fields completed ✅ Country dropdown includes France, Espagne, Italie, Allemagne, Belgique, Pays-Bas ✅ Professional blue-themed address section design ✅ Clear visual indicators for required fields. Address validation system fully functional and user-friendly."
     - agent: "testing"
       message: "COMPREHENSIVE TESTING COMPLETED: All 5 priority CRM features tested and working perfectly. Enhanced Product Catalog supports B2C/B2B filtering with new professional products. CRM Dashboard provides complete analytics. Lead Management System includes automated scoring (B2B consultation leads score 100/100). Professional Consultation System integrates with leads. Enhanced Contact Form creates leads automatically with email automation. All database collections functional. 15/15 tests passed (100% success rate)."
     - agent: "testing"
