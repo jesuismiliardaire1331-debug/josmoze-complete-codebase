@@ -1514,9 +1514,9 @@ async def generate_delivery_note(order_id: str, delivery_data: dict):
         raise HTTPException(status_code=500, detail="Erreur lors de la génération du bon de livraison")
 
 @api_router.post("/crm/process-recovery-emails")
-async def process_recovery_emails(current_user: User = Depends(require_role(["manager"]))):
+async def process_recovery_emails(current_user: User = Depends(require_role(["manager", "agent"]))):
     """
-    Traiter les emails de récupération programmés (endpoint manuel pour tests)
+    Traiter les emails de récupération programmés (accessible aux managers ET agents)
     """
     try:
         await abandoned_cart_service.process_scheduled_emails()
