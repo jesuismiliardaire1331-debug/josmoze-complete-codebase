@@ -38,7 +38,27 @@ const BrandMonitoring = () => {
     }
   };
 
-  const forceScan = async () => {
+  const startMonitoring = async () => {
+    try {
+      setLoading(true);
+      
+      const token = localStorage.getItem('token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
+      const response = await axios.post(`${backendUrl}/api/crm/brand-monitoring/start`, {}, config);
+      
+      alert('Agent de surveillance démarré avec succès !');
+      await loadMonitoringData(); // Recharger les données
+      
+    } catch (error) {
+      console.error('Erreur démarrage surveillance:', error);
+      alert('Erreur lors du démarrage de l\'agent');
+    } finally {
+      setLoading(false);
+    }
+  };
     try {
       setLoading(true);
       
