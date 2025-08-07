@@ -424,30 +424,37 @@ class BrandMonitoringAgent:
 
     async def run_monitoring_loop(self):
         """
-        Boucle principale de surveillance continue
+        🚨 Boucle principale de surveillance continue RENFORCÉE
         """
-        self.logger.info("🚀 DÉMARRAGE AGENT SURVEILLANCE MARQUE JOSMOSE.COM")
-        self.logger.info(f"📅 Intervalle de vérification: {MONITORING_CONFIG['check_interval']} secondes")
+        self.logger.info("🚀🚀🚀 DÉMARRAGE AGENT SURVEILLANCE MARQUE JOSMOSE.COM - MODE RENFORCÉ 🚀🚀🚀")
+        self.logger.info(f"⚡ SURVEILLANCE HAUTE INTENSITÉ ACTIVÉE ⚡")
+        self.logger.info(f"📅 Intervalle de vérification: {MONITORING_CONFIG['check_interval']} secondes (RENFORCÉ)")
         self.logger.info(f"🎯 Termes surveillés: {', '.join(FORBIDDEN_TERMS)}")
+        self.logger.info(f"🚨 Seuil d'alerte: IMMÉDIAT (1ère détection)")
+        self.logger.info(f"🔍 Points de contrôle: 5 URLs web + Fichiers + Métadonnées")
         
         self.running = True
         
         while self.running:
             try:
-                # Effectuer un scan complet
+                # Effectuer un scan complet RENFORCÉ
+                self.logger.info("🔍 DÉMARRAGE SCAN RENFORCÉ...")
                 results = await self.perform_full_scan()
                 
-                # Envoyer une alerte si nécessaire
+                # Envoyer une alerte IMMÉDIATE si nécessaire
                 if results["violations"]:
+                    self.logger.critical(f"🚨 VIOLATIONS DÉTECTÉES : {results['violations_found']} violations trouvées")
                     await self.send_alert(results["violations"])
+                else:
+                    self.logger.info(f"✅ SCAN PROPRE - Aucune violation détectée")
                 
-                # Attendre avant le prochain scan
-                self.logger.info(f"⏳ Prochaine vérification dans {MONITORING_CONFIG['check_interval']} secondes...")
+                # Attendre avant le prochain scan (30 secondes)
+                self.logger.info(f"⏳ Prochaine vérification RENFORCÉE dans {MONITORING_CONFIG['check_interval']} secondes...")
                 await asyncio.sleep(MONITORING_CONFIG["check_interval"])
                 
             except Exception as e:
-                self.logger.error(f"Erreur dans la boucle de surveillance: {str(e)}")
-                await asyncio.sleep(30)  # Attendre 30s en cas d'erreur
+                self.logger.error(f"🚨 ERREUR dans la boucle de surveillance RENFORCÉE: {str(e)}")
+                await asyncio.sleep(15)  # Attendre 15s en cas d'erreur (réduit pour surveillance renforcée)
 
     def stop_monitoring(self):
         """
