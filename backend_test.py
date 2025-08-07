@@ -6216,6 +6216,35 @@ class BackendTester:
         self.test_reportlab_pdf_generation()
         print()
         
+        # SECURITY & CYBERSECURITY AUDIT AGENT TESTS (NEW - as requested in review)
+        print("🛡️ SECURITY & CYBERSECURITY AUDIT AGENT 24/7 TESTS")
+        print("-" * 40)
+        print("🔐 Authenticating as manager (Antonio) for security tests...")
+        auth_success = self.authenticate_manager_antonio()
+        
+        if auth_success:
+            print("✅ Manager authentication successful - proceeding with security audit tests")
+            self.test_security_dashboard()
+            self.test_manual_audit_trigger()
+            self.test_security_threats_detection()
+            self.test_security_audits_history()
+            self.test_blocked_ips_management()
+            self.test_ip_unblock_functionality()
+            self.test_24_7_monitoring_status()
+            self.test_automatic_threat_detection()
+        else:
+            print("❌ Manager authentication failed - testing endpoints without authentication")
+            # Still test endpoints without authentication to check they exist
+            self.test_security_dashboard()
+            self.test_manual_audit_trigger()
+            self.test_security_threats_detection()
+            self.test_security_audits_history()
+            self.test_blocked_ips_management()
+            self.test_ip_unblock_functionality()
+            self.test_24_7_monitoring_status()
+            self.test_automatic_threat_detection()
+        print()
+        
         # Summary
         print("=" * 80)
         print("TEST SUMMARY - SOCIAL MEDIA MARKETING AUTOMATION")
