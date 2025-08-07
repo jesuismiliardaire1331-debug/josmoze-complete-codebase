@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the updated team structure with EQUAL MANAGER permissions: Naima, Aziza, and Antonio ALL have manager role with equal permissions"
+user_problem_statement: "Implémentation complète du système d'agents IA avec stratégies de Schopenhauer - Socrate, Aristote, Cicéron, Démosthène et Platon pour la gestion automatisée des appels et SMS avec horaires de travail 9h-18h, personnalisation client et KPIs de performance"
 
 backend:
   - task: "Equal Manager Permissions Implementation"
