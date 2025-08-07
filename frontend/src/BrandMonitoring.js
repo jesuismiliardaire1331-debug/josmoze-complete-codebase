@@ -199,7 +199,15 @@ const BrandMonitoring = () => {
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">🎛️ Actions de Surveillance</h3>
         
-        <div className="flex space-x-4">
+        <div className="flex flex-wrap space-x-4 space-y-2 md:space-y-0">
+          <button
+            onClick={startMonitoring}
+            disabled={loading || monitoringStatus?.status === 'RUNNING'}
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
+          >
+            {monitoringStatus?.status === 'RUNNING' ? '✅ Agent Actif' : '🚀 Démarrer Agent'}
+          </button>
+          
           <button
             onClick={forceScan}
             disabled={loading}
