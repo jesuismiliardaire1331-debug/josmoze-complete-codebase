@@ -59,6 +59,8 @@ const BrandMonitoring = () => {
       setLoading(false);
     }
   };
+
+  const forceScan = async () => {
     try {
       setLoading(true);
       
