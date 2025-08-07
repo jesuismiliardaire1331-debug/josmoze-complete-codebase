@@ -1047,8 +1047,8 @@ const CheckoutForm = () => {
     setLoading(true);
     setError('');
 
-    if (!customerInfo.name || !customerInfo.email) {
-      setError('Veuillez remplir tous les champs obligatoires');
+    if (!customerInfo.name || !customerInfo.email || !customerInfo.address.street || !customerInfo.address.postal_code || !customerInfo.address.city) {
+      setError('Veuillez remplir tous les champs obligatoires, y compris l\'adresse de livraison');
       setLoading(false);
       return;
     }
