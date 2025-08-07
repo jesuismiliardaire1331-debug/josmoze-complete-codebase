@@ -111,7 +111,7 @@ CRM_USERS = {
         "email": "support@josmose.com",  # Email professionnel pour clients 
         "professional_email": "support@josmose.com",
         "full_name": "Support - Technique",
-        "role": "technique",  # Technical support role - limited access
+        "role": "technique",  # ✅ RÔLE CONFIRMÉ : Technique (déjà correct)
         "password_hash": "$2b$12$AgqPE73OcPnBKMmpgCQ3IOiShGsj8AuBo.TLETjIUJgS.AD9aFEd.",  # "Support@2024!Help"
         "department": "Support Technique",
         "position": "Technicien Support",
