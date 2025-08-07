@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 
 # Backend URL
-BACKEND_URL = "https://67c818fa-35d3-46a9-b7df-5b06cb23e4f4.preview.emergentagent.com/api"
+BACKEND_URL = "https://38ebfc62-3cd2-4bbe-be3b-666002d5e6cd.preview.emergentagent.com/api"
 
 class BrandMonitoringTester:
     def __init__(self):
