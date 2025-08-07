@@ -1268,9 +1268,10 @@ async def send_email(email_data: EmailSendRequest, current_user: dict = Depends(
         raise HTTPException(status_code=500, detail="Erreur lors de l'envoi de l'email")
 
 @api_router.get("/crm/emails/inbox")
-async def get_inbox(current_user: dict = Depends(require_role(["manager", "commercial", "technique"]))):
+async def get_inbox(current_user: dict = Depends(require_role(["manager", "agent", "commercial", "technique"]))):
     """
-    Récupère les emails de la boîte mail de l'utilisateur
+    Récupère les emails reçus pour l'utilisateur connecté
+    Accessible aux managers, agents, commercial et technique
     """
     try:
         user_email = current_user.get("email")
