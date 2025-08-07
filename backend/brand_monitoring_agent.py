@@ -468,14 +468,21 @@ class BrandMonitoringAgent:
         Retourne les statistiques de surveillance
         """
         try:
-            # Statistiques des derniers scans
-            recent_scans = await self.db.brand_monitoring.find().sort("scan_time", -1).limit(10).to_list(10)
+            # Create a new MongoDB client for this request to avoid loop issues
+            client = AsyncIOMotorClient(os.getenv("MONGO_URL", "mongodb://localhost:27017"))
+            db = client[os.getenv("DB_NAME", "test_database")]
             
-            total_scans = await self.db.brand_monitoring.count_documents({})
-            clean_scans = await self.db.brand_monitoring.count_documents({"violations_found": 0})
+            # Statistiques des derniers scans
+            recent_scans = await db.brand_monitoring.find().sort("scan_time", -1).limit(10).to_list(10)
+            
+            total_scans = await db.brand_monitoring.count_documents({})
+            clean_scans = await db.brand_monitoring.count_documents({"violations_found": 0})
             
             # Statistiques des alertes
-            total_alerts = await self.db.brand_monitoring_alerts.count_documents({})
+            total_alerts = await db.brand_monitoring_alerts.count_documents({})
+            
+            # Close the client
+            client.close()
             
             return {
                 "status": "RUNNING" if self.running else "STOPPED",
