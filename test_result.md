@@ -167,6 +167,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "🔧 BUG FIX VERIFIED: Fixed 401 Unauthorized error on GET /api/crm/abandoned-carts/dashboard. Issue was in server.py line 1435 where current_user.get('email') was used instead of current_user.email (User object vs dict). All 3 managers (Naima, Aziza, Antonio) now successfully access dashboard with 200 OK response. Service properly initialized and returns statistics + recent_carts structure."
+        - working: true
+          agent: "testing"
+          comment: "🎉 AUTHENTICATION FIX CONFIRMED: Tested specific fix for type annotation issue. Antonio (antonio@josmose.com/Antonio@2024!Secure) successfully authenticates and accesses both GET /api/crm/abandoned-carts/dashboard (returns 200 OK with statistics + recent_carts) and POST /api/crm/process-recovery-emails (returns 200 OK with success: true). No more 401 Unauthorized errors. current_user.email is now accessible without errors after removing ': dict' type annotation."
 
   - task: "Email System Access - All Managers"
     implemented: true
