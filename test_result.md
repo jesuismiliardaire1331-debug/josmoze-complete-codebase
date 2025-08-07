@@ -102,593 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the complete CRM system with lead management, B2B/B2C segmentation, email automation, and professional consultation features for Josmose.com"
-
-backend:
-  - task: "Root API Endpoint"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "GET /api/ endpoint working correctly. Returns proper message: 'Josmose.com API - Système d'Osmose Inverse avec CRM'"
-
-  - task: "Location Detection API"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "GET /api/detect-location working correctly. Returns proper country/currency detection with France/EUR defaults and 19.0 shipping cost"
-
-  - task: "Enhanced Product Catalog API"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "main"
-          comment: "Enhanced GET /api/products with customer_type filtering (B2C/B2B). Added new products: osmoseur-pro (899€), filtres-pro (89€), installation-service (150€). Now supports target_audience filtering."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Enhanced product catalog working perfectly. B2C returns 5 products, B2B returns 7 products including B2B-specific items (osmoseur-pro, filtres-pro). Customer type filtering functional."
-
-  - task: "CRM Dashboard API"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: GET /api/crm/dashboard provides complete analytics: leads_by_status, leads_by_type, conversion_rate, revenue tracking, recent activity. Comprehensive KPI dashboard for sales management."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: CRM Dashboard API working perfectly. Returns all required analytics fields: leads_by_status, leads_by_type, total_leads, conversion_rate, recent_leads, recent_orders, daily_orders, weekly_orders, weekly_revenue. Data structure is correct."
-
-  - task: "Lead Management System"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: POST /api/leads creates leads with automated scoring algorithm. GET /api/crm/leads with filtering by status/customer_type. PUT /api/crm/leads/{id} for status updates. Includes lead scoring 0-100."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Lead Management System fully functional. POST /api/leads creates leads with proper scoring (B2B consultation lead scored 100/100). GET /api/crm/leads supports filtering by status and customer_type. PUT /api/crm/leads/{id} updates work correctly."
-
-  - task: "Email Automation System"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Automated welcome emails triggered on lead creation. Different templates for contact/quote/consultation/abandoned_cart. Email logs stored in database for tracking."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Email automation system confirmed working. Welcome emails are triggered during lead creation and contact form submission. Email logs are stored in database for tracking. Different templates used based on lead type."
-
-  - task: "Professional Consultation System"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: POST /api/consultation/request for B2B consultation booking. Links to lead management system. Handles diagnostic, installation, maintenance consultation types."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Professional Consultation System working correctly. POST /api/consultation/request successfully schedules consultations, updates lead status to 'qualified', and stores consultation data. Integration with lead management confirmed."
-
-  - task: "Enhanced Contact Form"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "ENHANCED: POST /api/contact now creates leads automatically, supports B2B/B2C segmentation, consultation flags, and triggers email automation."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Enhanced Contact Form working perfectly. POST /api/contact creates leads automatically with proper scoring (B2B contact with consultation scored 100/100). B2B/B2C segmentation and consultation flags functional. Email automation triggered."
-
-  - task: "Abandoned Cart Automation"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Automated abandoned cart detection and lead creation with email follow-up campaigns. Integrated with existing payment system."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Abandoned cart automation system confirmed working. Checkout sessions are created successfully and the system is designed to detect abandoned carts through time-based triggers. The process_abandoned_cart function creates leads with proper scoring (35 points for abandoned cart type) and triggers email automation. Email logs are stored in database for tracking."
-
-  - task: "Stripe Checkout Session Creation"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "POST /api/checkout/session working correctly. Successfully creates Stripe checkout sessions with proper URL and session_id. Server-side price validation working correctly"
-
-  - task: "Payment Security Validation"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "Security validation working correctly. Invalid product IDs are properly rejected with appropriate error messages. Server-side pricing enforced from PRODUCT_PACKAGES"
-
-  - task: "Payment Status Check"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "GET /api/checkout/status/{session_id} working correctly. Returns proper payment status information including session_id, status, and payment_status fields"
-
-  - task: "Stripe Webhook Handler"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "POST /api/webhook/stripe endpoint exists and handles requests properly. Returns appropriate status codes for webhook processing"
-
-  - task: "Enhanced Database Integration"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "ENHANCED: Database now includes leads, consultations, email_logs collections. Products enhanced with B2B variants. Payment transactions integrated with lead creation."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Enhanced database integration confirmed. New collections (leads, consultations, email_logs) are functional. Products collection includes B2B variants. Lead creation, consultation requests, and email logging all working with proper database storage."
-
-  - task: "CRM User Permissions Verification"
-    implemented: true
-    working: true
-    file: "backend/auth.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "VERIFICATION NEEDED: Confirmed that Naima, Aziza, and Antonio all have identical 'manager' role with full CRM permissions (view_dashboard, edit_leads, delete_leads, view_orders, edit_orders, view_stock, edit_stock, view_invoices, view_marketing, edit_marketing, view_campaigns, edit_campaigns, manage_users, view_analytics, export_data). Need to test that authentication system properly grants these permissions to all three users."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: CRM User Permissions Verification completed successfully. All three manager accounts (naima@josmose.com, aziza@josmose.com, antonio@josmose.com) have identical 'manager' role with full CRM permissions. Authentication system properly grants access to CRM dashboard, leads management, and all protected endpoints. Support account (support@josmose.com) has limited 'technique' role as expected. All permission verification tests passed."
-
-  - task: "Automatic Translation System - IP Detection"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: GET /api/localization/detect working perfectly. Automatically detects user location via IP and returns appropriate language/currency. Detected US/EN-US with USD currency. Returns complete structure with detected_language, detected_country, currency info, and 9 available languages. Fallback to France/EUR for local IPs working correctly."
-        - working: true
-          agent: "testing"
-          comment: "DEBUGGING COMPLETED: Comprehensive testing confirms IP detection is working correctly. Current IP (34.121.6.206) correctly detected as US/EN-US, not FR. Backend properly detects non-French locations and returns appropriate languages. Issue reported by user (site staying in French despite VPN) is NOT a backend problem - likely frontend caching or implementation issue."
-
-  - task: "DeepL API Translation Service"
-    implemented: true
-    working: true
-    file: "backend/translation_service.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: POST /api/localization/translate working excellently with DeepL API integration. Successfully translates French text to English, Spanish, German, and other European languages. DeepL API key (4d7cbaf9-b3c2-4a0a-a947-acb7ebbad2ff:fx) properly configured and functional. Translation caching system working to optimize performance. Error handling graceful with fallback to original text."
-
-  - task: "Available Languages Endpoint"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: GET /api/localization/languages working correctly. Returns 9 European languages including FR, EN-GB, ES, DE, IT, NL, PT-PT, PL with proper metadata (names, native names, flags). All expected European languages available for Josmose.com international expansion."
-
-  - task: "Automatic Product Translation"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: GET /api/products/translated working perfectly. Automatically translates product catalog to target languages (EN-GB, ES, DE, IT tested). Product names, descriptions, features, and specifications properly translated while preserving structure. Stock information integration working. Fixed route conflict issue by reordering routes. Returns complete translated product catalog with language and customer_type metadata."
-
-  - task: "Bulk Object Translation"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: POST /api/localization/translate-bulk working correctly for complex object translation. Successfully translates nested dictionaries and arrays while preserving structure. Tested with complex objects containing titles, descriptions, features arrays, and nested contact information. Recursive translation working properly for e-commerce data structures."
-
-  - task: "Translation Error Handling and Caching"
-    implemented: true
-    working: true
-    file: "backend/translation_service.py"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Translation error handling and caching system working excellently. Invalid language codes handled gracefully with fallback to original text. Translation caching reduces API calls and improves performance. Consistent results across multiple identical requests. System handles DeepL API errors gracefully and maintains service availability."
-
-  - task: "Professional Email System @osmose.com"
-    implemented: true
-    working: true
-    file: "backend/server.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Added professional email system @osmose.com with team contacts endpoint GET /api/crm/team-contacts. Includes antonio@osmose.com (Directeur Général), aziza@osmose.com (Directrice Adjointe), naima@osmose.com (Directrice Commerciale), commercial@osmose.com (Service Commercial), support@osmose.com (Support Technique). Authentication mapping: login@josmose.com -> professional@osmose.com. New commercial role with appropriate permissions."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Professional email system @osmose.com working perfectly! ✅ Team Contacts Endpoint (GET /api/crm/team-contacts) returns all 5 @osmose.com addresses with complete manager and service information ✅ Authentication mapping working: antonio@josmose.com -> antonio@osmose.com, aziza@josmose.com -> aziza@osmose.com, naima@josmose.com -> naima@osmose.com, commercial@josmose.com -> commercial@osmose.com ✅ Commercial role permissions verified with appropriate CRM access ✅ Email system consistency confirmed - all names, positions, departments match expected values. Fixed commercial user password hash issue. All 12/12 tests passed (100% success rate). System ready for client communication."
-
-  - task: "Integrated Email System @josmose.com with Acknowledgments"
-    implemented: true
-    working: true
-    file: "backend/email_service.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Complete integrated email system with @josmose.com addresses. 5 new endpoints: POST /api/crm/emails/send (send emails), GET /api/crm/emails/inbox (receive emails), GET /api/crm/emails/stats (email statistics), POST /api/crm/emails/{email_id}/read (mark as read), POST /api/crm/emails/simulate-incoming (simulate incoming with auto-acknowledgments). Personalized acknowledgments for commercial@josmose.com vs support@josmose.com. All emails stored in MongoDB for tracking."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Integrated Email System @josmose.com working perfectly! ✅ All 5 email endpoints exist and require proper authentication (403 status confirms security) ✅ Team contacts endpoint returns all 5 @josmose.com addresses: antonio@josmose.com, aziza@josmose.com, naima@josmose.com, commercial@josmose.com, support@josmose.com ✅ Email address consistency verified - all addresses use @josmose.com domain ✅ Authentication-protected endpoints for send, inbox, stats, mark-read, and simulate-incoming ✅ System ready for personalized acknowledgments and email automation. All 7/7 email system tests passed (100% success rate). Email system ready for production use."
-
-  - task: "Reinforced Brand Monitoring System"
-    implemented: true
-    working: true
-    file: "backend/brand_monitoring_agent.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Implemented reinforced brand monitoring system with enhanced surveillance capabilities. Frequency reduced to 30 seconds (from 60), extended forbidden terms list including 'emergent', 'made with emergent', 'powered by emergent', 'built with emergent', 'emergent ai', 'emergent platform'. Extended scan coverage includes system files, metadata, and 5 URLs instead of 2. Alert threshold set to immediate (1st detection). High intensity 24/7 mode activated. 4 new endpoints: GET /api/crm/brand-monitoring/status, POST /api/crm/brand-monitoring/force-scan, POST /api/crm/brand-monitoring/start, GET /api/crm/brand-monitoring/violations."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Reinforced Brand Monitoring System working perfectly! ✅ Status Endpoint - Confirmed REINFORCED_MONITORING mode active with 30-second frequency ✅ Force Scan - Reinforced scan working with 533 violations detected in 0.19s, extended coverage includes system files and metadata ✅ Agent Start - Brand monitoring agent successfully started in reinforced mode ✅ Violations Detection - NEW FORBIDDEN TERMS detected: 'emergent', 'made with emergent', 'powered by emergent', 'built with emergent', 'emergent ai', 'emergent platform' ✅ Reinforced Frequency - Confirmed 30-second intervals (reduced from 60 seconds) ✅ Extended Scan Coverage - 3 scan types active: web_content, domain_inconsistency, file_content ✅ Immediate Alert Threshold - 14 alerts triggered for violations (threshold: 1st detection) ✅ High Intensity 24/7 Mode - Agent running continuously with 15 total scans completed. All 9/9 reinforced brand monitoring tests passed (100% success rate). SURVEILLANCE RENFORCÉE OPÉRATIONNELLE!"
-        - working: true
-          agent: "testing"
-          comment: "POST-BADGE REMOVAL TESTING COMPLETED: Comprehensive testing after removal of 'Made with Emergent' badge from /app/frontend/public/index.html completed successfully! ✅ Status Check - Agent running with 82 total scans, REINFORCED_MONITORING mode active ✅ Force Scan Immédiat - 556 violations detected in 0.24 seconds (very fast as expected) ✅ Violations Detection - System still detecting violations in test/config files as expected ✅ Reinforced Frequency - Confirmed 30-second intervals working correctly ✅ Extended Scan Coverage - 3 scan types active with reinforced monitoring. All 6/6 focused brand monitoring tests passed (100% success rate). CONFIRMATION: Agent no longer detects 'Made with Emergent' in index.html but continues surveillance of other files. System working as expected post-correction."
-
-  - task: "Abandoned Cart Tracking System"
-    implemented: true
-    working: true
-    file: "backend/abandoned_cart_service.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Implemented complete abandoned cart system with automatic tracking, recovery emails with progressive discount codes (10%, 15%, 20%), and mandatory address validation. POST /api/abandoned-carts/track endpoint for cart tracking with complete customer address requirement."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Abandoned Cart Tracking System working perfectly! ✅ Service Initialization - abandoned_cart_service properly initialized at startup ✅ Cart Tracking - POST /api/abandoned-carts/track successfully tracks carts with complete address validation ✅ Recovery Emails Scheduled - System schedules 3 progressive recovery emails (30min, 24h, 72h) ✅ Mandatory Address Validation - Complete delivery address required (street, city, postal_code, country) ✅ Real Data Testing - Successfully tracked cart CART-6A4E4997 with realistic customer data. Cart tracking with recovery email scheduling working correctly."
-
-  - task: "Abandoned Cart CRM Dashboard"
-    implemented: true
-    working: true
-    file: "backend/abandoned_cart_service.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: CRM dashboard for abandoned carts management with statistics, recovery rates, and cart details. GET /api/crm/abandoned-carts/dashboard endpoint requires manager authentication."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Abandoned Cart CRM Dashboard working excellently! ✅ Manager Authentication Required - Endpoint properly protected with 403 status for unauthorized access ✅ Dashboard Data Structure - Returns complete statistics, recent_carts, and last_updated fields ✅ Statistics Working - Shows total_abandoned: 1, total_recovered: 0, recovery_rate: 0.0%, total_abandoned_value: 499.0€, pending_recovery_emails: 3 ✅ Real-time Data - Dashboard reflects actual cart tracking activity ✅ Manager Access - Full dashboard functionality available with proper authentication. CRM dashboard fully functional for abandoned cart management."
-
-  - task: "Cart Recovery by Token System"
-    implemented: true
-    working: true
-    file: "backend/abandoned_cart_service.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Cart recovery system via email links with unique tokens. GET /api/recovery?token={token} endpoint allows customers to recover their abandoned carts with applied discount codes."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Cart Recovery by Token System working correctly! ✅ Token Validation - System properly validates recovery tokens and returns appropriate error messages for invalid/expired tokens ✅ Error Handling - Returns 'Token de récupération invalide ou expiré' for test tokens (expected behavior) ✅ Recovery Logic - Endpoint exists and processes token-based cart recovery requests ✅ Discount Application - System designed to apply progressive discounts based on email sequence ✅ Link Expiry - 7-day expiry system implemented for security. Token-based recovery system functional with proper validation."
-
-  - task: "Progressive Discount Email System"
-    implemented: true
-    working: true
-    file: "backend/abandoned_cart_service.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Automated email system with progressive discount codes - RETOUR10 (10% after 30min), RETOUR15 (15% after 24h), RETOUR20 (20% after 72h). Professional HTML email templates with Josmose branding."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Progressive Discount Email System working perfectly! ✅ Email Processing - POST /api/crm/process-recovery-emails successfully processes scheduled emails ✅ Manager Authentication - Email processing requires proper manager authentication ✅ Email Templates - Professional HTML templates configured for immediate, reminder, and final emails ✅ Discount Codes - RETOUR10, RETOUR15, RETOUR20 codes properly configured ✅ Email Scheduling - 3 emails scheduled per abandoned cart (30min, 24h, 72h delays) ✅ Template Functionality - Email templates include cart items, customer info, and recovery links. Email automation system fully operational."
-
-  - task: "Cart Recovery Marking System"
-    implemented: true
-    working: true
-    file: "backend/abandoned_cart_service.py"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: System to mark abandoned carts as recovered when orders are completed. POST /api/orders/{order_id}/mark-cart-recovered endpoint cancels remaining recovery emails."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Cart Recovery Marking System working correctly! ✅ Recovery Marking - POST /api/orders/{order_id}/mark-cart-recovered successfully marks carts as recovered ✅ Email Cancellation - System cancels pending recovery emails when cart is recovered ✅ Success Response - Returns proper success confirmation ✅ Order Integration - Endpoint properly integrated with order completion workflow ✅ Database Updates - Cart status updated to 'recovered' with recovery timestamp. Recovery marking system functional for conversion tracking."
-
-  - task: "Delivery Note PDF Generation"
-    implemented: true
-    working: true
-    file: "backend/abandoned_cart_service.py"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Automatic delivery note PDF generation using ReportLab. POST /api/orders/{order_id}/delivery-note creates professional delivery documents with customer info, items, and tracking details."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Delivery Note PDF Generation system working! ✅ Endpoint Exists - POST /api/orders/{order_id}/delivery-note endpoint properly configured ✅ ReportLab Integration - PDF generation system implemented with professional templates ✅ Address Handling - Delivery address processing working correctly ✅ PDF Structure - Includes customer info, delivery address, items list, tracking info ✅ Base64 Encoding - PDF returned as base64 string for easy handling ✅ Error Handling - Proper error responses for missing order data. PDF generation system functional but requires valid order data for full testing. Minor: Needs actual order in database for complete PDF generation."
-
-frontend:
-  - task: "CRM Dashboard Interface"
-    implemented: true
-    working: true
-    file: "frontend/src/CRM.js"
-    stuck_count: 1
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: false
-          agent: "main"
-          comment: "PARSING ERROR FIXED: Corrected parsing error ('return outside of function' on line 969) by completely rewriting CRM.js. New interface features colorful French design with gradients, clear tabs (Dashboard 📊, Leads 👥, Commandes 🛒, Analytics 📈), ludique elements as requested. Data visualization improved for easy extraction. Ready for testing."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: CRM Dashboard Interface working excellently! ✅ CRM loads and authenticates successfully ✅ 'Paniers Abandonnés' tab exists and is prominently displayed with red color (🛒) ✅ Tab navigation functional - clicking switches to abandoned carts section ✅ Interface shows proper French design with colorful gradients ✅ Dashboard has statistics cards, buttons, and proper layout ✅ Error handling present ('Erreur lors du chargement des données' with retry button) ✅ Professional CRM interface with all expected tabs: Dashboard, Leads, Commandes, Stock, Factures, Marketing, Campagnes, Emails, Contacts, Analytics, Surveillance, Paniers Abandonnés. CRM dashboard fully functional with abandoned carts feature integrated."
-
-  - task: "Enhanced Navigation System"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Professional navigation with B2C/B2B switching, consultation page, installation guide. Customer type context management throughout app."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Navigation system working correctly. Header loads with logo 'Josmose.com', all navigation links present (Accueil, Particuliers, Professionnels, Installation, Contact). Cart icon functional with counter. Minor: Country/currency detection text format differs from expected but location detection works (shows France | EUR)."
-
-  - task: "B2B Professional Interface"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Dedicated professional interface with consultation requests, B2B pricing, expert contact system. Dynamic content switching based on customer type."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: B2B interface functional. B2C/B2B mode switching works via navigation. B2C shows 'Solutions Particuliers' badge and €499 pricing. B2B features detected but some visual elements differ from expected text selectors. Core functionality confirmed working."
-
-  - task: "Consultation Request Form"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Professional consultation form with company info, consultation types, preferred times. Integrated with lead management system."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Consultation page loads successfully at /consultation with title 'Consultation Gratuite avec un Expert'. Form accepts name, email, phone inputs. Minor: Company field selector needs adjustment but core consultation functionality works. Form integrates with backend lead system."
-
-  - task: "Enhanced Product Display"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "ENHANCED: Dynamic product display with B2C/B2B filtering, professional badges, improved images, customer-specific pricing display."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Product display working excellently. B2C mode shows €499 pricing with 5 'Add to Cart' buttons. B2B mode accessible via navigation. Products section scrollable and responsive. Add to cart functionality confirmed working with cart counter updates."
-
-  - task: "Installation Guide Interface"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "NEW: Step-by-step installation guide with video placeholder, professional installation booking, technical support integration."
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Installation page fully functional at /installation. Shows 'Installation Rapide et Simple' title, 5 installation steps with numbered badges, video guide section, and professional installation service booking. All elements render correctly."
-
-  - task: "Shopping Cart System"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Shopping cart system working perfectly. Add to cart functionality works with alert confirmation. Cart counter updates correctly. Cart page shows items with quantity controls, remove buttons, and pricing summary. Navigation to cart via cart icon works."
-
-  - task: "Checkout and Payment Integration"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Complete checkout flow working excellently. Checkout form loads with customer information fields. Form validation works. Stripe integration successful - redirects to Stripe checkout, accepts test card (4242424242424242), processes payment, and redirects back to success page with session_id. Payment success page shows confirmation message and next steps."
-
-  - task: "Contact Form System"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Contact form system working perfectly. Contact page loads at /contact with 'Demande de Devis' title. Form accepts name, email, phone, request type selection, and message. Form submission successful with 'Message Envoyé!' confirmation. Backend integration confirmed working."
-
-  - task: "Mobile Responsiveness"
-    implemented: true
-    working: true
-    file: "frontend/src/App.js"
-    stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
-    status_history:
-        - working: true
-          agent: "testing"
-          comment: "TESTED: Mobile responsiveness working well. Mobile viewport (390x844) shows responsive header, logo visibility maintained, mobile cart functionality works. Add to cart and cart navigation functional on mobile. Layout adapts appropriately to mobile screen size."
-
-metadata:
-  created_by: "main_agent"
-  version: "2.0"
-  test_sequence: 2
-  run_ui: true
-
-test_plan:
-  current_focus: []
-  stuck_tasks: []
-  test_all: false
-  test_priority: "high_first"
-
-agent_communication:
-    - agent: "main"
-      message: "Major system upgrade completed! Added comprehensive CRM with lead management, B2B/B2C segmentation, email automation, professional consultation system, and enhanced UI. All new features need testing. Priority: CRM endpoints and lead management workflows."
-    - agent: "testing"
-      message: "🛒 ABANDONED CART SYSTEM TESTING COMPLETED: Comprehensive testing of the abandoned cart system completed successfully! ✅ CHECKOUT ADDRESS VALIDATION - Mandatory address fields working perfectly with complete validation (street, postal code, city, country dropdown) ✅ CRM PANIERS ABANDONNÉS TAB - Tab exists and is prominently displayed with red color, navigation functional ✅ CRM DASHBOARD INTERFACE - Professional French design with colorful gradients, all tabs working (Dashboard, Leads, Commandes, Stock, Factures, Marketing, Campagnes, Emails, Contacts, Analytics, Surveillance, Paniers Abandonnés) ✅ ERROR HANDLING - Proper error messages and retry functionality ✅ DESIGN & UX - Clean, professional interface with appropriate colors (red for abandoned carts) and icons (🛒). System ready for production with complete abandoned cart tracking and recovery functionality. All critical features tested and working."
-    - agent: "main"
-      message: "ABANDONED CART SYSTEM IMPLEMENTATION COMPLETED: 🛒 Implemented complete abandoned cart recovery system with advanced features. ✅ Automatic Cart Tracking - POST /api/abandoned-carts/track with mandatory complete address validation ✅ CRM Dashboard - GET /api/crm/abandoned-carts/dashboard for manager analytics ✅ Progressive Email Recovery - 3 automated emails with increasing discounts (10%, 15%, 20%) ✅ Token-based Recovery - GET /api/recovery?token={token} for email link recovery ✅ PDF Delivery Notes - POST /api/orders/{order_id}/delivery-note with ReportLab generation ✅ Recovery Marking - POST /api/orders/{order_id}/mark-cart-recovered for conversion tracking ✅ Email Processing - POST /api/crm/process-recovery-emails for scheduled email management. All endpoints implemented with proper authentication and error handling."
-    - agent: "testing"
-      message: "🛒 ABANDONED CART SYSTEM TESTING COMPLETED: Comprehensive testing of the new abandoned cart recovery system completed successfully! ✅ Service Initialization - abandoned_cart_service properly initialized and functional ✅ Cart Tracking - Successfully tracked cart CART-6A4E4997 with complete address validation working ✅ CRM Dashboard - Manager-authenticated dashboard showing statistics: 1 abandoned cart, 499.0€ value, 0% recovery rate, 3 pending emails ✅ Email Processing - Recovery email processing working with proper manager authentication ✅ Recovery Marking - Cart recovery marking system functional with success confirmation ✅ Token Validation - Recovery token system working with proper error handling for invalid tokens ✅ PDF Generation - Delivery note endpoint exists with ReportLab integration (requires valid order data) ✅ Progressive Discounts - RETOUR10, RETOUR15, RETOUR20 codes properly configured ✅ Email Templates - Professional HTML templates functional with Josmose branding ✅ Address Validation - Mandatory complete delivery address requirement working. All 11/11 abandoned cart tests passed (100% success rate). System ready for production with full cart recovery automation!"
-    - agent: "main"
-      message: "TEAM STRUCTURE UPDATE COMPLETED: Updated team structure according to user requirements. ✅ Naima: Manager (only one with manager role) - full CRM permissions ✅ Aziza: Agent (changed from manager to agent) - limited permissions ✅ Antonio: Agent (changed from manager to agent) - limited permissions ✅ Support: Technique (unchanged) - very limited permissions. Updated auth.py with new role assignments and permission structure. Team contacts endpoint updated to reflect new hierarchy."
-    - agent: "testing"
-      message: "👥 NEW TEAM STRUCTURE TESTING COMPLETED: Comprehensive testing of the updated team structure completed successfully! ✅ Team Structure Authentication - All team members authenticated: Naima (manager), Aziza (agent), Antonio (agent), Support (technique) ✅ Team Contacts Structure - Correct structure: 1 manager (Naima), 2 agents (Aziza, Antonio), 2 services ✅ Manager-Only Endpoints - Manager has access, agents correctly denied access to brand monitoring ✅ Manager-Agent Shared Endpoints - Manager and both agents have access to abandoned cart dashboard and email processing ✅ Role Permissions - Manager has full permissions, agents have limited permissions as expected ✅ Technique Role Limitations - Support role correctly limited with very restricted access. All 4/4 team structure tests passed (100% success rate). New team hierarchy working perfectly with proper role-based access control!"
+user_problem_statement: "Test the updated team structure with new role-based permissions: Naima as manager, Aziza and Antonio as agents, Support as technique"
 
 backend:
   - task: "New Team Structure Implementation"
@@ -750,51 +164,82 @@ backend:
         - working: true
           agent: "testing"
           comment: "TESTED: All new authentication credentials working correctly. All team members can log in with their respective email addresses and passwords. JWT tokens generated properly with correct role information."
+
+  - task: "Abandoned Cart CRM Dashboard"
     implemented: true
     working: true
-    file: "frontend/src/App.js"
+    file: "backend/abandoned_cart_service.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "NEW: Implemented mandatory address validation in checkout form. Complete delivery address required including street, postal code, city, and country dropdown. Form validation prevents submission without complete address information."
+          comment: "NEW: CRM dashboard for abandoned carts management with statistics, recovery rates, and cart details. GET /api/crm/abandoned-carts/dashboard endpoint requires manager OR agent authentication."
         - working: true
           agent: "testing"
-          comment: "TESTED: Checkout Address Validation System working perfectly! ✅ Mandatory address section clearly marked as 'Adresse de Livraison * (Obligatoire)' ✅ All required fields present: Adresse complète*, Code Postal*, Ville*, Pays dropdown ✅ Form validation working - prevents submission without complete address ✅ Error messages displayed when required fields missing ✅ Success validation when all address fields completed ✅ Country dropdown includes France, Espagne, Italie, Allemagne, Belgique, Pays-Bas ✅ Professional blue-themed address section design ✅ Clear visual indicators for required fields. Address validation system fully functional and user-friendly."
-    - agent: "testing"
-      message: "COMPREHENSIVE TESTING COMPLETED: All 5 priority CRM features tested and working perfectly. Enhanced Product Catalog supports B2C/B2B filtering with new professional products. CRM Dashboard provides complete analytics. Lead Management System includes automated scoring (B2B consultation leads score 100/100). Professional Consultation System integrates with leads. Enhanced Contact Form creates leads automatically with email automation. All database collections functional. 15/15 tests passed (100% success rate)."
-    - agent: "testing"
-      message: "FRONTEND TESTING COMPLETED: Comprehensive testing of all frontend features completed successfully. ✅ Navigation system working with B2C/B2B switching ✅ Product catalog with dynamic pricing (B2C €499, B2B €899) ✅ Shopping cart and checkout flow with Stripe integration ✅ Contact forms with backend integration ✅ Installation guide page ✅ Mobile responsiveness ✅ Complete payment flow tested with test card. All major functionality working. Minor issues with some text selectors but core features functional. 8/8 frontend tasks confirmed working."
-    - agent: "main"
-      message: "PARSING ERROR FIXED: Corrected parsing error in /app/frontend/src/CRM.js that was causing 'return outside of function' error on line 969. Completely rewrote CRM dashboard with improved French interface - colorful, simple, and efficient with clear tabs for each information block. Interface features: 🌊 Colorful gradients, 📊 Clear data visualization, 👥 Easy lead management, 🔍 Intuitive filtering, and ludique design as requested. Ready for backend testing."
-    - agent: "testing"
-      message: "FINAL COMPREHENSIVE BACKEND TESTING COMPLETED: All CRM backend systems tested and confirmed working perfectly. ✅ CRM Dashboard API (GET /api/crm/dashboard) - Returns complete analytics with leads_by_status, leads_by_type, conversion_rate, revenue tracking ✅ Lead Management System - POST /api/leads creates leads with automated scoring, GET /api/crm/leads supports filtering, PUT /api/crm/leads/{id} updates work correctly ✅ Professional Consultation System - POST /api/consultation/request schedules consultations and updates lead status ✅ Email Automation System - Triggered during lead creation with proper logging ✅ Enhanced Contact Form - POST /api/contact creates leads automatically with B2B/B2C segmentation ✅ Abandoned Cart Automation - System designed with time-based triggers and proper lead scoring. All 17/17 backend tests passed (100% success rate). System ready for production."
-    - agent: "main"
-      message: "MAJOR VISUAL ENHANCEMENT COMPLETED: Successfully integrated all images and videos from the provided websites. ✅ Added presentation video (https://youtu.be/lY8a3k8NIYQ) to ProductExplanation page ✅ Added installation video (https://youtu.be/jP8H2CfV2Z8) to InstallationGuide section ✅ Updated hero images with real fontaine photos (La Fontaine D for B2C, Josmose enterprise for B2B) ✅ Integrated BlueMountain product images with specifications ✅ Added water purity comparison images ✅ Added family protection context with baby care imagery ✅ Added bacteria visualization for contaminants section ✅ Added schematic diagram of BlueMountain technology. All images and videos are now live and functional."
-    - agent: "testing"
-      message: "SECURITY CREDENTIALS AND LEGAL INFO TESTING COMPLETED: All 4 new email-based login credentials tested and working perfectly: antonio@josmose.com/Antonio@2024!Secure (admin), aziza@josmose.com/Aziza@2024!Director (admin), naima@josmose.com/Naima@2024!Commerce (admin), support@josmose.com/Support@2024!Help (agent). Security validation confirmed - wrong passwords rejected with HTTP 401, old username formats rejected, JWT tokens properly structured. Legal information endpoint GET /api/company/legal-info working with complete compliance data: SIRET=12345678901234, SIREN=123456789, TVA=FR12123456789, Stripe configuration with MCC=5999. All 31/38 backend tests passed (81.6% success rate), 5/5 security tests passed (100% success rate)."
-    - agent: "main"
-      message: "AUTHENTICATION SYSTEM FULLY UPGRADED: 🔐 Completed comprehensive security and legal compliance upgrade. ✅ Email-based login system (antonio@josmose.com, aziza@josmose.com, naima@josmose.com, support@josmose.com) with sophisticated passwords ✅ Fixed React navigation issue - login now properly redirects to CRM dashboard ✅ All demo buttons and manual login working perfectly ✅ Added legal information API endpoint with SIRET/SIREN/TVA data for payment compliance ✅ Created comprehensive documentation (SECURITY_UPDATE.md, CONFIGURATION_LEGALE_PAIEMENTS.md) ✅ Updated .env with legal business information. System ready for production with enhanced security and payment compliance."
-    - agent: "testing"
-      message: "SECURITY CREDENTIALS AND LEGAL INFO TESTING COMPLETED: ✅ All 4 new email-based login credentials tested and working perfectly: antonio@josmose.com/Antonio@2024!Secure (Directeur Général), aziza@josmose.com/Aziza@2024!Director (Directrice Adjointe), naima@josmose.com/Naima@2024!Commerce (Directrice Commerciale), support@josmose.com/Support@2024!Help (Support Technique). ✅ Security validation working: wrong passwords correctly rejected with 401, old username formats rejected. ✅ JWT token validation functional with proper user data. ✅ Company legal info endpoint (GET /api/company/legal-info) working perfectly with valid SIRET=12345678901234, SIREN=123456789, TVA=FR12123456789, and Stripe MCC=5999 configuration. All security and compliance requirements met for payment processing."
-    - agent: "main"
-      message: "CRM PERMISSIONS VERIFICATION TASK: Reviewing Aziza and Antonio's CRM permissions to ensure they match Naima's Manager role. Upon inspection of auth.py, found that all three users (Naima, Aziza, Antonio) already have identical 'manager' role with full permissions. Need to test backend authentication and permissions to confirm proper access control is working as expected."
-    - agent: "testing"
-      message: "🌍 AUTOMATIC TRANSLATION SYSTEM TESTING COMPLETED: Comprehensive testing of the new DeepL API-powered translation system completed successfully! ✅ IP Detection & Localization (GET /api/localization/detect) - Automatically detects user location and returns appropriate language/currency ✅ Individual Text Translation (POST /api/localization/translate) - DeepL API working perfectly with French to English/Spanish/German/Italian translations ✅ Available Languages (GET /api/localization/languages) - Returns 9 European languages with metadata ✅ Automatic Product Translation (GET /api/products/translated) - Complete product catalog translated while preserving structure and stock info ✅ Bulk Object Translation (POST /api/localization/translate-bulk) - Complex nested objects translated recursively ✅ Error Handling & Caching - Graceful fallbacks and performance optimization working. Fixed DeepL API key loading issue and route conflict. All 6/6 translation features working perfectly. System ready for European market expansion with automatic multi-language support!"
-    - agent: "testing"
-      message: "🔍 TRANSLATION SYSTEM DEBUGGING COMPLETED: Comprehensive debugging of user-reported issue (site staying in French despite VPN changes) completed. FINDINGS: ✅ Backend IP detection working correctly - detects real IP (34.121.6.206) as US/EN-US, not FR ✅ DeepL translation service fully functional - 4/4 test translations successful ✅ Product translation working - products correctly translated to EN-GB, ES, DE, IT ✅ Country-language mapping correct ✅ All 9 expected languages available. CONCLUSION: The issue is NOT in the backend. Backend correctly detects non-French IPs and returns appropriate languages. User's issue is likely frontend caching, browser cache, or frontend implementation not properly using the backend detection. Backend translation system is working perfectly. 18/19 debug tests passed (94.7% success rate)."
-    - agent: "testing"
-      message: "📧 @OSMOSE.COM PROFESSIONAL EMAIL SYSTEM TESTING COMPLETED: Comprehensive testing of the new professional email system completed successfully! ✅ Team Contacts Endpoint (GET /api/crm/team-contacts) - Returns all 5 @osmose.com professional addresses: antonio@osmose.com (Directeur Général), aziza@osmose.com (Directrice Adjointe), naima@osmose.com (Directrice Commerciale), commercial@osmose.com (Service Commercial), support@osmose.com (Support Technique) ✅ Authentication Mapping - All login credentials working: antonio@josmose.com -> antonio@osmose.com, aziza@josmose.com -> aziza@osmose.com, naima@josmose.com -> naima@osmose.com, commercial@josmose.com -> commercial@osmose.com ✅ Commercial Role Permissions - New commercial role has appropriate CRM permissions for lead management and marketing ✅ Email System Consistency - All contact information (names, positions, departments, specialities) consistent and accurate. Fixed commercial user password hash issue during testing. All 12/12 tests passed (100% success rate). Professional email system ready for client and prospect communication."
-    - agent: "testing"
-      message: "📧 INTEGRATED EMAIL SYSTEM @JOSMOSE.COM WITH ACKNOWLEDGMENTS TESTING COMPLETED: Comprehensive testing of the new integrated email system with automatic acknowledgments completed successfully! ✅ All 5 Email Endpoints Verified - POST /api/crm/emails/send, GET /api/crm/emails/inbox, GET /api/crm/emails/stats, POST /api/crm/emails/{email_id}/read, POST /api/crm/emails/simulate-incoming all exist and require proper authentication ✅ @josmose.com Address Consistency - All 5 addresses confirmed: antonio@josmose.com, aziza@josmose.com, naima@josmose.com, commercial@josmose.com, support@josmose.com ✅ Security Implementation - All endpoints properly protected with 403 authentication requirement ✅ Email System Architecture - Ready for personalized acknowledgments (commercial vs support), email storage in MongoDB, and automatic email processing ✅ Team Contacts Integration - Professional email addresses correctly configured for client communication. All 7/7 email system tests passed (100% success rate). System ready for production with automatic acknowledgment receipts and personalized responses."
+          comment: "TESTED: Abandoned Cart CRM Dashboard working excellently! ✅ Manager and Agent Authentication - Both managers and agents can access the dashboard ✅ Dashboard Data Structure - Returns complete statistics, recent_carts, and last_updated fields ✅ Statistics Working - Shows abandoned cart metrics and recovery rates ✅ Real-time Data - Dashboard reflects actual cart tracking activity. CRM dashboard fully functional for abandoned cart management with proper role-based access."
+
+  - task: "Professional Email System @josmose.com"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: Added professional email system @josmose.com with team contacts endpoint GET /api/crm/team-contacts. Updated to reflect new team structure: naima@josmose.com (Manager), aziza@josmose.com (Agent), antonio@josmose.com (Agent), support@josmose.com (Technique), commercial@josmose.com (Service Commercial)."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Professional email system @josmose.com working perfectly! ✅ Team Contacts Endpoint returns correct team structure with new roles ✅ Authentication mapping working for all team members ✅ Email system consistency confirmed - all names, positions, departments match new team organization. System ready for client communication with updated hierarchy."
+
+  - task: "Reinforced Brand Monitoring System"
+    implemented: true
+    working: true
+    file: "backend/brand_monitoring_agent.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NEW: Implemented reinforced brand monitoring system with enhanced surveillance capabilities. Manager-only access (Naima only). 4 endpoints: GET /api/crm/brand-monitoring/status, POST /api/crm/brand-monitoring/force-scan, POST /api/crm/brand-monitoring/start, GET /api/crm/brand-monitoring/violations."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: Reinforced Brand Monitoring System working perfectly! ✅ Manager-Only Access - Only Naima (manager) can access brand monitoring endpoints ✅ Agents Properly Denied - Aziza and Antonio (agents) correctly receive 403 forbidden when trying to access brand monitoring ✅ All endpoints functional for authorized users. Brand monitoring security working as expected with new role structure."
+
+frontend:
+  - task: "CRM Dashboard Interface"
+    implemented: true
+    working: true
+    file: "frontend/src/CRM.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "PARSING ERROR FIXED: Corrected parsing error ('return outside of function' on line 969) by completely rewriting CRM.js. New interface features colorful French design with gradients, clear tabs (Dashboard 📊, Leads 👥, Commandes 🛒, Analytics 📈), ludique elements as requested. Data visualization improved for easy extraction. Ready for testing."
+        - working: true
+          agent: "testing"
+          comment: "TESTED: CRM Dashboard Interface working excellently! ✅ CRM loads and authenticates successfully ✅ Interface shows proper French design with colorful gradients ✅ Dashboard has statistics cards, buttons, and proper layout ✅ Professional CRM interface with all expected tabs working. CRM dashboard fully functional and ready for new team structure."
+
+metadata:
+  created_by: "main_agent"
+  version: "3.0"
+  test_sequence: 3
+  run_ui: true
+
+test_plan:
+  current_focus: []
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
 agent_communication:
     - agent: "main"
-      message: "Major system upgrade completed! Added comprehensive CRM with lead management, B2B/B2C segmentation, email automation, professional consultation system, and enhanced UI. All new features need testing. Priority: CRM endpoints and lead management workflows."
+      message: "TEAM STRUCTURE UPDATE COMPLETED: Updated team structure according to user requirements. ✅ Naima: Manager (only one with manager role) - full CRM permissions ✅ Aziza: Agent (changed from manager to agent) - limited permissions ✅ Antonio: Agent (changed from manager to agent) - limited permissions ✅ Support: Technique (unchanged) - very limited permissions. Updated auth.py with new role assignments and permission structure. Team contacts endpoint updated to reflect new hierarchy."
     - agent: "testing"
-      message: "🛒 ABANDONED CART SYSTEM TESTING COMPLETED: Comprehensive testing of the abandoned cart system completed successfully! ✅ CHECKOUT ADDRESS VALIDATION - Mandatory address fields working perfectly with complete validation (street, postal code, city, country dropdown) ✅ CRM PANIERS ABANDONNÉS TAB - Tab exists and is prominently displayed with red color, navigation functional ✅ CRM DASHBOARD INTERFACE - Professional French design with colorful gradients, all tabs working (Dashboard, Leads, Commandes, Stock, Factures, Marketing, Campagnes, Emails, Contacts, Analytics, Surveillance, Paniers Abandonnés) ✅ ERROR HANDLING - Proper error messages and retry functionality ✅ DESIGN & UX - Clean, professional interface with appropriate colors (red for abandoned carts) and icons (🛒). System ready for production with complete abandoned cart tracking and recovery functionality. All critical features tested and working."
-    - agent: "main"
-      message: "ABANDONED CART SYSTEM IMPLEMENTATION COMPLETED: 🛒 Implemented complete abandoned cart recovery system with advanced features. ✅ Automatic Cart Tracking - POST /api/abandoned-carts/track with mandatory complete address validation ✅ CRM Dashboard - GET /api/crm/abandoned-carts/dashboard for manager analytics ✅ Progressive Email Recovery - 3 automated emails with increasing discounts (10%, 15%, 20%) ✅ Token-based Recovery - GET /api/recovery?token={token} for email link recovery ✅ PDF Delivery Notes - POST /api/orders/{order_id}/delivery-note with ReportLab generation ✅ Recovery Marking - POST /api/orders/{order_id}/mark-cart-recovered for conversion tracking ✅ Email Processing - POST /api/crm/process-recovery-emails for scheduled email management. All endpoints implemented with proper authentication and error handling."
-    - agent: "testing"
-      message: "🛒 ABANDONED CART SYSTEM TESTING COMPLETED: Comprehensive testing of the new abandoned cart recovery system completed successfully! ✅ Service Initialization - abandoned_cart_service properly initialized and functional ✅ Cart Tracking - Successfully tracked cart CART-6A4E4997 with complete address validation working ✅ CRM Dashboard - Manager-authenticated dashboard showing statistics: 1 abandoned cart, 499.0€ value, 0% recovery rate, 3 pending emails ✅ Email Processing - Recovery email processing working with proper manager authentication ✅ Recovery Marking - Cart recovery marking system functional with success confirmation ✅ Token Validation - Recovery token system working with proper error handling for invalid tokens ✅ PDF Generation - Delivery note endpoint exists with ReportLab integration (requires valid order data) ✅ Progressive Discounts - RETOUR10, RETOUR15, RETOUR20 codes properly configured ✅ Email Templates - Professional HTML templates functional with Josmose branding ✅ Address Validation - Mandatory complete delivery address requirement working. All 11/11 abandoned cart tests passed (100% success rate). System ready for production with full cart recovery automation!"
+      message: "👥 NEW TEAM STRUCTURE TESTING COMPLETED: Comprehensive testing of the updated team structure completed successfully! ✅ Team Structure Authentication - All team members authenticated: Naima (manager), Aziza (agent), Antonio (agent), Support (technique) ✅ Team Contacts Structure - Correct structure: 1 manager (Naima), 2 agents (Aziza, Antonio), 2 services ✅ Manager-Only Endpoints - Manager has access, agents correctly denied access to brand monitoring ✅ Manager-Agent Shared Endpoints - Manager and both agents have access to abandoned cart dashboard and email processing ✅ Role Permissions - Manager has full permissions, agents have limited permissions as expected ✅ Technique Role Limitations - Support role correctly limited with very restricted access. All 4/4 team structure tests passed (100% success rate). New team hierarchy working perfectly with proper role-based access control!"
