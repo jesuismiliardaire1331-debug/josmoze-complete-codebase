@@ -1188,22 +1188,20 @@ async def get_team_contacts():
                 "email": "naima@josmose.com",
                 "department": "Direction Commerciale",
                 "speciality": "Management et développement commercial"
-            }
-        ],
-        "agents": [
+            },
             {
                 "name": "Aziza",
-                "position": "Agent",
+                "position": "Manager",
                 "email": "aziza@josmose.com", 
-                "department": "Équipe Commerciale",
-                "speciality": "Gestion clients et support commercial"
+                "department": "Direction Commerciale",
+                "speciality": "Management et gestion clients"
             },
             {
                 "name": "Antonio",
-                "position": "Agent", 
+                "position": "Manager", 
                 "email": "antonio@josmose.com",
-                "department": "Équipe Commerciale",
-                "speciality": "Prospection et relations clients"
+                "department": "Direction Commerciale",
+                "speciality": "Management et prospection"
             }
         ],
         "services": [
