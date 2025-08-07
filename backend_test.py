@@ -6442,7 +6442,7 @@ class BackendTester:
         print("="*80)
 
     def run_all_tests(self):
-        """Run all backend tests including the new equal manager tests"""
+        """Run all backend tests including the new AI agents tests"""
         print("🚀 Starting Comprehensive Backend API Testing for Josmose.com")
         print(f"Backend URL: {BACKEND_URL}")
         print("="*80)
@@ -6452,8 +6452,19 @@ class BackendTester:
         self.test_location_detection()
         self.test_product_catalog()
         
-        # Authentication and team structure tests (NEW FOCUS)
+        # Authentication and team structure tests
         self.run_equal_managers_tests()
+        
+        # AI AGENTS SYSTEM TESTS (NEW FOCUS)
+        print("\n🤖 AI AGENTS SYSTEM TESTING")
+        print("="*50)
+        self.test_ai_agents_dashboard()
+        self.test_agent_status_control()
+        self.test_client_profiling_system()
+        self.test_schopenhauer_strategies()
+        self.test_performance_analytics()
+        self.test_agent_interaction()
+        self.test_working_hours_configuration()
         
         # Other important tests
         self.test_checkout_session_creation()
