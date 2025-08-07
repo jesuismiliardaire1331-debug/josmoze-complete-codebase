@@ -1427,11 +1427,20 @@ async def get_abandoned_carts_dashboard(current_user: dict = Depends(require_rol
     Accessible aux managers ET agents
     """
     try:
+        # Vérification de l'initialisation du service
+        if abandoned_cart_service is None:
+            logging.error("abandoned_cart_service is None - not initialized")
+            raise HTTPException(status_code=500, detail="Service non initialisé")
+        
+        logging.info(f"Getting abandoned carts dashboard for user: {current_user.get('email', 'Unknown')}")
         dashboard_data = await abandoned_cart_service.get_abandoned_carts_dashboard()
+        logging.info(f"Dashboard data retrieved successfully: {len(dashboard_data.get('recent_carts', []))} recent carts")
         return dashboard_data
         
     except Exception as e:
         logging.error(f"Erreur dashboard paniers abandonnés: {str(e)}")
+        import traceback
+        logging.error(f"Traceback: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des données")
 
 @api_router.get("/recovery")
