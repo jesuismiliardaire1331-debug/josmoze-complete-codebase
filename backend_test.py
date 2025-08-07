@@ -5519,7 +5519,80 @@ class BackendTester:
             self.log_test("Technique Role Limitations", False, f"Exception: {str(e)}")
             return False
 
+    def run_equal_managers_tests(self):
+        """Run comprehensive tests for equal manager permissions configuration"""
+        print("\n" + "="*80)
+        print("🔄 TESTING NEW EQUAL MANAGER PERMISSIONS CONFIGURATION")
+        print("Testing that Naima, Aziza, and Antonio all have manager role with equal permissions")
+        print("="*80)
+        
+        # Test authentication and role verification
+        self.test_all_managers_authentication()
+        self.test_jwt_token_role_verification()
+        
+        # Test team structure
+        self.test_team_contacts_structure_equal_managers()
+        
+        # Test equal access to manager-only endpoints
+        self.test_brand_monitoring_access_all_managers()
+        self.test_abandoned_cart_dashboard_access_all_managers()
+        self.test_email_system_access_all_managers()
+        
+        print("\n" + "="*80)
+        print("✅ EQUAL MANAGER PERMISSIONS TESTING COMPLETED")
+        print("="*80)
+
     def run_all_tests(self):
+        """Run all backend tests including the new equal manager tests"""
+        print("🚀 Starting Comprehensive Backend API Testing for Josmose.com")
+        print(f"Backend URL: {BACKEND_URL}")
+        print("="*80)
+        
+        # Core API tests
+        self.test_root_endpoint()
+        self.test_location_detection()
+        self.test_product_catalog()
+        
+        # Authentication and team structure tests (NEW FOCUS)
+        self.run_equal_managers_tests()
+        
+        # Other important tests
+        self.test_checkout_session_creation()
+        self.test_lead_creation()
+        self.test_crm_dashboard()
+        
+        # Generate summary
+        self.generate_test_summary()
+
+    def generate_test_summary(self):
+        """Generate comprehensive test summary"""
+        print("\n" + "="*80)
+        print("📊 TEST RESULTS SUMMARY")
+        print("="*80)
+        
+        passed = sum(1 for result in self.test_results if result["success"])
+        failed = len(self.test_results) - passed
+        
+        print(f"Total Tests: {len(self.test_results)}")
+        print(f"✅ Passed: {passed}")
+        print(f"❌ Failed: {failed}")
+        print(f"Success Rate: {(passed/len(self.test_results)*100):.1f}%")
+        
+        # Show failed tests
+        if failed > 0:
+            print("\n❌ FAILED TESTS:")
+            for result in self.test_results:
+                if not result["success"]:
+                    print(f"  - {result['test']}: {result['details']}")
+        
+        # Show critical manager permission tests
+        print("\n🔑 MANAGER PERMISSIONS TESTS:")
+        manager_tests = [r for r in self.test_results if "Manager" in r["test"] or "Equal" in r["test"]]
+        for result in manager_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test']}: {result['details']}")
+        
+        print("="*80)
         """Run all backend tests"""
         print("=" * 80)
         print("JOSMOSE.COM BACKEND API TESTING - SOCIAL MEDIA MARKETING AUTOMATION")
