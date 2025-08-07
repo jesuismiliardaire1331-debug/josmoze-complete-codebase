@@ -4448,6 +4448,22 @@ class BackendTester:
             self.test_brand_monitoring_violations_detection()
         print()
         
+        # ABANDONED CART SYSTEM TESTS (NEW - as requested in review)
+        print("🛒 ABANDONED CART SYSTEM TESTS")
+        print("-" * 40)
+        self.test_abandoned_cart_service_initialization()
+        self.test_abandoned_cart_tracking()
+        self.test_mandatory_address_validation()
+        self.test_abandoned_cart_dashboard()
+        self.test_cart_recovery_by_token()
+        self.test_mark_cart_recovered()
+        self.test_delivery_note_generation()
+        self.test_process_recovery_emails()
+        self.test_progressive_discount_codes()
+        self.test_email_templates_functionality()
+        self.test_reportlab_pdf_generation()
+        print()
+        
         # Summary
         print("=" * 80)
         print("TEST SUMMARY - SOCIAL MEDIA MARKETING AUTOMATION")
