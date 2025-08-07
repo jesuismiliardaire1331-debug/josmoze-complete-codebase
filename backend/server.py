@@ -1183,25 +1183,27 @@ async def get_team_contacts():
     team_contacts = {
         "managers": [
             {
-                "name": "Antonio",
-                "position": "Directeur Général", 
-                "email": "antonio@josmose.com",
-                "department": "Direction Générale",
-                "speciality": "Direction stratégique et développement"
-            },
+                "name": "Naima",
+                "position": "Manager", 
+                "email": "naima@josmose.com",
+                "department": "Direction Commerciale",
+                "speciality": "Management et développement commercial"
+            }
+        ],
+        "agents": [
             {
                 "name": "Aziza",
-                "position": "Directrice Adjointe",
+                "position": "Agent",
                 "email": "aziza@josmose.com", 
-                "department": "Direction Adjointe",
-                "speciality": "Gestion opérationnelle et coordination"
+                "department": "Équipe Commerciale",
+                "speciality": "Gestion clients et support commercial"
             },
             {
-                "name": "Naima", 
-                "position": "Directrice Commerciale",
-                "email": "naima@josmose.com",
-                "department": "Direction Commerciale", 
-                "speciality": "Développement commercial et relations clients"
+                "name": "Antonio",
+                "position": "Agent", 
+                "email": "antonio@josmose.com",
+                "department": "Équipe Commerciale",
+                "speciality": "Prospection et relations clients"
             }
         ],
         "services": [
@@ -1213,8 +1215,8 @@ async def get_team_contacts():
                 "speciality": "Prospection et ventes, devis personnalisés"
             },
             {
-                "name": "Support Technique",
-                "position": "Technicien Support", 
+                "name": "Support",
+                "position": "Technique", 
                 "email": "support@josmose.com",
                 "department": "Support Technique",
                 "speciality": "Installation, maintenance et support technique"
