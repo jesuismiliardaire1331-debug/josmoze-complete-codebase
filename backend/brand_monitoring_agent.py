@@ -416,3 +416,32 @@ async def get_brand_monitoring_status():
 async def force_brand_scan():
     """Force un scan immédiat"""
     return await brand_monitor.perform_full_scan()
+
+def start_monitoring_task():
+    """Démarre l'agent de surveillance en arrière-plan"""
+    try:
+        import threading
+        import asyncio
+        
+        def run_monitoring():
+            """Fonction pour exécuter la surveillance dans un thread séparé"""
+            try:
+                # Créer un nouvel événement loop pour ce thread
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                # Lancer la surveillance
+                loop.run_until_complete(brand_monitor.run_monitoring_loop())
+            except Exception as e:
+                logging.error(f"Erreur dans le thread de surveillance: {e}")
+        
+        # Lancer dans un thread daemon (se ferme automatiquement avec l'app)
+        thread = threading.Thread(target=run_monitoring, daemon=True)
+        thread.start()
+        
+        logging.info("🚀 Agent de surveillance marque démarré en arrière-plan")
+        return {"status": "started", "message": "Agent de surveillance démarré"}
+        
+    except Exception as e:
+        logging.error(f"Impossible de démarrer l'agent de surveillance: {e}")
+        return {"status": "error", "message": str(e)}
