@@ -135,68 +135,6 @@ const TeamContacts = () => {
         </div>
       </div>
 
-      {/* Agents */}
-      {contacts.agents && (
-        <div className="mb-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-            👥 Agents Commerciaux
-            <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
-              {contacts.agents.length}
-            </span>
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {contacts.agents.map((agent, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
-                <div className="flex items-center mb-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold">
-                    👤
-                  </div>
-                  <div className="ml-3">
-                    <h4 className="font-semibold text-gray-900">{agent.name}</h4>
-                    <p className="text-sm text-blue-600 font-medium">{agent.position}</p>
-                  </div>
-                </div>
-                
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center text-sm">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                    <span className="text-gray-600">{agent.department}</span>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {agent.speciality}
-                  </div>
-                </div>
-
-                <div className="border-t pt-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-blue-900">Email professionnel:</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <code className="bg-blue-50 px-2 py-1 rounded text-sm flex-1">
-                      {agent.email}
-                    </code>
-                    <button
-                      onClick={() => copyToClipboard(agent.email)}
-                      className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                      title="Copier l'email"
-                    >
-                      {copiedEmail === agent.email ? '✅' : '📋'}
-                    </button>
-                    <button
-                      onClick={() => sendEmail(agent.email, agent.name)}
-                      className="p-1 text-gray-500 hover:text-green-600 transition-colors"
-                      title="Envoyer un email"
-                    >
-                      ✉️
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Services */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-4">🛠️ Services & Support</h3>
