@@ -3006,6 +3006,503 @@ class BackendTester:
             self.log_test("Smart Recommendations B2B vs B2C", False, f"Exception: {str(e)}")
             return False
 
+    # ========== AI AGENTS SYSTEM TESTS ==========
+    
+    def authenticate_manager(self):
+        """Authenticate as manager for AI agents tests"""
+        try:
+            login_data = {
+                "username": "naima@josmose.com",
+                "password": "Naima@2024!Commerce"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=login_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "access_token" in data:
+                    self.auth_token = data["access_token"]
+                    self.session.headers.update({
+                        "Authorization": f"Bearer {self.auth_token}"
+                    })
+                    return True
+            return False
+        except:
+            return False
+
+    def test_ai_agents_dashboard(self):
+        """Test GET /api/crm/ai-agents/dashboard - Main AI agents dashboard with 5 agents"""
+        try:
+            if not self.authenticate_manager():
+                self.log_test("AI Agents Dashboard", False, "Authentication failed")
+                return False
+            
+            response = self.session.get(f"{BACKEND_URL}/crm/ai-agents/dashboard")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "dashboard" in data:
+                    dashboard = data["dashboard"]
+                    
+                    # Check for 5 agents
+                    agents_status = dashboard.get("agents_status", {})
+                    expected_agents = ["socrate", "aristote", "ciceron", "demosthene", "platon"]
+                    
+                    found_agents = []
+                    for agent_key in expected_agents:
+                        if agent_key in agents_status:
+                            agent_info = agents_status[agent_key]
+                            agent_name = agent_info.get("name", "")
+                            specialty = agent_info.get("specialty", "")
+                            status = agent_info.get("status", "")
+                            
+                            found_agents.append(f"{agent_name} ({status})")
+                    
+                    if len(found_agents) == 5:
+                        # Check for expected agent names with emojis
+                        expected_names = ["Socrate 🧠", "Aristote 📞", "Cicéron 💬", "Démosthène 🛒", "Platon 📊"]
+                        actual_names = [agents_status[key]["name"] for key in expected_agents if key in agents_status]
+                        
+                        if all(name in actual_names for name in expected_names):
+                            self.log_test("AI Agents Dashboard", True, 
+                                        f"Dashboard loaded with all 5 agents: {', '.join(found_agents)}")
+                            
+                            # Check for global KPIs
+                            global_kpis = dashboard.get("global_kpis", {})
+                            if "average_satisfaction" in global_kpis and "average_response_time" in global_kpis:
+                                satisfaction = global_kpis.get("average_satisfaction", 0)
+                                response_time = global_kpis.get("average_response_time", 0)
+                                self.log_test("AI Agents KPIs", True, 
+                                            f"KPIs available: Satisfaction: {satisfaction}, Response time: {response_time}s")
+                            
+                            return True
+                        else:
+                            self.log_test("AI Agents Dashboard", False, f"Missing expected agent names. Found: {actual_names}")
+                            return False
+                    else:
+                        self.log_test("AI Agents Dashboard", False, f"Expected 5 agents, found {len(found_agents)}: {found_agents}")
+                        return False
+                else:
+                    self.log_test("AI Agents Dashboard", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("AI Agents Dashboard", False, f"Status: {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("AI Agents Dashboard", False, f"Exception: {str(e)}")
+            return False
+
+    def test_agent_status_control(self):
+        """Test PUT /api/crm/ai-agents/{agent_name}/status - Toggle agents ON/OFF"""
+        try:
+            if not self.authenticate_manager():
+                self.log_test("Agent Status Control", False, "Authentication failed")
+                return False
+            
+            # Test toggling Socrate agent status
+            agent_name = "socrate"
+            
+            # First, try to activate the agent
+            status_data = {"status": "active"}
+            
+            response = self.session.put(
+                f"{BACKEND_URL}/crm/ai-agents/{agent_name}/status",
+                json=status_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "status_change" in data:
+                    status_change = data["status_change"]
+                    
+                    if status_change.get("status") == "success":
+                        agent_name_display = status_change.get("agent", "")
+                        new_status = status_change.get("new_status", "")
+                        
+                        self.log_test("Agent Status Control - Activate", True, 
+                                    f"Successfully activated {agent_name_display} -> {new_status}")
+                        
+                        # Now try to deactivate
+                        deactivate_data = {"status": "inactive"}
+                        deactivate_response = self.session.put(
+                            f"{BACKEND_URL}/crm/ai-agents/{agent_name}/status",
+                            json=deactivate_data,
+                            headers={"Content-Type": "application/json"}
+                        )
+                        
+                        if deactivate_response.status_code == 200:
+                            deactivate_data_response = deactivate_response.json()
+                            if deactivate_data_response.get("success"):
+                                self.log_test("Agent Status Control - Deactivate", True, 
+                                            f"Successfully deactivated {agent_name_display}")
+                                return True
+                            else:
+                                self.log_test("Agent Status Control - Deactivate", False, "Deactivation failed")
+                                return False
+                        else:
+                            self.log_test("Agent Status Control - Deactivate", False, 
+                                        f"Deactivate status: {deactivate_response.status_code}")
+                            return False
+                    else:
+                        self.log_test("Agent Status Control", False, f"Status change failed: {status_change}")
+                        return False
+                else:
+                    self.log_test("Agent Status Control", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Agent Status Control", False, f"Status: {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Agent Status Control", False, f"Exception: {str(e)}")
+            return False
+
+    def test_client_profiling_system(self):
+        """Test GET /api/crm/ai-agents/client-profiles - Client personality analysis"""
+        try:
+            if not self.authenticate_manager():
+                self.log_test("Client Profiling System", False, "Authentication failed")
+                return False
+            
+            response = self.session.get(f"{BACKEND_URL}/crm/ai-agents/client-profiles?limit=20")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "profiles" in data and "statistics" in data:
+                    profiles = data["profiles"]
+                    statistics = data["statistics"]
+                    
+                    # Check statistics structure
+                    required_stats = ["total_profiles", "personality_distribution", "high_conversion", "cart_abandoned"]
+                    if all(stat in statistics for stat in required_stats):
+                        total_profiles = statistics["total_profiles"]
+                        personality_dist = statistics["personality_distribution"]
+                        high_conversion = statistics["high_conversion"]
+                        cart_abandoned = statistics["cart_abandoned"]
+                        
+                        self.log_test("Client Profiling System", True, 
+                                    f"Profiles loaded: {total_profiles} total, {high_conversion} high conversion, {cart_abandoned} abandoned carts")
+                        
+                        # Check personality types
+                        if isinstance(personality_dist, list) and len(personality_dist) > 0:
+                            personalities = [p.get("_id") for p in personality_dist]
+                            expected_personalities = ["ANALYTIQUE", "AMICAL", "EXPRESSIF", "PILOTE", "SKEPTIQUE", "PRESSE", "ECONOMIQUE", "TECHNIQUE"]
+                            
+                            found_personalities = [p for p in personalities if p in expected_personalities]
+                            if found_personalities:
+                                self.log_test("Personality Analysis", True, 
+                                            f"Personality types detected: {', '.join(found_personalities)}")
+                            else:
+                                self.log_test("Personality Analysis", True, 
+                                            f"Personality distribution available: {len(personality_dist)} types")
+                        
+                        # Test filtering by personality
+                        filter_response = self.session.get(f"{BACKEND_URL}/crm/ai-agents/client-profiles?personality=ANALYTIQUE")
+                        if filter_response.status_code == 200:
+                            filter_data = filter_response.json()
+                            if filter_data.get("success"):
+                                self.log_test("Personality Filtering", True, "Personality filtering works")
+                        
+                        return True
+                    else:
+                        missing_stats = [stat for stat in required_stats if stat not in statistics]
+                        self.log_test("Client Profiling System", False, f"Missing statistics: {missing_stats}")
+                        return False
+                else:
+                    self.log_test("Client Profiling System", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Client Profiling System", False, f"Status: {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Client Profiling System", False, f"Exception: {str(e)}")
+            return False
+
+    def test_schopenhauer_strategies(self):
+        """Test GET /api/crm/ai-agents/schopenhauer-strategies - 38 dialectical strategies"""
+        try:
+            if not self.authenticate_manager():
+                self.log_test("Schopenhauer Strategies", False, "Authentication failed")
+                return False
+            
+            response = self.session.get(f"{BACKEND_URL}/crm/ai-agents/schopenhauer-strategies")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "schopenhauer_reference" in data:
+                    reference = data["schopenhauer_reference"]
+                    
+                    # Check for 38 strategies
+                    total_stratagems = reference.get("total_stratagems", 0)
+                    actively_used = reference.get("actively_used", 0)
+                    strategies = reference.get("strategies", [])
+                    
+                    if total_stratagems == 38:
+                        self.log_test("Schopenhauer Strategies Count", True, 
+                                    f"All 38 stratagems available, {actively_used} actively used")
+                        
+                        # Check strategy structure
+                        if isinstance(strategies, list) and len(strategies) > 0:
+                            first_strategy = strategies[0]
+                            required_fields = ["id", "name", "description", "usage_count", "recommended_for"]
+                            
+                            if all(field in first_strategy for field in required_fields):
+                                # Check for specific strategies
+                                strategy_ids = [s.get("id") for s in strategies]
+                                expected_strategies = [1, 10, 12, 14, 26]  # Key strategies
+                                
+                                found_key_strategies = [sid for sid in strategy_ids if sid in expected_strategies]
+                                
+                                self.log_test("Schopenhauer Strategies", True, 
+                                            f"Strategies loaded: {len(strategies)} with usage stats, key strategies: {found_key_strategies}")
+                                
+                                # Check usage philosophy
+                                philosophy = reference.get("usage_philosophy", "")
+                                if "éthique" in philosophy and "respectueuse" in philosophy:
+                                    self.log_test("Ethical Usage Philosophy", True, 
+                                                "Ethical usage philosophy confirmed")
+                                
+                                return True
+                            else:
+                                missing_fields = [f for f in required_fields if f not in first_strategy]
+                                self.log_test("Schopenhauer Strategies", False, f"Missing strategy fields: {missing_fields}")
+                                return False
+                        else:
+                            self.log_test("Schopenhauer Strategies", False, "No strategies in response")
+                            return False
+                    else:
+                        self.log_test("Schopenhauer Strategies", False, f"Expected 38 stratagems, got {total_stratagems}")
+                        return False
+                else:
+                    self.log_test("Schopenhauer Strategies", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Schopenhauer Strategies", False, f"Status: {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Schopenhauer Strategies", False, f"Exception: {str(e)}")
+            return False
+
+    def test_performance_analytics(self):
+        """Test GET /api/crm/ai-agents/performance-analytics - Advanced analytics dashboard"""
+        try:
+            if not self.authenticate_manager():
+                self.log_test("Performance Analytics", False, "Authentication failed")
+                return False
+            
+            response = self.session.get(f"{BACKEND_URL}/crm/ai-agents/performance-analytics?time_range=7days")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "analytics" in data:
+                    analytics = data["analytics"]
+                    
+                    # Check global KPIs
+                    global_kpis = analytics.get("global_kpis", {})
+                    required_kpis = ["total_interactions", "average_response_time_seconds", "satisfaction_score", "target_satisfaction"]
+                    
+                    if all(kpi in global_kpis for kpi in required_kpis):
+                        total_interactions = global_kpis["total_interactions"]
+                        avg_response_time = global_kpis["average_response_time_seconds"]
+                        satisfaction_score = global_kpis["satisfaction_score"]
+                        target_satisfaction = global_kpis["target_satisfaction"]
+                        
+                        # Check if satisfaction meets target (95%+)
+                        meets_target = satisfaction_score >= target_satisfaction
+                        performance_status = global_kpis.get("performance_status", "")
+                        
+                        self.log_test("Performance Analytics KPIs", True, 
+                                    f"KPIs: {total_interactions} interactions, {avg_response_time}s response, {satisfaction_score}% satisfaction (target: {target_satisfaction}%)")
+                        
+                        if meets_target and satisfaction_score >= 95.0:
+                            self.log_test("Satisfaction Target", True, 
+                                        f"Satisfaction {satisfaction_score}% exceeds 95% target")
+                        
+                        if avg_response_time < 300:  # Less than 5 minutes
+                            self.log_test("Response Time Target", True, 
+                                        f"Response time {avg_response_time}s meets <5min target")
+                        
+                        # Check agent performance
+                        agent_performance = analytics.get("agent_performance", [])
+                        if isinstance(agent_performance, list):
+                            self.log_test("Agent Performance Data", True, 
+                                        f"Performance data for {len(agent_performance)} agents")
+                        
+                        # Check personality insights
+                        personality_insights = analytics.get("personality_insights", [])
+                        if isinstance(personality_insights, list):
+                            self.log_test("Personality Insights", True, 
+                                        f"Personality analysis for {len(personality_insights)} types")
+                        
+                        # Check Schopenhauer strategies effectiveness
+                        strategy_effectiveness = analytics.get("schopenhauer_strategies_effectiveness", [])
+                        if isinstance(strategy_effectiveness, list):
+                            self.log_test("Strategy Effectiveness", True, 
+                                        f"Effectiveness data for {len(strategy_effectiveness)} strategies")
+                        
+                        # Check recommendations
+                        recommendations = analytics.get("recommendations", [])
+                        if isinstance(recommendations, list) and len(recommendations) > 0:
+                            self.log_test("Analytics Recommendations", True, 
+                                        f"Generated {len(recommendations)} optimization recommendations")
+                        
+                        return True
+                    else:
+                        missing_kpis = [kpi for kpi in required_kpis if kpi not in global_kpis]
+                        self.log_test("Performance Analytics", False, f"Missing KPIs: {missing_kpis}")
+                        return False
+                else:
+                    self.log_test("Performance Analytics", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Performance Analytics", False, f"Status: {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Performance Analytics", False, f"Exception: {str(e)}")
+            return False
+
+    def test_agent_interaction(self):
+        """Test POST /api/crm/ai-agents/{agent_name}/interact - Agent interaction"""
+        try:
+            if not self.authenticate_manager():
+                self.log_test("Agent Interaction", False, "Authentication failed")
+                return False
+            
+            # Test interaction with Socrate agent
+            interaction_data = {
+                "client_data": {
+                    "name": "Marie Dubois",
+                    "email": "marie.dubois@example.fr",
+                    "phone": "+33123456789",
+                    "personality": "analytique"
+                },
+                "message_type": "sms"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/crm/ai-agents/socrate/interact",
+                json=interaction_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "interaction_result" in data:
+                    interaction_result = data["interaction_result"]
+                    
+                    # Check interaction result structure
+                    if interaction_result.get("status") == "success":
+                        agent_name = interaction_result.get("agent", "")
+                        message = interaction_result.get("message", "")
+                        
+                        if "Socrate" in agent_name and len(message) > 0:
+                            self.log_test("Agent Interaction", True, 
+                                        f"Successful interaction with {agent_name}, message length: {len(message)} chars")
+                            
+                            # Check if strategies were used
+                            strategies_used = interaction_result.get("strategies_used", {})
+                            if "primary_strategies" in strategies_used:
+                                primary_strategies = strategies_used["primary_strategies"]
+                                self.log_test("Schopenhauer Integration", True, 
+                                            f"Strategies applied: {primary_strategies}")
+                            
+                            return True
+                        else:
+                            self.log_test("Agent Interaction", False, f"Invalid agent response: {agent_name}")
+                            return False
+                    elif interaction_result.get("status") == "agent_inactive":
+                        self.log_test("Agent Interaction", True, 
+                                    f"Agent correctly reported as inactive: {interaction_result.get('message', '')}")
+                        return True
+                    else:
+                        self.log_test("Agent Interaction", False, f"Interaction failed: {interaction_result}")
+                        return False
+                else:
+                    self.log_test("Agent Interaction", False, "Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("Agent Interaction", False, f"Status: {response.status_code}", response.text)
+                return False
+                
+        except Exception as e:
+            self.log_test("Agent Interaction", False, f"Exception: {str(e)}")
+            return False
+
+    def test_working_hours_configuration(self):
+        """Test agent working hours configuration (9h-18h vs 24/7)"""
+        try:
+            if not self.authenticate_manager():
+                self.log_test("Working Hours Configuration", False, "Authentication failed")
+                return False
+            
+            response = self.session.get(f"{BACKEND_URL}/crm/ai-agents/dashboard")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "dashboard" in data:
+                    dashboard = data["dashboard"]
+                    agents_status = dashboard.get("agents_status", {})
+                    
+                    # Check working hours for each agent
+                    working_hours_correct = True
+                    agent_schedules = []
+                    
+                    for agent_key, agent_info in agents_status.items():
+                        working_hours = agent_info.get("working_hours", {})
+                        agent_name = agent_info.get("name", agent_key)
+                        
+                        if agent_key in ["socrate", "platon"]:
+                            # Should be 24/7
+                            if working_hours.get("always_active"):
+                                agent_schedules.append(f"{agent_name}: 24/7 ✓")
+                            else:
+                                agent_schedules.append(f"{agent_name}: NOT 24/7 ✗")
+                                working_hours_correct = False
+                        else:
+                            # Should have specific hours (9h-18h)
+                            if "start_time" in working_hours and "end_time" in working_hours:
+                                start_time = working_hours.get("start_time", "")
+                                end_time = working_hours.get("end_time", "")
+                                agent_schedules.append(f"{agent_name}: {start_time}-{end_time} ✓")
+                            else:
+                                agent_schedules.append(f"{agent_name}: No schedule ✗")
+                                working_hours_correct = False
+                    
+                    if working_hours_correct:
+                        self.log_test("Working Hours Configuration", True, 
+                                    f"All agents have correct schedules: {'; '.join(agent_schedules)}")
+                        return True
+                    else:
+                        self.log_test("Working Hours Configuration", False, 
+                                    f"Schedule issues: {'; '.join(agent_schedules)}")
+                        return False
+                else:
+                    self.log_test("Working Hours Configuration", False, "Invalid response structure")
+                    return False
+            else:
+                self.log_test("Working Hours Configuration", False, f"Status: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Working Hours Configuration", False, f"Exception: {str(e)}")
+            return False
+
     def test_smart_recommendations_different_contexts(self):
         """Test POST /api/recommendations/smart with different context pages"""
         try:
