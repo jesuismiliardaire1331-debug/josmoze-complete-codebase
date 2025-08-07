@@ -1186,6 +1186,90 @@ const CheckoutForm = () => {
               </div>
             )}
             
+            {/* 🆕 ADRESSE DE LIVRAISON OBLIGATOIRE */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+              <h4 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
+                🚚 Adresse de Livraison *
+                <span className="text-sm font-normal text-blue-700 ml-2">(Obligatoire)</span>
+              </h4>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">
+                    Adresse complète *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="123 Rue de la République"
+                    value={customerInfo.address.street}
+                    onChange={(e) => setCustomerInfo({
+                      ...customerInfo, 
+                      address: {...customerInfo.address, street: e.target.value}
+                    })}
+                    className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-blue-900 mb-2">
+                      Code Postal *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="75001"
+                      value={customerInfo.address.postal_code}
+                      onChange={(e) => setCustomerInfo({
+                        ...customerInfo, 
+                        address: {...customerInfo.address, postal_code: e.target.value}
+                      })}
+                      className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-blue-900 mb-2">
+                      Ville *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Paris"
+                      value={customerInfo.address.city}
+                      onChange={(e) => setCustomerInfo({
+                        ...customerInfo, 
+                        address: {...customerInfo.address, city: e.target.value}
+                      })}
+                      className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-blue-900 mb-2">
+                    Pays
+                  </label>
+                  <select
+                    value={customerInfo.address.country}
+                    onChange={(e) => setCustomerInfo({
+                      ...customerInfo, 
+                      address: {...customerInfo.address, country: e.target.value}
+                    })}
+                    className="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="France">France</option>
+                    <option value="Espagne">Espagne</option>
+                    <option value="Italie">Italie</option>
+                    <option value="Allemagne">Allemagne</option>
+                    <option value="Belgique">Belgique</option>
+                    <option value="Pays-Bas">Pays-Bas</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
             <button
               type="submit"
               disabled={loading}
