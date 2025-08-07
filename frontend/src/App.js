@@ -1012,7 +1012,14 @@ const CheckoutForm = () => {
     name: '',
     email: '',
     phone: '',
-    company: customerType === 'B2B' ? '' : undefined
+    company: customerType === 'B2B' ? '' : undefined,
+    // 🆕 ADRESSE OBLIGATOIRE
+    address: {
+      street: '',
+      postal_code: '',
+      city: '',
+      country: 'France'
+    }
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
