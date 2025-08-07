@@ -1421,7 +1421,7 @@ async def track_abandoned_cart(cart_data: dict):
         raise HTTPException(status_code=500, detail="Erreur lors de l'enregistrement du panier abandonné")
 
 @api_router.get("/crm/abandoned-carts/dashboard")
-async def get_abandoned_carts_dashboard(current_user: User = Depends(require_role(["manager", "agent"]))):
+async def get_abandoned_carts_dashboard(current_user: dict = Depends(require_role(["manager", "agent"]))):
     """
     Récupérer les données du dashboard des paniers abandonnés pour le CRM
     Accessible aux managers ET agents
