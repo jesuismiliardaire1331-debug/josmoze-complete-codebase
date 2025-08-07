@@ -1357,8 +1357,7 @@ async def force_brand_monitoring_scan(current_user: User = Depends(require_role(
         raise HTTPException(status_code=500, detail="Erreur lors du scan forcé")
 
 @api_router.get("/crm/brand-monitoring/violations")
-@require_role(["manager"])  # Seulement pour les managers
-async def get_recent_violations():
+async def get_recent_violations(current_user: User = Depends(require_role(["manager"]))):
     """
     Récupère les violations récentes détectées
     """
