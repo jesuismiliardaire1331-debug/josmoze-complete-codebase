@@ -199,6 +199,17 @@ frontend:
   - task: "AI Agents Manager Interface"
     implemented: true
     working: true
+  - task: "Acheter Button Fix - Product Display Issue"
+    implemented: false
+    working: false
+    file: "frontend/src/App.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "PROBLÈME IDENTIFIÉ: Le bouton Acheter/Order Now fonctionne et fait bien le scroll vers #products-section, MAIS aucun produit ne s'affiche. L'API backend retourne correctement 6 produits (/api/products et /api/products/translated), le problème semble être dans le rendu frontend. Section 'Our Products' visible mais vide avec message 'Aucune recommandation disponible pour le moment'."
     file: "frontend/src/AIAgentsManager.js"
     stuck_count: 0
     priority: "high"
