@@ -138,16 +138,19 @@ class OSMOSEAgentTester:
             return f"Message de {agent_name} (Erreur IA: {str(e)})"
 
     def send_sms_test(self, agent_name, message):
-        """Envoie un SMS de test"""
+        """Envoie un SMS de test sans mention Twilio"""
         try:
+            # Message propre sans préfixe de test
+            clean_message = message
+            
             sms = self.twilio_client.messages.create(
-                body=f"[TEST OSMOSE - {agent_name.upper()}] {message}",
+                body=clean_message,  # Message direct sans préfixe
                 from_=TWILIO_PHONE_NUMBER,
                 to=TEST_CLIENT_NUMBER
             )
             
             self.log_result(
-                agent=f"{agent_name} 💬", 
+                agent=f"{agent_name.title()} 💬", 
                 action="SMS",
                 success=True,
                 message="SMS envoyé avec succès",
@@ -157,7 +160,7 @@ class OSMOSEAgentTester:
             
         except Exception as e:
             self.log_result(
-                agent=f"{agent_name} 💬",
+                agent=f"{agent_name.title()} 💬",
                 action="SMS", 
                 success=False,
                 message="Erreur envoi SMS",
