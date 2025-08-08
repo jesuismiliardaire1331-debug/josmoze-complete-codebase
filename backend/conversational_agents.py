@@ -9,6 +9,7 @@ Agents IA vraiment interactifs avec conversations naturelles
 """
 
 import openai
+from openai import OpenAI
 from twilio.rest import Client
 import os
 import json
@@ -17,7 +18,7 @@ from typing import Dict, List, Optional
 import asyncio
 
 # Configuration
-openai.api_key = "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"
+client = OpenAI(api_key="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")
 TWILIO_ACCOUNT_SID = "AC5d37fc46401a27a84540203820d680ca"
 TWILIO_AUTH_TOKEN = "ead5696cac732121a4f448942845517c"
 TWILIO_PHONE_NUMBER = "+16592518805"
