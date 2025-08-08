@@ -135,20 +135,26 @@ backend:
           agent: "testing"
           comment: "✅ SOPHIE CALL DEACTIVATION VERIFIED: Code review confirms Sophie correctly removed from call_agents dict (interactive_call_system.py lines 195-205), Thomas set as default. Sophie remains active in conversational_agents for SMS as intended."
 
-  - task: "SMS URL Correction to www.josmose.com"
+  - task: "SMS URL Correction CRITIQUE - Lien fonctionnel"
     implemented: true
     working: true
     file: "backend/conversational_agents.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
     status_history:
-        - working: "NA"
+        - working: false
           agent: "main"
           comment: "URL CORRIGÉE: Changé JOSMOSE_WEBSITE de preview.emergentagent.com vers https://www.josmose.com dans tous les fichiers concernés. Tous les nouveaux SMS utilisent maintenant la bonne URL."
         - working: true
           agent: "testing"
           comment: "✅ SMS URL CORRECTION VERIFIED: Code review confirms JOSMOSE_WEBSITE correctly set to https://www.josmose.com (line 25), all SMS templates use correct URL variable, emergency responses also use correct URL."
+        - working: false
+          agent: "main"
+          comment: "🚨 PROBLÈME CRITIQUE: Test SMS réel révèle que www.josmose.com ET josmose.com ne fonctionnent pas! Client reçoit 'Unable to connect' quand il clique sur lien SMS. Domaines non configurés ou inaccessibles. URGENT: Revenir à URL fonctionnelle preview.emergentagent.com temporairement."
+        - working: true
+          agent: "main"
+          comment: "✅ CORRECTION URGENTE: Restauré URL fonctionnelle https://0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com dans tous fichiers. Tests confirment que cette URL fonctionne (HTTP 200). Clients peuvent maintenant accéder au site via liens SMS. À terme, configurer proprement josmose.com."
 
   - task: "SMS Ultra-Optimization"
     implemented: true
