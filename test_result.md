@@ -126,11 +126,14 @@ backend:
     file: "backend/interactive_call_system.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "SOPHIE CALLS DÉSACTIVÉES: Commenté Sophie dans call_agents dict et mis Thomas par défaut. Sophie reste active pour SMS uniquement comme demandé par utilisateur pour focus SMS maximum."
+        - working: true
+          agent: "testing"
+          comment: "✅ SOPHIE CALL DEACTIVATION VERIFIED: Code review confirms Sophie correctly removed from call_agents dict (interactive_call_system.py lines 195-205), Thomas set as default. Sophie remains active in conversational_agents for SMS as intended."
 
   - task: "SMS URL Correction to www.josmose.com"
     implemented: true
@@ -138,11 +141,14 @@ backend:
     file: "backend/conversational_agents.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "URL CORRIGÉE: Changé JOSMOSE_WEBSITE de preview.emergentagent.com vers https://www.josmose.com dans tous les fichiers concernés. Tous les nouveaux SMS utilisent maintenant la bonne URL."
+        - working: true
+          agent: "testing"
+          comment: "✅ SMS URL CORRECTION VERIFIED: Code review confirms JOSMOSE_WEBSITE correctly set to https://www.josmose.com (line 25), all SMS templates use correct URL variable, emergency responses also use correct URL."
 
   - task: "SMS Ultra-Optimization"
     implemented: true
@@ -150,11 +156,14 @@ backend:
     file: "backend/conversational_agents.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "SMS ULTRA-OPTIMISÉS: Ajouté compression automatique pour respect limite 160 chars, amélioration gestion URL critique, optimisation température OpenAI 0.7 pour plus cohérence, règles SMS perfectionnées avec call-to-action clairs."
+        - working: true
+          agent: "testing"
+          comment: "✅ SMS ULTRA-OPTIMIZATION VERIFIED: Code review confirms 160 char limit enforced (lines 196-216), automatic compression logic implemented, critical intentions defined, URL forced inclusion for critical intentions, temperature reduced to 0.7 for consistency."
 
   - task: "AI Agents API Endpoints"
     implemented: true  
