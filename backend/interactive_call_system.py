@@ -16,7 +16,7 @@ import json
 openai_client = OpenAI(api_key="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")
 twilio_client = Client("AC5d37fc46401a27a84540203820d680ca", "ead5696cac732121a4f448942845517c")
 TWILIO_PHONE_NUMBER = "+16592518805"
-JOSMOSE_WEBSITE = "https://38ebfc62-3cd2-4bbe-be3b-666002d5e6cd.preview.emergentagent.com"
+JOSMOSE_WEBSITE = "https://0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com"
 
 class InteractiveCallAgent:
     def __init__(self, name: str, specialty: str):

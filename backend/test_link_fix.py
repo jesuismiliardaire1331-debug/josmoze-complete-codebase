@@ -29,7 +29,7 @@ async def test_link_correction():
     if success:
         print("✅ SMS avec lien corrigé envoyé !")
         print("🌐 Le lien devrait maintenant être accessible depuis votre mobile")
-        print(f"🔗 URL utilisée: https://38ebfc62-3cd2-4bbe-be3b-666002d5e6cd.preview.emergentagent.com")
+        print(f"🔗 URL utilisée: https://0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com")
     else:
         print("❌ Échec envoi")
 
