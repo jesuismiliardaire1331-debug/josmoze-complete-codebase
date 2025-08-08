@@ -92,7 +92,7 @@ class ConversationalAgent:
         """
         
         try:
-            response = await openai.ChatCompletion.acreate(
+            response = await openai.chat.completions.create(
                 model="gpt-4o-mini",  # Plus rapide et moins cher pour SMS
                 messages=[
                     {"role": "system", "content": base_directive},
