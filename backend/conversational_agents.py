@@ -160,8 +160,8 @@ class ConversationalAgent:
         DIRECTIVE SPÉCIALISÉE:
         {template}
         
-        RÈGLES SMS OPTIMALES:
-        1. Maximum 140 caractères (strict!)
+        RÈGLES SMS ULTRA-OPTIMALES:
+        1. Maximum 160 caractères (limite SMS standard)
         2. Ton personnalisé selon ton rôle
         3. TOUJOURS inclure lien {JOSMOSE_WEBSITE} si approprié à l'intention
         4. Question engageante pour continuer conversation
@@ -169,6 +169,8 @@ class ConversationalAgent:
         6. Urgence douce si approprié
         7. Personnalisation avec nom client
         8. Éviter répétitions avec historique
+        9. Utiliser émojis avec parcimonie (maximum 1-2)
+        10. Appel à l'action clair et direct
         
         Génère la réponse SMS PARFAITE pour cette intention et ce contexte.
         """
