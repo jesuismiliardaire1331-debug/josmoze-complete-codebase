@@ -22,7 +22,7 @@ client = OpenAI(api_key="sk-proj-1D8g-lkrupOOcB9i5YS4nACl8eHishyENFDB71AEFTLr5Fh
 TWILIO_ACCOUNT_SID = "AC5d37fc46401a27a84540203820d680ca"
 TWILIO_AUTH_TOKEN = "ead5696cac732121a4f448942845517c"
 TWILIO_PHONE_NUMBER = "+16592518805"
-JOSMOSE_WEBSITE = "https://38ebfc62-3cd2-4bbe-be3b-666002d5e6cd.preview.emergentagent.com"  # URL publique réelle
+JOSMOSE_WEBSITE = "https://38ebfc62-3cd2-4bbe-be3b-666002d5e6cd.preview.emergentagent.com:3000"  # Port frontend correct
 
 class ConversationalAgent:
     def __init__(self, name: str, role: str, personality: str):
