@@ -205,20 +205,21 @@ call_agents = {
 }
 
 async def test_appel_interactif():
-    """Test d'appel vraiment interactif"""
+    """Test d'appel vraiment interactif - Sophie temporairement désactivée"""
     
     print("📞 TEST APPEL INTERACTIF AVANCÉ")
     print("=" * 40)
     
-    sophie = call_agents["sophie"]
+    # Sophie temporairement désactivée pour focus SMS - utiliser Thomas
+    thomas = call_agents["thomas"]
     
     client_phone = "+15068893760"
     client_name = "Monsieur Dubois"
     
-    print(f"🎯 Sophie va appeler {client_name}...")
+    print(f"🎯 Thomas va appeler {client_name}... (Sophie désactivée pour focus SMS)")
     print("📋 Appel avec conversation naturelle et options interactives")
     
-    success = sophie.make_intelligent_call(client_phone, client_name)
+    success = thomas.make_intelligent_call(client_phone, client_name)
     
     if success:
         print("✅ Appel interactif lancé avec succès!")
