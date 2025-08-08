@@ -72,7 +72,7 @@ async def test_systeme_conversationnel_complet():
     print("🔗 Tous les SMS contiennent le lien du site")
     print("🗣️ Appel permet conversation naturelle")
     
-    print(f"\n🌐 SITE WEB: {agent.JOSMOSE_WEBSITE}")
+    print(f"\n🌐 SITE WEB: https://38ebfc62-3cd2-4bbe-be3b-666002d5e6cd.preview.emergentagent.com")
     print("✅ Bouton 'Acheter' fonctionnel")
     print("✅ Produits chargés et disponibles")
 
