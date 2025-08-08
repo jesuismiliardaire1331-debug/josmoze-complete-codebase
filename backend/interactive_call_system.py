@@ -191,12 +191,12 @@ class InteractiveCallAgent:
             print(f"❌ Erreur appel: {str(e)}")
             return False
 
-# Agents d'appel spécialisés
+# Agents d'appel spécialisés - Sophie temporairement désactivée pour focus SMS
 call_agents = {
-    "sophie": InteractiveCallAgent(
-        name="Sophie",
-        specialty="experte en vente consultative"
-    ),
+    # "sophie": InteractiveCallAgent(
+    #     name="Sophie",
+    #     specialty="experte en vente consultative"
+    # ),
     
     "thomas": InteractiveCallAgent(
         name="Thomas", 
