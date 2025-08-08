@@ -289,11 +289,12 @@ class OSMOSEAgentTester:
             "personality": "ANALYTIQUE"  # Pour le test
         }
         
+        # Nouveaux agents avec prénoms professionnels
         agents_to_test = [
-            ("socrate", "🧠", "sms"),
-            ("ciceron", "💬", "sms"), 
-            ("demosthene", "🛒", "sms"),
-            ("aristote", "📞", "call")  # Appel en dernier
+            ("thomas", "👨‍💼", "sms"),      # Ex-Socrate: Prospection  
+            ("marie", "👩‍💼", "sms"),        # Ex-Cicéron: Relation client
+            ("julien", "👨‍💼", "sms"),      # Ex-Démosthène: Paniers abandonnés
+            ("sophie", "👩‍💼", "call")       # Ex-Aristote: Appels commerciaux
         ]
         
         # Tests SMS d'abord
