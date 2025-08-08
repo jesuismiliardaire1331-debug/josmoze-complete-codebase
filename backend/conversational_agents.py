@@ -189,14 +189,41 @@ class ConversationalAgent:
             intelligent_response = response.choices[0].message.content.strip()
             
             # Post-traitement pour optimisation finale
-            # Forcer inclusion lien si intention critique et pas présent
+            # Définir les intentions critiques
             critical_intentions = ["prix_tarif", "info_produit", "achat_commande", "comparaison", "technique"]
+            
+            # Forcer respect limite 160 caractères SMS
+            if len(intelligent_response) > 160:
+                # Compresser automatiquement
+                parts = intelligent_response.split(' ')
+                compressed = ""
+                for part in parts:
+                    if len(compressed + " " + part) <= 155:  # 5 chars de marge
+                        compressed = compressed + " " + part if compressed else part
+                    else:
+                        break
+                # S'assurer qu'on a l'URL si critique
+                if JOSMOSE_WEBSITE not in compressed and detected_intention in critical_intentions:
+                    # Sacrifier du texte pour garder l'URL
+                    url_space = len(JOSMOSE_WEBSITE) + 1
+                    available_space = 155 - url_space
+                    if available_space > 20:  # Minimum viable
+                        text_part = intelligent_response[:available_space].rsplit(' ', 1)[0]
+                        intelligent_response = f"{text_part} {JOSMOSE_WEBSITE}"
+                    else:
+                        intelligent_response = compressed
+                else:
+                    intelligent_response = compressed
+                    
+            # Forcer inclusion lien si intention critique et pas présent
             if detected_intention in critical_intentions and JOSMOSE_WEBSITE not in intelligent_response:
-                if len(intelligent_response) < 90:  # Assez de place
-                    intelligent_response += f" → {JOSMOSE_WEBSITE}"
+                if len(intelligent_response) < 120:  # Assez de place
+                    intelligent_response += f" {JOSMOSE_WEBSITE}"
                 else:
                     # Compresser pour faire de la place
-                    intelligent_response = intelligent_response[:70] + f"... → {JOSMOSE_WEBSITE}"
+                    available = 155 - len(JOSMOSE_WEBSITE)
+                    text_part = intelligent_response[:available].rsplit(' ', 1)[0]
+                    intelligent_response = f"{text_part} {JOSMOSE_WEBSITE}"
             
             # Sauvegarder conversation avec métadonnées
             self.save_message(client_phone, f"Client ({client_name})", client_message)
