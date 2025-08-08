@@ -182,8 +182,8 @@ class ConversationalAgent:
                     {"role": "system", "content": base_directive},
                     {"role": "user", "content": f"Génère le SMS parfait pour {client_name}"}
                 ],
-                max_tokens=80,  # Plus court pour forcer concision
-                temperature=0.8
+                max_tokens=100,  # Augmenté pour messages plus complets mais dans la limite SMS
+                temperature=0.7  # Réduit pour plus de cohérence
             )
             
             intelligent_response = response.choices[0].message.content.strip()
