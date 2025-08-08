@@ -120,6 +120,42 @@ backend:
           agent: "testing"
           comment: "✅ AI AGENTS CORE SYSTEM WORKING: Dashboard loads successfully with all 5 agents (Socrate 🧠, Aristote 📞, Cicéron 💬, Démosthène 🛒, Platon 📊). Agent status tracking functional. Working hours correctly configured: Socrate & Platon 24/7, others 9h-18h/20h. Performance KPIs showing 96.3% satisfaction (exceeds 95% target) and 4.2s response time (meets <5min target)."
 
+  - task: "Sophie Agent Call Deactivation"
+    implemented: true
+    working: true  
+    file: "backend/interactive_call_system.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "SOPHIE CALLS DÉSACTIVÉES: Commenté Sophie dans call_agents dict et mis Thomas par défaut. Sophie reste active pour SMS uniquement comme demandé par utilisateur pour focus SMS maximum."
+
+  - task: "SMS URL Correction to www.josmose.com"
+    implemented: true
+    working: true
+    file: "backend/conversational_agents.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "URL CORRIGÉE: Changé JOSMOSE_WEBSITE de preview.emergentagent.com vers https://www.josmose.com dans tous les fichiers concernés. Tous les nouveaux SMS utilisent maintenant la bonne URL."
+
+  - task: "SMS Ultra-Optimization"
+    implemented: true
+    working: true
+    file: "backend/conversational_agents.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "SMS ULTRA-OPTIMISÉS: Ajouté compression automatique pour respect limite 160 chars, amélioration gestion URL critique, optimisation température OpenAI 0.7 pour plus cohérence, règles SMS perfectionnées avec call-to-action clairs."
+
   - task: "AI Agents API Endpoints"
     implemented: true  
     working: true
