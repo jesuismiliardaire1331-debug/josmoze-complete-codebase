@@ -315,11 +315,11 @@ class OSMOSEAgentTester:
             if success:
                 await asyncio.sleep(3)  # 3 secondes entre chaque test
         
-        # Test final Platon (Analytics)
-        print(f"\n--- Test PLATON 📊 (Analytics) ---")
-        platon_insights = self.generate_agent_message("platon", client_info, "sms")
-        print(f"💭 Insights générés: {platon_insights}")
-        self.send_sms_test("platon", platon_insights)
+        # Test final Caroline (Analytics) 
+        print(f"\n--- Test CAROLINE 📊 (Analytics & Conseils) ---")
+        caroline_insights = self.generate_agent_message("caroline", client_info, "sms")
+        print(f"💭 Conseils générés: {caroline_insights}")
+        self.send_sms_test("caroline", caroline_insights)
         
         # Résumé final
         print("\n" + "🌊" * 50)
