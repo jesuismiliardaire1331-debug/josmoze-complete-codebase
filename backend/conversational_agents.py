@@ -67,7 +67,14 @@ class ConversationalAgent:
         # Contexte de conversation
         conversation_context = self.get_conversation_context(client_phone)
         
-        # Construction du prompt système selon l'agent
+        # Détection des mots-clés pour inclure automatiquement le lien
+        message_lower = client_message.lower()
+        keywords_need_link = ["prix", "coût", "tarif", "acheter", "commander", "info", "information", "site", "voir", "produit", "catalogue"]
+        needs_link = any(keyword in message_lower for keyword in keywords_need_link)
+        
+        # Construction du prompt système avec directive lien
+        link_directive = f"IMPORTANT: Si approprié (surtout si le client demande prix, infos, produits), TOUJOURS inclure le lien {JOSMOSE_WEBSITE} de façon naturelle dans ta réponse." if needs_link else f"Inclus le lien {JOSMOSE_WEBSITE} si c'est pertinent pour aider le client."
+        
         base_directive = f"""
         Tu es {self.name}, {self.role} chez Josmose (purificateurs d'eau).
         
@@ -77,11 +84,13 @@ class ConversationalAgent:
         1. Réponds de manière naturelle et conversationnelle
         2. Poses des questions pour qualifier le besoin si approprié
         3. Utilise les stratégies de Schopenhauer subtilement et éthiquement
-        4. Proposes le lien {JOSMOSE_WEBSITE} quand c'est pertinent
+        4. {link_directive}
         5. Maximum 140 caractères pour SMS (important!)
         6. Sois empathique et professionnel
         7. Mémorise et utilise l'historique de conversation
         8. Adapte ta réponse au contexte et aux besoins exprimés
+        9. Si client demande prix/tarif, donne info rapide ET lien pour détails
+        10. Guide toujours vers une action concrète (visite site, appel, rdv)
         
         HISTORIQUE CONVERSATION:
         {conversation_context}
@@ -89,7 +98,7 @@ class ConversationalAgent:
         MESSAGE DU CLIENT: "{client_message}"
         
         Réponds intelligemment et de manière personnalisée à {client_name}.
-        Si c'est approprié, guide vers {JOSMOSE_WEBSITE} ou propose un rendez-vous.
+        INCLUS le lien {JOSMOSE_WEBSITE} naturellement si approprié.
         """
         
         try:
@@ -99,11 +108,20 @@ class ConversationalAgent:
                     {"role": "system", "content": base_directive},
                     {"role": "user", "content": f"Client {client_name}: {client_message}"}
                 ],
-                max_tokens=100,  # Plus court pour SMS
+                max_tokens=120,  # Plus court pour SMS avec lien
                 temperature=0.7
             )
             
             intelligent_response = response.choices[0].message.content.strip()
+            
+            # Force l'inclusion du lien si mots-clés critiques détectés
+            if needs_link and JOSMOSE_WEBSITE not in intelligent_response:
+                # Ajout automatique du lien si l'IA l'a oublié
+                if len(intelligent_response) < 80:  # Assez de place
+                    intelligent_response += f" Voir: {JOSMOSE_WEBSITE}"
+                else:
+                    # Remplacer une partie pour faire de la place
+                    intelligent_response = intelligent_response[:60] + f"... Détails: {JOSMOSE_WEBSITE}"
             
             # Sauvegarder la conversation
             self.save_message(client_phone, f"Client ({client_name})", client_message)
@@ -114,15 +132,15 @@ class ConversationalAgent:
         except Exception as e:
             print(f"❌ Erreur IA: {str(e)}")
             
-            # Réponses de secours intelligentes par agent
+            # Réponses de secours avec lien automatique
             fallback_responses = {
-                "Thomas": f"Merci {client_name} ! Votre question sur l'eau est importante. Consultez {JOSMOSE_WEBSITE} ou appelez-nous ! 💧",
-                "Sophie": f"Parfait {client_name} ! Je traite votre demande commerciale. Détails sur {JOSMOSE_WEBSITE} 📞",
-                "Marie": f"Bonjour {client_name} 😊 Je m'occupe de votre demande. Infos complètes: {JOSMOSE_WEBSITE} ✨",
-                "Julien": f"{client_name}, votre panier vous attend ! Finalisez rapidement sur {JOSMOSE_WEBSITE} 🛒",
-                "Caroline": f"Analyse en cours {client_name}. Données techniques sur {JOSMOSE_WEBSITE} 📊"
+                "Thomas": f"Merci {client_name} ! Questions sur l'eau importantes. Détails: {JOSMOSE_WEBSITE} ou appelez-nous ! 💧",
+                "Sophie": f"Parfait {client_name} ! Prix et devis personnalisés: {JOSMOSE_WEBSITE} 📞",
+                "Marie": f"Bonjour {client_name} 😊 Toutes nos infos: {JOSMOSE_WEBSITE} ✨",
+                "Julien": f"{client_name}, finalisez rapidement: {JOSMOSE_WEBSITE} 🛒",
+                "Caroline": f"Analyses complètes {client_name}: {JOSMOSE_WEBSITE} 📊"
             }
-            return fallback_responses.get(self.name, f"Merci {client_name} ! Un expert vous répond sur {JOSMOSE_WEBSITE}")
+            return fallback_responses.get(self.name, f"Merci {client_name} ! Infos: {JOSMOSE_WEBSITE}")
     
     async def send_intelligent_sms(self, to_number: str, client_message: str, client_name: str = "Client") -> bool:
         """Envoie une réponse SMS intelligente"""
