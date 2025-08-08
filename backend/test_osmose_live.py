@@ -284,7 +284,7 @@ class OSMOSEAgentTester:
         print("\n🤖 TESTS DES AGENTS IA:")
         
         client_info = {
-            "name": TEST_CLIENT_NAME,
+            "name": "Monsieur Dubois",  # Nom plus réaliste
             "phone": TEST_CLIENT_NUMBER,
             "personality": "ANALYTIQUE"  # Pour le test
         }
