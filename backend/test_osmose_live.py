@@ -169,16 +169,31 @@ class OSMOSEAgentTester:
             return False
 
     def make_call_test(self, agent_name, message):
-        """Effectue un appel de test avec synthèse vocale"""
+        """Effectue un appel interactif avec conversation possible"""
         try:
-            # TwiML pour synthèse vocale française
+            # URL de webhook pour gérer l'interaction (à implémenter)
+            webhook_url = "https://handler.twilio.com/twiml/EH4a9a64c1aa7c6b0f45b7e92bdcf2b24b"  # Webhook par défaut
+            
+            # TwiML pour conversation interactive
             twiml_content = f"""
             <Response>
                 <Say voice="Polly.Celine" language="fr-FR">
-                    Bonjour, c'est {agent_name} du système OSMOSE. 
                     {message}
-                    Ceci était un test du système d'agents IA. 
-                    Merci de votre attention. Au revoir.
+                    
+                    Si vous souhaitez en savoir plus, appuyez sur 1.
+                    Pour être rappelé plus tard, appuyez sur 2.
+                    Pour parler à un conseiller, appuyez sur 3.
+                </Say>
+                
+                <Gather numDigits="1" timeout="10" action="{webhook_url}">
+                    <Say voice="Polly.Celine" language="fr-FR">
+                        Votre choix s'il vous plaît.
+                    </Say>
+                </Gather>
+                
+                <Say voice="Polly.Celine" language="fr-FR">
+                    Merci pour votre attention. Un conseiller vous recontactera très prochainement. 
+                    Bonne journée !
                 </Say>
             </Response>
             """
@@ -187,21 +202,22 @@ class OSMOSEAgentTester:
                 twiml=twiml_content,
                 to=TEST_CLIENT_NUMBER,
                 from_=TWILIO_PHONE_NUMBER,
-                record=False  # Pas d'enregistrement pour les tests
+                record=False,
+                timeout=30  # Timeout pour réponse
             )
             
             self.log_result(
-                agent=f"{agent_name} 📞",
-                action="APPEL",
+                agent=f"{agent_name.title()} 📞",
+                action="APPEL INTERACTIF",
                 success=True,
-                message="Appel lancé avec succès",
-                details=f"Call SID: {call.sid}, Durée estimée: 30s"
+                message="Appel interactif lancé avec succès",
+                details=f"Call SID: {call.sid}, Conversation possible avec options"
             )
             return True
             
         except Exception as e:
             self.log_result(
-                agent=f"{agent_name} 📞",
+                agent=f"{agent_name.title()} 📞",
                 action="APPEL",
                 success=False,
                 message="Erreur appel",
