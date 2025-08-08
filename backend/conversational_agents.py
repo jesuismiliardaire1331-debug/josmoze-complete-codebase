@@ -62,85 +62,159 @@ class ConversationalAgent:
             self.conversation_memory[client_phone] = self.conversation_memory[client_phone][-20:]
     
     async def generate_intelligent_response(self, client_message: str, client_phone: str, client_name: str = "Client") -> str:
-        """Génère une réponse intelligente basée sur le message client"""
+        """Génère une réponse SMS ultra-optimisée avec intelligence conversationnelle maximale"""
         
         # Contexte de conversation
         conversation_context = self.get_conversation_context(client_phone)
         
-        # Détection des mots-clés pour inclure automatiquement le lien
+        # Analyse poussée des intentions client
         message_lower = client_message.lower()
-        keywords_need_link = ["prix", "coût", "tarif", "acheter", "commander", "info", "information", "site", "voir", "produit", "catalogue"]
-        needs_link = any(keyword in message_lower for keyword in keywords_need_link)
         
-        # Construction du prompt système avec directive lien
-        link_directive = f"IMPORTANT: Si approprié (surtout si le client demande prix, infos, produits), TOUJOURS inclure le lien {JOSMOSE_WEBSITE} de façon naturelle dans ta réponse." if needs_link else f"Inclus le lien {JOSMOSE_WEBSITE} si c'est pertinent pour aider le client."
+        # Catégories d'intentions avec mots-clés étendus
+        intentions = {
+            "prix_tarif": ["prix", "coût", "tarif", "combien", "€", "euros", "cher", "budget", "coûte"],
+            "info_produit": ["info", "information", "produit", "catalogue", "voir", "montre", "détails", "caractéristiques"],
+            "achat_commande": ["acheter", "commander", "commande", "veux", "voudrais", "prendre", "intéressé"],
+            "comparaison": ["comparai", "différence", "mieux", "quel", "lequel", "choisir", "conseil"],
+            "technique": ["technique", "fonctionne", "installation", "entretien", "filtre", "garantie"],
+            "urgence": ["urgent", "rapidement", "vite", "immédiat", "maintenant", "aujourd'hui"],
+            "hésitation": ["hésite", "réfléchis", "pas sûr", "doute", "peut-être", "voir"],
+            "positif": ["oui", "ok", "d'accord", "intéresse", "parfait", "bien", "merci"],
+            "négatif": ["non", "pas intéressé", "cher", "plus tard", "réfléchir"]
+        }
         
+        # Détection de l'intention principale
+        detected_intention = "general"
+        max_score = 0
+        for intention, keywords in intentions.items():
+            score = sum(1 for keyword in keywords if keyword in message_lower)
+            if score > max_score:
+                max_score = score
+                detected_intention = intention
+        
+        # Génération du prompt ultra-personnalisé selon l'agent ET l'intention
+        prompt_templates = {
+            "Thomas": {
+                "prix_tarif": f"Client demande les prix. Donne fourchette rapide (199€-599€) + lien {JOSMOSE_WEBSITE} pour devis personnalisé + question qualifiante sur besoins.",
+                "info_produit": f"Client veut des infos produits. Donne 2-3 avantages clés + lien {JOSMOSE_WEBSITE} pour catalogue + question sur usage prévu.",
+                "achat_commande": f"Client veut acheter. Félicite + guide vers {JOSMOSE_WEBSITE} pour choisir + question sur priorités (santé/goût/économie).",
+                "comparaison": f"Client compare. Donne notre différenciation unique + lien {JOSMOSE_WEBSITE} + question sur critères importants.",
+                "technique": f"Client question technique. Donne réponse experte concise + lien {JOSMOSE_WEBSITE} pour détails + propose échange téléphonique.",
+                "hésitation": f"Client hésite. Empathie + rassurance + petit bénéfice concret + lien {JOSMOSE_WEBSITE} + question ouverte.",
+                "positif": f"Client positif. Enthousiasme + prochaine étape concrète + lien {JOSMOSE_WEBSITE} + question progression.",
+                "général": f"Réponse empathique + question qualifiante + lien {JOSMOSE_WEBSITE} si approprié."
+            },
+            
+            "Sophie": {
+                "prix_tarif": f"Client demande prix. Fourchette + valeur/prix + lien {JOSMOSE_WEBSITE} pour configurateur + ROI/économies.",
+                "info_produit": f"Client infos. 3 bénéfices commerciaux + lien {JOSMOSE_WEBSITE} + question besoin urgent/prévu.",
+                "achat_commande": f"Client acheter. Closing doux + guide {JOSMOSE_WEBSITE} + urgence douce (stock/promo) + facilitation.",
+                "comparaison": f"Client compare. Avantages concurrentiels + preuve sociale + lien {JOSMOSE_WEBSITE} + question décision.",
+                "hésitation": f"Client hésite. Objection handling + rassurance + petit plus + lien {JOSMOSE_WEBSITE} + closing alternatif.",
+                "positif": f"Client positif. Momentum + action immédiate + lien {JOSMOSE_WEBSITE} + facilitation achat.",
+                "négatif": f"Client négatif. Empathie + reframe + bénéfice inattendu + lien {JOSMOSE_WEBSITE} + porte ouverte.",
+                "général": f"Approche consultative + qualification besoin + lien {JOSMOSE_WEBSITE} + question closing."
+            },
+            
+            "Marie": {
+                "prix_tarif": f"Client prix. Transparence + options financement + lien {JOSMOSE_WEBSITE} pour simulateur + accompagnement.",
+                "info_produit": f"Client infos. Service personnalisé + lien {JOSMOSE_WEBSITE} + proposition accompagnement choix.",
+                "achat_commande": f"Client commande. Accompagnement complet + lien {JOSMOSE_WEBSITE} + rassurance SAV.",
+                "technique": f"Client technique. Expertise + lien {JOSMOSE_WEBSITE} pour guides + support personnalisé.",
+                "hésitation": f"Client hésite. Écoute + compréhension + solutions personnalisées + lien {JOSMOSE_WEBSITE}.",
+                "général": f"Approche relationnelle + écoute + lien {JOSMOSE_WEBSITE} + proposition d'aide."
+            },
+            
+            "Julien": {
+                "prix_tarif": f"Client prix. Prix juste + économies long terme + lien {JOSMOSE_WEBSITE} + urgence stock/promo.",
+                "achat_commande": f"Client commande. Félicitations + facilitation maximum + lien {JOSMOSE_WEBSITE} + bonus/urgence.",
+                "hésitation": f"Client hésite. Levée objections + offre spéciale + lien {JOSMOSE_WEBSITE} + scarcité.",
+                "négatif": f"Client négatif. Dernière chance + offre exceptionnelle + lien {JOSMOSE_WEBSITE} + urgence.",
+                "général": f"Récupération + motivation + lien {JOSMOSE_WEBSITE} + incitation action."
+            },
+            
+            "Caroline": {
+                "technique": f"Client technique. Données précises + études/tests + lien {JOSMOSE_WEBSITE} pour documentation + expertise.",
+                "comparaison": f"Client compare. Analyses objectives + tableaux comparatifs + lien {JOSMOSE_WEBSITE} + recommandation data-driven.",
+                "info_produit": f"Client infos. Spécifications détaillées + performances + lien {JOSMOSE_WEBSITE} + tests personnalisés.",
+                "général": f"Approche analytique + données concrètes + lien {JOSMOSE_WEBSITE} + insights personnalisés."
+            }
+        }
+        
+        # Sélection du template approprié
+        agent_templates = prompt_templates.get(self.name, prompt_templates["Thomas"])
+        template = agent_templates.get(detected_intention, agent_templates.get("général", ""))
+        
+        # Construction du prompt ultra-optimisé
         base_directive = f"""
         Tu es {self.name}, {self.role} chez Josmose (purificateurs d'eau).
-        
         Personnalité: {self.personality}
         
-        DIRECTIVES STRICTES:
-        1. Réponds de manière naturelle et conversationnelle
-        2. Poses des questions pour qualifier le besoin si approprié
-        3. Utilise les stratégies de Schopenhauer subtilement et éthiquement
-        4. {link_directive}
-        5. Maximum 140 caractères pour SMS (important!)
-        6. Sois empathique et professionnel
-        7. Mémorise et utilise l'historique de conversation
-        8. Adapte ta réponse au contexte et aux besoins exprimés
-        9. Si client demande prix/tarif, donne info rapide ET lien pour détails
-        10. Guide toujours vers une action concrète (visite site, appel, rdv)
+        CLIENT: {client_name}
+        INTENTION DÉTECTÉE: {detected_intention}
+        MESSAGE CLIENT: "{client_message}"
         
-        HISTORIQUE CONVERSATION:
+        CONTEXT PRÉCÉDENT:
         {conversation_context}
         
-        MESSAGE DU CLIENT: "{client_message}"
+        DIRECTIVE SPÉCIALISÉE:
+        {template}
         
-        Réponds intelligemment et de manière personnalisée à {client_name}.
-        INCLUS le lien {JOSMOSE_WEBSITE} naturellement si approprié.
+        RÈGLES SMS OPTIMALES:
+        1. Maximum 140 caractères (strict!)
+        2. Ton personnalisé selon ton rôle
+        3. TOUJOURS inclure lien {JOSMOSE_WEBSITE} si approprié à l'intention
+        4. Question engageante pour continuer conversation
+        5. Action concrète suggérée
+        6. Urgence douce si approprié
+        7. Personnalisation avec nom client
+        8. Éviter répétitions avec historique
+        
+        Génère la réponse SMS PARFAITE pour cette intention et ce contexte.
         """
         
         try:
             response = client.chat.completions.create(
-                model="gpt-4o-mini",  # Plus rapide et moins cher pour SMS
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": base_directive},
-                    {"role": "user", "content": f"Client {client_name}: {client_message}"}
+                    {"role": "user", "content": f"Génère le SMS parfait pour {client_name}"}
                 ],
-                max_tokens=120,  # Plus court pour SMS avec lien
-                temperature=0.7
+                max_tokens=80,  # Plus court pour forcer concision
+                temperature=0.8
             )
             
             intelligent_response = response.choices[0].message.content.strip()
             
-            # Force l'inclusion du lien si mots-clés critiques détectés
-            if needs_link and JOSMOSE_WEBSITE not in intelligent_response:
-                # Ajout automatique du lien si l'IA l'a oublié
-                if len(intelligent_response) < 80:  # Assez de place
-                    intelligent_response += f" Voir: {JOSMOSE_WEBSITE}"
+            # Post-traitement pour optimisation finale
+            # Forcer inclusion lien si intention critique et pas présent
+            critical_intentions = ["prix_tarif", "info_produit", "achat_commande", "comparaison", "technique"]
+            if detected_intention in critical_intentions and JOSMOSE_WEBSITE not in intelligent_response:
+                if len(intelligent_response) < 90:  # Assez de place
+                    intelligent_response += f" → {JOSMOSE_WEBSITE}"
                 else:
-                    # Remplacer une partie pour faire de la place
-                    intelligent_response = intelligent_response[:60] + f"... Détails: {JOSMOSE_WEBSITE}"
+                    # Compresser pour faire de la place
+                    intelligent_response = intelligent_response[:70] + f"... → {JOSMOSE_WEBSITE}"
             
-            # Sauvegarder la conversation
+            # Sauvegarder conversation avec métadonnées
             self.save_message(client_phone, f"Client ({client_name})", client_message)
-            self.save_message(client_phone, f"{self.name}", intelligent_response)
+            self.save_message(client_phone, f"{self.name} [{detected_intention}]", intelligent_response)
             
             return intelligent_response
             
         except Exception as e:
             print(f"❌ Erreur IA: {str(e)}")
             
-            # Réponses de secours avec lien automatique
-            fallback_responses = {
-                "Thomas": f"Merci {client_name} ! Questions sur l'eau importantes. Détails: {JOSMOSE_WEBSITE} ou appelez-nous ! 💧",
-                "Sophie": f"Parfait {client_name} ! Prix et devis personnalisés: {JOSMOSE_WEBSITE} 📞",
-                "Marie": f"Bonjour {client_name} 😊 Toutes nos infos: {JOSMOSE_WEBSITE} ✨",
-                "Julien": f"{client_name}, finalisez rapidement: {JOSMOSE_WEBSITE} 🛒",
-                "Caroline": f"Analyses complètes {client_name}: {JOSMOSE_WEBSITE} 📊"
+            # Réponses de secours ultra-optimisées par intention
+            emergency_responses = {
+                "prix_tarif": f"{client_name}, nos purificateurs 199-599€ selon besoins. Devis: {JOSMOSE_WEBSITE} Votre budget ?",
+                "info_produit": f"{client_name}, découvrez notre gamme: {JOSMOSE_WEBSITE} Quelle eau purifiez-vous ?",
+                "achat_commande": f"Parfait {client_name} ! Choisissez votre modèle: {JOSMOSE_WEBSITE} Installation quand ?",
+                "hésitation": f"Je comprends {client_name}. Essai gratuit 30j: {JOSMOSE_WEBSITE} Questions ?",
+                "général": f"Merci {client_name} ! Toutes nos solutions: {JOSMOSE_WEBSITE} Puis-je vous aider ?"
             }
-            return fallback_responses.get(self.name, f"Merci {client_name} ! Infos: {JOSMOSE_WEBSITE}")
+            
+            return emergency_responses.get(detected_intention, f"Merci {client_name} ! Infos: {JOSMOSE_WEBSITE}")
     
     async def send_intelligent_sms(self, to_number: str, client_message: str, client_name: str = "Client") -> bool:
         """Envoie une réponse SMS intelligente"""
