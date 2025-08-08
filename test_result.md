@@ -188,8 +188,13 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "SMS Ultra-Optimization"
+    - "Sophie Agent Call Deactivation"  
+    - "SMS Link Redirection Fix"
+    - "Acheter Button Fix"
+  stuck_tasks:
+    - "Twilio Daily SMS Limit Reached"
   test_all: false
   test_priority: "high_first"
 
