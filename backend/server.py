@@ -1933,8 +1933,8 @@ async def initialize_products():
         {
             "id": "osmoseur-principal",
             "name": "Fontaine à Eau Osmosée BlueMountain",
-            "description": "Système d'osmose inverse professionnel BlueMountain. Production 380L/jour (16L/h). Eau chaude, froide et tempérée. Membrane 100GPD encapsulée. Prix spécial : 499€ au lieu de 599€.",
-            "price": 499.0,
+            "description": "Système d'osmose inverse professionnel BlueMountain. Production 380L/jour (16L/h). Eau chaude, froide et tempérée. Membrane 100GPD encapsulée. Prix spécial : 479€ au lieu de 599€.",
+            "price": 479.0,
             "original_price": 599.0,
             "image": "https://www.josmose.fr/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
             "category": "osmoseur",
