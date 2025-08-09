@@ -1206,7 +1206,7 @@ async def get_team_contacts():
             {
                 "name": "Antonio",
                 "position": "Manager", 
-                "email": "antonio@josmose.com",
+                "email": "antonio@josmoze.com",
                 "department": "Direction Commerciale",
                 "speciality": "Management et prospection"
             }
