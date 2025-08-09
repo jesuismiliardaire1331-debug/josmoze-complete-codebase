@@ -44,8 +44,15 @@ const ChatBot = () => {
 
   useEffect(() => {
     if (isOpen && !hasShownWelcome) {
-      const currentLang = window.i18n?.language?.startsWith('fr') ? 'fr' : 'en';
-      const welcome = welcomeMessages[currentLang];
+      // Détecter la langue automatiquement
+      const currentLang = window.i18n?.language || 'fr';
+      const isFrench = currentLang.startsWith('fr') || 
+                      window.location.pathname.includes('/fr') ||
+                      localStorage.getItem('i18nextLng')?.startsWith('fr') ||
+                      true; // Par défaut français pour JOSMOSE.COM
+      
+      const currentLangCode = isFrench ? 'fr' : 'en';
+      const welcome = welcomeMessages[currentLangCode];
       
       setMessages([
         {
