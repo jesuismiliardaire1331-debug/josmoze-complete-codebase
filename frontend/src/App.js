@@ -21,6 +21,9 @@ import ProductRecommendations from "./ProductRecommendations";
 // Import ChatBot
 import ChatBot from "./ChatBot";
 
+// Import Translation Guardian  
+import TranslationGuardian from "./TranslationGuardian";
+
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
