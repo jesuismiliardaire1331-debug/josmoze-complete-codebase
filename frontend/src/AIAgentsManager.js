@@ -8,7 +8,7 @@ const AIAgentsManager = () => {
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('dashboard');
 
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://josmoze.com';
 
     // Load dashboard data
     useEffect(() => {

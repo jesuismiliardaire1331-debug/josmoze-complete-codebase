@@ -1,0 +1,40 @@
+{
+  "project": "JOSMOSE.COM",
+  "domain": "josmoze.com",
+  "prepared_at": "2025-08-09T20:08:48.088341",
+  "environment": "production",
+  "version": "1.0.0",
+  "components": {
+    "frontend": {
+      "framework": "React",
+      "build_command": "yarn build",
+      "output_dir": "build/",
+      "port": 3000
+    },
+    "backend": {
+      "framework": "FastAPI",
+      "start_command": "python3 server.py",
+      "port": 8001,
+      "database": "MongoDB (josmoze_production)"
+    },
+    "ai_agents": {
+      "openai_integration": true,
+      "twilio_integration": true,
+      "agents_count": 5,
+      "operating_hours": "9h-18h (Mon-Fri) + 24/7 (prospecting)"
+    }
+  },
+  "services": {
+    "web_server": "Nginx",
+    "process_manager": "Supervisor",
+    "ssl": "Let's Encrypt",
+    "firewall": "UFW"
+  },
+  "contacts": [
+    "naima@josmoze.com",
+    "aziza@josmoze.com",
+    "antonio@josmoze.com",
+    "commercial@josmoze.com",
+    "support@josmoze.com"
+  ]
+}

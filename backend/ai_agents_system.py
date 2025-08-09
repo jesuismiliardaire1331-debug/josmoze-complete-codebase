@@ -605,7 +605,7 @@ async def get_ai_agent_system():
     
     if ai_agent_system is None:
         mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
-        db_name = os.environ.get('DB_NAME', 'test_database')
+        db_name = os.environ.get('DB_NAME', 'josmoze_production')
         ai_agent_system = AIAgentSystem(mongo_url, db_name)
         
     return ai_agent_system
