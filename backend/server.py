@@ -75,7 +75,7 @@ app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://josmose.com"],
+    allow_origins=["http://localhost:3000", "https://josmoze.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
