@@ -184,13 +184,16 @@ const Header = () => {
   
   const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
+  // Force domain display to josmoze.com even in development
+  const displayDomain = "www.josmoze.com";
+
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
             <h1 className="text-2xl font-bold text-blue-600">
-              Josmoze.com
+              {displayDomain}
             </h1>
             <span className="ml-3 text-sm text-gray-600">
               💧 {t('hero.subtitle', 'Filtration professionnelle')}
