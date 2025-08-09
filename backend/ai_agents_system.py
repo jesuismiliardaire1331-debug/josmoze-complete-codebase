@@ -227,9 +227,9 @@ class AIAgentSystem:
             ]
         )
         
-        # Platon 📊 - Agent Analytics & Intelligence Prédictive
-        self.agents["platon"] = AgentConfig(
-            name="Platon 📊",
+        # Caroline 👩‍💼 - Agent Analytics & Intelligence Prédictive
+        self.agents["caroline"] = AgentConfig(
+            name="Caroline 👩‍💼",
             specialty="Analytics avancés et intelligence prédictive", 
             model_provider="openai",
             model_name="gpt-4o",
