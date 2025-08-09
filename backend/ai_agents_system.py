@@ -206,9 +206,9 @@ class AIAgentSystem:
             ]
         )
         
-        # Démosthène 🛒 - Agent Paniers Abandonnés
-        self.agents["demosthene"] = AgentConfig(
-            name="Démosthène 🛒", 
+        # Julien 👨‍💼 - Agent Paniers Abandonnés
+        self.agents["julien"] = AgentConfig(
+            name="Julien 👨‍💼", 
             specialty="Récupération paniers abandonnés - Expert urgence",
             model_provider="openai",
             model_name="gpt-4o",
