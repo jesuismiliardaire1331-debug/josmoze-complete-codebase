@@ -2402,6 +2402,14 @@ async def startup_db():
     global security_audit_agent  
     security_audit_agent = get_security_audit_agent(db)
     
+    # 🌐 Démarrage automatique du Translation Guardian Agent 24/7
+    logging.info("🌐 Démarrage automatique du Translation Guardian Agent...")
+    try:
+        await start_translation_guardian_task()
+        logging.info("✅ Translation Guardian Agent started")
+    except Exception as e:
+        logging.error(f"❌ Failed to start Translation Guardian: {e}")
+    
     # 🛡️ Démarrage automatique de l'agent de surveillance marque 24/7
     logging.info("🛡️ Démarrage automatique de l'agent de surveillance marque...")
     start_monitoring_task()
