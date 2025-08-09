@@ -2913,7 +2913,7 @@ async def interact_with_agent(
     interaction_data: Dict[str, Any],
     current_user: User = Depends(require_role(["manager", "agent"]))
 ):
-    """🗣️ Interagir avec un agent IA spécifique (Socrate, Aristote, Cicéron, Démosthène, Platon)"""
+    """🗣️ Interagir avec un agent IA spécifique (Thomas, Sophie, Marie, Julien, Caroline)"""
     try:
         ai_system = await get_ai_agent_system()
         
