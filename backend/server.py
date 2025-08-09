@@ -3178,7 +3178,7 @@ async def trigger_abandoned_cart_recovery(
             "recovery_attempted": {"$ne": True}
         }).limit(20).to_list(20)
         
-        # Processus de récupération avec Démosthène
+        # Processus de récupération avec Julien
         recovery_results = []
         for cart in abandoned_carts:
             try:
