@@ -3191,7 +3191,7 @@ async def trigger_abandoned_cart_recovery(
                     "cart_value": cart.get("total_amount", 0)
                 }
                 
-                # Interaction avec Démosthène
+                # Interaction avec Julien
                 result = await ai_system.process_client_interaction(
                     client_data=client_data,
                     agent_name="demosthene",
