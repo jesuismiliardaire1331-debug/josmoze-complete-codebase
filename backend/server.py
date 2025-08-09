@@ -789,37 +789,46 @@ async def chatbot_response(
         message = data.get('message', '')
         agent = data.get('agent', 'thomas')  # Par défaut Thomas
         context = data.get('context', 'website_chat')
+        language = data.get('language', 'french')  # Par défaut français pour JOSMOSE
         
         if not message:
             raise HTTPException(status_code=400, detail="Message requis")
         
+        # Log pour debug
+        logging.info(f"🤖 ChatBot request: message='{message}', language='{language}', agent='{agent}'")
+        
         # Obtenir le système d'agents IA
         ai_system = get_ai_agent_system()
         
-        # Messages de base selon le contexte
-        responses_fr = {
-            'purification': "💧 L'osmose inverse élimine 99% des contaminants : chlore, métaux lourds, bactéries, pesticides. C'est la technologie la plus avancée pour une eau pure !",
-            'prix': "💰 Notre osmoseur principal est à 499€ au lieu de 899€. Installation incluse + garantie 2 ans. Voulez-vous découvrir les détails ?",
-            'fonctionnement': "🔧 L'eau passe par 5 filtres successifs puis une membrane ultra-fine. Résultat : une eau pure comme en bouteille, directement au robinet !",
-            'installation': "🛠️ Installation simple en 2h par notre équipe. Nous nous occupons de tout : raccordement, tests, formation. Aucun stress pour vous !",
-            'garantie': "✅ Garantie 2 ans complète + SAV dédié. Si problème : intervention sous 48h. Satisfaction garantie ou remboursé !",
-            'contact': "📞 Parfait ! Notre équipe est disponible au 01.XX.XX.XX.XX ou par email à commercial@josmoze.com. Préférez-vous être rappelé ?",
-            'default': f"🤔 Excellente question ! Je suis Thomas, spécialiste en purification d'eau. Puis-je vous expliquer comment nos osmoseurs transforment votre eau du robinet en eau pure ?"
-        }
+        # Détecter automatiquement la langue si non spécifiée
+        is_french = language == 'french' or any(word in message.lower() for word in [
+            'bonjour', 'salut', 'prix', 'comment', 'ça', 'marche', 'français', 'merci',
+            'osmoseur', 'eau', 'pure', 'système', 'garantie', 'installation'
+        ])
         
-        responses_en = {
-            'purification': "💧 Reverse osmosis removes 99% of contaminants: chlorine, heavy metals, bacteria, pesticides. It's the most advanced technology for pure water!",
-            'prix': "💰 Our main osmosis system is €499 instead of €899. Installation included + 2-year warranty. Would you like to see the details?",
-            'fonctionnement': "🔧 Water passes through 5 successive filters then an ultra-fine membrane. Result: bottled-quality water directly from your tap!",
-            'installation': "🛠️ Simple 2-hour installation by our team. We handle everything: connection, testing, training. No stress for you!",
-            'garantie': "✅ Complete 2-year warranty + dedicated support. If problems: intervention within 48h. Satisfaction guaranteed or money back!",
-            'contact': "📞 Perfect! Our team is available at 01.XX.XX.XX.XX or email commercial@josmoze.com. Would you prefer to be called back?",
-            'default': f"🤔 Great question! I'm Thomas, water purification specialist. Can I explain how our osmosis systems transform your tap water into pure water?"
-        }
-        
-        # Détecter la langue (simple heuristique)
-        is_french = any(word in message.lower() for word in ['bonjour', 'salut', 'prix', 'comment', 'ça', 'fonctionne', 'marche', 'français'])
-        responses = responses_fr if is_french else responses_en
+        # Messages de base selon la langue détectée
+        if is_french:
+            responses_fr = {
+                'purification': "💧 L'osmose inverse élimine 99% des contaminants : chlore, métaux lourds, bactéries, pesticides. C'est la technologie la plus avancée pour une eau pure !",
+                'prix': "💰 Notre osmoseur principal est à 499€ au lieu de 899€. Installation incluse + garantie 2 ans. Voulez-vous découvrir les détails ?",
+                'fonctionnement': "🔧 L'eau passe par 5 filtres successifs puis une membrane ultra-fine. Résultat : une eau pure comme en bouteille, directement au robinet !",
+                'installation': "🛠️ Installation simple en 2h par notre équipe. Nous nous occupons de tout : raccordement, tests, formation. Aucun stress pour vous !",
+                'garantie': "✅ Garantie 2 ans complète + SAV dédié. Si problème : intervention sous 48h. Satisfaction garantie ou remboursé !",
+                'contact': "📞 Parfait ! Notre équipe est disponible au 01.XX.XX.XX.XX ou par email à commercial@josmoze.com. Préférez-vous être rappelé ?",
+                'default': f"🤔 Excellente question ! Je suis Thomas, spécialiste en purification d'eau. Puis-je vous expliquer comment nos osmoseurs transforment votre eau du robinet en eau pure ?"
+            }
+            responses = responses_fr
+        else:
+            responses_en = {
+                'purification': "💧 Reverse osmosis removes 99% of contaminants: chlorine, heavy metals, bacteria, pesticides. It's the most advanced technology for pure water!",
+                'prix': "💰 Our main osmosis system is €499 instead of €899. Installation included + 2-year warranty. Would you like to see the details?",
+                'fonctionnement': "🔧 Water passes through 5 successive filters then an ultra-fine membrane. Result: bottled-quality water directly from your tap!",
+                'installation': "🛠️ Simple 2-hour installation by our team. We handle everything: connection, testing, training. No stress for you!",
+                'garantie': "✅ Complete 2-year warranty + dedicated support. If problems: intervention within 48h. Satisfaction guaranteed or money back!",
+                'contact': "📞 Perfect! Our team is available at 01.XX.XX.XX.XX or email commercial@josmoze.com. Would you prefer to be called back?",
+                'default': f"🤔 Great question! I'm Thomas, water purification specialist. Can I explain how our osmosis systems transform your tap water into pure water?"
+            }
+            responses = responses_en
         
         # Analyser le message pour donner une réponse appropriée
         message_lower = message.lower()
