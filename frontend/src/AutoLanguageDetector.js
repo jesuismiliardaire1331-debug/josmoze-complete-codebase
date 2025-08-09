@@ -108,24 +108,7 @@ const AutoLanguageDetector = () => {
     return () => clearTimeout(timer);
   }, []); // Exécuter seulement au montage
 
-  // Composant de debug (visible seulement en dev)
-  if (process.env.NODE_ENV === 'development' && debugInfo) {
-    return (
-      <div className="fixed bottom-4 right-4 bg-black bg-opacity-80 text-white p-3 rounded-lg text-xs z-50 max-w-sm">
-        <div className="font-bold mb-2">🔍 Debug: Détection automatique</div>
-        <div>IP: {debugInfo.ip_address || 'N/A'}</div>
-        <div>Pays détecté: {debugInfo.detected_country}</div>
-        <div>Langue détectée: {debugInfo.detected_language}</div>
-        <div>Langue actuelle: {debugInfo.current_language}</div>
-        <div>Devise: {debugInfo.currency?.code || 'N/A'}</div>
-        {debugInfo.fallback_used && <div className="text-yellow-300">⚠️ Fallback utilisé</div>}
-        {debugInfo.error && <div className="text-red-300">❌ {debugInfo.error}</div>}
-        <div className="text-gray-300 mt-1">
-          {detectionComplete ? '✅ Détection terminée' : '⏳ En cours...'}
-        </div>
-      </div>
-    );
-  }
+  // Debug complètement supprimé en production
 
   // En production, ne rien afficher
   return null;
