@@ -164,9 +164,9 @@ class AIAgentSystem:
             ]
         )
         
-        # Aristote 📞 - Agent Calls Commercial (9h-18h)
-        self.agents["aristote"] = AgentConfig(
-            name="Aristote 📞",
+        # Sophie 👩‍💼 - Agent Calls Commercial (9h-18h) - DÉSACTIVÉ POUR FOCUS SMS
+        self.agents["sophie"] = AgentConfig(
+            name="Sophie 👩‍💼",
             specialty="Appels commerciaux et gestion objections",
             model_provider="openai", 
             model_name="gpt-4o",
