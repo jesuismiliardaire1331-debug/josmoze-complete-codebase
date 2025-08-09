@@ -154,7 +154,7 @@ backend:
           comment: "🚨 PROBLÈME CRITIQUE: Test SMS réel révèle que www.josmose.com ET josmose.com ne fonctionnent pas! Client reçoit 'Unable to connect' quand il clique sur lien SMS. Domaines non configurés ou inaccessibles. URGENT: Revenir à URL fonctionnelle preview.emergentagent.com temporairement."
         - working: true
           agent: "main"
-          comment: "✅ CORRECTION URGENTE: Restauré URL fonctionnelle https://0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com dans tous fichiers. Tests confirment que cette URL fonctionne (HTTP 200). Clients peuvent maintenant accéder au site via liens SMS. À terme, configurer proprement josmose.com."
+          comment: "✅ CORRECTION URGENTE: Restauré URL fonctionnelle https://0881b34d-7b4f-447e-9597-bafb3efaa24b.preview.emergentagent.com dans tous fichiers. Tests confirment que cette URL fonctionne (HTTP 200). Clients peuvent maintenant accéder au site via liens SMS. À terme, configurer proprement josmose.com."
 
   - task: "SMS Ultra-Optimization"
     implemented: true

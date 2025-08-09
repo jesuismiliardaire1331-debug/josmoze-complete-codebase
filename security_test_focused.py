@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = "https://0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com/api"
+BACKEND_URL = "https://0881b34d-7b4f-447e-9597-bafb3efaa24b.preview.emergentagent.com/api"
 
 class SecurityTester:
     def __init__(self):
