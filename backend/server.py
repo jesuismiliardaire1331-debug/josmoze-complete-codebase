@@ -3148,10 +3148,10 @@ async def get_agents_performance_analytics(
                 "personality_insights": personality_conversion,
                 "schopenhauer_strategies_effectiveness": strategy_performance,
                 "recommendations": [
-                    "🎯 Cicéron excelle avec les clients AMICAL - intensifiez l'usage",
-                    "⚡ Aristote performant sur SKEPTIQUE - augmentez les créneaux calls",
-                    "🛒 Démosthène récupère 87% paniers - optimisez le timing",
-                    "📊 Platon identifie 3 patterns émergents - exploitez les insights"
+                    "🎯 Marie excelle avec les clients AMICAL - intensifiez l'usage",
+                    "⚡ Sophie performante sur SKEPTIQUE - focus SMS optimisé",
+                    "🛒 Julien récupère 87% paniers - optimisez le timing",
+                    "📊 Caroline identifie 3 patterns émergents - exploitez les insights"
                 ]
             }
         }
