@@ -3165,7 +3165,7 @@ async def trigger_abandoned_cart_recovery(
     recovery_data: Dict[str, Any],
     current_user: User = Depends(require_role(["manager", "agent"]))
 ):
-    """🛒 Déclencher récupération panier abandonné avec Démosthène"""
+    """🛒 Déclencher récupération panier abandonné avec Julien"""
     try:
         ai_system = await get_ai_agent_system()
         
