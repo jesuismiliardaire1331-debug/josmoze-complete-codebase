@@ -1228,8 +1228,8 @@ async def get_team_contacts():
             }
         ],
         "contact_general": {
-            "website": "josmose.com",
-            "domain": "@josmose.com",
+            "website": "josmoze.com",
+            "domain": "@josmoze.com",
             "headquarters": "France",
             "business_hours": "Lundi-Vendredi 9h-18h"
         }
