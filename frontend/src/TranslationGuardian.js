@@ -294,8 +294,8 @@ const TranslationGuardianComponent = () => {
     }
   }, []);
 
-  // Development UI (only show in development)
-  if (process.env.NODE_ENV === 'development' && guardianStatus) {
+  // Development UI (COMPLETEMENT SUPPRIME EN PRODUCTION)
+  if (process.env.NODE_ENV === 'development' && process.env.REACT_APP_DEBUG_TRANSLATION && guardianStatus) {
     return (
       <div className="fixed bottom-20 right-4 bg-green-800 bg-opacity-90 text-white p-3 rounded-lg text-xs z-40 max-w-xs">
         <div className="font-bold mb-2">🛡️ Translation Guardian</div>
