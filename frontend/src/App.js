@@ -530,40 +530,41 @@ const CustomerTypeHandler = () => {
 
 const Features = () => {
   const { customerType } = useApp();
+  const { t } = useTranslation();
 
   const b2cFeatures = [
     {
       icon: "🦠",
-      title: "Élimination Totale",
-      description: "Supprime 99% des virus, bactéries, chlore et particules organiques grâce à notre système 4 étapes."
+      title: t('features.elimination.title', "Élimination Totale"),
+      description: t('features.elimination.description', "Supprime 99% des virus, bactéries, chlore et particules organiques grâce à notre système 4 étapes.")
     },
     {
       icon: "⚡",
-      title: "Installation Simple",
-      description: "Aucun électricien nécessaire! Installation rapide sans électricité, utilise uniquement la pression du réseau."
+      title: t('features.installation.title', "Installation Simple"),
+      description: t('features.installation.description', "Aucun électricien nécessaire! Installation rapide sans électricité, utilise uniquement la pression du réseau.")
     },
     {
       icon: "💰", 
-      title: "Économies Garanties",
-      description: "Économisez 500-700€ par an en supprimant l'achat de bouteilles d'eau. Rentabilité en moins d'un an."
+      title: t('features.savings.title', "Économies Garanties"),
+      description: t('features.savings.description', "Économisez 500-700€ par an en supprimant l'achat de bouteilles d'eau. Rentabilité en moins d'un an.")
     }
   ];
 
   const b2bFeatures = [
     {
       icon: "🏭",
-      title: "Capacité Industrielle", 
-      description: "Systèmes haute capacité pour restaurants, bureaux et commerces. Jusqu'à 500L/jour de production."
+      title: t('features.b2b.capacity.title', "Capacité Industrielle"), 
+      description: t('features.b2b.capacity.description', "Systèmes haute capacité pour restaurants, bureaux et commerces. Jusqu'à 500L/jour de production.")
     },
     {
       icon: "📊",
-      title: "Monitoring Avancé",
-      description: "Surveillance en temps réel de la qualité, alerts automatiques et maintenance prédictive incluse."
+      title: t('features.b2b.monitoring.title', "Monitoring Avancé"),
+      description: t('features.b2b.monitoring.description', "Surveillance en temps réel de la qualité, alerts automatiques et maintenance prédictive incluse.")
     },
     {
       icon: "🛠️",
-      title: "Support Dédié",
-      description: "Installation professionnelle, formation personnel et maintenance 24/7 avec techniciens certifiés."
+      title: t('features.b2b.support.title', "Support Dédié"),
+      description: t('features.b2b.support.description', "Installation professionnelle, formation personnel et maintenance 24/7 avec techniciens certifiés.")
     }
   ];
 
@@ -574,8 +575,8 @@ const Features = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
           {customerType === 'B2B' 
-            ? 'Pourquoi Choisir Nos Solutions Pro? 💼' 
-            : 'Pourquoi Choisir Nos Systèmes? 🌟'
+            ? t('features.title.b2b', 'Pourquoi Choisir Nos Solutions Pro? 💼')
+            : t('features.title.b2c', 'Pourquoi Choisir Nos Systèmes? 🌟')
           }
         </h2>
         
