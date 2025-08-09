@@ -1192,7 +1192,7 @@ async def get_team_contacts():
             {
                 "name": "Naima",
                 "position": "Manager", 
-                "email": "naima@josmose.com",
+                "email": "naima@josmoze.com",
                 "department": "Direction Commerciale",
                 "speciality": "Management et développement commercial"
             },
