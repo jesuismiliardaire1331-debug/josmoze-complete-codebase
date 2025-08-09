@@ -3225,7 +3225,7 @@ async def trigger_abandoned_cart_recovery(
             "abandoned_cart_recovery": {
                 "targeted_carts": len(abandoned_carts),
                 "recovery_attempts": len(recovery_results),
-                "agent_used": "Démosthène 🛒",
+                "agent_used": "Julien 👨‍💼",
                 "threshold_hours": hours_threshold,
                 "results": recovery_results
             },
