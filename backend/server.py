@@ -2906,6 +2906,73 @@ async def update_social_media_account(
         raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour du compte")
 
 
+# API endpoint pour contrôler le Translation Guardian
+@app.get("/api/translation-guardian/status")
+async def translation_guardian_status(
+    request: Request
+):
+    """Obtenir le statut du Translation Guardian Agent"""
+    try:
+        stats = get_guardian_stats()
+        return {
+            "status": "active",
+            "stats": stats,
+            "message": "Translation Guardian is monitoring translations"
+        }
+    except Exception as e:
+        logging.error(f"Erreur statut Translation Guardian: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/translation-guardian/check")
+async def translation_guardian_check(
+    request: Request,
+    data: dict
+):
+    """Vérifier et corriger les traductions d'un contenu"""
+    try:
+        content = data.get('content', {})
+        language = data.get('language', 'english')
+        
+        if not content:
+            raise HTTPException(status_code=400, detail="Content requis")
+        
+        result = await check_content_translation(content, language)
+        
+        return {
+            "check_result": result,
+            "guardian_status": get_guardian_stats(),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur vérification Translation Guardian: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/translation-guardian/force-retranslation")  
+async def translation_guardian_force_retranslation(
+    request: Request,
+    data: dict
+):
+    """Forcer la retraduction complète d'un contenu"""
+    try:
+        content = data.get('content', {})
+        language = data.get('language', 'english')
+        
+        if not content:
+            raise HTTPException(status_code=400, detail="Content requis")
+        
+        result = await force_content_retranslation(content, language)
+        
+        return {
+            "retranslated_content": result,
+            "guardian_status": get_guardian_stats(),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur retraduction forcée: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ========== PROTECTED CRM ENDPOINTS ==========
 
 @crm_router.get("/dashboard/advanced")
