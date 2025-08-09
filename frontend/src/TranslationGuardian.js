@@ -157,7 +157,7 @@ class TranslationGuardian {
     const textNodes = [];
     let node;
     
-    while (node = walker.nextNode()) {
+    while ((node = walker.nextNode())) {
       if (node.nodeValue.includes(originalText)) {
         textNodes.push(node);
       }
