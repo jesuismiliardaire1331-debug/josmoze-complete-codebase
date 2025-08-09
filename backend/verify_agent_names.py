@@ -15,7 +15,7 @@ async def verify_agent_renaming():
     print("=" * 50)
     
     # Obtenir le système d'agents
-    agent_system = get_ai_agent_system()
+    agent_system = await get_ai_agent_system()
     
     # Noms attendus
     expected_agents = {
