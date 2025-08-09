@@ -134,7 +134,7 @@ class AutoProspector:
         Ton: {tone}
         
         Génère un email personnalisé de 150-200 mots pour ce prospect.
-        Inclus le lien vers josmose.com.
+        Inclus le lien vers josmoze.com.
         Mentionne les économies de 700€/an.
         Adapte le message à sa catégorie d'activité.
         """

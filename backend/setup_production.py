@@ -23,7 +23,7 @@ async def setup_production_config():
     # Configuration production
     production_config = {
         "environment": "production",
-        "domain": "josmose.com",  # À configurer avec le vrai domaine
+        "domain": "josmoze.com",  # À configurer avec le vrai domaine
         "company": {
             "name": "Josmose",
             "countries": ["FR", "ES", "BE"],  # France, Espagne, Belgique
@@ -37,19 +37,19 @@ async def setup_production_config():
         "team": {
             "managers": [
                 {
-                    "email": "aziza@josmose.com",
+                    "email": "aziza@josmoze.com",
                     "name": "Aziza",
                     "role": "manager",
                     "status": "active"
                 },
                 {
-                    "email": "naima@josmose.com", 
+                    "email": "naima@josmoze.com", 
                     "name": "Naima",
                     "role": "manager",
                     "status": "active"
                 },
                 {
-                    "email": "antonio@josmose.com",
+                    "email": "antonio@josmoze.com",
                     "name": "Antonio", 
                     "role": "manager",
                     "status": "active"

@@ -127,7 +127,7 @@ const ProductExplanation = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="https://www.josmose.fr/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png"
+                  src="https://www.josmoze.com/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png"
                   alt="Schéma système osmose inverse BlueMountain"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
@@ -310,7 +310,7 @@ const ProductExplanation = () => {
             {/* Image comparative eau pure/impure */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6 text-center">
               <img 
-                src="https://www.josmose.fr/img/cms/eau-pure-et-impure.png"
+                src="https://www.josmoze.com/img/cms/eau-pure-et-impure.png"
                 alt="Comparaison eau pure et impure"
                 className="w-full h-auto rounded-lg mb-4"
               />
@@ -348,7 +348,7 @@ const ProductExplanation = () => {
           {/* Image des bactéries */}
           <div className="text-center mb-8">
             <img 
-              src="https://www.josmose.fr/img/cms/bacteries-dans-leau.png"
+              src="https://www.josmoze.com/img/cms/bacteries-dans-leau.png"
               alt="Bactéries et micro-organismes dans l'eau"
               className="mx-auto h-48 object-contain rounded-lg shadow-md"
             />
@@ -410,7 +410,7 @@ const ProductExplanation = () => {
             <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-lg">
               <div className="text-center mb-6">
                 <img 
-                  src="https://www.josmose.fr/2570-large_default/fontaine-osmoseur-minibluesea.jpg"
+                  src="https://www.josmoze.com/2570-large_default/fontaine-osmoseur-minibluesea.jpg"
                   alt="Fontaine BlueMountain"
                   className="w-full h-64 object-contain rounded-lg mb-4"
                 />

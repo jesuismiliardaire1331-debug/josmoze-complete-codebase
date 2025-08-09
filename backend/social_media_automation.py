@@ -1,5 +1,5 @@
 """
-Josmose.com - Social Media Marketing Automation System
+Josmoze.com - Social Media Marketing Automation System
 Système d'automatisation marketing Facebook, Instagram, TikTok
 Génération automatique de contenu, campagnes et leads
 """
@@ -100,7 +100,7 @@ class SocialMediaMetrics(BaseModel):
 # ========== SOCIAL MEDIA AUTOMATION CLASS ==========
 
 class SocialMediaAutomation:
-    """Gestionnaire d'automatisation des réseaux sociaux pour Josmose.com"""
+    """Gestionnaire d'automatisation des réseaux sociaux pour Josmoze.com"""
     
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
@@ -149,7 +149,7 @@ class SocialMediaAutomation:
         self.content_templates = {
             "facebook": {
                 "fr": {
-                    "post_template": "🌊 Découvrez l'eau pure avec Josmose ! \n\n✅ Élimine 99% des contaminants\n💧 Goût exceptionnel\n🏠 Installation facile\n💰 Prix spécial Europe: €{price}\n\n👉 Commandez maintenant sur josmose.com\n#EauPure #Santé #Josmose #France",
+                    "post_template": "🌊 Découvrez l'eau pure avec Josmose ! \n\n✅ Élimine 99% des contaminants\n💧 Goût exceptionnel\n🏠 Installation facile\n💰 Prix spécial Europe: €{price}\n\n👉 Commandez maintenant sur josmoze.com\n#EauPure #Santé #Josmose #France",
                     "ad_headlines": [
                         "Eau Pure pour Toute la Famille 💧",
                         "Technologie d'Osmose Inverse Avancée",
@@ -157,7 +157,7 @@ class SocialMediaAutomation:
                     ]
                 },
                 "es": {
-                    "post_template": "🌊 ¡Descubre agua pura con Josmose! \n\n✅ Elimina 99% de contaminantes\n💧 Sabor excepcional\n🏠 Instalación fácil\n💰 Precio especial Europa: €{price}\n\n👉 Pide ahora en josmose.com\n#AguaPura #Salud #Josmose #España",
+                    "post_template": "🌊 ¡Descubre agua pura con Josmose! \n\n✅ Elimina 99% de contaminantes\n💧 Sabor excepcional\n🏠 Instalación fácil\n💰 Precio especial Europa: €{price}\n\n👉 Pide ahora en josmoze.com\n#AguaPura #Salud #Josmose #España",
                     "ad_headlines": [
                         "Agua Pura para Toda la Familia 💧",
                         "Tecnología de Ósmosis Inversa Avanzada", 
@@ -187,7 +187,7 @@ class SocialMediaAutomation:
                 "fr": {
                     "video_scripts": [
                         "POV: Tu découvres que ton eau du robinet n'est pas si pure... 😱 \n\nMais avec Josmose, fini les soucis ! 💧✨\n\n99% de contaminants éliminés ✅\n#EauPure #Santé #Josmose #WaterTok",
-                        "Test de goût : Eau du robinet VS Eau Josmose 🥛\n\nLa différence est incroyable ! 😍\n\nCommande ton système sur josmose.com 👆\n#TestEau #Josmose #EauPure",
+                        "Test de goût : Eau du robinet VS Eau Josmose 🥛\n\nLa différence est incroyable ! 😍\n\nCommande ton système sur josmoze.com 👆\n#TestEau #Josmose #EauPure",
                         "Installation Josmose en 60 secondes chrono ⏱️\n\nC'est vraiment si facile ? OUI ! 💪\n\n#DIY #Installation #Josmose #EauPure"
                     ]
                 }
@@ -620,7 +620,7 @@ class SocialMediaAutomation:
                 "campaign_id": campaign_id,
                 "language": language,
                 "template_data": template,
-                "url": f"https://josmose.com/lp/{campaign_id}",
+                "url": f"https://josmoze.com/lp/{campaign_id}",
                 "conversion_tracking": True,
                 "a_b_testing": {
                     "variant_a": "Original",

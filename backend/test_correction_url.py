@@ -33,7 +33,7 @@ async def test_correction_url():
     # Vérifications
     if "0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com" in response:
         print("✅ URL fonctionnelle présente!")
-    elif "josmose.com" in response:
+    elif "josmoze.com" in response:
         print("❌ Ancienne URL non-fonctionnelle encore présente!")
     else:
         print("⚠️ Aucune URL trouvée")

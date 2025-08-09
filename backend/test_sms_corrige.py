@@ -42,7 +42,7 @@ async def test_sms_url_corrigee():
         
         if "preview.emergentagent.com" in response:
             print("✅ URL fonctionnelle présente!")
-        elif "josmose.com" in response:
+        elif "josmoze.com" in response:
             print("❌ Ancienne URL non-fonctionnelle!")
         else:
             print("⚠️ Pas d'URL")
@@ -91,7 +91,7 @@ async def test_sms_url_corrigee():
     if sms_envoyes > 0:
         print(f"\n🔗 INSTRUCTION IMPORTANTE:")
         print(f"Cliquez sur le lien dans le SMS reçu.")
-        print(f"Cette fois, vous devriez arriver sur le site josmose.com")
+        print(f"Cette fois, vous devriez arriver sur le site josmoze.com")
         print(f"et NON sur une page 'Unable to connect' !")
 
 if __name__ == "__main__":

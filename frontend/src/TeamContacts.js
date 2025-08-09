@@ -32,7 +32,7 @@ const TeamContacts = () => {
   };
 
   const sendEmail = (email, name) => {
-    const subject = encodeURIComponent('Contact depuis le site Josmose.com');
+    const subject = encodeURIComponent('Contact depuis le site Josmoze.com');
     const body = encodeURIComponent(`Bonjour ${name},\n\nJe vous contacte concernant vos solutions d'osmose inverse.\n\nCordialement,`);
     window.open(`mailto:${email}?subject=${subject}&body=${body}`);
   };

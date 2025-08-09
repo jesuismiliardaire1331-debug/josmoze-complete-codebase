@@ -1,5 +1,5 @@
 """
-Josmose.com - Advanced Analytics & Business Intelligence Dashboard
+Josmoze.com - Advanced Analytics & Business Intelligence Dashboard
 Tableau de bord analytics avancé pour prise de décision business
 """
 

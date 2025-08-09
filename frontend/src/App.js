@@ -184,7 +184,7 @@ const Header = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
             <h1 className="text-2xl font-bold text-blue-600">
-              Josmose.com
+              Josmoze.com
             </h1>
             <span className="ml-3 text-sm text-gray-600">
               💧 {t('hero.subtitle', 'Filtration professionnelle')}
@@ -317,7 +317,7 @@ const Hero = () => {
           <div className="relative">
             <img
               src={customerType === 'B2B' 
-                ? "https://www.josmose.fr/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg"
+                ? "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg"
                 : "https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png"
               }
               alt={customerType === 'B2B' ? "Fontaine à eau pour entreprise" : "Fontaine intelligente"}
@@ -1624,7 +1624,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">Josmose.com</h3>
+            <h3 className="text-xl font-bold mb-4">Josmoze.com</h3>
             <p className="text-gray-300 text-sm">
               Spécialiste européen des systèmes d'osmose inverse. 
               Solutions pour particuliers et professionnels.
@@ -1674,7 +1674,7 @@ const Footer = () => {
         <hr className="border-gray-700 my-8" />
         
         <div className="text-center text-gray-300 text-sm">
-          <p>&copy; 2024 Josmose.com - Eau pure pour l'Europe 💧</p>
+          <p>&copy; 2024 Josmoze.com - Eau pure pour l'Europe 💧</p>
         </div>
       </div>
     </footer>

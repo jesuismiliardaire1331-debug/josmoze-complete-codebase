@@ -16,7 +16,7 @@ async def test_sms_production():
     print("=" * 45)
     
     print(f"🌐 URL utilisée: {JOSMOSE_WEBSITE}")
-    print("🎯 Focus: Messages parfaits avec www.josmose.com")
+    print("🎯 Focus: Messages parfaits avec www.josmoze.com")
     
     client_phone = "+15068893760" 
     client_name = "Monsieur Dubois"
@@ -27,13 +27,13 @@ async def test_sms_production():
             "title": "🛒 Prospect Intéressé",
             "agent": "sophie",
             "message": "Je suis intéressé par vos purificateurs, pouvez-vous me renseigner ?",
-            "expected": "URL josmose.com + closing soft + question qualifiante"
+            "expected": "URL josmoze.com + closing soft + question qualifiante"
         },
         {
             "title": "💰 Question Prix",
             "agent": "thomas", 
             "message": "Combien coûte votre purificateur le moins cher ?",
-            "expected": "Fourchette prix + valeur + lien josmose.com"
+            "expected": "Fourchette prix + valeur + lien josmoze.com"
         },
         {
             "title": "🤔 Hésitation Client",
@@ -71,7 +71,7 @@ async def test_sms_production():
             checks = []
             
             # Vérif URL correcte
-            if "www.josmose.com" in response:
+            if "www.josmoze.com" in response:
                 checks.append("✅ URL correcte")
             elif "preview.emergentagent.com" in response:
                 checks.append("❌ Ancienne URL!")
@@ -143,7 +143,7 @@ async def test_emergency_responses():
         print(f"🔧 {context} ({agent_name}): {expected_response}")
         
         # Vérifier URL correcte dans réponses d'urgence
-        if "www.josmose.com" in expected_response:
+        if "www.josmoze.com" in expected_response:
             print("✅ URL correcte dans réponse d'urgence")
         else:
             print("❌ URL incorrecte dans réponse d'urgence!")

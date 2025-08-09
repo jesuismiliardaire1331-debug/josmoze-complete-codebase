@@ -1,5 +1,5 @@
 """
-Josmose.com - Smart Loyalty Program System
+Josmoze.com - Smart Loyalty Program System
 Programme de fidélité intelligent pour augmenter la rétention
 """
 

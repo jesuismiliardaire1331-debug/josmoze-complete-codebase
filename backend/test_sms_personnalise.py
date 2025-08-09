@@ -27,28 +27,28 @@ async def test_sms_personnalise():
             "agent": "sophie",
             "message": "Combien coûte votre purificateur le plus populaire ?",
             "contexte": "💰 Question Prix - Agent Sophie (Vente)",
-            "attendu": "Prix + valeur + URL josmose.com + closing"
+            "attendu": "Prix + valeur + URL josmoze.com + closing"
         },
         
         {
             "agent": "thomas", 
             "message": "Bonjour, j'aimerais des informations sur vos systèmes",
             "contexte": "📋 Demande Info - Agent Thomas (Conseil)",
-            "attendu": "Info + conseils + URL josmose.com + question qualifiante"
+            "attendu": "Info + conseils + URL josmoze.com + question qualifiante"
         },
         
         {
             "agent": "marie",
             "message": "Je ne sais pas si j'en ai vraiment besoin...",
             "contexte": "🤔 Hésitation - Agent Marie (Relation Client)",
-            "attendu": "Empathie + bénéfices + URL josmose.com + rassurance"
+            "attendu": "Empathie + bénéfices + URL josmoze.com + rassurance"
         },
         
         {
             "agent": "julien",
             "message": "J'avais regardé vos produits hier mais j'hésite encore",
             "contexte": "🛒 Récupération - Agent Julien (Conversion)",
-            "attendu": "Urgence douce + facilitation + URL josmose.com"
+            "attendu": "Urgence douce + facilitation + URL josmoze.com"
         }
     ]
     
@@ -112,7 +112,7 @@ async def test_generation_sans_envoi():
     print(f"💬 \"{response}\"")
     print(f"📏 Longueur: {len(response)} caractères")
     
-    if "www.josmose.com" in response:
+    if "www.josmoze.com" in response:
         print("✅ URL correcte présente")
     else:
         print("❌ URL manquante ou incorrecte")

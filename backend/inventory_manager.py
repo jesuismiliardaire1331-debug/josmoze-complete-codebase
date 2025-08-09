@@ -1,5 +1,5 @@
 """
-Josmose.com - Inventory & Order Management System
+Josmoze.com - Inventory & Order Management System
 Gestion des stocks, facturation PDF et suivi des commandes
 """
 
@@ -106,7 +106,7 @@ class Invoice(BaseModel):
 # ========== INVENTORY MANAGER CLASS ==========
 
 class InventoryManager:
-    """Gestionnaire de stock et facturation pour Josmose.com"""
+    """Gestionnaire de stock et facturation pour Josmoze.com"""
     
     def __init__(self, db: AsyncIOMotorDatabase):
         self.db = db
@@ -320,7 +320,7 @@ class InventoryManager:
             )
             
             # En-tête avec logo (texte pour l'instant)
-            story.append(Paragraph("🌊 JOSMOSE.COM", title_style))
+            story.append(Paragraph("🌊 JOSMOZE.COM", title_style))
             story.append(Paragraph("Spécialiste européen des systèmes d'osmose inverse", styles['Normal']))
             story.append(Paragraph("Solutions pour particuliers et professionnels", styles['Normal']))
             story.append(Spacer(1, 20))
@@ -425,7 +425,7 @@ class InventoryManager:
             conditions = """
             • Paiement effectué par carte bancaire via Stripe<br/>
             • Garantie constructeur incluse selon les termes du produit<br/>
-            • Support technique disponible par email : support@josmose.com<br/>
+            • Support technique disponible par email : support@josmoze.com<br/>
             • Service client : +33 (0)1 XX XX XX XX<br/>
             • TVA intracommunautaire : FR XX XXX XXX XXX<br/><br/>
             <b>Merci pour votre confiance ! 🌊</b>
@@ -633,8 +633,8 @@ class InventoryManager:
             # TODO: Intégrer avec service d'email (SendGrid, etc.)
             email_record = {
                 "recipient": invoice.customer_email,
-                "recipient_admin": ["admin@josmose.com", "naima@josmose.com", "aziza@josmose.com"],
-                "subject": f"Votre facture Josmose.com - {invoice.invoice_id}",
+                "recipient_admin": ["admin@josmoze.com", "naima@josmoze.com", "aziza@josmoze.com"],
+                "subject": f"Votre facture Josmoze.com - {invoice.invoice_id}",
                 "content": f"Merci pour votre commande ! Voici votre facture en pièce jointe.",
                 "type": "invoice",
                 "status": "sent",

@@ -1,5 +1,5 @@
 """
-🛡️ AGENT AUDIT & CYBERSÉCURITÉ JOSMOSE.COM 🛡️
+🛡️ AGENT AUDIT & CYBERSÉCURITÉ JOSMOZE.COM 🛡️
 Agent de surveillance, audit et protection cybersécurité 24/7
 
 MISSIONS PRINCIPALES :
@@ -506,7 +506,7 @@ class SecurityAuditAgent:
         """Envoi d'alerte critique"""
         try:
             alert_message = f"""
-🚨 ALERTE CYBERSÉCURITÉ CRITIQUE - JOSMOSE.COM 🚨
+🚨 ALERTE CYBERSÉCURITÉ CRITIQUE - JOSMOZE.COM 🚨
 
 Type de menace: {threat.threat_type}
 Sévérité: {threat.severity}
@@ -518,7 +518,7 @@ Heure: {threat.detected_at.strftime('%Y-%m-%d %H:%M:%S')}
 Actions automatiques prises:
 {chr(10).join(f"• {action}" for action in threat.mitigation_actions)}
 
-🛡️ Agent de sécurité JOSMOSE.COM
+🛡️ Agent de sécurité JOSMOZE.COM
 """
             
             # Sauvegarder l'alerte dans la base

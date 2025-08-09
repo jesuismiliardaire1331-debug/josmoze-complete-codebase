@@ -1,5 +1,5 @@
 """
-Josmose.com - Security & Performance Middleware
+Josmoze.com - Security & Performance Middleware
 Middleware de sécurité et performance critique pour production
 """
 

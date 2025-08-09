@@ -29,7 +29,7 @@ EMAIL_CONFIG = {
 
 # Messages d'accusé de réception personnalisés
 WELCOME_TEMPLATES = {
-    "commercial@josmose.com": {
+    "commercial@josmoze.com": {
         "subject": "🌊 Merci pour votre intérêt - Josmose Solutions",
         "message": """
 Bonjour,
@@ -39,7 +39,7 @@ Merci pour votre message ! Nous avons bien reçu votre demande concernant nos so
 Notre équipe commerciale va analyser votre besoin et vous recontacter dans les plus brefs délais (généralement sous 2h en journée).
 
 En attendant, vous pouvez :
-• Découvrir nos solutions sur www.josmose.com
+• Découvrir nos solutions sur www.josmoze.com
 • Consulter nos cas clients et témoignages
 • Télécharger notre catalogue technique
 
@@ -52,15 +52,15 @@ Nous sommes spécialisés dans :
 À très bientôt,
 
 L'équipe commerciale Josmose
-📧 commercial@josmose.com
+📧 commercial@josmoze.com
 📞 Service client disponible 9h-18h
-🌐 www.josmose.com
+🌐 www.josmoze.com
 
 ---
 Ceci est un message automatique. Votre demande a été enregistrée sous la référence #{reference}
         """.strip()
     },
-    "support@josmose.com": {
+    "support@josmoze.com": {
         "subject": "🔧 Support Technique Josmose - Ticket ouvert",
         "message": """
 Bonjour,
@@ -84,9 +84,9 @@ Notre équipe technique expérimentée est là pour résoudre rapidement tous vo
 Cordialement,
 
 L'équipe support Josmose
-🔧 support@josmose.com
+🔧 support@josmoze.com
 📞 Hotline technique 9h-18h
-🌐 www.josmose.com/support
+🌐 www.josmoze.com/support
 
 ---
 Ticket de support #{reference} créé le {date}
@@ -102,15 +102,15 @@ Nous avons bien reçu votre message et vous remercions pour votre intérêt pour
 Un membre de notre équipe va prendre connaissance de votre demande et vous recontacter très rapidement.
 
 En attendant, nous vous invitons à découvrir :
-🌐 Notre site web : www.josmose.com
+🌐 Notre site web : www.josmoze.com
 📚 Nos solutions d'osmose inverse
 💧 Nos témoignages clients
 
 Merci de votre confiance,
 
 L'équipe Josmose
-📧 contact@josmose.com
-🌐 www.josmose.com
+📧 contact@josmoze.com
+🌐 www.josmoze.com
 
 ---
 Référence de votre message : #{reference}

@@ -107,11 +107,11 @@ const BrandMonitoring = () => {
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          🛡️ Surveillance Marque JOSMOSE.COM - MODE RENFORCÉ ⚡
+          🛡️ Surveillance Marque JOSMOZE.COM - MODE RENFORCÉ ⚡
         </h2>
         <p className="text-gray-600">
           Agent de surveillance HAUTE INTENSITÉ 24/7 qui vérifie <strong>toutes les 30 secondes</strong> 
-          que toute mention "emergent" est supprimée et que le site reste www.josmose.com
+          que toute mention "emergent" est supprimée et que le site reste www.josmoze.com
         </p>
         <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-red-800 text-sm">
@@ -316,7 +316,7 @@ const BrandMonitoring = () => {
           <div>• Vérification : <strong>Toutes les 30 SECONDES ⚡</strong></div>
           <div>• Surveillance : <strong>emergent, made with emergent, powered by emergent</strong></div>
           <div>• Scan renforcé : <strong>.js, .py, .html, .css, .json, métadonnées</strong></div>
-          <div>• Domaine surveillé : <strong>www.josmose.com UNIQUEMENT</strong></div>
+          <div>• Domaine surveillé : <strong>www.josmoze.com UNIQUEMENT</strong></div>
           <div>• Mode alerte : <strong>IMMÉDIATE (dès 1ère détection)</strong></div>
           <div>• URLs surveillées : <strong>5 points de contrôle web</strong></div>
         </div>

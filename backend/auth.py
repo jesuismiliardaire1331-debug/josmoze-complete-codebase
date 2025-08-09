@@ -35,7 +35,7 @@ COMPANY_INFO = {
         "country": "France"
     },
     "contact": {
-        "email": "legal@josmose.com",
+        "email": "legal@josmoze.com",
         "phone": "+33 1 23 45 67 89"
     },
     "stripe": {
@@ -44,7 +44,7 @@ COMPANY_INFO = {
         "business_profile": {
             "product_description": "Systèmes de purification d'eau par osmose inverse",
             "business_type": "company",
-            "url": "https://josmose.com"
+            "url": "https://josmoze.com"
         }
     }
 }
@@ -69,11 +69,11 @@ class Token(BaseModel):
 
 # Predefined users for CRM access - Updated with correct roles from user interface
 CRM_USERS = {
-    "naima@josmose.com": {
+    "naima@josmoze.com": {
         "id": "user_naima",
-        "username": "naima@josmose.com",
-        "email": "naima@josmose.com",  # Email professionnel pour clients
-        "professional_email": "naima@josmose.com",
+        "username": "naima@josmoze.com",
+        "email": "naima@josmoze.com",  # Email professionnel pour clients
+        "professional_email": "naima@josmoze.com",
         "full_name": "Naima - Manager",
         "role": "manager",  # Manager role - highest level
         "password_hash": "$2b$12$T3.CqIsUwLAcFv8lM2fyGOBlYKAIJB0TZXXmWrYg2SFim/jgW1Cd2",  # "Naima@2024!Commerce"
@@ -81,11 +81,11 @@ CRM_USERS = {
         "position": "Directrice Commerciale",
         "is_active": True
     },
-    "aziza@josmose.com": {
+    "aziza@josmoze.com": {
         "id": "user_aziza", 
-        "username": "aziza@josmose.com",
-        "email": "aziza@josmose.com",  # Email professionnel pour clients
-        "professional_email": "aziza@josmose.com", 
+        "username": "aziza@josmoze.com",
+        "email": "aziza@josmoze.com",  # Email professionnel pour clients
+        "professional_email": "aziza@josmoze.com", 
         "full_name": "Aziza - Manager",
         "role": "manager",  # 🔄 RÔLE RESTAURÉ : Manager (comme Naima et Antonio)
         "password_hash": "$2b$12$GHSiiMx03IQ81HMWinZUn.xvyi3MtGhg6k6mZG1QXqCwCZJT5b/vm",  # "Aziza@2024!Director"
@@ -93,11 +93,11 @@ CRM_USERS = {
         "position": "Manager Commercial",
         "is_active": True
     },
-    "antonio@josmose.com": {
+    "antonio@josmoze.com": {
         "id": "user_antonio",
-        "username": "antonio@josmose.com",
-        "email": "antonio@josmose.com",  # Email professionnel pour clients
-        "professional_email": "antonio@josmose.com",
+        "username": "antonio@josmoze.com",
+        "email": "antonio@josmoze.com",  # Email professionnel pour clients
+        "professional_email": "antonio@josmoze.com",
         "full_name": "Antonio - Manager",
         "role": "manager",  # 🔄 RÔLE RESTAURÉ : Manager (comme Naima et Aziza)
         "password_hash": "$2b$12$gWfOtZyEWTzJ2871yBT8W.FfLGIpm9VGEjYGRTZUVOQXQcIR2LRHe",  # "Antonio@2024!Secure"
@@ -105,11 +105,11 @@ CRM_USERS = {
         "position": "Manager Commercial",
         "is_active": True
     },
-    "support@josmose.com": {
+    "support@josmoze.com": {
         "id": "user_support",
-        "username": "support@josmose.com",
-        "email": "support@josmose.com",  # Email professionnel pour clients 
-        "professional_email": "support@josmose.com",
+        "username": "support@josmoze.com",
+        "email": "support@josmoze.com",  # Email professionnel pour clients 
+        "professional_email": "support@josmoze.com",
         "full_name": "Support - Technique",
         "role": "technique",  # ✅ RÔLE CONFIRMÉ : Technique (déjà correct)
         "password_hash": "$2b$12$AgqPE73OcPnBKMmpgCQ3IOiShGsj8AuBo.TLETjIUJgS.AD9aFEd.",  # "Support@2024!Help"
@@ -118,11 +118,11 @@ CRM_USERS = {
         "is_active": True
     },
     # Nouvelle adresse email pour le service commercial
-    "commercial@josmose.com": {
+    "commercial@josmoze.com": {
         "id": "user_commercial",
-        "username": "commercial@josmose.com", 
-        "email": "commercial@josmose.com",  # Email professionnel pour prospects
-        "professional_email": "commercial@josmose.com",
+        "username": "commercial@josmoze.com", 
+        "email": "commercial@josmoze.com",  # Email professionnel pour prospects
+        "professional_email": "commercial@josmoze.com",
         "full_name": "Service Commercial",
         "role": "commercial",  # Role commercial pour prospects
         "password_hash": "$2b$12$JUSY1Xvr16sYMyxClk5m0.JQhAqylyzBZy4I/LPHyR4q9ESP9353G",  # "Commercial@2024!Sales"

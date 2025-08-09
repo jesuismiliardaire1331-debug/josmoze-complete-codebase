@@ -1,5 +1,5 @@
 """
-Josmose.com - Smart Product Recommendation Engine
+Josmoze.com - Smart Product Recommendation Engine
 Moteur de recommandations intelligent pour augmenter les ventes
 """
 

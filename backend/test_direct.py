@@ -41,8 +41,8 @@ async def test_direct_url():
         
         if "0d683f65" in response:
             print("✅ URL preview présente")
-        elif "josmose.com" in response:
-            print("⚠️ URL josmose.com présente")
+        elif "josmoze.com" in response:
+            print("⚠️ URL josmoze.com présente")
         else:
             print("❌ AUCUNE URL!")
         

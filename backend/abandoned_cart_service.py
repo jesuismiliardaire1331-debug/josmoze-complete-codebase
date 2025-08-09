@@ -1,5 +1,5 @@
 """
-Service de Gestion des Paniers Abandonnés - Josmose.com
+Service de Gestion des Paniers Abandonnés - Josmoze.com
 Système intelligent pour récupérer les ventes perdues avec emails automatiques
 et liens de recommande rapide
 """
@@ -289,7 +289,7 @@ class AbandonedCartService:
                 )
                 
                 # Générer le lien de récupération
-                abandoned_cart.recovery_link = f"https://www.josmose.com/recovery?token={abandoned_cart.recovery_token}"
+                abandoned_cart.recovery_link = f"https://www.josmoze.com/recovery?token={abandoned_cart.recovery_token}"
                 
                 await self.db.abandoned_carts.insert_one(abandoned_cart.dict())
                 cart_id = abandoned_cart.cart_id
@@ -443,7 +443,7 @@ class AbandonedCartService:
                 total_value=total_value,
                 discounted_total=discounted_total,
                 recovery_link=cart["recovery_link"],
-                unsubscribe_link=f"https://www.josmose.com/unsubscribe?token={cart['recovery_token']}",
+                unsubscribe_link=f"https://www.josmoze.com/unsubscribe?token={cart['recovery_token']}",
                 expiry_date=(datetime.utcnow() + timedelta(days=2)).strftime("%d/%m/%Y"),
                 deletion_date=(datetime.utcnow() + timedelta(days=1)).strftime("%d/%m/%Y")
             )
@@ -452,7 +452,7 @@ class AbandonedCartService:
             from email_service import email_service
             
             result = await email_service.send_email(
-                from_email="commercial@josmose.com",
+                from_email="commercial@josmoze.com",
                 to_email=cart["customer_email"],
                 subject=template_data["subject"],
                 body=email_html
@@ -629,7 +629,7 @@ class AbandonedCartService:
             )
             
             # En-tête du bon de livraison
-            story.append(Paragraph("🌊 JOSMOSE.COM", title_style))
+            story.append(Paragraph("🌊 JOSMOZE.COM", title_style))
             story.append(Paragraph("BON DE LIVRAISON", title_style))
             story.append(Spacer(1, 20))
             
@@ -736,8 +736,8 @@ class AbandonedCartService:
             story.append(Spacer(1, 30))
             footer_text = """
             <font size="8">
-            Josmose.com - Spécialiste des systèmes d'osmose inverse<br/>
-            Support client: support@josmose.com | Service commercial: commercial@josmose.com
+            Josmoze.com - Spécialiste des systèmes d'osmose inverse<br/>
+            Support client: support@josmoze.com | Service commercial: commercial@josmoze.com
             </font>
             """
             story.append(Paragraph(footer_text, styles['Normal']))

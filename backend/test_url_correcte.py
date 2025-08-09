@@ -2,7 +2,7 @@
 """
 🔗 TEST URL CORRECTE DANS SMS
 ============================
-Vérification que tous les SMS utilisent www.josmose.com
+Vérification que tous les SMS utilisent www.josmoze.com
 """
 
 import asyncio
@@ -16,7 +16,7 @@ async def test_url_correcte():
     
     print(f"✅ URL configurée: {JOSMOSE_WEBSITE}")
     
-    if JOSMOSE_WEBSITE != "https://www.josmose.com":
+    if JOSMOSE_WEBSITE != "https://www.josmoze.com":
         print("❌ ERREUR: URL incorrecte configurée!")
         return
     
@@ -47,7 +47,7 @@ async def test_url_correcte():
             print(f"📱 Message généré: {response}")
             
             # Vérifier que la bonne URL est utilisée
-            if "www.josmose.com" in response:
+            if "www.josmoze.com" in response:
                 print("✅ URL CORRECTE trouvée dans le message")
             elif "preview.emergentagent.com" in response:
                 print("❌ ANCIENNE URL trouvée - PROBLÈME!")
@@ -59,7 +59,7 @@ async def test_url_correcte():
     
     print(f"\n🎯 RÉSUMÉ:")
     print(f"URL système: {JOSMOSE_WEBSITE}")
-    print("✅ Tous les nouveaux SMS utiliseront www.josmose.com")
+    print("✅ Tous les nouveaux SMS utiliseront www.josmoze.com")
     print("🔄 Test terminé - vérifiez les messages ci-dessus")
 
 if __name__ == "__main__":

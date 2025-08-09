@@ -44,7 +44,7 @@ class AIEmailAgent:
         try:
             # Prepare context for AI
             context = f"""
-            Tu es un expert en marketing pour Josmose.com, spécialiste français des systèmes d'osmose inverse.
+            Tu es un expert en marketing pour Josmoze.com, spécialiste français des systèmes d'osmose inverse.
             
             CLIENT:
             - Nom: {customer_data.get('name', 'Cher client')}
@@ -110,7 +110,7 @@ Code: BIENVENUE100 (valable 7 jours)
 Besoin d'aide ? Notre équipe d'experts est à votre disposition.
 
 À très bientôt,
-L'équipe Josmose.com 💧
+L'équipe Josmoze.com 💧
 
 P.S. Regardez cette vidéo de 2 minutes pour voir la différence : [lien vidéo]
             """
@@ -163,7 +163,7 @@ Saviez-vous que l'eau du robinet contient plus de 2000 substances potentiellemen
 📞 Consultation gratuite : Nos experts analysent votre eau
 
 Prenez soin de votre famille,
-L'équipe Josmose.com 🌿
+L'équipe Josmoze.com 🌿
             """
         }
     
@@ -192,7 +192,7 @@ Commander maintenant >>
 
 Votre santé n'a pas de prix, mais nos prix si ! 😉
 
-L'équipe Josmose.com
+L'équipe Josmoze.com
             """
         }
     
@@ -219,7 +219,7 @@ Comment se passe votre expérience ?
 Une question ? Répondez à cet email !
 
 Merci de nous faire confiance,
-L'équipe Josmose.com 💙
+L'équipe Josmoze.com 💙
 
 P.S. Laissez-nous un avis 5⭐ et recevez 10€ offerts !
             """
@@ -228,7 +228,7 @@ P.S. Laissez-nous un avis 5⭐ et recevez 10€ offerts !
     def _get_fallback_email(self, template_type: str, customer_data: Dict) -> Dict[str, str]:
         """Fallback email if AI generation fails"""
         return {
-            "subject": "Josmose.com - Votre spécialiste osmose inverse",
+            "subject": "Josmoze.com - Votre spécialiste osmose inverse",
             "content": f"""
 Bonjour {customer_data.get('name', 'Cher client')},
 
@@ -237,7 +237,7 @@ Merci pour votre intérêt pour nos systèmes d'osmose inverse.
 Notre équipe vous contactera prochainement.
 
 Cordialement,
-L'équipe Josmose.com
+L'équipe Josmoze.com
             """
         }
 

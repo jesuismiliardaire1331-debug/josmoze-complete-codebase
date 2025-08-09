@@ -112,10 +112,10 @@ const CRMLogin = () => {
   const handleDemoLogin = async (userEmail) => {
     setLoading(true);
     const passwordMap = {
-      'antonio@josmose.com': 'Antonio@2024!Secure',
-      'aziza@josmose.com': 'Aziza@2024!Director',
-      'naima@josmose.com': 'Naima@2024!Commerce',
-      'support@josmose.com': 'Support@2024!Help'
+      'antonio@josmoze.com': 'Antonio@2024!Secure',
+      'aziza@josmoze.com': 'Aziza@2024!Director',
+      'naima@josmoze.com': 'Naima@2024!Commerce',
+      'support@josmoze.com': 'Support@2024!Help'
     };
     
     const result = await login(userEmail, passwordMap[userEmail]);
@@ -167,7 +167,7 @@ const CRMLogin = () => {
                 value={credentials.username}
                 onChange={(e) => setCredentials({...credentials, username: e.target.value})}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                placeholder="votre.email@josmose.com"
+                placeholder="votre.email@josmoze.com"
               />
             </div>
 
@@ -202,7 +202,7 @@ const CRMLogin = () => {
             
             <div className="grid grid-cols-2 gap-3">
               <button
-                onClick={() => handleDemoLogin('naima@josmose.com')}
+                onClick={() => handleDemoLogin('naima@josmoze.com')}
                 disabled={loading}
                 className="bg-purple-100 text-purple-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors disabled:opacity-50"
               >
@@ -211,7 +211,7 @@ const CRMLogin = () => {
               </button>
               
               <button
-                onClick={() => handleDemoLogin('aziza@josmose.com')}
+                onClick={() => handleDemoLogin('aziza@josmoze.com')}
                 disabled={loading}
                 className="bg-green-100 text-green-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors disabled:opacity-50"
               >
@@ -220,7 +220,7 @@ const CRMLogin = () => {
               </button>
               
               <button
-                onClick={() => handleDemoLogin('antonio@josmose.com')}
+                onClick={() => handleDemoLogin('antonio@josmoze.com')}
                 disabled={loading}
                 className="bg-blue-100 text-blue-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors disabled:opacity-50"
               >
@@ -229,7 +229,7 @@ const CRMLogin = () => {
               </button>
               
               <button
-                onClick={() => handleDemoLogin('support@josmose.com')}
+                onClick={() => handleDemoLogin('support@josmoze.com')}
                 disabled={loading}
                 className="bg-orange-100 text-orange-800 py-2 px-3 rounded-lg text-sm font-medium hover:bg-orange-200 transition-colors disabled:opacity-50"
               >
@@ -256,7 +256,7 @@ const CRMLogin = () => {
         {/* Footer */}
         <div className="text-center mt-8 text-blue-200">
           <p className="text-sm">
-            Josmose.com © 2024 | Système CRM & Marketing Automation
+            Josmoze.com © 2024 | Système CRM & Marketing Automation
           </p>
         </div>
       </div>
