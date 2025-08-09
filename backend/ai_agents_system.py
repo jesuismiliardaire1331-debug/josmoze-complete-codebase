@@ -3,11 +3,11 @@
 ================================================================
 
 Agents créés:
-- Socrate 🧠: Agent Prospection & Qualification 24/7
-- Aristote 📞: Agent Calls Commercial (9h-18h)
-- Cicéron 💬: Agent SMS & Suivi Relationnel
-- Démosthène 🛒: Agent Paniers Abandonnés Spécialisé
-- Platon 📊: Agent Analytics & Intelligence Prédictive
+- Thomas 👨‍💼: Agent Prospection & Qualification 24/7
+- Sophie 👩‍💼: Agent SMS Vente (Appels désactivés) 
+- Marie 👩‍💼: Agent SMS & Suivi Relationnel
+- Julien 👨‍💼: Agent Paniers Abandonnés Spécialisé
+- Caroline 👩‍💼: Agent Analytics & Intelligence Prédictive
 
 Features:
 - 38 Stratagèmes de Schopenhauer intégrés
