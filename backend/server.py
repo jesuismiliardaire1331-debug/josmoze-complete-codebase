@@ -1222,7 +1222,7 @@ async def get_team_contacts():
             {
                 "name": "Support",
                 "position": "Technique", 
-                "email": "support@josmose.com",
+                "email": "support@josmoze.com",
                 "department": "Support Technique",
                 "speciality": "Installation, maintenance et support technique"
             }
