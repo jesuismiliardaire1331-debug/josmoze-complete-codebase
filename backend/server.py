@@ -1199,7 +1199,7 @@ async def get_team_contacts():
             {
                 "name": "Aziza",
                 "position": "Manager",
-                "email": "aziza@josmose.com", 
+                "email": "aziza@josmoze.com", 
                 "department": "Direction Commerciale",
                 "speciality": "Management et gestion clients"
             },
