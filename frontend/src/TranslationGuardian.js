@@ -46,20 +46,19 @@ class TranslationGuardian {
   }
 
   async forceCompleteRetranslation(targetLanguage) {
-    console.log('🚀 Forcing complete page retranslation to:', targetLanguage);
+    console.log('🚀 FORCE AGGRESSIVE: Complete page retranslation to:', targetLanguage);
     
     try {
-      // Get all text content on page
-      const textElements = this.findAllTextElements();
+      // Force immediate page updates
+      await this.forceAllTextElements(targetLanguage);
       
-      for (const element of textElements) {
-        await this.translateElement(element, targetLanguage);
-      }
+      // Force React re-render with language change event
+      this.triggerLanguageChange(targetLanguage);
       
-      // Force React re-render
-      this.triggerReactUpdate();
+      // Force retranslation of all hardcoded texts
+      await this.translateHardcodedTexts(targetLanguage);
       
-      console.log(`✅ Complete retranslation completed for ${textElements.length} elements`);
+      console.log(`✅ AGGRESSIVE retranslation completed`);
       
     } catch (error) {
       console.error('❌ Complete retranslation failed:', error);
@@ -68,6 +67,123 @@ class TranslationGuardian {
         setTimeout(() => this.forceCompleteRetranslation(targetLanguage), 1000);
       }
     }
+  }
+
+  async forceAllTextElements(targetLanguage) {
+    if (targetLanguage === 'fr') return; // French is default
+    
+    // Get ALL text elements including hardcoded ones
+    const allTextSelectors = [
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'p', 'span', 'div', 'button', 'a', 'label',
+      '[class*="text"]', '[class*="title"]', '[class*="description"]',
+      '[class*="content"]', '[class*="label"]', '[class*="feature"]',
+      '[class*="price"]', '[class*="product"]', '[class*="cart"]'
+    ];
+    
+    for (const selector of allTextSelectors) {
+      const elements = document.querySelectorAll(selector);
+      for (const element of elements) {
+        if (this.hasTranslatableText(element)) {
+          await this.translateElement(element, targetLanguage);
+        }
+      }
+    }
+  }
+
+  async translateHardcodedTexts(targetLanguage) {
+    const hardcodedTranslations = {
+      'en': {
+        'Élimination Totale': 'Total Elimination',
+        'Installation Simple': 'Simple Installation', 
+        'Économies Garanties': 'Guaranteed Savings',
+        'Capacité Industrielle': 'Industrial Capacity',
+        'Monitoring Avancé': 'Advanced Monitoring',
+        'Support Dédié': 'Dedicated Support',
+        'Pourquoi Choisir Nos Systèmes?': 'Why Choose Our Systems?',
+        'Pourquoi Choisir Nos Solutions Pro?': 'Why Choose Our Pro Solutions?',
+        'Supprime 99% des virus, bactéries, chlore et particules organiques grâce à notre système 4 étapes.': 'Removes 99% of viruses, bacteria, chlorine and organic particles thanks to our 4-step system.',
+        'Aucun électricien nécessaire! Installation rapide sans électricité, utilise uniquement la pression du réseau.': 'No electrician needed! Quick installation without electricity, uses only network pressure.',
+        'Économisez 500-700€ par an en supprimant l\'achat de bouteilles d\'eau. Rentabilité en moins d\'un an.': 'Save €500-700 per year by eliminating bottled water purchases. Payback in less than one year.',
+        'Systèmes haute capacité pour restaurants, bureaux et commerces. Jusqu\'à 500L/jour de production.': 'High capacity systems for restaurants, offices and businesses. Up to 500L/day production.',
+        'Surveillance en temps réel de la qualité, alerts automatiques et maintenance prédictive incluse.': 'Real-time quality monitoring, automatic alerts and predictive maintenance included.',
+        'Installation professionnelle, formation personnel et maintenance 24/7 avec techniciens certifiés.': 'Professional installation, staff training and 24/7 maintenance with certified technicians.',
+        'Eau Pure avec Système d\'Osmose Inverse': 'Pure Water with Reverse Osmosis System',
+        'Eliminez 99% des contaminants avec notre technologie avancée': 'Eliminate 99% of contaminants with our advanced technology',
+        'Commander Maintenant': 'Order Now',
+        'Garantie 2 ans': '2-year warranty',
+        'Installation incluse': 'Installation included',
+        'SAV France': 'French Support',
+        '99% Contaminants éliminés': '99% Contaminants eliminated'
+      },
+      'es': {
+        'Élimination Totale': 'Eliminación Total',
+        'Installation Simple': 'Instalación Simple',
+        'Économies Garanties': 'Ahorros Garantizados', 
+        'Capacité Industrielle': 'Capacidad Industrial',
+        'Monitoring Avancé': 'Monitoreo Avanzado',
+        'Support Dédié': 'Soporte Dedicado',
+        'Pourquoi Choisir Nos Systèmes?': '¿Por Qué Elegir Nuestros Sistemas?',
+        'Pourquoi Choisir Nos Solutions Pro?': '¿Por Qué Elegir Nuestras Soluciones Pro?'
+      },
+      'de': {
+        'Élimination Totale': 'Vollständige Elimination',
+        'Installation Simple': 'Einfache Installation',
+        'Économies Garanties': 'Garantierte Einsparungen',
+        'Capacité Industrielle': 'Industrielle Kapazität', 
+        'Monitoring Avancé': 'Erweiterte Überwachung',
+        'Support Dédié': 'Dedizierter Support',
+        'Pourquoi Choisir Nos Systèmes?': 'Warum Unsere Systeme Wählen?',
+        'Pourquoi Choisir Nos Solutions Pro?': 'Warum Unsere Pro-Lösungen Wählen?'
+      }
+    };
+
+    const translations = hardcodedTranslations[targetLanguage] || {};
+    
+    // Apply hardcoded translations immediately
+    for (const [french, translated] of Object.entries(translations)) {
+      await this.replaceTextOnPage(french, translated);
+    }
+  }
+
+  async replaceTextOnPage(originalText, translatedText) {
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+
+    const textNodes = [];
+    let node;
+    
+    while (node = walker.nextNode()) {
+      if (node.nodeValue.includes(originalText)) {
+        textNodes.push(node);
+      }
+    }
+
+    textNodes.forEach(textNode => {
+      textNode.nodeValue = textNode.nodeValue.replace(new RegExp(originalText, 'g'), translatedText);
+    });
+
+    console.log(`🔄 Replaced: "${originalText}" → "${translatedText}"`);
+  }
+
+  triggerLanguageChange(targetLanguage) {
+    // Force React i18n update
+    if (window.i18n && window.i18n.changeLanguage) {
+      window.i18n.changeLanguage(targetLanguage === 'en' ? 'en' : 'fr');
+    }
+    
+    // Force custom language change event
+    const event = new CustomEvent('forceLanguageChange', {
+      detail: { language: targetLanguage }
+    });
+    window.dispatchEvent(event);
+    
+    // Force DOM update
+    document.documentElement.lang = targetLanguage === 'en' ? 'en' : 'fr';
   }
 
   async scanForUntranslatedContent(currentLanguage) {
