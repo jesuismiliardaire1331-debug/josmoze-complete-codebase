@@ -148,9 +148,9 @@ class AIAgentSystem:
     def _initialize_agents(self):
         """Initialize all AI agents with their specific configurations"""
         
-        # Socrate 🧠 - Agent Prospection & Qualification 24/7
-        self.agents["socrate"] = AgentConfig(
-            name="Socrate 🧠",
+        # Thomas 👨‍💼 - Agent Prospection & Qualification 24/7
+        self.agents["thomas"] = AgentConfig(
+            name="Thomas 👨‍💼",
             specialty="Prospection et Qualification des leads 24/7",
             model_provider="openai",
             model_name="gpt-4o",
