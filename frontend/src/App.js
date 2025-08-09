@@ -1809,6 +1809,8 @@ function App() {
                   </Routes>
                 </main>
                 <Footer />
+                {/* ChatBot pour prospects */}
+                <ChatBot />
               </BrowserRouter>
             </div>
           </AuthProvider>
