@@ -185,9 +185,9 @@ class AIAgentSystem:
             ]
         )
         
-        # Cicéron 💬 - Agent SMS & Suivi Relationnel  
-        self.agents["ciceron"] = AgentConfig(
-            name="Cicéron 💬",
+        # Marie 👩‍💼 - Agent SMS & Suivi Relationnel  
+        self.agents["marie"] = AgentConfig(
+            name="Marie 👩‍💼",
             specialty="SMS personnalisés et suivi relationnel",
             model_provider="openai",
             model_name="gpt-4o", 
