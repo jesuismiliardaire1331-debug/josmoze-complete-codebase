@@ -1970,8 +1970,8 @@ async def initialize_products():
         {
             "id": "fontaine-ultrafiltration",
             "name": "Fontaine Intelligente H₂O",
-            "description": "Fontaine d'eau intelligente avec contrôle digital du bout des doigts. Température réglable en 3 secondes, installation plug & play, sécurité enfant intégrée.",
-            "price": 399.0,
+            "description": "Fontaine d'eau intelligente avec contrôle digital du bout des doigts. Température réglable en 3 secondes, installation plug & play, sécurité enfant intégrée. Prix attractif : 419€ au lieu de 499€.",
+            "price": 419.0,
             "original_price": 499.0,
             "image": "https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png",
             "category": "osmoseur", 
