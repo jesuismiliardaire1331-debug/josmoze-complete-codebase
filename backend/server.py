@@ -883,7 +883,99 @@ async def chatbot_response(
             "error": True
         }
 
-# ========== CRM ENDPOINTS ==========
+# API endpoint pour traduction forcée par le Guardian
+@app.post("/api/translate")
+async def force_translate(
+    request: Request,
+    data: dict
+):
+    """Endpoint pour traduction forcée par le Translation Guardian"""
+    try:
+        text = data.get('text', '')
+        target_language = data.get('target_language', 'EN-US')
+        source_language = data.get('source_language', 'FR')
+        
+        if not text:
+            raise HTTPException(status_code=400, detail="Texte requis")
+        
+        # Utiliser le service de traduction existant
+        translation_result = await translation_service.translate_text(
+            text=text,
+            target_language=target_language,
+            source_language=source_language
+        )
+        
+        if translation_result and 'translated_text' in translation_result:
+            return {
+                "translated_text": translation_result['translated_text'],
+                "source_language": source_language,
+                "target_language": target_language,
+                "original_text": text,
+                "service": "deepl",
+                "guardian": True
+            }
+        else:
+            # Fallback basic translations si DeepL échoue
+            fallback_translations = {
+                'EN-US': {
+                    'Pourquoi Choisir Nos Systèmes?': 'Why Choose Our Systems?',
+                    'Élimination Totale': 'Total Elimination',
+                    'Supprime 99% des virus, bactéries, chlore et particules organiques grâce à notre système 4 étapes.': 'Removes 99% of viruses, bacteria, chlorine and organic particles thanks to our 4-step system.',
+                    'Eau Pure avec Système d\'Osmose Inverse': 'Pure Water with Reverse Osmosis System',
+                    'Eliminez 99% des contaminants avec notre technologie avancée': 'Eliminate 99% of contaminants with our advanced technology',
+                    'Commander Maintenant': 'Order Now',
+                    'Garantie 2 ans': '2-year warranty',
+                    'Installation incluse': 'Installation included',
+                    'SAV France': 'French Support'
+                },
+                'ES': {
+                    'Pourquoi Choisir Nos Systèmes?': '¿Por Qué Elegir Nuestros Sistemas?',
+                    'Élimination Totale': 'Eliminación Total',
+                    'Supprime 99% des virus, bactéries, chlore et particules organiques grâce à notre système 4 étapes.': 'Elimina el 99% de virus, bacterias, cloro y partículas orgánicas gracias a nuestro sistema de 4 etapas.',
+                    'Eau Pure avec Système d\'Osmose Inverse': 'Agua Pura con Sistema de Ósmosis Inversa',
+                    'Eliminez 99% des contaminants avec notre technologie avancée': 'Elimine el 99% de contaminantes con nuestra tecnología avanzada',
+                    'Commander Maintenant': 'Ordenar Ahora',
+                    'Garantie 2 ans': 'Garantía 2 años',
+                    'Installation incluse': 'Instalación incluida',
+                    'SAV France': 'Soporte Francia'
+                },
+                'DE': {
+                    'Pourquoi Choisir Nos Systèmes?': 'Warum Unsere Systeme Wählen?',
+                    'Élimination Totale': 'Vollständige Elimination',
+                    'Supprime 99% des virus, bactéries, chlore et particules organiques grâce à notre système 4 étapes.': 'Entfernt 99% der Viren, Bakterien, Chlor und organischen Partikel dank unserem 4-Stufen-System.',
+                    'Eau Pure avec Système d\'Osmose Inverse': 'Reines Wasser mit Umkehrosmose-System',
+                    'Eliminez 99% des contaminants avec notre technologie avancée': 'Eliminieren Sie 99% der Schadstoffe mit unserer fortschrittlichen Technologie',
+                    'Commander Maintenant': 'Jetzt Bestellen',
+                    'Garantie 2 ans': '2 Jahre Garantie',
+                    'Installation incluse': 'Installation inklusive',
+                    'SAV France': 'Deutscher Support'
+                }
+            }
+            
+            translated = fallback_translations.get(target_language, {}).get(text, text)
+            
+            return {
+                "translated_text": translated,
+                "source_language": source_language,
+                "target_language": target_language,
+                "original_text": text,
+                "service": "fallback",
+                "guardian": True
+            }
+            
+    except Exception as e:
+        logging.error(f"Erreur traduction Guardian: {str(e)}")
+        
+        # En cas d'erreur, retourner le texte original
+        return {
+            "translated_text": data.get('text', ''),
+            "source_language": data.get('source_language', 'FR'),
+            "target_language": data.get('target_language', 'EN-US'),
+            "original_text": data.get('text', ''),
+            "service": "error",
+            "guardian": True,
+            "error": str(e)
+        }
 
 @api_router.get("/crm/leads")
 async def get_leads(status: Optional[str] = None, customer_type: Optional[str] = None):
