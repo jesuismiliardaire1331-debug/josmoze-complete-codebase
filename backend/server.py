@@ -75,7 +75,7 @@ app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://josmoze.net"],
+    allow_origins=["http://localhost:3000", "https://josmoze.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -933,7 +933,7 @@ async def get_all_products():
             "description": "Système d'osmose inverse professionnel BlueMountain. Production 380L/jour (16L/h). Eau chaude, froide et tempérée. Membrane 100GPD encapsulée. Prix spécial : 479€ au lieu de 599€.",
             "price": 479.0,
             "original_price": 599.0,
-            "image": "https://www.josmoze.net/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
+            "image": "https://www.josmoze.com/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
             "category": "osmoseur",
             "target_audience": "both",
             "in_stock": True,
@@ -957,7 +957,7 @@ async def get_all_products():
             "description": "Solution professionnelle BlueMountain grand format pour restaurants, bureaux et commerces. Dimensions 1040×330×300mm avec même performance 15L/h.",
             "price": 899.0,
             "original_price": 1199.0,
-            "image": "https://www.josmoze.net/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
+            "image": "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
             "category": "osmoseur",
             "target_audience": "B2B",
             "in_stock": True,
@@ -1192,21 +1192,21 @@ async def get_team_contacts():
             {
                 "name": "Naima",
                 "position": "Manager", 
-                "email": "naima@josmoze.net",
+                "email": "naima@josmoze.com",
                 "department": "Direction Commerciale",
                 "speciality": "Management et développement commercial"
             },
             {
                 "name": "Aziza",
                 "position": "Manager",
-                "email": "aziza@josmoze.net", 
+                "email": "aziza@josmoze.com", 
                 "department": "Direction Commerciale",
                 "speciality": "Management et gestion clients"
             },
             {
                 "name": "Antonio",
                 "position": "Manager", 
-                "email": "antonio@josmoze.net",
+                "email": "antonio@josmoze.com",
                 "department": "Direction Commerciale",
                 "speciality": "Management et prospection"
             }
@@ -1215,21 +1215,21 @@ async def get_team_contacts():
             {
                 "name": "Service Commercial",
                 "position": "Équipe Commerciale",
-                "email": "commercial@josmoze.net",
+                "email": "commercial@josmoze.com",
                 "department": "Service Commercial",
                 "speciality": "Prospection et ventes, devis personnalisés"
             },
             {
                 "name": "Support",
                 "position": "Technique", 
-                "email": "support@josmoze.net",
+                "email": "support@josmoze.com",
                 "department": "Support Technique",
                 "speciality": "Installation, maintenance et support technique"
             }
         ],
         "contact_general": {
-            "website": "josmoze.net",
-            "domain": "@josmoze.net",
+            "website": "josmoze.com",
+            "domain": "@josmoze.com",
             "headquarters": "France",
             "business_hours": "Lundi-Vendredi 9h-18h"
         }
@@ -1936,7 +1936,7 @@ async def initialize_products():
             "description": "Système d'osmose inverse professionnel BlueMountain. Production 380L/jour (16L/h). Eau chaude, froide et tempérée. Membrane 100GPD encapsulée. Prix spécial : 479€ au lieu de 599€.",
             "price": 479.0,
             "original_price": 599.0,
-            "image": "https://www.josmoze.net/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
+            "image": "https://www.josmoze.com/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
             "category": "osmoseur",
             "target_audience": "both",
             "specifications": {
@@ -1960,10 +1960,10 @@ async def initialize_products():
                 "Compatible usage domestique et bureau"
             ],
             "images_gallery": [
-                "https://www.josmoze.net/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
-                "https://www.josmoze.net/2566-small_default/fontaine-osmoseur-minibluesea.jpg",
-                "https://www.josmoze.net/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png",
-                "https://www.josmoze.net/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg"
+                "https://www.josmoze.com/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
+                "https://www.josmoze.com/2566-small_default/fontaine-osmoseur-minibluesea.jpg",
+                "https://www.josmoze.com/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png",
+                "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg"
             ],
             "in_stock": True
         },
@@ -2008,7 +2008,7 @@ async def initialize_products():
             "description": "Solution professionnelle BlueMountain grand format pour restaurants, bureaux et commerces. Dimensions 1040×330×300mm avec même performance 15L/h.",
             "price": 899.0,
             "original_price": 1199.0,
-            "image": "https://www.josmoze.net/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
+            "image": "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
             "category": "osmoseur",
             "target_audience": "B2B",
             "specifications": {
@@ -2032,9 +2032,9 @@ async def initialize_products():
                 "Certification sanitaire entreprise"
             ],
             "images_gallery": [
-                "https://www.josmoze.net/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
-                "https://www.josmoze.net/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
-                "https://www.josmoze.net/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png"
+                "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
+                "https://www.josmoze.com/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
+                "https://www.josmoze.com/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png"
             ],
             "in_stock": True
         },
@@ -2069,7 +2069,7 @@ async def initialize_products():
             "name": "Filtres Professionnels - Pack Annuel",
             "description": "Pack de filtres professionnels pour systèmes industriels. Qualité supérieure avec suivi de maintenance.",
             "price": 89.0,
-            "image": "https://www.josmoze.net/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png",
+            "image": "https://www.josmoze.com/img/cms/BlueSea/BlueMountain/Sch%C3%A9ma_Blue_Mountain-removebg-preview.png",
             "category": "accessoire",
             "target_audience": "B2B",
             "specifications": {

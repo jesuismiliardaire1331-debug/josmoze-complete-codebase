@@ -2,7 +2,7 @@
 Agent de Surveillance Marque 24/7 - JOSMOZE.COM
 Surveille en permanence que :
 1. Aucune mention "emergent" ou "made with emergent" n'apparaît
-2. Le site reste toujours www.josmoze.net
+2. Le site reste toujours www.josmoze.com
 3. Aucune référence indésirable dans le code ou l'interface
 
 FONCTIONNEMENT 24/7 : Cet agent se lance automatiquement au démarrage du serveur
@@ -24,8 +24,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 # Configuration de l'agent
 MONITORING_CONFIG = {
     "check_interval": 30,  # 🚨 SURVEILLANCE RENFORCÉE : Vérification toutes les 30 secondes ⚡
-    "frontend_url": os.environ.get("REACT_APP_BACKEND_URL", "https://www.josmoze.net").replace("/api", ""),
-    "crm_url": os.environ.get("REACT_APP_BACKEND_URL", "https://www.josmoze.net").replace("/api", "") + "/crm",
+    "frontend_url": os.environ.get("REACT_APP_BACKEND_URL", "https://www.josmoze.com").replace("/api", ""),
+    "crm_url": os.environ.get("REACT_APP_BACKEND_URL", "https://www.josmoze.com").replace("/api", "") + "/crm",
     "scan_directories": ["/app/frontend/src", "/app/backend", "/app"],
     "excluded_files": [".git", "node_modules", "__pycache__", ".emergent", "brand_monitoring_agent.py"],
     "alert_threshold": 1  # 🚨 ALERTE IMMÉDIATE - Alerter dès la première détection
@@ -188,7 +188,7 @@ class BrandMonitoringAgent:
 
     async def check_domain_consistency(self) -> List[Dict]:
         """
-        Vérifie que les références au domaine sont cohérentes (josmoze.net)
+        Vérifie que les références au domaine sont cohérentes (josmoze.com)
         """
         violations = []
         
@@ -199,7 +199,7 @@ class BrandMonitoringAgent:
             "/app/frontend/package.json"
         ]
         
-        correct_domain = "josmoze.net"
+        correct_domain = "josmoze.com"
         incorrect_domains = [
             "osmose.com",
             "emergentagent.com",
@@ -384,7 +384,7 @@ class BrandMonitoringAgent:
                 alert_message = f"""
 🚨🚨🚨 ALERTE SURVEILLANCE MARQUE RENFORCÉE - {datetime.utcnow().strftime('%d/%m/%Y %H:%M:%S')} 🚨🚨🚨
 
-⚠️ VIOLATIONS CRITIQUES DÉTECTÉES SUR www.josmoze.net ⚠️
+⚠️ VIOLATIONS CRITIQUES DÉTECTÉES SUR www.josmoze.com ⚠️
 
 {len(violations)} violations détectées en mode surveillance renforcée (30 secondes) :
 
