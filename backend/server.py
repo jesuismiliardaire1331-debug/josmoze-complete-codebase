@@ -233,16 +233,16 @@ stripe_api_key = os.environ.get('STRIPE_API_KEY')
 if not stripe_api_key:
     logging.error("STRIPE_API_KEY not found in environment variables")
 
-# Product packages with fixed pricing (security)
+# Product packages with pricing optimisé concurrentiel (2025)
 PRODUCT_PACKAGES = {
-    "osmoseur-principal": 499.0,
-    "osmoseur-pro": 899.0,  # B2B version
-    "filtres-rechange": 49.0,
-    "filtres-pro": 89.0,  # B2B version
-    "garantie-2ans": 39.0,
-    "garantie-5ans": 59.0,
-    "installation-service": 150.0,
-    "consultation-expert": 0.0  # Free consultation
+    "osmoseur-principal": 479.0,    # Optimisé: 499€ → 479€ (-20€)
+    "osmoseur-pro": 899.0,          # Inchangé (B2B)
+    "filtres-rechange": 59.0,       # Optimisé: 49€ → 59€ (+10€ premium)
+    "filtres-pro": 89.0,            # Inchangé (B2B)
+    "garantie-2ans": 39.0,          # Inchangé
+    "garantie-5ans": 79.0,          # Optimisé: 59€ → 79€ (+20€ valeur)
+    "installation-service": 129.0,  # Optimisé: 150€ → 129€ (-21€ attractif)
+    "consultation-expert": 0.0      # Gratuit maintenu
 }
 
 def get_stripe_checkout(request: Request) -> StripeCheckout:
