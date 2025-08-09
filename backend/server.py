@@ -39,6 +39,9 @@ from security_audit_agent import get_security_audit_agent, start_security_monito
 # Import AI agents system
 from ai_agents_system import get_ai_agent_system, AgentStatus, ClientPersonality, ConversationStage
 
+# Import Translation Guardian Agent
+from translation_guardian_agent import get_translation_guardian, start_translation_guardian_task, check_content_translation, force_content_retranslation, get_guardian_stats
+
 # Initialize services
 abandoned_cart_service = None
 security_audit_agent = None
