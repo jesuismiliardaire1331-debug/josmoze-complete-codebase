@@ -98,16 +98,32 @@ const ChatBot = () => {
     setIsLoading(true);
 
     try {
+      // Détecter la langue pour Thomas
+      const currentLang = window.i18n?.language || 'fr';
+      const isFrench = currentLang.startsWith('fr') || 
+                      localStorage.getItem('i18nextLng')?.startsWith('fr') ||
+                      true; // Par défaut français
+      
+      console.log('🤖 Thomas sending message:', message, 'Language detected:', isFrench ? 'FR' : 'EN');
+
       // Appel à l'agent Thomas pour réponse intelligente
       const response = await axios.post(`${backendUrl}/api/ai-agents/chat`, {
         message: message,
         agent: 'thomas',
-        context: 'website_chat'
+        context: 'website_chat',
+        language: isFrench ? 'french' : 'english'
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 10000 // 10 secondes timeout
       });
+
+      console.log('🤖 Thomas response:', response.data);
 
       const botMessage = {
         type: 'bot',
-        content: response.data.response,
+        content: response.data.response || "Je vous écoute ! Comment puis-je vous aider avec nos systèmes de purification d'eau ?",
         timestamp: new Date().toISOString(),
         suggestions: response.data.suggestions || []
       };
@@ -115,14 +131,14 @@ const ChatBot = () => {
       setMessages(prev => [...prev, botMessage]);
 
     } catch (error) {
-      console.error('Erreur chatbot:', error);
+      console.error('❌ Erreur chatbot:', error);
       
-      // Réponse de fallback
+      // Réponse de fallback intelligente en français
       const fallbackMessage = {
         type: 'bot',
-        content: t('chatbot.error', 'Désolé, je rencontre un problème technique. Puis-je vous rediriger vers notre équipe ? 📞'),
+        content: "Je suis temporairement indisponible, mais notre équipe peut vous aider ! 📞 Appelez-nous ou envoyez un email à commercial@josmoze.com",
         timestamp: new Date().toISOString(),
-        suggestions: ['📞 Contacter l\'équipe', '🔄 Réessayer']
+        suggestions: ['💰 Voir les prix', '📞 Contacter l\'équipe', '💧 En savoir plus']
       };
 
       setMessages(prev => [...prev, fallbackMessage]);
