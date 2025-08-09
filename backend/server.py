@@ -1215,7 +1215,7 @@ async def get_team_contacts():
             {
                 "name": "Service Commercial",
                 "position": "Équipe Commerciale",
-                "email": "commercial@josmose.com",
+                "email": "commercial@josmoze.com",
                 "department": "Service Commercial",
                 "speciality": "Prospection et ventes, devis personnalisés"
             },
