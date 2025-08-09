@@ -2918,7 +2918,7 @@ async def interact_with_agent(
         ai_system = await get_ai_agent_system()
         
         # Valider l'agent
-        valid_agents = ["socrate", "aristote", "ciceron", "demosthene", "platon"]
+        valid_agents = ["thomas", "sophie", "marie", "julien", "caroline"]
         if agent_name.lower() not in valid_agents:
             raise HTTPException(status_code=400, detail=f"Agent non valide. Agents disponibles: {valid_agents}")
         
