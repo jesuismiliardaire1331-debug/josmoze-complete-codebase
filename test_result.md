@@ -256,10 +256,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "SMS Ultra-Optimization"
-    - "Sophie Agent Call Deactivation"  
-    - "SMS Link Redirection Fix"
-    - "Acheter Button Fix"
+    - "Scraper Agent - Backend Implementation"
+    - "Scraper Agent - API Endpoints"
+    - "Scraper Agent - Frontend Interface"
+    - "Scraper Agent - CRM Integration"
   stuck_tasks:
     - "Twilio Daily SMS Limit Reached"
   test_all: false
