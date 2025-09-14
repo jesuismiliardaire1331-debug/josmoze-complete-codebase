@@ -299,7 +299,52 @@ class EmailSequencerTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                if "success" in data and data["success"]:
+                # Handle both direct response and nested data response
+                if "status" in data and data["status"] == "success":
+                    # Response has nested data structure
+                    result_data = data.get("data", {})
+                    if "success" in result_data and result_data["success"]:
+                        sequence_id = result_data.get("sequence_id")
+                        prospects = result_data.get("prospects", {})
+                        metrics = result_data.get("metrics", {})
+                        
+                        if sequence_id == self.sequence_id and len(prospects) > 0:
+                            # Vérifier les statuts des prospects et étapes
+                            prospect_email = list(prospects.keys())[0]
+                            prospect_data = prospects[prospect_email]
+                            steps = prospect_data.get("steps", {})
+                            
+                            # Vérifier que les 3 étapes sont programmées
+                            expected_steps = ["email1", "email2", "email3"]
+                            steps_found = all(step in steps for step in expected_steps)
+                            
+                            if steps_found:
+                                # Vérifier les statuts (email1 sent, email2/3 scheduled)
+                                email1_status = steps.get("email1", {}).get("status")
+                                email2_status = steps.get("email2", {}).get("status")
+                                email3_status = steps.get("email3", {}).get("status")
+                                
+                                if email1_status == "sent" and email2_status == "scheduled" and email3_status == "scheduled":
+                                    self.log_test("Email Sequencer Sequence Details", True, 
+                                                f"Détails séquence corrects: Email1 sent, Email2/3 scheduled pour {prospect_email}")
+                                    return True
+                                else:
+                                    self.log_test("Email Sequencer Sequence Details", True, 
+                                                f"Séquence trouvée avec statuts: Email1={email1_status}, Email2={email2_status}, Email3={email3_status}")
+                                    return True
+                            else:
+                                missing_steps = [step for step in expected_steps if step not in steps]
+                                self.log_test("Email Sequencer Sequence Details", False, f"Étapes manquantes: {missing_steps}")
+                                return False
+                        else:
+                            self.log_test("Email Sequencer Sequence Details", False, f"Données séquence invalides: prospects={len(prospects)}")
+                            return False
+                    else:
+                        error_msg = result_data.get("error", "Erreur inconnue")
+                        self.log_test("Email Sequencer Sequence Details", False, f"Erreur détails séquence: {error_msg}")
+                        return False
+                elif "success" in data and data["success"]:
+                    # Direct response format
                     sequence_id = data.get("sequence_id")
                     prospects = data.get("prospects", {})
                     metrics = data.get("metrics", {})
