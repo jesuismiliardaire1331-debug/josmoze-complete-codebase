@@ -283,12 +283,25 @@ class TranslationGuardian {
 
   async translateElement(element, targetLanguage) {
     try {
-      const originalText = element.textContent.trim();
+      // Vérifier que l'élément existe encore dans le DOM
+      if (!element || !element.parentNode || !document.body.contains(element)) {
+        this.pendingElements.delete(element);
+        return;
+      }
+
+      const originalText = element.textContent ? element.textContent.trim() : '';
+      if (!originalText) {
+        this.pendingElements.delete(element);
+        return;
+      }
       
       // Check cache first
       const cacheKey = `${originalText}_${targetLanguage}`;
       if (this.translationCache[cacheKey]) {
-        element.textContent = this.translationCache[cacheKey];
+        // Vérifier que l'élément existe encore avant de le modifier
+        if (element.parentNode && document.body.contains(element)) {
+          element.textContent = this.translationCache[cacheKey];
+        }
         this.pendingElements.delete(element);
         return;
       }
@@ -303,8 +316,10 @@ class TranslationGuardian {
       if (response.data && response.data.translated_text) {
         const translatedText = response.data.translated_text;
         
-        // Update element
-        element.textContent = translatedText;
+        // Update element only if it still exists in DOM
+        if (element.parentNode && document.body.contains(element)) {
+          element.textContent = translatedText;
+        }
         
         // Cache translation
         this.translationCache[cacheKey] = translatedText;
