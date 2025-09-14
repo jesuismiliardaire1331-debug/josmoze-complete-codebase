@@ -58,3 +58,6 @@ anthropic>=0.25.0
 google-generativeai>=0.7.0
 phonenumbers>=8.13.0
 langdetect>=1.0.9
+beautifulsoup4
+aiohttp
+email-validator
