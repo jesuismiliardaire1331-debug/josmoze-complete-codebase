@@ -360,7 +360,25 @@ class EmailSequencerTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                if "success" in data and data["success"]:
+                # Handle both direct response and nested data response
+                if "status" in data and data["status"] == "success":
+                    # Response has nested data structure
+                    result_data = data.get("data", {})
+                    if "success" in result_data and result_data["success"]:
+                        processed = result_data.get("processed", 0)
+                        sent = result_data.get("sent", 0)
+                        errors = result_data.get("errors", 0)
+                        
+                        # Le traitement peut ne rien avoir à traiter si pas d'emails programmés pour maintenant
+                        self.log_test("Email Sequencer Process Scheduled", True, 
+                                    f"Traitement réussi: {processed} traités, {sent} envoyés, {errors} erreurs")
+                        return True
+                    else:
+                        error_msg = result_data.get("error", "Erreur inconnue")
+                        self.log_test("Email Sequencer Process Scheduled", False, f"Erreur traitement: {error_msg}")
+                        return False
+                elif "success" in data and data["success"]:
+                    # Direct response format
                     processed = data.get("processed", 0)
                     sent = data.get("sent", 0)
                     errors = data.get("errors", 0)
