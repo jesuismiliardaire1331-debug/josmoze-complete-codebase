@@ -1810,9 +1810,10 @@ function App() {
                     <Route path="/comment-ca-marche" element={<ProductExplanation />} />
                     <Route path="/payment-success" element={<PaymentSuccess />} />
                     <Route path="/payment-cancelled" element={<PaymentCancelled />} />
-                    {/* CRM Routes */}
-                    <Route path="/crm-login" element={<CRMLogin />} />
-                    <Route path="/crm" element={<CRMDashboard />} />
+                    {/* CRM Routes - ajustées pour basename /crm */}
+                    <Route path="/login" element={<CRMLogin />} />
+                    <Route path="/" element={<CRMDashboard />} />
+                    <Route path="/dashboard" element={<CRMDashboard />} />
                   </Routes>
                 </main>
                 <Footer />
