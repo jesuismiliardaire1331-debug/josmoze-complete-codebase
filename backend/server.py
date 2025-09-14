@@ -3582,7 +3582,436 @@ def get_strategy_recommendations(strategy_id: int) -> List[str]:
     }
     return recommendations_map.get(strategy_id, ["Usage contextuel", "Adaptation requise"])
 
-# ========== PROSPECTS MANAGEMENT ENDPOINTS ==========
+# ========== SUPPRESSION LIST MANAGEMENT ENDPOINTS ==========
+
+@app.post("/api/suppression-list/add")
+async def add_email_to_suppression_list(
+    request: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Ajouter un email à la liste de suppression"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        result = await manager.add_email_to_suppression_list(
+            email=request.get("email"),
+            reason=request.get("reason", "manual"),
+            source=request.get("source", "crm_manual"),
+            notes=request.get("notes", ""),
+            agent_email=current_user.email
+        )
+        
+        if result["success"]:
+            return {"status": "success", "message": result["message"], "data": result.get("entry")}
+        else:
+            raise HTTPException(status_code=400, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur ajout suppression list: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.delete("/api/suppression-list/remove/{email}")
+async def remove_email_from_suppression_list(
+    email: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Retirer un email de la liste de suppression"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        result = await manager.remove_email_from_suppression_list(
+            email=email,
+            agent_email=current_user.email
+        )
+        
+        if result["success"]:
+            return {"status": "success", "message": result["message"]}
+        else:
+            raise HTTPException(status_code=404, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur suppression de suppression list: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/suppression-list")
+async def get_suppression_list(
+    skip: int = 0,
+    limit: int = 100,
+    reason: str = None,
+    source: str = None,
+    search_email: str = None,
+    date_from: str = None,
+    date_to: str = None,
+    current_user: User = Depends(get_current_user)
+):
+    """Récupérer la liste de suppression avec filtres"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        
+        # Convertir les dates si fournies
+        date_from_dt = datetime.fromisoformat(date_from) if date_from else None
+        date_to_dt = datetime.fromisoformat(date_to) if date_to else None
+        
+        result = await manager.get_suppression_list(
+            skip=skip,
+            limit=limit,
+            reason_filter=reason,
+            source_filter=source,
+            search_email=search_email,
+            date_from=date_from_dt,
+            date_to=date_to_dt
+        )
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "data": result["data"],
+                "pagination": {
+                    "total_count": result["total_count"],
+                    "page_size": result["page_size"],
+                    "current_page": result["current_page"]
+                }
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur récupération suppression list: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/suppression-list/stats")
+async def get_suppression_stats(
+    current_user: User = Depends(get_current_user)
+):
+    """Obtenir les statistiques de la liste de suppression"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        result = await manager.get_suppression_stats()
+        
+        if result["success"]:
+            return {"status": "success", "stats": result["stats"]}
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur statistiques suppression list: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.post("/api/suppression-list/import-csv")
+async def import_suppression_csv(
+    request: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Importer une liste de suppression depuis un CSV"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        result = await manager.import_csv_suppression_list(
+            csv_content=request.get("csv_content"),
+            agent_email=current_user.email
+        )
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "message": result["message"],
+                "imported_count": result["imported_count"],
+                "errors": result["errors"]
+            }
+        else:
+            raise HTTPException(status_code=400, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur import CSV suppression list: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/suppression-list/export-csv")
+async def export_suppression_csv(
+    current_user: User = Depends(get_current_user)
+):
+    """Exporter la liste de suppression en CSV"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        result = await manager.export_csv_suppression_list(
+            agent_email=current_user.email
+        )
+        
+        if result["success"]:
+            from fastapi.responses import StreamingResponse
+            import io
+            
+            # Créer un flux de données CSV
+            csv_data = io.StringIO(result["csv_content"])
+            
+            return StreamingResponse(
+                io.BytesIO(csv_data.getvalue().encode('utf-8')),
+                media_type="text/csv",
+                headers={"Content-Disposition": "attachment; filename=suppression_list.csv"}
+            )
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur export CSV suppression list: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/suppression-list/check/{email}")
+async def check_email_suppression(
+    email: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Vérifier si un email est dans la liste de suppression"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        is_suppressed = await manager.is_email_suppressed(email)
+        
+        return {
+            "status": "success",
+            "email": email,
+            "is_suppressed": is_suppressed
+        }
+            
+    except Exception as e:
+        logging.error(f"Erreur vérification suppression: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/gdpr-journal")
+async def get_gdpr_journal(
+    skip: int = 0,
+    limit: int = 100,
+    action_type: str = None,
+    date_from: str = None,
+    date_to: str = None,
+    current_user: User = Depends(get_current_user)
+):
+    """Récupérer le journal GDPR"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_suppression_manager()
+        
+        # Convertir les dates si fournies
+        date_from_dt = datetime.fromisoformat(date_from) if date_from else None
+        date_to_dt = datetime.fromisoformat(date_to) if date_to else None
+        
+        result = await manager.get_gdpr_journal(
+            skip=skip,
+            limit=limit,
+            action_type_filter=action_type,
+            date_from=date_from_dt,
+            date_to=date_to_dt
+        )
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "data": result["data"],
+                "pagination": {
+                    "total_count": result["total_count"],
+                    "page_size": result["page_size"],
+                    "current_page": result["current_page"]
+                }
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur récupération journal GDPR: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+# ========== PAGE PUBLIQUE DE DÉSINSCRIPTION ==========
+
+@app.get("/unsubscribe")
+async def unsubscribe_page(token: str):
+    """Page publique de désinscription"""
+    try:
+        manager = await get_suppression_manager()
+        
+        # Traiter la désinscription
+        result = await manager.process_unsubscribe(
+            token=token,
+            user_agent="",  # Request headers peuvent être ajoutés
+            ip_address=""   # Client IP peut être ajouté
+        )
+        
+        if result["success"]:
+            # Retourner une page HTML de confirmation
+            html_content = f"""
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Désinscription Confirmée - Josmoze.com</title>
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        margin: 0;
+                        padding: 40px 20px;
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }}
+                    .container {{
+                        background: white;
+                        border-radius: 15px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                        padding: 40px;
+                        text-align: center;
+                        max-width: 500px;
+                        width: 100%;
+                    }}
+                    .success-icon {{
+                        font-size: 4rem;
+                        margin-bottom: 20px;
+                    }}
+                    h1 {{
+                        color: #2d3748;
+                        margin-bottom: 20px;
+                        font-size: 1.8rem;
+                    }}
+                    p {{
+                        color: #4a5568;
+                        line-height: 1.6;
+                        margin-bottom: 15px;
+                    }}
+                    .email {{
+                        background: #f7fafc;
+                        padding: 10px 15px;
+                        border-radius: 8px;
+                        font-family: monospace;
+                        color: #2b6cb0;
+                        font-weight: bold;
+                        margin: 20px 0;
+                    }}
+                    .footer {{
+                        margin-top: 30px;
+                        padding-top: 20px;
+                        border-top: 1px solid #e2e8f0;
+                        color: #718096;
+                        font-size: 0.9rem;
+                    }}
+                    .logo {{
+                        font-size: 1.5rem;
+                        margin-bottom: 10px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="success-icon">✅</div>
+                    <div class="logo">💧 Josmoze.com</div>
+                    <h1>Désinscription Confirmée</h1>
+                    <p>Votre demande de désinscription a bien été prise en compte.</p>
+                    <div class="email">{result["email"]}</div>
+                    <p>Vous ne recevrez plus d'emails commerciaux de notre part.</p>
+                    <p>Cette action est effective immédiatement et conforme au RGPD.</p>
+                    
+                    <div class="footer">
+                        <p><strong>Josmoze.com</strong> - Spécialiste des systèmes d'osmose inverse</p>
+                        <p>🔒 Vos données sont protégées selon la réglementation RGPD</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content)
+        else:
+            # Page d'erreur
+            error_html = f"""
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Erreur Désinscription - Josmoze.com</title>
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                        margin: 0;
+                        padding: 40px 20px;
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }}
+                    .container {{
+                        background: white;
+                        border-radius: 15px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                        padding: 40px;
+                        text-align: center;
+                        max-width: 500px;
+                        width: 100%;
+                    }}
+                    .error-icon {{
+                        font-size: 4rem;
+                        margin-bottom: 20px;
+                    }}
+                    h1 {{
+                        color: #e53e3e;
+                        margin-bottom: 20px;
+                        font-size: 1.8rem;
+                    }}
+                    p {{
+                        color: #4a5568;
+                        line-height: 1.6;
+                        margin-bottom: 15px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="error-icon">❌</div>
+                    <h1>Lien Invalide</h1>
+                    <p>Le lien de désinscription est invalide ou a expiré.</p>
+                    <p>Veuillez utiliser le lien le plus récent de nos emails.</p>
+                    <p>Si le problème persiste, contactez notre support.</p>
+                </div>
+            </body>
+            </html>
+            """
+            
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=error_html, status_code=400)
+            
+    except Exception as e:
+        logging.error(f"Erreur page désinscription: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
+# ========== PROSPECTS MANAGEMENT ENDPOINTS (EXISTING) ==========
 
 # Import Prospects Manager
 from prospects_manager import (
