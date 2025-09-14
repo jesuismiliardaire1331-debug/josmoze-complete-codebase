@@ -7693,6 +7693,18 @@ class BackendTester:
         self.test_agent_interaction()
         self.test_working_hours_configuration()
         
+        # EMAIL SEQUENCER OSMOSEUR TESTS - GDPR/CNIL COMPLIANT (NEW PRIORITY)
+        print("\n📧 EMAIL SEQUENCER OSMOSEUR TESTING - GDPR/CNIL COMPLIANCE")
+        print("="*65)
+        self.test_email_sequencer_templates()
+        self.test_email_sequencer_metrics_initial()
+        self.test_email_sequencer_start_test_mode()
+        self.test_email_sequencer_metrics_after_start()
+        self.test_email_sequencer_sequence_details()
+        self.test_email_sequencer_process_scheduled()
+        self.test_email_sequencer_stop_sequence()
+        self.test_email_sequencer_gdpr_compliance()
+        
         # SCRAPER AGENT TESTS - GDPR/CNIL COMPLIANT (PRIORITY)
         print("\n🕷️ SCRAPER AGENT TESTING - GDPR/CNIL COMPLIANCE")
         print("="*60)
