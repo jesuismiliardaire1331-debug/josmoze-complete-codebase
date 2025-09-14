@@ -207,7 +207,8 @@ class SuppressionListManager:
             total_suppressed = await self.collection.count_documents({})
             
             # Suppressions des 30 derniers jours
-            thirty_days_ago = datetime.now(timezone.utc).replace(day=datetime.now(timezone.utc).day - 30)
+            from datetime import timedelta
+            thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
             recent_suppressed = await self.collection.count_documents({
                 "unsubscribed_at": {"$gte": thirty_days_ago}
             })
