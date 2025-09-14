@@ -23,7 +23,24 @@ class SuppressionListManager:
         self.gdpr_journal = db.gdpr_journal
         self.secret_key = os.environ.get('UNSUBSCRIBE_SECRET_KEY', 'josmoze_unsubscribe_secret_2024!')
         
-    async def init_collections(self):
+    async def create_indexes(self):
+        """Créer les index pour optimiser les performances"""
+        try:
+            # Index unique sur email
+            await self.collection.create_index([("email", 1)], unique=True)
+            await self.collection.create_index([("reason", 1)])
+            await self.collection.create_index([("source", 1)])
+            await self.collection.create_index([("unsubscribed_at", -1)])
+            
+            # Index pour le journal GDPR
+            await self.gdpr_journal.create_index([("timestamp", -1)])
+            await self.gdpr_journal.create_index([("action_type", 1)])
+            await self.gdpr_journal.create_index([("email", 1)])
+            
+            print("✅ Index suppression_list et gdpr_journal créés")
+            
+        except Exception as e:
+            print(f"⚠️ Erreur lors de la création des index: {e}")
         """Initialiser les collections avec les index appropriés"""
         try:
             # Index unique sur email
