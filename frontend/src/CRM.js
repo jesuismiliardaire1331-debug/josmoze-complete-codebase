@@ -1218,6 +1218,11 @@ const CRMDashboard = () => {
           <ProspectsManager />
         )}
 
+        {/* Onglet Scraper Agent - Collecte automatique */}
+        {activeTab === 'scraper' && (
+          <ScraperAgent />
+        )}
+
         {/* Onglet Surveillance Marque */}
         {activeTab === 'surveillance' && (
           <BrandMonitoring />
