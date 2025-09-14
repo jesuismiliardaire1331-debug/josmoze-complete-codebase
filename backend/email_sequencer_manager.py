@@ -470,7 +470,7 @@ class EmailSequencerManager:
             msg['To'] = prospect_email
             
             # Version HTML
-            html_part = MimeText(html_content, 'html', 'utf-8')
+            html_part = MIMEText(html_content, 'html', 'utf-8')
             msg.attach(html_part)
             
             # Envoyer l'email
