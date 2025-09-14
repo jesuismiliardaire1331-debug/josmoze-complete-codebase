@@ -456,7 +456,6 @@ class SuppressionListManager:
         """Journaliser une action GDPR"""
         try:
             journal_entry = {
-                "id": str(uuid.uuid4()),
                 "timestamp": datetime.now(timezone.utc),
                 "action_type": action_type,
                 "email": email,
