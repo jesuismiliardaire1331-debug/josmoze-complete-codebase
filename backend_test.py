@@ -7851,14 +7851,14 @@ class BackendTester:
         return success_rate >= 80
 
 if __name__ == "__main__":
-    print("🔄 JOSMOSE CRM - EQUAL MANAGER PERMISSIONS TESTING")
-    print("Testing new configuration: Naima, Aziza, Antonio all have MANAGER role")
+    print("🔄 JOSMOSE CRM - SUPPRESSION LIST / OPT-OUT GUARDIAN GDPR/CNIL TESTING")
+    print("Testing newly implemented GDPR/CNIL compliant suppression list module")
     print("="*80)
     
     tester = BackendTester()
     
-    # Run focused tests on equal manager permissions
-    tester.run_equal_managers_tests()
+    # Run focused tests on suppression list module
+    tester.run_suppression_list_tests()
     
     # Also run some core API tests to ensure system is working
     print("\n🔧 RUNNING CORE API TESTS...")
@@ -7869,5 +7869,5 @@ if __name__ == "__main__":
     # Generate final summary
     tester.generate_test_summary()
     
-    print("\n🎯 FOCUS: All three users (Naima, Aziza, Antonio) should now have equal MANAGER permissions")
+    print("\n🎯 FOCUS: Complete testing of Suppression List / Opt-out Guardian GDPR/CNIL module")
     print("✅ Test completed - Check results above for verification")
