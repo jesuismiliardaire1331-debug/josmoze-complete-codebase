@@ -183,8 +183,10 @@ class SuppressionListManager:
             cursor = self.collection.find(filter_query).sort("unsubscribed_at", -1).skip(skip).limit(limit)
             suppression_list = await cursor.to_list(length=None)
             
-            # Formater les dates pour JSON
+            # Formater les dates pour JSON et retirer les ObjectId
             for item in suppression_list:
+                if '_id' in item:
+                    del item['_id']  # Supprimer l'ObjectId MongoDB
                 if 'unsubscribed_at' in item:
                     item['unsubscribed_at'] = item['unsubscribed_at'].isoformat()
             
