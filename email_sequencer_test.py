@@ -57,7 +57,7 @@ class EmailSequencerTester:
                     self.session.headers.update({
                         "Authorization": f"Bearer {data['access_token']}"
                     })
-                    self.log_test("Manager Authentication (Naima)", True, f"Authenticated as naima@josmose.com with manager role")
+                    self.log_test("Manager Authentication (Naima)", True, f"Authenticated as naima@josmoze.com with manager role")
                     return True
                 else:
                     self.log_test("Manager Authentication (Naima)", False, "No access token in response", data)
