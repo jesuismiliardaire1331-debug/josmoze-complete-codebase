@@ -153,7 +153,35 @@ class EmailSequencerTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                if "success" in data and data["success"]:
+                # Handle both direct response and nested data response
+                if "status" in data and data["status"] == "success":
+                    # Response has nested data structure
+                    result_data = data.get("data", {})
+                    if "success" in result_data and result_data["success"]:
+                        if "sequence_id" in result_data:
+                            self.sequence_id = result_data["sequence_id"]  # Stocker pour les tests suivants
+                            
+                            # Vérifier les métriques de démarrage
+                            email1_sent = result_data.get("email1_sent", 0)
+                            test_mode = result_data.get("test_mode", False)
+                            
+                            if test_mode and email1_sent >= 1:
+                                self.log_test("Email Sequencer Start TEST", True, 
+                                            f"Séquence test démarrée: {self.sequence_id[:8]}..., Email1 envoyé: {email1_sent}")
+                                return True
+                            else:
+                                self.log_test("Email Sequencer Start TEST", False, 
+                                            f"Mode test: {test_mode}, Email1 envoyé: {email1_sent}")
+                                return False
+                        else:
+                            self.log_test("Email Sequencer Start TEST", False, "Pas de sequence_id dans la réponse", result_data)
+                            return False
+                    else:
+                        error_msg = result_data.get("error", "Erreur inconnue")
+                        self.log_test("Email Sequencer Start TEST", False, f"Échec du démarrage: {error_msg}", result_data)
+                        return False
+                elif "success" in data and data["success"]:
+                    # Direct response format
                     if "sequence_id" in data:
                         self.sequence_id = data["sequence_id"]  # Stocker pour les tests suivants
                         
