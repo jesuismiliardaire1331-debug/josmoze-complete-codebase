@@ -297,9 +297,9 @@ test_plan:
 
   - task: "Scraper Agent - Frontend Interface"
     implemented: true
-    working: "NA"
+    working: false
     file: "frontend/src/ScraperAgent.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -309,12 +309,15 @@ test_plan:
         - working: "NA"
           agent: "testing"
           comment: "Frontend testing not performed as per system limitations. Backend API endpoints are fully functional and ready for frontend integration."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL ROUTING ISSUE: Cannot access CRM login page. All attempts to access https://josmoze-crm.preview.emergentagent.com/crm-login redirect to main website instead of CRM login form. This prevents testing of Scraper Agent interface. URL routing configuration needs to be fixed to allow CRM access."
 
   - task: "Scraper Agent - CRM Integration"
     implemented: true
-    working: "NA"
+    working: false
     file: "frontend/src/CRM.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -324,6 +327,9 @@ test_plan:
         - working: "NA"
           agent: "testing"
           comment: "Frontend testing not performed as per system limitations. Backend integration points are working correctly."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL ROUTING ISSUE: Cannot access CRM system due to URL routing problem. All CRM URLs redirect to main website, preventing login and access to Scraper IA tab. This blocks testing of the complete Scraper Agent integration. CRM routing must be fixed before Scraper interface can be tested."
 
 agent_communication:
     - agent: "main"
