@@ -415,7 +415,8 @@ class SuppressionListManager:
     def build_unsubscribe_link(self, email: str, base_url: str = "https://josmoze.com") -> str:
         """Construire un lien de désinscription sécurisé"""
         token = self.generate_unsubscribe_token(email)
-        return f"{base_url}/unsubscribe?token={token}"
+        # Utiliser la route /api/public/unsubscribe qui est correctement routée
+        return f"{base_url}/api/public/unsubscribe?token={token}"
     
     async def process_unsubscribe(self, token: str, user_agent: str = "", ip_address: str = "") -> Dict[str, Any]:
         """Traiter une demande de désinscription via token"""
