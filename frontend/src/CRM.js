@@ -1244,6 +1244,11 @@ const CRMDashboard = () => {
           <ProspectsManager />
         )}
 
+        {/* Onglet Email Sequencer */}
+        {activeTab === 'email-sequencer' && (
+          <EmailSequencer />
+        )}
+
         {/* Onglet Liste d'exclusion GDPR */}
         {activeTab === 'suppression-list' && (
           <SuppressionListManager />
