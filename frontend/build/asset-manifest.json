@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/crm/static/css/main.fd77b057.css",
+    "main.js": "/crm/static/js/main.8b53e372.js",
+    "index.html": "/crm/index.html",
+    "static/media/getFetch.cjs": "/crm/static/media/getFetch.7a7a1c81840c96d5a3ea.cjs"
+  },
+  "entrypoints": [
+    "static/css/main.fd77b057.css",
+    "static/js/main.8b53e372.js"
+  ]
+}
