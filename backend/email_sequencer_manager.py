@@ -9,6 +9,9 @@ import smtplib
 import asyncio
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any, Optional
+import email.mime.text
+import email.mime.multipart
+import email.mime.base
 from email.mime.text import MimeText
 from email.mime.multipart import MimeMultipart
 from email.mime.base import MimeBase
