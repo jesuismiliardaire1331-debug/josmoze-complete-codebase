@@ -464,7 +464,7 @@ class EmailSequencerManager:
             )
             
             # Créer le message email
-            msg = MimeMultipart('alternative')
+            msg = MIMEMultipart('alternative')
             msg['Subject'] = template_config["subject"]
             msg['From'] = f"{self.from_name} <{self.from_email}>"
             msg['To'] = prospect_email
