@@ -732,51 +732,53 @@ const CRMDashboard = () => {
           </div>
         )}
 
-        {/* Onglet Stock */}
-        {activeTab === 'stock' && stockData && (
-          <div className="space-y-6">
-            {/* Alertes Stock */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-4 rounded-xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-red-100 text-sm">Stock Critique</p>
-                    <p className="text-2xl font-bold">{stockData.alert_summary?.critical || 0}</p>
+        {/* Onglet Stock - Conditionnel selon disponibilité des données */}
+        {activeTab === 'stock' && (
+          <div>
+            {stockData && stockData.stock_items && stockData.stock_items.length > 0 ? (
+              <div className="space-y-6">
+                {/* Alertes Stock */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-4 rounded-xl shadow-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-red-100 text-sm">Stock Critique</p>
+                        <p className="text-2xl font-bold">{stockData.alert_summary?.critical || 0}</p>
+                      </div>
+                      <div className="text-3xl">🚨</div>
+                    </div>
                   </div>
-                  <div className="text-3xl">🚨</div>
-                </div>
-              </div>
 
-              <div className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white p-4 rounded-xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-orange-100 text-sm">Stock Faible</p>
-                    <p className="text-2xl font-bold">{stockData.alert_summary?.warning || 0}</p>
+                  <div className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white p-4 rounded-xl shadow-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-orange-100 text-sm">Stock Faible</p>
+                        <p className="text-2xl font-bold">{stockData.alert_summary?.warning || 0}</p>
+                      </div>
+                      <div className="text-3xl">⚠️</div>
+                    </div>
                   </div>
-                  <div className="text-3xl">⚠️</div>
-                </div>
-              </div>
 
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-blue-100 text-sm">Stock Normal</p>
-                    <p className="text-2xl font-bold">{stockData.alert_summary?.normal || 0}</p>
+                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-100 text-sm">Stock Normal</p>
+                        <p className="text-2xl font-bold">{stockData.alert_summary?.normal || 0}</p>
+                      </div>
+                      <div className="text-3xl">📦</div>
+                    </div>
                   </div>
-                  <div className="text-3xl">📦</div>
-                </div>
-              </div>
 
-              <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 rounded-xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-green-100 text-sm">Stock Optimal</p>
-                    <p className="text-2xl font-bold">{stockData.alert_summary?.optimal || 0}</p>
+                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 rounded-xl shadow-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-green-100 text-sm">Stock Optimal</p>
+                        <p className="text-2xl font-bold">{stockData.alert_summary?.optimal || 0}</p>
+                      </div>
+                      <div className="text-3xl">✅</div>
+                    </div>
                   </div>
-                  <div className="text-3xl">✅</div>
                 </div>
-              </div>
-            </div>
 
             {/* Tableau de Stock */}
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
