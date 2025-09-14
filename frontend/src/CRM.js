@@ -354,6 +354,7 @@ const CRMDashboard = () => {
               { id: 'analytics', name: 'Analytics', icon: '📈', color: 'from-orange-500 to-red-500' },
               { id: 'ai-agents', name: 'Agents IA', icon: '🤖', color: 'from-indigo-600 to-purple-700' },
               { id: 'prospects', name: 'Prospects', icon: '📋', color: 'from-green-600 to-emerald-700' },
+              { id: 'email-sequencer', name: 'Email Sequencer', icon: '📧', color: 'from-indigo-600 to-purple-700' },
               { id: 'suppression-list', name: 'Liste d\'exclusion (GDPR)', icon: '🛡️', color: 'from-red-500 to-red-600' },
               { id: 'scraper', name: 'Scraper IA', icon: '🕷️', color: 'from-gray-600 to-slate-700' },
               { id: 'surveillance', name: 'Surveillance', icon: '🛡️', color: 'from-red-500 to-orange-600' },
