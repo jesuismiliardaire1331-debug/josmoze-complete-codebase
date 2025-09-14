@@ -15,6 +15,10 @@ export const useNotifications = () => {
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
 
+  const removeNotification = (id) => {
+    setNotifications(prev => prev.filter(notif => notif.id !== id));
+  };
+
   const addNotification = (notification) => {
     const id = Date.now() + Math.random();
     const newNotification = {
@@ -28,16 +32,15 @@ export const NotificationProvider = ({ children }) => {
 
     setNotifications(prev => [...prev, newNotification]);
 
-    // Auto-remove after duration
+    // Auto-remove after duration with cleanup
     if (newNotification.duration > 0) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         removeNotification(id);
       }, newNotification.duration);
+      
+      // Store timeout ID for potential cleanup
+      newNotification.timeoutId = timeoutId;
     }
-  };
-
-  const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notif => notif.id !== id));
   };
 
   const clearAll = () => {
