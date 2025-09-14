@@ -780,7 +780,7 @@ const CRMDashboard = () => {
                   </div>
                 </div>
 
-            {/* Tableau de Stock */}
+                {/* Tableau de Stock */}
             <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
               <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
                 <h3 className="text-xl font-bold text-gray-800 flex items-center">
