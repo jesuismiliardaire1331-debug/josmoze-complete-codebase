@@ -413,6 +413,21 @@ test_plan:
           agent: "testing"
           comment: "❌ CRITICAL ROUTING ISSUE: Cannot access CRM system due to URL routing problem. All CRM URLs redirect to main website, preventing login and access to Scraper IA tab. This blocks testing of the complete Scraper Agent integration. CRM routing must be fixed before Scraper interface can be tested."
 
+  - task: "Email Sequencer Osmoseur - Frontend Interface"
+    implemented: true
+    working: false
+    file: "frontend/src/EmailSequencer.js"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NOUVEAU COMPOSANT: Interface complète Email Sequencer avec 4 onglets (Dashboard, Séquences, Templates, Événements), conformité GDPR, mode test, métriques temps réel, gestion séquences 3 emails osmoseur."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL ROUTING ISSUE PREVENTS FRONTEND TESTING: Cannot access CRM interface due to URL routing problem - all CRM URLs (https://josmoze-crm.preview.emergentagent.com/crm-login) redirect to main website instead of CRM login/dashboard. EmailSequencer.js component is properly implemented with all required features (4 sub-tabs: Dashboard, Séquences Actives, Templates, Événements), GDPR compliance sections, test mode functionality, real-time metrics, sequence management, but cannot be accessed due to infrastructure routing issue. Backend API integration confirmed working (100% success rate). Frontend component exists and is integrated into CRM.js but cannot be tested due to routing problem."
+
 agent_communication:
     - agent: "main"
       message: "🚀 PRODUCTION DEPLOYMENT READY: Complete application prepared for josmoze.com deployment on Namecheap VPS (159.198.66.241). All URLs updated to production domain, environment variables configured, deployment scripts created. VNC access provided (password: Onu7s8lA). Ready for immediate deployment with comprehensive documentation, SSL setup, and management scripts. Professional emails configured (@josmoze.com). AI agents fully operational with Schopenhauer strategies. Next step: Connect via VNC and execute deployment."
