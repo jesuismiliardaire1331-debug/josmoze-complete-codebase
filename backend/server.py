@@ -4011,6 +4011,170 @@ async def unsubscribe_page(token: str):
         logging.error(f"Erreur page désinscription: {e}")
         raise HTTPException(status_code=500, detail="Erreur serveur")
 
+# Alternative publique via API
+@app.get("/api/public/unsubscribe")
+async def public_unsubscribe_api(token: str):
+    """Alternative publique pour désinscription via API"""
+    try:
+        manager = await get_suppression_manager()
+        
+        # Traiter la désinscription
+        result = await manager.process_unsubscribe(
+            token=token,
+            user_agent="",
+            ip_address=""
+        )
+        
+        if result["success"]:
+            # Retourner une page HTML de confirmation
+            html_content = f"""
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Désinscription Confirmée - Josmoze.com</title>
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        margin: 0;
+                        padding: 40px 20px;
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }}
+                    .container {{
+                        background: white;
+                        border-radius: 15px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                        padding: 40px;
+                        text-align: center;
+                        max-width: 500px;
+                        width: 100%;
+                    }}
+                    .success-icon {{
+                        font-size: 4rem;
+                        margin-bottom: 20px;
+                    }}
+                    h1 {{
+                        color: #2d3748;
+                        margin-bottom: 20px;
+                        font-size: 1.8rem;
+                    }}
+                    p {{
+                        color: #4a5568;
+                        line-height: 1.6;
+                        margin-bottom: 15px;
+                    }}
+                    .email {{
+                        background: #f7fafc;
+                        padding: 10px 15px;
+                        border-radius: 8px;
+                        font-family: monospace;
+                        color: #2b6cb0;
+                        font-weight: bold;
+                        margin: 20px 0;
+                    }}
+                    .footer {{
+                        margin-top: 30px;
+                        padding-top: 20px;
+                        border-top: 1px solid #e2e8f0;
+                        color: #718096;
+                        font-size: 0.9rem;
+                    }}
+                    .logo {{
+                        font-size: 1.5rem;
+                        margin-bottom: 10px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="success-icon">✅</div>
+                    <div class="logo">💧 Josmoze.com</div>
+                    <h1>Désinscription Confirmée</h1>
+                    <p>Votre demande de désinscription a bien été prise en compte.</p>
+                    <div class="email">{result["email"]}</div>
+                    <p>Vous ne recevrez plus d'emails commerciaux de notre part.</p>
+                    <p>Cette action est effective immédiatement et conforme au RGPD.</p>
+                    
+                    <div class="footer">
+                        <p><strong>Josmoze.com</strong> - Spécialiste des systèmes d'osmose inverse</p>
+                        <p>🔒 Vos données sont protégées selon la réglementation RGPD</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """
+            
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=html_content)
+        else:
+            # Page d'erreur
+            error_html = f"""
+            <!DOCTYPE html>
+            <html lang="fr">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Erreur Désinscription - Josmoze.com</title>
+                <style>
+                    body {{
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                        margin: 0;
+                        padding: 40px 20px;
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }}
+                    .container {{
+                        background: white;
+                        border-radius: 15px;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                        padding: 40px;
+                        text-align: center;
+                        max-width: 500px;
+                        width: 100%;
+                    }}
+                    .error-icon {{
+                        font-size: 4rem;
+                        margin-bottom: 20px;
+                    }}
+                    h1 {{
+                        color: #e53e3e;
+                        margin-bottom: 20px;
+                        font-size: 1.8rem;
+                    }}
+                    p {{
+                        color: #4a5568;
+                        line-height: 1.6;
+                        margin-bottom: 15px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="error-icon">❌</div>
+                    <h1>Lien Invalide</h1>
+                    <p>Le lien de désinscription est invalide ou a expiré.</p>
+                    <p>Veuillez utiliser le lien le plus récent de nos emails.</p>
+                    <p>Si le problème persiste, contactez notre support.</p>
+                </div>
+            </body>
+            </html>
+            """
+            
+            from fastapi.responses import HTMLResponse
+            return HTMLResponse(content=error_html, status_code=400)
+            
+    except Exception as e:
+        logging.error(f"Erreur page désinscription publique: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
 # ========== PROSPECTS MANAGEMENT ENDPOINTS (EXISTING) ==========
 
 # Import Prospects Manager
