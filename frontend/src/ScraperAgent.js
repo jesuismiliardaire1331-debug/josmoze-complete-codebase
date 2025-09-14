@@ -199,9 +199,9 @@ const ScraperAgent = () => {
       <div className="bg-white p-6 rounded-lg shadow-md mb-6 border">
         <h3 className="text-lg font-semibold mb-4">🎯 Mots-clés Ciblés</h3>
         <div className="flex flex-wrap gap-2">
-          {scraperStatus.keywords_targeted?.map((keyword, index) => (
+          {scraperStatus.keywords_targeted?.map((keyword) => (
             <span 
-              key={index}
+              key={`keyword-${keyword}`}
               className="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full"
             >
               {keyword}
