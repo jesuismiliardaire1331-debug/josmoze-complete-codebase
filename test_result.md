@@ -301,10 +301,13 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Email Sequencer Osmoseur - Backend Implementation"
+    - "Email Sequencer Osmoseur - API Endpoints"
     - "Suppression List / Opt-out Guardian - Backend Implementation"
     - "Suppression List / Opt-out Guardian - API Endpoints"
     - "Suppression List / Opt-out Guardian - Public Unsubscribe Page"
   stuck_tasks:
+    - "Email Sequencer Osmoseur - Python Import Conflict"
     - "Twilio Daily SMS Limit Reached"
     - "Suppression List / Opt-out Guardian - Authentication System"
   test_all: false
