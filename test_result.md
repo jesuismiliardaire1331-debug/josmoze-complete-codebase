@@ -201,6 +201,51 @@ backend:
           agent: "testing"
           comment: "✅ CLIENT PROFILING SYSTEM WORKING: Client profiles endpoint functional with proper statistics structure (total_profiles, personality_distribution, high_conversion, cart_abandoned). Personality filtering works. System ready to analyze client personalities and adapt Schopenhauer strategies accordingly."
 
+  - task: "Suppression List / Opt-out Guardian - Backend Implementation"
+    implemented: true
+    working: false
+    file: "backend/suppression_list_manager.py"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NOUVEAU MODULE GDPR/CNIL: Implémenté système complet de gestion des désinscriptions avec SuppressionListManager, collections MongoDB (suppression_list, gdpr_journal), validation emails, tokens HMAC sécurisés, conformité RGPD complète."
+        - working: false
+          agent: "testing"
+          comment: "❌ AUTHENTICATION BLOCKING TESTS: All 7 suppression list API endpoints exist and are properly implemented with manager-only security (403 Forbidden). However, authentication system is failing (401/422 errors) preventing full testing. Endpoints verified: POST /add, GET /stats, GET /list, GET /check/{email}, POST /import-csv, GET /export-csv, GET /gdpr-journal."
+
+  - task: "Suppression List / Opt-out Guardian - API Endpoints"
+    implemented: true
+    working: false
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NOUVEAU: Ajouté 8 endpoints API suppression list: /api/suppression-list/add, /stats, /list, /check/{email}, /import-csv, /export-csv, /api/gdpr-journal, /unsubscribe. Authentification manager requise, conformité GDPR/CNIL."
+        - working: false
+          agent: "testing"
+          comment: "❌ ENDPOINTS EXIST BUT AUTH FAILING: All suppression list endpoints properly implemented and secured. Structure verified: POST /add (manual email), GET /stats (statistics), GET /list (paginated with filters), GET /check/{email} (individual verification), POST /import-csv, GET /export-csv, GET /gdpr-journal. All return 403 Forbidden correctly when not authenticated, but authentication system (naima@josmose.com) returns 401/422 errors."
+
+  - task: "Suppression List / Opt-out Guardian - Public Unsubscribe Page"
+    implemented: true
+    working: false
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NOUVEAU: Page publique de désinscription GET /unsubscribe?token=XXX avec traitement sécurisé des tokens HMAC, validation, et page HTML de confirmation. Aucune authentification requise."
+        - working: false
+          agent: "testing"
+          comment: "❌ ROUTING ISSUE: Public unsubscribe page GET /unsubscribe?token=XXX returns main website HTML instead of unsubscribe page. URL routing not working correctly - requests to /unsubscribe are being redirected to main React app instead of backend endpoint."
+
 frontend:
   - task: "AI Agents Manager Interface"
     implemented: true
