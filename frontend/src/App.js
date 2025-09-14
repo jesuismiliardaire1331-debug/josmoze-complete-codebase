@@ -1793,7 +1793,7 @@ function App() {
         <AppProvider>
           <AuthProvider>
             <div className="App min-h-screen bg-gray-50">
-              <BrowserRouter basename="/crm">
+              <BrowserRouter>
                 <AutoLanguageDetector />
                 <CustomerTypeHandler />
                 <Header />
