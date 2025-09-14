@@ -83,7 +83,6 @@ class SuppressionListManager:
             
             # Créer l'entrée
             suppression_entry = {
-                "id": str(uuid.uuid4()),
                 "email": email,
                 "reason": reason,
                 "unsubscribed_at": datetime.now(timezone.utc),
