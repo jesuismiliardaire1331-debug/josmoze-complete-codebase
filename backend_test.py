@@ -6959,6 +6959,13 @@ class BackendTester:
             status = "✅" if result["success"] else "❌"
             print(f"  {status} {result['test']}: {result['details']}")
         
+        # Show Scraper Agent tests specifically
+        print("\n🕷️ SCRAPER AGENT TESTS - GDPR/CNIL:")
+        scraper_tests = [r for r in self.test_results if "Scraper" in r["test"]]
+        for result in scraper_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test']}: {result['details']}")
+        
         # Show critical manager permission tests
         print("\n🔑 MANAGER PERMISSIONS TESTS:")
         manager_tests = [r for r in self.test_results if "Manager" in r["test"] or "Equal" in r["test"]]
