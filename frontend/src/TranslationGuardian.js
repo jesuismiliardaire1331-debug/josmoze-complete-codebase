@@ -158,13 +158,20 @@ class TranslationGuardian {
     let node;
     
     while ((node = walker.nextNode())) {
-      if (node.nodeValue.includes(originalText)) {
+      if (node.nodeValue && node.nodeValue.includes(originalText)) {
         textNodes.push(node);
       }
     }
 
     textNodes.forEach(textNode => {
-      textNode.nodeValue = textNode.nodeValue.replace(new RegExp(originalText, 'g'), translatedText);
+      try {
+        // Vérifier que le node a encore un parent avant de le modifier
+        if (textNode.parentNode && textNode.nodeValue) {
+          textNode.nodeValue = textNode.nodeValue.replace(new RegExp(originalText, 'g'), translatedText);
+        }
+      } catch (error) {
+        console.warn('⚠️ Erreur lors du remplacement de texte:', error);
+      }
     });
 
     console.log(`🔄 Replaced: "${originalText}" → "${translatedText}"`);
