@@ -301,12 +301,12 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Scraper Agent - Backend Implementation"
-    - "Scraper Agent - API Endpoints"
-    - "Scraper Agent - Frontend Interface"
-    - "Scraper Agent - CRM Integration"
+    - "Suppression List / Opt-out Guardian - Backend Implementation"
+    - "Suppression List / Opt-out Guardian - API Endpoints"
+    - "Suppression List / Opt-out Guardian - Public Unsubscribe Page"
   stuck_tasks:
     - "Twilio Daily SMS Limit Reached"
+    - "Suppression List / Opt-out Guardian - Authentication System"
   test_all: false
   test_priority: "high_first"
 
