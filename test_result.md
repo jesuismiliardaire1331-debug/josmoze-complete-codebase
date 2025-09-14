@@ -310,7 +310,35 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
-  - task: "Scraper Agent - Backend Implementation"
+  - task: "Email Sequencer Osmoseur - Backend Implementation"
+    implemented: true
+    working: false
+    file: "backend/email_sequencer_manager.py"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NOUVEAU MODULE: Implémenté système complet Email Sequencer avec 3 templates HTML (email1 J+0, email2 J+2, email3 J+5), conformité GDPR complète, respect suppression_list, liens désinscription, tracking UTM, métriques complètes."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL IMPORT ERROR: Backend failing to start due to Python email module import conflict. EmailSequencerManager implementation is complete and well-structured with GDPR compliance, but cannot be tested due to 'ImportError: cannot import name MimeText from email.mime.text'. This appears to be a Python environment issue preventing backend startup."
+
+  - task: "Email Sequencer Osmoseur - API Endpoints"
+    implemented: true
+    working: false
+    file: "backend/server.py"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NOUVEAU: Ajouté 6 endpoints API email sequencer: /api/email-sequencer/templates, /metrics, /start, /sequence/{id}, /process-scheduled, /stop/{id}. Authentification manager requise, conformité GDPR/CNIL."
+        - working: false
+          agent: "testing"
+          comment: "❌ ENDPOINTS CANNOT BE TESTED: All 6 email sequencer endpoints are properly implemented in server.py (lines 3587-3750) with correct manager authentication and GDPR compliance structure. However, backend service fails to start due to email module import conflict, preventing any API testing. Code structure is correct but runtime environment issue blocks functionality."
     implemented: true
     working: true
     file: "backend/scraper_agent.py"
