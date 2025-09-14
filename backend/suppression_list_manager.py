@@ -500,8 +500,10 @@ class SuppressionListManager:
             cursor = self.gdpr_journal.find(filter_query).sort("timestamp", -1).skip(skip).limit(limit)
             journal_entries = await cursor.to_list(length=None)
             
-            # Formater les dates pour JSON
+            # Formater les dates pour JSON et retirer les ObjectId
             for entry in journal_entries:
+                if '_id' in entry:
+                    del entry['_id']  # Supprimer l'ObjectId MongoDB
                 if 'timestamp' in entry:
                     entry['timestamp'] = entry['timestamp'].isoformat()
             
