@@ -6910,6 +6910,19 @@ class BackendTester:
         self.test_agent_interaction()
         self.test_working_hours_configuration()
         
+        # SCRAPER AGENT TESTS - GDPR/CNIL COMPLIANT (PRIORITY)
+        print("\n🕷️ SCRAPER AGENT TESTING - GDPR/CNIL COMPLIANCE")
+        print("="*60)
+        self.test_scraper_status()
+        self.test_scraper_domains()
+        self.test_scraper_run_session()
+        self.test_scraper_start_scheduled()
+        self.test_scraper_stop_scheduled()
+        self.test_scraper_test_domain()
+        self.test_scraper_prospects_integration()
+        self.test_scraper_rate_limiting()
+        self.test_scraper_audit_logs()
+        
         # Other important tests
         self.test_checkout_session_creation()
         self.test_lead_creation()
