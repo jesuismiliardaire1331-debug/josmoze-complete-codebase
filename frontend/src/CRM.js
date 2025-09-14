@@ -18,6 +18,7 @@ const API = `${BACKEND_URL}/api`;
 
 const CRMDashboard = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const notifications = useNotifications();
   const [dashboardData, setDashboardData] = useState(null);
   const [leads, setLeads] = useState([]);
@@ -34,6 +35,14 @@ const CRMDashboard = () => {
     lead_type: ''
   });
   const [loading, setLoading] = useState(true);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      navigate('/crm-login');
+      return;
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     fetchDashboardData();
