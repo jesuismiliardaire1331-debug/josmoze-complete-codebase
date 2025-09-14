@@ -1210,6 +1210,11 @@ const CRMDashboard = () => {
           <AIAgentsManager />
         )}
 
+        {/* Onglet Gestion Prospects - CNIL/GDPR */}
+        {activeTab === 'prospects' && (
+          <ProspectsManager />
+        )}
+
         {/* Onglet Surveillance Marque */}
         {activeTab === 'surveillance' && (
           <BrandMonitoring />
