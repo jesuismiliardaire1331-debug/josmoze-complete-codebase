@@ -3608,6 +3608,15 @@ async def get_prospects_manager():
         logging.info("✅ Prospects Manager initialized")
     return prospects_manager
 
+async def get_suppression_manager():
+    """Obtenir l'instance du gestionnaire de liste de suppression"""
+    global suppression_manager
+    if suppression_manager is None:
+        suppression_manager = SuppressionListManager(db)
+        await suppression_manager.create_indexes()
+        logging.info("✅ Suppression List Manager initialized")
+    return suppression_manager
+
 @app.post("/api/prospects", response_model=ProspectResponse, tags=["Prospects"])
 async def create_prospect(prospect: ProspectCreate):
     """
