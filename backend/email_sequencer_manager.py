@@ -9,7 +9,9 @@ import smtplib
 import asyncio
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any, Optional
-from email_utils import MimeText, MimeMultipart, MimeBase
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
 from jinja2 import Template
 import logging
 
