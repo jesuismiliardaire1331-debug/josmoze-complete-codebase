@@ -655,8 +655,8 @@ const CRMDashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {orders.map((order, index) => (
-                      <tr key={order.id} className={`hover:bg-blue-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                    {orders.map((order) => (
+                      <tr key={`order-${order.id || order.customer_email}`} className={`hover:bg-blue-50 transition-colors`}>
                         <td className="px-6 py-4">
                           <div>
                             <div className="font-semibold text-gray-900">{order.customer_name}</div>
