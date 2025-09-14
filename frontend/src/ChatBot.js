@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { useSafeCleanup } from './hooks/useSafeCleanup';
 
 const ChatBot = () => {
   const { t } = useTranslation();
