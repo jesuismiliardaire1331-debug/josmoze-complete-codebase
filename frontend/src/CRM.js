@@ -866,6 +866,21 @@ const CRMDashboard = () => {
                 </table>
               </div>
             </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📦</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Module Stock
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Les données de stock ne sont pas disponibles actuellement.
+                </p>
+                <p className="text-sm text-gray-500">
+                  Vérifiez la configuration de l'API d'inventaire ou contactez l'administrateur.
+                </p>
+              </div>
+            )}
           </div>
         )}
 
