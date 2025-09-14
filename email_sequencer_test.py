@@ -222,7 +222,37 @@ class EmailSequencerTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                if "success" in data and data["success"]:
+                # Handle both direct response and nested data response
+                if "status" in data and data["status"] == "success":
+                    # Response has nested data structure
+                    result_data = data.get("data", {})
+                    if "success" in result_data and result_data["success"]:
+                        metrics = result_data.get("metrics", {})
+                        active_sequences = result_data.get("active_sequences", [])
+                        recent_events = result_data.get("recent_events", [])
+                        
+                        # Vérifier qu'il y a des métriques
+                        if len(active_sequences) > 0:
+                            # Chercher des événements "sent" dans les événements récents
+                            sent_events = [event for event in recent_events if event.get("event_type") == "sent"]
+                            
+                            if len(sent_events) > 0:
+                                self.log_test("Email Sequencer Metrics", True, 
+                                            f"Métriques trouvées: {len(active_sequences)} séquences actives, {len(sent_events)} événements 'sent'")
+                                return True
+                            else:
+                                self.log_test("Email Sequencer Metrics", True, 
+                                            f"Métriques disponibles: {len(active_sequences)} séquences actives, pas d'événements 'sent' encore")
+                                return True
+                        else:
+                            self.log_test("Email Sequencer Metrics", True, "Système de métriques fonctionnel, pas de séquences actives")
+                            return True
+                    else:
+                        error_msg = result_data.get("error", "Erreur inconnue")
+                        self.log_test("Email Sequencer Metrics", False, f"Erreur métriques: {error_msg}")
+                        return False
+                elif "success" in data and data["success"]:
+                    # Direct response format
                     metrics = data.get("metrics", {})
                     active_sequences = data.get("active_sequences", [])
                     recent_events = data.get("recent_events", [])
