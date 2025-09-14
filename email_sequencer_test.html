@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sequencer Osmoseur - Test Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .tab-active { border-bottom: 2px solid #3B82F6; color: #3B82F6; }
+        .tab-inactive { border-bottom: 2px solid transparent; color: #6B7280; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">📧 Email Sequencer Osmoseur</h1>
+                    <p class="text-gray-600">Séquences automatiques de marketing par email avec conformité GDPR</p>
+                </div>
+                <div class="flex space-x-3">
+                    <button id="launchBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        🚀 Lancer Séquence
+                    </button>
+                    <button id="refreshBtn" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                        🔄 Actualiser
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                <span class="text-blue-600 font-bold">📧</span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-medium text-gray-500">Séquences Actives</h3>
+                            <p id="activeSequences" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                <span class="text-green-600 font-bold">✅</span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-medium text-gray-500">Envoyés</h3>
+                            <p id="totalSent" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <span class="text-purple-600 font-bold">👁️</span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-medium text-gray-500">Ouverts</h3>
+                            <p id="totalOpened" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                <span class="text-indigo-600 font-bold">🔗</span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-medium text-gray-500">Cliqués</h3>
+                            <p id="totalClicked" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                                <span class="text-red-600 font-bold">🛡️</span>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-sm font-medium text-gray-500">Ignorés GDPR</h3>
+                            <p id="totalSkipped" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                    <button class="tab-active py-2 px-1 border-b-2 font-medium text-sm" data-tab="dashboard">
+                        📊 Dashboard
+                    </button>
+                    <button class="tab-inactive py-2 px-1 border-b-2 font-medium text-sm" data-tab="sequences">
+                        📧 Séquences Actives
+                    </button>
+                    <button class="tab-inactive py-2 px-1 border-b-2 font-medium text-sm" data-tab="templates">
+                        📝 Templates
+                    </button>
+                    <button class="tab-inactive py-2 px-1 border-b-2 font-medium text-sm" data-tab="events">
+                        📋 Événements
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="dashboard" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Active Sequences -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">🔥 Séquences Actives</h3>
+                    <div id="activeSequencesList">
+                        <div class="text-center py-8">
+                            <div class="text-4xl mb-4">📧</div>
+                            <p class="text-gray-600">Chargement des séquences...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Templates -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">📝 Séquence Osmoseur (3 emails)</h3>
+                    <div id="templatesList">
+                        <div class="text-center py-8">
+                            <div class="text-4xl mb-4">📝</div>
+                            <p class="text-gray-600">Chargement des templates...</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                        <h5 class="font-medium text-blue-900 mb-2">🛡️ Protection GDPR</h5>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li>• Lien de désinscription automatique</li>
+                            <li>• Respect de la liste de suppression</li>
+                            <li>• Filtrage des emails génériques</li>
+                            <li>• Journal d'audit complet</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="sequences" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">📧 Séquences Actives</h3>
+                <div id="sequencesDetailList">
+                    <div class="text-center py-8">
+                        <div class="text-4xl mb-4">📧</div>
+                        <p class="text-gray-600">Chargement des séquences détaillées...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="templates" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-6">📝 Templates de la Séquence Osmoseur</h3>
+                <div id="templatesDetail">
+                    <div class="text-center py-8">
+                        <div class="text-4xl mb-4">📝</div>
+                        <p class="text-gray-600">Chargement des templates détaillés...</p>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-green-50 rounded-lg">
+                    <h5 class="font-medium text-green-900 mb-2">🛡️ Conformité GDPR intégrée</h5>
+                    <ul class="text-sm text-green-700 space-y-1">
+                        <li>• Lien de désinscription unique généré automatiquement</li>
+                        <li>• Vérification de la suppression_list avant chaque envoi</li>
+                        <li>• Gestion automatique des bounces (hard bounce → suppression_list)</li>
+                        <li>• Journalisation de tous les événements dans le Journal GDPR</li>
+                        <li>• Filtrage automatique des emails génériques</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="events" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">📋 Événements Récents</h3>
+                    <p class="text-sm text-gray-600 mt-1">Journal des envois et interactions des 50 derniers événements</p>
+                </div>
+                <div id="eventsTable">
+                    <div class="p-8 text-center">
+                        <div class="text-4xl mb-4">📋</div>
+                        <p class="text-gray-600">Chargement des événements...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Launch Modal -->
+    <div id="launchModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+        <div class="relative top-20 mx-auto p-5 border w-2/3 max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">🚀 Lancer une Séquence Email Osmoseur</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="flex items-center">
+                            <input type="checkbox" id="testMode" checked class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <span class="text-sm text-gray-700">
+                                <strong>Mode Test</strong> - Envoi simulé (recommandé pour la première fois)
+                            </span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Emails de test</label>
+                        <input type="email" id="testEmail" value="test-ui@example.com" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                               placeholder="email@example.com">
+                    </div>
+
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-blue-900 mb-2">🎯 Séquence "Osmoseur" - 3 emails</h4>
+                        <ul class="text-sm text-blue-700 space-y-1">
+                            <li>• <strong>Email 1</strong> : Envoi immédiat (J+0) - "Votre eau mérite mieux"</li>
+                            <li>• <strong>Email 2</strong> : Dans 2 jours (J+2) - "Et si vous goûtiez la différence ?"</li>
+                            <li>• <strong>Email 3</strong> : Dans 5-7 jours (J+5/J+7) - "Derniers jours offre spéciale"</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <h4 class="text-sm font-medium text-green-900 mb-2">🛡️ Protection GDPR</h4>
+                        <ul class="text-sm text-green-700 space-y-1">
+                            <li>• Vérification automatique de la liste de suppression</li>
+                            <li>• Liens de désinscription sécurisés</li>
+                            <li>• Respect des préférences utilisateur</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button id="cancelLaunch" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors">
+                            Annuler
+                        </button>
+                        <button id="confirmLaunch" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            🚀 Lancer la Séquence
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://josmoze-crm.preview.emergentagent.com/api';
+        const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJuYWltYUBqb3Ntb3plLmNvbSIsImV4cCI6MTc1Nzg5Njg0Mn0.RQ1MG8Pb3VbMjl10q5bUB6UKhIgR_1n5-5OqffBl_s4';
+
+        let currentData = {
+            templates: {},
+            metrics: {},
+            sequences: [],
+            events: []
+        };
+
+        // Tab switching
+        document.querySelectorAll('[data-tab]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                // Update tab styles
+                document.querySelectorAll('[data-tab]').forEach(t => {
+                    t.className = 'tab-inactive py-2 px-1 border-b-2 font-medium text-sm';
+                });
+                tab.className = 'tab-active py-2 px-1 border-b-2 font-medium text-sm';
+                
+                // Show/hide content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(tabName).classList.remove('hidden');
+                
+                // Load specific tab data
+                if (tabName === 'templates') {
+                    loadTemplatesDetail();
+                } else if (tabName === 'events') {
+                    loadEvents();
+                }
+            });
+        });
+
+        // Modal handling
+        document.getElementById('launchBtn').addEventListener('click', () => {
+            document.getElementById('launchModal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancelLaunch').addEventListener('click', () => {
+            document.getElementById('launchModal').classList.add('hidden');
+        });
+
+        document.getElementById('confirmLaunch').addEventListener('click', async () => {
+            const testMode = document.getElementById('testMode').checked;
+            const testEmail = document.getElementById('testEmail').value;
+            
+            if (!testEmail) {
+                alert('Veuillez saisir un email de test');
+                return;
+            }
+            
+            await startSequence(testMode, [testEmail]);
+            document.getElementById('launchModal').classList.add('hidden');
+        });
+
+        document.getElementById('refreshBtn').addEventListener('click', loadDashboardData);
+
+        // API Functions
+        async function apiCall(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${TOKEN}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                return { status: 'error', message: error.message };
+            }
+        }
+
+        async function loadTemplates() {
+            const response = await apiCall('/email-sequencer/templates');
+            if (response.status === 'success') {
+                currentData.templates = response.templates;
+                renderTemplates();
+            }
+        }
+
+        async function loadDashboardData() {
+            const response = await apiCall('/email-sequencer/metrics');
+            if (response.status === 'success') {
+                currentData.metrics = response.data.metrics;
+                currentData.sequences = response.data.active_sequences;
+                currentData.events = response.data.recent_events;
+                renderDashboard();
+            }
+        }
+
+        async function startSequence(testMode, testEmails) {
+            const data = {
+                test_mode: testMode,
+                test_emails: testEmails
+            };
+            
+            const response = await apiCall('/email-sequencer/start', 'POST', data);
+            if (response.status === 'success') {
+                alert(`✅ Séquence démarrée avec succès !
+
+ID: ${response.data.sequence_id}
+Prospects traités: ${response.data.total_prospects}
+Emails envoyés: ${response.data.email1_sent}
+Ignorés (suppression): ${response.data.skipped_count}`);
+                loadDashboardData();
+            } else {
+                alert(`❌ Erreur: ${response.message || 'Erreur inconnue'}`);
+            }
+        }
+
+        async function stopSequence(sequenceId) {
+            if (!confirm(`Êtes-vous sûr de vouloir arrêter la séquence ${sequenceId.slice(0, 8)} ?
+
+Tous les emails non envoyés seront annulés.`)) {
+                return;
+            }
+            
+            const response = await apiCall(`/email-sequencer/stop/${sequenceId}`, 'POST');
+            if (response.status === 'success') {
+                alert(`✅ Séquence arrêtée
+
+${response.data.cancelled_emails} emails annulés`);
+                loadDashboardData();
+            } else {
+                alert(`❌ Erreur: ${response.message || 'Erreur inconnue'}`);
+            }
+        }
+
+        // Render Functions
+        function renderDashboard() {
+            // Update statistics
+            document.getElementById('activeSequences').textContent = currentData.sequences.length;
+            
+            let totalSent = 0, totalOpened = 0, totalClicked = 0, totalSkipped = 0;
+            Object.values(currentData.metrics).forEach(seq => {
+                Object.values(seq).forEach(step => {
+                    totalSent += step.sent || 0;
+                    totalOpened += step.opened || 0;
+                    totalClicked += step.clicked || 0;
+                    totalSkipped += step.skipped_suppressed || 0;
+                });
+            });
+            
+            document.getElementById('totalSent').textContent = totalSent;
+            document.getElementById('totalOpened').textContent = totalOpened;
+            document.getElementById('totalClicked').textContent = totalClicked;
+            document.getElementById('totalSkipped').textContent = totalSkipped;
+            
+            // Render active sequences
+            const sequencesList = document.getElementById('activeSequencesList');
+            if (currentData.sequences.length === 0) {
+                sequencesList.innerHTML = `
+                    <div class="text-center py-8">
+                        <div class="text-4xl mb-4">📧</div>
+                        <p class="text-gray-600">Aucune séquence active</p>
+                        <button onclick="document.getElementById('launchModal').classList.remove('hidden')" 
+                                class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            Lancer votre première séquence
+                        </button>
+                    </div>
+                `;
+            } else {
+                sequencesList.innerHTML = currentData.sequences.map(sequenceId => {
+                    const metrics = currentData.metrics[sequenceId] || {};
+                    let sent = 0, opened = 0, clicked = 0, skipped = 0;
+                    Object.values(metrics).forEach(step => {
+                        sent += step.sent || 0;
+                        opened += step.opened || 0;
+                        clicked += step.clicked || 0;
+                        skipped += step.skipped_suppressed || 0;
+                    });
+                    
+                    return `
+                        <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition-colors mb-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Séquence ${sequenceId.slice(0, 8)}</h4>
+                                    <p class="text-sm text-gray-600">${sent} envoyés • ${skipped} ignorés</p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button onclick="loadSequenceDetails('${sequenceId}')" 
+                                            class="text-xs bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded">
+                                        📋 Détails
+                                    </button>
+                                    <button onclick="stopSequence('${sequenceId}')" 
+                                            class="text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded">
+                                        🛑 Arrêter
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="flex space-x-4 text-xs">
+                                <span class="text-green-600">👁️ ${opened}</span>
+                                <span class="text-blue-600">🔗 ${clicked}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function renderTemplates() {
+            const templatesList = document.getElementById('templatesList');
+            templatesList.innerHTML = Object.entries(currentData.templates).map(([step, template]) => `
+                <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-medium text-gray-900">
+                                ${step === 'email1' ? '📧 Email 1 - Découverte' :
+                                  step === 'email2' ? '📧 Email 2 - Relance' :
+                                  '📧 Email 3 - Offre finale'}
+                            </h4>
+                            <p class="text-sm text-gray-600">${template.subject}</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded ${
+                            template.delay_days === 0 ? 'bg-green-100 text-green-700' :
+                            template.delay_days <= 2 ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-red-100 text-red-700'
+                        }">
+                            J+${template.delay_days}
+                        </span>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        UTM: ${template.utm_content}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadTemplatesDetail() {
+            const templatesDetail = document.getElementById('templatesDetail');
+            templatesDetail.innerHTML = Object.entries(currentData.templates).map(([step, template]) => `
+                <div class="border border-gray-200 rounded-lg p-6 mb-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="text-xl font-medium text-gray-900">
+                                ${step === 'email1' ? '📧 Email 1 - Découverte (J+0)' :
+                                  step === 'email2' ? '📧 Email 2 - Relance (J+2)' :
+                                  '📧 Email 3 - Offre finale (J+5/J+7)'}
+                            </h4>
+                            <p class="text-lg text-gray-700">${template.subject}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <span class="px-3 py-1 rounded-full text-sm ${
+                                template.delay_days === 0 ? 'bg-green-100 text-green-700' :
+                                template.delay_days <= 2 ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-red-100 text-red-700'
+                            }">
+                                Délai: ${template.delay_days} jour${template.delay_days > 1 ? 's' : ''}
+                            </span>
+                            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                                UTM: ${template.utm_content}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h5 class="font-medium text-gray-900 mb-2">Contenu clé:</h5>
+                        <ul class="text-sm text-gray-700 space-y-1">
+                            ${step === 'email1' ? `
+                                <li>• Introduction au problème de l'eau du robinet</li>
+                                <li>• Présentation des bénéfices de l'osmoseur</li>
+                                <li>• Offre de lancement : 549€ TTC (au lieu de 649€)</li>
+                                <li>• Paiement 3× sans frais + Filtres année 1 offerts</li>
+                            ` : step === 'email2' ? `
+                                <li>• Focus sur l'expérience utilisateur</li>
+                                <li>• Élimination des contaminants spécifiques</li>
+                                <li>• Témoignage client</li>
+                                <li>• Rappel de l'offre promotionnelle</li>
+                            ` : `
+                                <li>• Urgence - Derniers jours de l'offre</li>
+                                <li>• Récapitulatif complet des avantages</li>
+                                <li>• Retour au prix normal après expiration</li>
+                                <li>• Social proof (2000+ familles)</li>
+                            `}
+                        </ul>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        <strong>CTA Link:</strong> www.josmoze.com/acheter?utm_source=email&utm_campaign=osmozeur_seq1&utm_content=${template.utm_content}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadEvents() {
+            const eventsTable = document.getElementById('eventsTable');
+            if (currentData.events.length === 0) {
+                eventsTable.innerHTML = `
+                    <div class="p-8 text-center">
+                        <div class="text-4xl mb-4">📋</div>
+                        <p class="text-gray-600">Aucun événement récent</p>
+                    </div>
+                `;
+            } else {
+                eventsTable.innerHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date/Heure</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Événement</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Étape</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Séquence</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Détails</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                ${currentData.events.map(event => `
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                            ${new Date(event.created_at).toLocaleString('fr-FR')}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                event.event_type === 'sent' ? 'bg-blue-100 text-blue-800' :
+                                                event.event_type === 'opened' ? 'bg-green-100 text-green-800' :
+                                                event.event_type === 'clicked' ? 'bg-purple-100 text-purple-800' :
+                                                'bg-gray-100 text-gray-800'
+                                            }">
+                                                ${event.event_type === 'sent' ? '📧 Envoyé' : event.event_type}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            ${event.prospect_email}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            ${event.step}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            ${event.sequence_id.slice(0, 8)}...
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                                            ${event.details}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadSequenceDetails(sequenceId) {
+            const response = await apiCall(`/email-sequencer/sequence/${sequenceId}`);
+            if (response.status === 'success') {
+                const data = response.data;
+                let detailsHtml = `
+                    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                        <div class="relative top-10 mx-auto p-5 border w-4/5 max-w-4xl shadow-lg rounded-md bg-white">
+                            <div class="mt-3">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-lg font-medium text-gray-900">📋 Détails Séquence ${sequenceId.slice(0, 8)}</h3>
+                                    <button onclick="this.parentElement.parentElement.parentElement.parentElement.remove()" 
+                                            class="text-gray-400 hover:text-gray-600">✕</button>
+                                </div>
+                                
+                                <div class="space-y-4">
+                `;
+                
+                Object.entries(data.prospects).forEach(([email, prospect]) => {
+                    detailsHtml += `
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h4 class="font-medium text-gray-900 mb-2">${prospect.first_name} (${email})</h4>
+                            <div class="grid grid-cols-3 gap-4">
+                    `;
+                    
+                    Object.entries(prospect.steps).forEach(([step, stepData]) => {
+                        detailsHtml += `
+                            <div class="border border-gray-100 rounded p-3">
+                                <h5 class="font-medium text-sm">${step === 'email1' ? '📧 Email 1' : step === 'email2' ? '📧 Email 2' : '📧 Email 3'}</h5>
+                                <p class="text-xs ${stepData.status === 'sent' ? 'text-green-600' : 'text-yellow-600'}">
+                                    ${stepData.status === 'sent' ? '✅ Envoyé' : '⏰ Programmé'}
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    ${stepData.sent_at ? new Date(stepData.sent_at).toLocaleString('fr-FR') : 
+                                      new Date(stepData.scheduled_at).toLocaleString('fr-FR')}
+                                </p>
+                            </div>
+                        `;
+                    });
+                    
+                    detailsHtml += `
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                detailsHtml += `
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.insertAdjacentHTML('beforeend', detailsHtml);
+            }
+        }
+
+        // Initialize
+        async function init() {
+            await loadTemplates();
+            await loadDashboardData();
+        }
+
+        init();
+    </script>
+</body>
+</html>
