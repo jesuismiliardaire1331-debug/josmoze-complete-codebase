@@ -3581,6 +3581,328 @@ def get_strategy_recommendations(strategy_id: int) -> List[str]:
     }
     return recommendations_map.get(strategy_id, ["Usage contextuel", "Adaptation requise"])
 
+# ========== PROSPECTS MANAGEMENT ENDPOINTS ==========
+
+# Import Prospects Manager
+from prospects_manager import (
+    ProspectsManager, ProspectCreate, ProspectUpdate, 
+    ProspectInDB, ProspectResponse, ConsentStatus, ProspectStatus
+)
+
+# Global prospects manager instance
+prospects_manager = None
+
+async def get_prospects_manager():
+    """Obtenir l'instance du gestionnaire de prospects"""
+    global prospects_manager
+    if prospects_manager is None:
+        prospects_manager = ProspectsManager(db)
+        await prospects_manager.create_indexes()
+        logging.info("✅ Prospects Manager initialized")
+    return prospects_manager
+
+@app.post("/api/prospects", response_model=ProspectResponse, tags=["Prospects"])
+async def create_prospect(prospect: ProspectCreate):
+    """
+    Créer un nouveau prospect avec validation CNIL/GDPR
+    
+    Fonctionnalités:
+    - Validation email unique
+    - Vérification conformité GDPR
+    - Attribution token de désinscription
+    - Classification automatique B2B/B2C
+    """
+    try:
+        manager = await get_prospects_manager()
+        
+        # Vérifier si le prospect existe déjà
+        existing = await manager.get_prospect_by_email(prospect.email)
+        if existing:
+            raise HTTPException(status_code=400, detail=f"Prospect avec email {prospect.email} existe déjà")
+        
+        # Créer le prospect
+        created_prospect = await manager.create_prospect(prospect)
+        
+        # Log pour audit GDPR
+        logging.info(f"📋 Nouveau prospect créé: {prospect.email} | Consentement: {prospect.consent_status} | Source: {prospect.source_url}")
+        
+        return ProspectResponse(**created_prospect.dict())
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur création prospect: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/prospects", response_model=List[ProspectResponse], tags=["Prospects"])
+async def list_prospects(
+    status: Optional[ProspectStatus] = None,
+    consent_status: Optional[ConsentStatus] = None,
+    country: str = "FR",
+    limit: int = 100,
+    skip: int = 0
+):
+    """
+    Lister les prospects avec filtres
+    
+    Paramètres:
+    - status: Filtrer par statut (new, contacted, etc.)
+    - consent_status: Filtrer par type de consentement
+    - country: Code pays (défaut: FR)
+    - limit: Nombre max de résultats
+    - skip: Nombre de résultats à ignorer
+    """
+    try:
+        manager = await get_prospects_manager()
+        prospects = await manager.list_prospects(
+            status=status,
+            consent_status=consent_status,
+            country=country,
+            limit=limit,
+            skip=skip
+        )
+        
+        return [ProspectResponse(**p.dict()) for p in prospects]
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur listing prospects: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/prospects/{prospect_id}", response_model=ProspectResponse, tags=["Prospects"])
+async def get_prospect(prospect_id: str):
+    """Récupérer un prospect spécifique par ID"""
+    try:
+        manager = await get_prospects_manager()
+        prospect = await manager.get_prospect(prospect_id)
+        
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospect non trouvé")
+        
+        return ProspectResponse(**prospect.dict())
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération prospect {prospect_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/api/prospects/{prospect_id}", response_model=ProspectResponse, tags=["Prospects"])
+async def update_prospect(prospect_id: str, update_data: ProspectUpdate):
+    """Mettre à jour un prospect"""
+    try:
+        manager = await get_prospects_manager()
+        updated_prospect = await manager.update_prospect(prospect_id, update_data)
+        
+        if not updated_prospect:
+            raise HTTPException(status_code=404, detail="Prospect non trouvé ou aucune modification")
+        
+        logging.info(f"📝 Prospect mis à jour: {prospect_id}")
+        return ProspectResponse(**updated_prospect.dict())
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur mise à jour prospect {prospect_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/prospects/{prospect_id}", tags=["Prospects"])
+async def delete_prospect(prospect_id: str):
+    """
+    Supprimer un prospect (Droit à l'oubli GDPR)
+    
+    Cette action est irréversible et respecte le droit à l'oubli du RGPD
+    """
+    try:
+        manager = await get_prospects_manager()
+        deleted = await manager.delete_prospect(prospect_id)
+        
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Prospect non trouvé")
+        
+        logging.info(f"🗑️ Prospect supprimé (droit à l'oubli GDPR): {prospect_id}")
+        return {"message": "Prospect supprimé avec succès", "gdpr_compliant": True}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur suppression prospect {prospect_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/prospects/unsubscribe/{token}", tags=["Prospects"])
+async def unsubscribe_prospect(token: str):
+    """
+    Désinscription d'un prospect via token (lien email)
+    
+    Endpoint public pour les liens de désinscription dans les emails
+    """
+    try:
+        manager = await get_prospects_manager()
+        unsubscribed = await manager.unsubscribe_prospect(token)
+        
+        if not unsubscribed:
+            raise HTTPException(status_code=404, detail="Token de désinscription invalide")
+        
+        logging.info(f"📧 Désinscription réussie via token: {token[:8]}...")
+        
+        return {
+            "message": "Désinscription réussie",
+            "status": "unsubscribed",
+            "gdpr_compliant": True,
+            "note": "Vous ne recevrez plus d'emails de JOSMOSE.COM"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur désinscription token {token}: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/prospects/stats/overview", tags=["Prospects"])
+async def get_prospects_stats():
+    """
+    Statistiques des prospects pour le dashboard
+    
+    Retourne:
+    - Nombre total de prospects
+    - Répartition par statut
+    - Répartition par consentement
+    - Prospects expirés (GDPR)
+    """
+    try:
+        manager = await get_prospects_manager()
+        stats = await manager.get_stats()
+        
+        return {
+            "prospects_stats": stats,
+            "generated_at": datetime.now().isoformat(),
+            "gdpr_compliance": {
+                "data_retention_policy": "3 ans maximum",
+                "right_to_erasure": "Disponible via API DELETE",
+                "consent_tracking": "Activé",
+                "opt_out_mechanism": "Token unique par prospect"
+            }
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur stats prospects: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/prospects/cleanup/expired", tags=["Prospects"])
+async def cleanup_expired_prospects():
+    """
+    Nettoyer les prospects expirés (rétention GDPR)
+    
+    Supprime automatiquement les prospects dont la période de rétention
+    (3 ans) est dépassée, conformément au RGPD
+    """
+    try:
+        manager = await get_prospects_manager()
+        deleted_count = await manager.cleanup_expired_data()
+        
+        logging.info(f"🧹 Nettoyage GDPR: {deleted_count} prospects expirés supprimés")
+        
+        return {
+            "message": f"{deleted_count} prospects expirés supprimés",
+            "deleted_count": deleted_count,
+            "gdpr_compliance": True,
+            "next_cleanup": (datetime.now() + timedelta(days=30)).isoformat()
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur nettoyage prospects: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/prospects/{prospect_id}/track-communication", tags=["Prospects"])
+async def track_prospect_communication(
+    prospect_id: str,
+    comm_type: str = "emails",  # emails, sms
+    action: str = "sent"  # sent, opened, clicked
+):
+    """
+    Tracker une communication avec un prospect
+    
+    Utilisé par les agents IA pour suivre les interactions
+    """
+    try:
+        manager = await get_prospects_manager()
+        
+        # Vérifier que le prospect existe
+        prospect = await manager.get_prospect(prospect_id)
+        if not prospect:
+            raise HTTPException(status_code=404, detail="Prospect non trouvé")
+        
+        # Tracker la communication
+        await manager.track_communication(prospect_id, f"{comm_type}_{action}")
+        
+        logging.info(f"📈 Communication trackée: {prospect_id} | {comm_type}_{action}")
+        
+        return {
+            "message": "Communication trackée avec succès",
+            "prospect_id": prospect_id,
+            "communication": f"{comm_type}_{action}",
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur tracking communication: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/prospects/bulk-import", tags=["Prospects"])
+async def bulk_import_prospects(prospects_data: List[ProspectCreate]):
+    """
+    Import en lot de prospects avec validation GDPR
+    
+    Valide chaque prospect individuellement et crée un rapport d'import
+    """
+    try:
+        manager = await get_prospects_manager()
+        
+        results = {
+            "total_submitted": len(prospects_data),
+            "successful_imports": 0,
+            "failed_imports": 0,
+            "errors": [],
+            "imported_emails": []
+        }
+        
+        for idx, prospect_data in enumerate(prospects_data):
+            try:
+                # Vérifier si existe déjà
+                existing = await manager.get_prospect_by_email(prospect_data.email)
+                if existing:
+                    results["errors"].append({
+                        "index": idx,
+                        "email": prospect_data.email,
+                        "error": "Email déjà existant"
+                    })
+                    results["failed_imports"] += 1
+                    continue
+                
+                # Créer le prospect
+                created = await manager.create_prospect(prospect_data)
+                results["successful_imports"] += 1
+                results["imported_emails"].append(created.email)
+                
+            except Exception as e:
+                results["errors"].append({
+                    "index": idx,
+                    "email": prospect_data.email if hasattr(prospect_data, 'email') else f"index_{idx}",
+                    "error": str(e)
+                })
+                results["failed_imports"] += 1
+        
+        logging.info(f"📥 Import en lot terminé: {results['successful_imports']}/{results['total_submitted']} réussis")
+        
+        return {
+            "import_results": results,
+            "gdpr_compliance": True,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur import en lot: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ========== ROUTER INCLUSION ==========
 # Include all routers after all routes are defined
 api_router.include_router(crm_router, prefix="/crm")  # Include crm_router in api_router with /crm prefix
