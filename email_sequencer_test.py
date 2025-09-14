@@ -413,7 +413,27 @@ class EmailSequencerTester:
             if response.status_code == 200:
                 data = response.json()
                 
-                if "success" in data and data["success"]:
+                # Handle both direct response and nested data response
+                if "status" in data and data["status"] == "success":
+                    # Response has nested data structure
+                    result_data = data.get("data", {})
+                    if "success" in result_data and result_data["success"]:
+                        sequence_id = result_data.get("sequence_id")
+                        cancelled_emails = result_data.get("cancelled_emails", 0)
+                        
+                        if sequence_id == self.sequence_id:
+                            self.log_test("Email Sequencer Stop Sequence", True, 
+                                        f"Séquence arrêtée: {sequence_id[:8]}..., {cancelled_emails} emails annulés")
+                            return True
+                        else:
+                            self.log_test("Email Sequencer Stop Sequence", False, f"Mauvais sequence_id retourné: {sequence_id}")
+                            return False
+                    else:
+                        error_msg = result_data.get("error", "Erreur inconnue")
+                        self.log_test("Email Sequencer Stop Sequence", False, f"Erreur arrêt séquence: {error_msg}")
+                        return False
+                elif "success" in data and data["success"]:
+                    # Direct response format
                     sequence_id = data.get("sequence_id")
                     cancelled_emails = data.get("cancelled_emails", 0)
                     
