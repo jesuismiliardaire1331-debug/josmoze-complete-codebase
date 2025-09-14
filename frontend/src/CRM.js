@@ -96,11 +96,13 @@ const CRMDashboard = () => {
         );
       }
     } catch (error) {
-      console.error('Erreur lors du chargement du stock:', error);
-      notifications.error(
-        '❌ Erreur Stock',
-        'Impossible de charger les données de stock'
-      );
+      console.warn('Stock data not available:', error);
+      // Ne pas afficher d'erreur pour l'API stock - utiliser des données par défaut
+      setStockData({
+        products: [],
+        alert_summary: { critical: 0, warning: 0, normal: 0 },
+        total_products: 0
+      });
     }
   };
 
