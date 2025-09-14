@@ -70,21 +70,25 @@ const ChatBot = () => {
 
   // Afficher automatiquement après 10 secondes sur le site
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!hasShownWelcome && !isOpen) {
+    const timerId = safeSetTimeout(() => {
+      if (!hasShownWelcome && !isOpen && isMounted()) {
         // Pulse animation pour attirer l'attention
         const chatButton = document.querySelector('.chatbot-button');
         if (chatButton) {
           chatButton.classList.add('animate-pulse');
-          setTimeout(() => {
-            chatButton.classList.remove('animate-pulse');
+          safeSetTimeout(() => {
+            if (isMounted() && chatButton) {
+              chatButton.classList.remove('animate-pulse');
+            }
           }, 3000);
         }
       }
     }, 10000);
 
-    return () => clearTimeout(timer);
-  }, [hasShownWelcome, isOpen]);
+    return () => {
+      // Cleanup is handled by useSafeCleanup
+    };
+  }, [hasShownWelcome, isOpen, safeSetTimeout, isMounted]);
 
   const sendMessage = async (message) => {
     if (!message.trim()) return;
