@@ -3585,10 +3585,13 @@ def get_strategy_recommendations(strategy_id: int) -> List[str]:
 # ========== PROSPECTS MANAGEMENT ENDPOINTS ==========
 
 # Import Prospects Manager
-from suppression_list_manager import (
+from prospects_manager import (
     ProspectsManager, ProspectCreate, ProspectUpdate, 
     ProspectInDB, ProspectResponse, ConsentStatus, ProspectStatus
 )
+
+# Import Suppression List Manager
+from suppression_list_manager import SuppressionListManager
 
 # Global prospects manager instance
 prospects_manager = None
