@@ -4216,6 +4216,16 @@ async def get_suppression_manager():
         logging.info("✅ Suppression List Manager initialized")
     return suppression_manager
 
+async def get_email_sequencer_manager():
+    """Obtenir l'instance du gestionnaire de séquences email"""
+    global email_sequencer_manager
+    if email_sequencer_manager is None:
+        suppression_mgr = await get_suppression_manager()
+        email_sequencer_manager = EmailSequencerManager(db, suppression_mgr)
+        await email_sequencer_manager.create_indexes()
+        logging.info("✅ Email Sequencer Manager initialized")
+    return email_sequencer_manager
+
 @app.post("/api/prospects", response_model=ProspectResponse, tags=["Prospects"])
 async def create_prospect(prospect: ProspectCreate):
     """
