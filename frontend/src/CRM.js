@@ -570,8 +570,8 @@ const CRMDashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {leads.map((lead, index) => (
-                      <tr key={lead.id} className={`hover:bg-blue-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                    {leads.map((lead) => (
+                      <tr key={`lead-${lead.id || lead.email}`} className={`hover:bg-blue-50 transition-colors`}>
                         <td className="px-6 py-4">
                           <div>
                             <div className="font-semibold text-gray-900">{lead.name}</div>
