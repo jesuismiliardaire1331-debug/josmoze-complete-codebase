@@ -9,6 +9,7 @@ import AbandonedCarts from "./AbandonedCarts";
 import SecurityAudit from "./SecurityAudit";
 import AIAgentsManager from "./AIAgentsManager";
 import ProspectsManager from "./ProspectsManager";
+import ScraperAgent from "./ScraperAgent";
 import { useNotifications } from "./NotificationSystem";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
