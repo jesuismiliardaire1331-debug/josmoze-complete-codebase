@@ -39,7 +39,7 @@ class EmailSequencerTester:
         """Authenticate as manager (Naima) for manager-only tests"""
         try:
             login_data = {
-                "username": "naima@josmose.com",
+                "username": "naima@josmoze.com",
                 "password": "Naima@2024!Commerce"
             }
             
