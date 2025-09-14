@@ -4195,6 +4195,9 @@ prospects_manager = None
 # Global suppression list manager instance
 suppression_manager = None
 
+# Global email sequencer manager instance
+email_sequencer_manager = None
+
 async def get_prospects_manager():
     """Obtenir l'instance du gestionnaire de prospects"""
     global prospects_manager
