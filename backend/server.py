@@ -4186,6 +4186,9 @@ from prospects_manager import (
 # Import Suppression List Manager
 from suppression_list_manager import SuppressionListManager
 
+# Import Email Sequencer Manager
+from email_sequencer_manager import EmailSequencerManager
+
 # Global prospects manager instance
 prospects_manager = None
 
