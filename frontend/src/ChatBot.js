@@ -12,6 +12,7 @@ const ChatBot = () => {
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const messagesEndRef = useRef(null);
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+  const { safeSetTimeout, isMounted } = useSafeCleanup();
 
   // Messages d'accueil selon la langue
   const welcomeMessages = {
