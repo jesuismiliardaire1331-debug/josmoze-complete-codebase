@@ -1242,6 +1242,11 @@ const CRMDashboard = () => {
           <ProspectsManager />
         )}
 
+        {/* Onglet Liste d'exclusion GDPR */}
+        {activeTab === 'suppression-list' && (
+          <SuppressionListManager />
+        )}
+
         {/* Onglet Scraper Agent - Collecte automatique */}
         {activeTab === 'scraper' && (
           <ScraperAgent />
