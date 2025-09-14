@@ -7754,6 +7754,13 @@ class BackendTester:
             status = "✅" if result["success"] else "❌"
             print(f"  {status} {result['test']}: {result['details']}")
         
+        # Show Email Sequencer tests specifically
+        print("\n📧 EMAIL SEQUENCER OSMOSEUR TESTS - GDPR/CNIL:")
+        sequencer_tests = [r for r in self.test_results if "Email Sequencer" in r["test"]]
+        for result in sequencer_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test']}: {result['details']}")
+        
         # Show Scraper Agent tests specifically
         print("\n🕷️ SCRAPER AGENT TESTS - GDPR/CNIL:")
         scraper_tests = [r for r in self.test_results if "Scraper" in r["test"]]
