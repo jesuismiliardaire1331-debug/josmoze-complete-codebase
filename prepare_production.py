@@ -86,7 +86,7 @@ def main():
     # Production URL replacements
     url_replacements = {
         # Old development URLs to production
-        'https://0881b34d-7b4f-447e-9597-bafb3efaa24b.preview.emergentagent.com': 'https://josmoze.com',
+        'https://josmoze-crm.preview.emergentagent.com': 'https://josmoze.com',
         'http://localhost:3000': 'https://josmoze.com',
         'http://localhost:8001': 'https://josmoze.com',
         'preview.emergentagent.com': 'josmoze.com',
