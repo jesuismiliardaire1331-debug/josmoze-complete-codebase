@@ -104,16 +104,44 @@ const NotificationContainer = ({ notifications, onRemove }) => {
 const NotificationItem = ({ notification, onRemove }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
+  const timeoutRef = useRef(null);
+  const animationTimeoutRef = useRef(null);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
     // Trigger entrance animation
-    setTimeout(() => setIsVisible(true), 50);
+    animationTimeoutRef.current = setTimeout(() => {
+      if (mountedRef.current) {
+        setIsVisible(true);
+      }
+    }, 50);
+
+    return () => {
+      mountedRef.current = false;
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+    };
   }, []);
 
   const handleRemove = () => {
+    if (!mountedRef.current || isLeaving) return;
+    
     setIsLeaving(true);
-    setTimeout(() => onRemove(notification.id), 300);
+    timeoutRef.current = setTimeout(() => {
+      if (mountedRef.current) {
+        onRemove(notification.id);
+      }
+    }, 300);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   const getIcon = () => {
     switch (notification.type) {
