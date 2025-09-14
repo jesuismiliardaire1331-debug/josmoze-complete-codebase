@@ -3582,7 +3582,180 @@ def get_strategy_recommendations(strategy_id: int) -> List[str]:
     }
     return recommendations_map.get(strategy_id, ["Usage contextuel", "Adaptation requise"])
 
-# ========== SUPPRESSION LIST MANAGEMENT ENDPOINTS ==========
+# ========== EMAIL SEQUENCER ENDPOINTS ==========
+
+@app.post("/api/email-sequencer/start")
+async def start_email_sequence(
+    request: dict,
+    current_user: User = Depends(get_current_user)
+):
+    """Démarrer une nouvelle séquence d'emails"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_email_sequencer_manager()
+        
+        test_mode = request.get("test_mode", False)
+        test_emails = request.get("test_emails", [])
+        
+        result = await manager.start_email_sequence(
+            test_mode=test_mode,
+            test_emails=test_emails,
+            agent_email=current_user.email
+        )
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "message": "Séquence d'emails démarrée avec succès",
+                "data": result
+            }
+        else:
+            raise HTTPException(status_code=400, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur démarrage séquence email: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.post("/api/email-sequencer/process-scheduled")
+async def process_scheduled_emails(
+    current_user: User = Depends(get_current_user)
+):
+    """Traiter les emails programmés (endpoint de maintenance)"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_email_sequencer_manager()
+        result = await manager.process_scheduled_emails()
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "message": "Emails programmés traités",
+                "data": result
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur traitement emails programmés: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/email-sequencer/metrics")
+async def get_email_sequencer_metrics(
+    sequence_id: str = None,
+    limit: int = 100,
+    current_user: User = Depends(get_current_user)
+):
+    """Obtenir les métriques des séquences d'emails"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_email_sequencer_manager()
+        result = await manager.get_sequence_metrics(sequence_id, limit)
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "data": result
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur récupération métriques: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/email-sequencer/sequence/{sequence_id}")
+async def get_sequence_status(
+    sequence_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Obtenir le statut d'une séquence spécifique"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_email_sequencer_manager()
+        result = await manager.get_sequence_status(sequence_id)
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "data": result
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur récupération statut séquence: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.post("/api/email-sequencer/stop/{sequence_id}")
+async def stop_email_sequence(
+    sequence_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Arrêter une séquence d'emails"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_email_sequencer_manager()
+        result = await manager.stop_sequence(sequence_id, current_user.email)
+        
+        if result["success"]:
+            return {
+                "status": "success",
+                "message": "Séquence arrêtée avec succès",
+                "data": result
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+            
+    except Exception as e:
+        logging.error(f"Erreur arrêt séquence: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+@app.get("/api/email-sequencer/templates")
+async def get_email_templates(
+    current_user: User = Depends(get_current_user)
+):
+    """Obtenir les templates d'emails disponibles"""
+    # Vérifier les permissions manager
+    if current_user.role != "manager":
+        raise HTTPException(status_code=403, detail="Accès réservé aux managers")
+    
+    try:
+        manager = await get_email_sequencer_manager()
+        
+        # Retourner les templates sans le HTML complet (trop lourd)
+        templates_info = {}
+        for step, config in manager.email_templates.items():
+            templates_info[step] = {
+                "subject": config["subject"],
+                "delay_days": config["delay_days"],
+                "utm_content": config["utm_content"]
+            }
+        
+        return {
+            "status": "success",
+            "templates": templates_info
+        }
+            
+    except Exception as e:
+        logging.error(f"Erreur récupération templates: {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur serveur: {str(e)}")
+
+# ========== SUPPRESSION LIST MANAGEMENT ENDPOINTS (EXISTING) ==========
 
 @app.post("/api/suppression-list/add")
 async def add_email_to_suppression_list(
