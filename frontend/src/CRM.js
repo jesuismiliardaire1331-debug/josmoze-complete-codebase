@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "./CRMLogin";
+import { useNavigate } from "react-router-dom";
 import AnalyticsDashboard from "./AnalyticsDashboard";
 import TeamContacts from "./TeamContacts";
 import EmailInterface from "./EmailInterface";
