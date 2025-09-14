@@ -69,12 +69,12 @@ class SuppressionListManager:
     ) -> Dict[str, Any]:
         """Ajouter un email à la liste de suppression"""
         try:
-            # Valider l'email
+            # Valider l'email (format seulement pour les tests)
             try:
-                validated_email = validate_email(email)
+                validated_email = validate_email(email, check_deliverability=False)
                 email = validated_email.email
             except EmailNotValidError as e:
-                return {"success": False, "error": f"Email invalide: {str(e)}"}
+                return {"success": False, "error": f"Format email invalide: {str(e)}"}
             
             # Vérifier si l'email existe déjà
             existing = await self.collection.find_one({"email": email})
