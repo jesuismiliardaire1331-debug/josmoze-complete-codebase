@@ -1912,7 +1912,7 @@ function App() {
                 {/* Translation Guardian - surveille les traductions */}
                 <TranslationGuardian />
                 {/* ChatBot pour prospects */}
-                <ChatBot />
+                <ChatBotV2 />
               </BrowserRouter>
             </div>
           </AuthProvider>
