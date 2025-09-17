@@ -127,7 +127,7 @@ const KNOWLEDGE_BASE_V3 = {
       prix_objection: ['cher', 'coûteux', 'budget', 'moyens', 'financier', 'abordable'],
       prix_demande: ['prix', 'coût', 'tarif', 'combien', '€', 'euro', 'financement'],
       comparaison_precise: ['carafe', 'brita', 'filtre', 'robinet', 'bouteille', 'evian', 'versus', 'vs'],
-      economie_roi: ['économie', 'rentable', 'amortissement', 'roi', 'investissement', 'remboursé'],
+      economie_roi: ['economie', 'rentable', 'amortissement', 'roi', 'investissement', 'rembourse'],
       
       // Nouvelles intentions produits
       animaux_nouveaute: ['chien', 'chat', 'animal', 'fontaine', 'sac', 'transport', 'distributeur'],
