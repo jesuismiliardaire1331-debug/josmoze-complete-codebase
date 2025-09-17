@@ -4986,6 +4986,186 @@ async def test_scraper_domain(domain: str):
         logging.error(f"❌ Erreur test domaine {domain}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ========== SYSTÈME DE PAIEMENT STRIPE ==========
+
+@app.get("/api/payments/packages", tags=["Paiements"])
+async def get_payment_packages():
+    """
+    📦 Obtenir la liste des packages de produits disponibles
+    
+    Retourne tous les produits Josmoze avec prix fixes (sécurisé)
+    """
+    try:
+        manager = await get_payment_manager()
+        packages = await manager.get_packages()
+        
+        return {
+            "packages": packages["packages"],
+            "currency": packages["currency"],
+            "payment_methods": ["stripe", "paypal"],
+            "secure_checkout": True
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur packages paiement: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/payments/checkout/session", tags=["Paiements"])
+async def create_checkout_session(request: Request, data: dict):
+    """
+    💳 Créer une session de paiement Stripe
+    
+    Body: {
+        "package_id": "osmoseur_particulier",
+        "quantity": 1,
+        "customer_info": {"name": "...", "email": "...", "address": {...}},
+        "metadata": {...}
+    }
+    """
+    try:
+        # Récupérer l'URL du frontend
+        host_url = str(request.base_url).rstrip('/')
+        
+        # Validation des données
+        package_id = data.get("package_id")
+        quantity = data.get("quantity", 1)
+        customer_info = data.get("customer_info", {})
+        metadata = data.get("metadata", {})
+        
+        if not package_id:
+            raise HTTPException(400, "package_id requis")
+        
+        if not customer_info.get("email"):
+            raise HTTPException(400, "Email client requis")
+        
+        # Créer session paiement
+        manager = await get_payment_manager()
+        session_response = await manager.create_checkout_session(
+            package_id=package_id,
+            quantity=quantity,
+            host_url=host_url,
+            customer_info=customer_info,
+            metadata=metadata
+        )
+        
+        return {
+            "url": session_response.url,
+            "session_id": session_response.session_id,
+            "package_id": package_id,
+            "total_items": quantity
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur création session checkout: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/payments/checkout/status/{session_id}", tags=["Paiements"])
+async def get_checkout_status(session_id: str, request: Request):
+    """
+    🔍 Vérifier le statut d'un paiement Stripe
+    
+    Used par le frontend pour polling du statut après redirection Stripe
+    """
+    try:
+        host_url = str(request.base_url).rstrip('/')
+        
+        manager = await get_payment_manager()
+        status = await manager.get_payment_status(session_id, host_url)
+        
+        return status
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur statut checkout: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/webhook/stripe", tags=["Paiements"])
+async def stripe_webhook(request: Request):
+    """
+    🔔 Webhook Stripe pour traitement des événements de paiement
+    
+    Traite automatiquement les confirmations de paiement
+    """
+    try:
+        body = await request.body()
+        stripe_signature = request.headers.get("stripe-signature", "")
+        host_url = str(request.base_url).rstrip('/')
+        
+        manager = await get_payment_manager()
+        result = await manager.handle_stripe_webhook(body, stripe_signature, host_url)
+        
+        return {"received": True, "processed": result["processed"]}
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur webhook Stripe: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+# ========== FLUX DE PAIEMENT INTÉGRÉ AVEC PANIER ==========
+
+@app.post("/api/checkout/session", tags=["E-commerce"])
+async def create_ecommerce_checkout(request: Request, data: dict):
+    """
+    🛒 Créer session de paiement pour le panier e-commerce Josmoze
+    
+    Intégration avec le flow existant du panier
+    """
+    try:
+        host_url = str(request.base_url).rstrip('/')
+        
+        # Récupérer données panier
+        cart_items = data.get("cart_items", [])
+        customer_info = data.get("customer_info", {})
+        origin_url = data.get("origin_url", host_url)
+        
+        if not cart_items:
+            raise HTTPException(400, "Panier vide")
+        
+        # Pour l'instant, on gère qu'un seul item (à étendre plus tard)
+        first_item = cart_items[0]
+        product_id = first_item.get("product_id")
+        quantity = first_item.get("quantity", 1)
+        
+        # Mapping produits vers packages
+        product_to_package = {
+            "1": "osmoseur_particulier",    # Osmoseur particulier
+            "2": "osmoseur_professionnel",  # Osmoseur pro
+            "3": "fontaine_animaux",        # Fontaine animaux  
+            "4": "sac_transport",           # Sac transport
+            "5": "distributeur_nourriture"  # Distributeur
+        }
+        
+        package_id = product_to_package.get(str(product_id), "osmoseur_particulier")
+        
+        # Créer session avec URLs personnalisées
+        metadata = {
+            "source": "ecommerce_cart",
+            "product_id": str(product_id),
+            "customer_type": customer_info.get("customer_type", "B2C")
+        }
+        
+        manager = await get_payment_manager()
+        session_response = await manager.create_checkout_session(
+            package_id=package_id,
+            quantity=quantity,
+            host_url=origin_url,  # Utiliser l'URL du frontend
+            customer_info=customer_info,
+            metadata=metadata
+        )
+        
+        return {
+            "url": session_response.url,
+            "session_id": session_response.session_id
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur checkout e-commerce: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ========== ROUTER INCLUSION ==========
 # Include all routers after all routes are defined
 api_router.include_router(crm_router, prefix="/crm")  # Include crm_router in api_router with /crm prefix
