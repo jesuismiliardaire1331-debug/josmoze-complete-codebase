@@ -5166,6 +5166,144 @@ async def create_ecommerce_checkout(request: Request, data: dict):
         logging.error(f"❌ Erreur checkout e-commerce: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# ========== WORKAROUND CRM ROUTING ==========
+
+@app.get("/crm-access")
+async def crm_access_redirect():
+    """
+    🔧 WORKAROUND: Point d'accès CRM temporaire
+    
+    Solution de contournement pour le problème de routage ingress
+    Redirige vers l'interface CRM en contournant les restrictions de routage
+    """
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Accès CRM Josmoze</title>
+        <style>
+            body { 
+                font-family: Arial, sans-serif; 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                min-height: 100vh; 
+                margin: 0; 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+            }
+            .container { 
+                text-align: center; 
+                background: rgba(255,255,255,0.1); 
+                padding: 2rem; 
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+            }
+            .button {
+                display: inline-block;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 30px;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 10px;
+                font-weight: bold;
+                transition: background 0.3s;
+            }
+            .button:hover { background: #45a049; }
+            .info { font-size: 14px; margin-top: 20px; opacity: 0.8; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🚀 Accès CRM Josmoze</h1>
+            <p>Interface de gestion commerciale</p>
+            
+            <a href="/crm-direct" class="button">📊 Accéder au CRM</a>
+            <a href="/" class="button">🌐 Site Principal</a>
+            
+            <div class="info">
+                <p>💡 <strong>Workaround temporaire</strong> pour problème de routage</p>
+                <p>🔧 Solution définitive en cours d'implémentation</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    return HTMLResponse(content=html_content)
+
+@app.get("/crm-direct")
+async def crm_direct_access():
+    """
+    🎯 ACCÈS DIRECT CRM
+    
+    Sert directement l'interface CRM en contournant les problèmes de routage
+    """
+    try:
+        # Lire le fichier index.html du build React
+        import os
+        frontend_build_path = "/app/frontend/build/index.html"
+        
+        if os.path.exists(frontend_build_path):
+            with open(frontend_build_path, 'r', encoding='utf-8') as f:
+                html_content = f.read()
+            
+            # Injecter du JavaScript pour forcer l'affichage du CRM
+            crm_injection = """
+            <script>
+                // Force CRM routing
+                window.addEventListener('DOMContentLoaded', function() {
+                    console.log('🔧 CRM Direct Access Workaround Active');
+                    
+                    // Force navigation to CRM login if not already there
+                    if (!window.location.pathname.includes('/crm')) {
+                        console.log('🔄 Redirecting to CRM...');
+                        setTimeout(() => {
+                            window.history.pushState({}, '', '/crm-login');
+                            window.dispatchEvent(new PopStateEvent('popstate'));
+                        }, 100);
+                    }
+                });
+            </script>
+            </head>
+            """
+            
+            # Injecter le script avant la fermeture du head
+            html_content = html_content.replace('</head>', crm_injection)
+            
+            return HTMLResponse(content=html_content)
+        else:
+            # Fallback si pas de build
+            return HTMLResponse(content="""
+            <html>
+            <head><title>CRM Josmoze</title></head>
+            <body>
+                <h1>CRM en cours de chargement...</h1>
+                <p>Redirection vers l'interface CRM...</p>
+                <script>
+                    setTimeout(() => {
+                        window.location.href = '/crm-login';
+                    }, 2000);
+                </script>
+            </body>
+            </html>
+            """)
+    
+    except Exception as e:
+        logging.error(f"❌ Erreur accès CRM direct: {e}")
+        return HTMLResponse(content=f"""
+        <html>
+        <body>
+            <h1>Erreur CRM</h1>
+            <p>Erreur: {str(e)}</p>
+            <a href="/crm-access">Retour</a>
+        </body>
+        </html>
+        """, status_code=500)
+
 # ========== ROUTER INCLUSION ==========
 # Include all routers after all routes are defined
 api_router.include_router(crm_router, prefix="/crm")  # Include crm_router in api_router with /crm prefix
