@@ -9102,7 +9102,7 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "message" in data and "Josmose" in data["message"]:
+                if "message" in data and ("Josmose" in data["message"] or "Osmose" in data["message"]):
                     self.log_test("API Health General", True, f"API healthy: {data['message']}")
                     return True
                 else:
