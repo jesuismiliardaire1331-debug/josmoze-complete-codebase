@@ -135,7 +135,7 @@ const KNOWLEDGE_BASE_V3 = {
       installation_service: ['installer', 'installation', 'pose', 'technicien', 'service'],
       garanties_securite: ['garantie', 'sav', 'assurance', 'securite', 'rembourse', 'satisfait'],
       
-      // Intentions d'engagement
+      // Intentions d engagement
       urgence_decision: ['urgent', 'rapidement', 'maintenant', 'aujourd'hui', 'vite'],
       hesitation_doute: ['hésite', 'réfléchir', 'pas sûr', 'doute', 'incertain'],
       temoignages_avis: ['avis', 'témoignage', 'retour', 'expérience', 'satisfaction'],
