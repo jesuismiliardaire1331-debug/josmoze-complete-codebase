@@ -7668,6 +7668,413 @@ class BackendTester:
         print("✅ EQUAL MANAGER PERMISSIONS TESTING COMPLETED")
         print("="*80)
 
+    # ========== PRIORITY TESTS FOR REVIEW REQUEST ==========
+    
+    def test_manager_authentication_naima(self):
+        """PRIORITY 1: Test CRM authentication with manager credentials naima@josmoze.com"""
+        try:
+            login_data = {
+                "username": "naima@josmoze.com",
+                "password": "Naima@2024!Commerce"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/auth/login",
+                json=login_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "access_token" in data:
+                    self.auth_token = data['access_token']
+                    self.session.headers.update({
+                        "Authorization": f"Bearer {data['access_token']}"
+                    })
+                    self.log_test("PRIORITY 1 - Manager Authentication (Naima)", True, 
+                                f"✅ Successfully authenticated naima@josmoze.com with JWT token")
+                    return True
+                else:
+                    self.log_test("PRIORITY 1 - Manager Authentication (Naima)", False, 
+                                "❌ No access token in response", data)
+                    return False
+            else:
+                self.log_test("PRIORITY 1 - Manager Authentication (Naima)", False, 
+                            f"❌ Authentication failed with status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 1 - Manager Authentication (Naima)", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_jwt_token_validation(self):
+        """PRIORITY 1: Verify JWT token is valid and contains proper claims"""
+        if not self.auth_token:
+            self.log_test("PRIORITY 1 - JWT Token Validation", False, "❌ No auth token available")
+            return False
+        
+        try:
+            # Test token by making an authenticated request
+            response = self.session.get(f"{BACKEND_URL}/auth/user-info")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "user" in data and "email" in data["user"]:
+                    user_email = data["user"]["email"]
+                    user_role = data["user"].get("role", "")
+                    
+                    if user_email == "naima@josmoze.com":
+                        self.log_test("PRIORITY 1 - JWT Token Validation", True, 
+                                    f"✅ JWT token valid for {user_email} with role: {user_role}")
+                        return True
+                    else:
+                        self.log_test("PRIORITY 1 - JWT Token Validation", False, 
+                                    f"❌ Token for wrong user: {user_email}")
+                        return False
+                else:
+                    self.log_test("PRIORITY 1 - JWT Token Validation", False, 
+                                "❌ Invalid user info response", data)
+                    return False
+            else:
+                self.log_test("PRIORITY 1 - JWT Token Validation", False, 
+                            f"❌ Token validation failed: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 1 - JWT Token Validation", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_manager_role_verification(self):
+        """PRIORITY 1: Confirm manager role is properly assigned"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/auth/user-info")
+            
+            if response.status_code == 200:
+                data = response.json()
+                user = data.get("user", {})
+                role = user.get("role", "")
+                
+                if role == "manager":
+                    self.log_test("PRIORITY 1 - Manager Role Verification", True, 
+                                f"✅ Manager role confirmed for naima@josmoze.com")
+                    return True
+                else:
+                    self.log_test("PRIORITY 1 - Manager Role Verification", False, 
+                                f"❌ Wrong role assigned: {role} (expected: manager)")
+                    return False
+            else:
+                self.log_test("PRIORITY 1 - Manager Role Verification", False, 
+                            f"❌ Failed to get user info: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 1 - Manager Role Verification", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_suppression_list_stats_priority(self):
+        """PRIORITY 2: Test /api/suppression-list/stats (GDPR module)"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/suppression-list/stats")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "total_suppressed" in data and "gdpr_compliant" in data:
+                    self.log_test("PRIORITY 2 - Suppression List Stats", True, 
+                                f"✅ GDPR module working: {data.get('total_suppressed', 0)} suppressed emails")
+                    return True
+                else:
+                    self.log_test("PRIORITY 2 - Suppression List Stats", False, 
+                                "❌ Invalid response structure", data)
+                    return False
+            elif response.status_code == 403:
+                self.log_test("PRIORITY 2 - Suppression List Stats", False, 
+                            "❌ Access forbidden - authentication issue")
+                return False
+            elif response.status_code == 401:
+                self.log_test("PRIORITY 2 - Suppression List Stats", False, 
+                            "❌ Unauthorized - authentication token issue")
+                return False
+            else:
+                self.log_test("PRIORITY 2 - Suppression List Stats", False, 
+                            f"❌ Unexpected status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 2 - Suppression List Stats", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_email_sequencer_templates_priority(self):
+        """PRIORITY 2: Test /api/email-sequencer/templates (Email Sequencer module)"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/email-sequencer/templates")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "templates" in data and isinstance(data["templates"], dict):
+                    templates = data["templates"]
+                    expected_templates = ["email1", "email2", "email3"]
+                    
+                    all_found = all(template in templates for template in expected_templates)
+                    
+                    if all_found:
+                        self.log_test("PRIORITY 2 - Email Sequencer Templates", True, 
+                                    f"✅ Email Sequencer working: {len(templates)} templates available")
+                        return True
+                    else:
+                        missing = [t for t in expected_templates if t not in templates]
+                        self.log_test("PRIORITY 2 - Email Sequencer Templates", False, 
+                                    f"❌ Missing templates: {missing}")
+                        return False
+                else:
+                    self.log_test("PRIORITY 2 - Email Sequencer Templates", False, 
+                                "❌ Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("PRIORITY 2 - Email Sequencer Templates", False, 
+                            f"❌ Request failed: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 2 - Email Sequencer Templates", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_scraper_status_priority(self):
+        """PRIORITY 2: Test /api/scraper/status (Scraper Agent module)"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/scraper/status")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if "status" in data and "gdpr_compliance" in data:
+                    status = data["status"]
+                    gdpr_compliant = data["gdpr_compliance"]
+                    
+                    self.log_test("PRIORITY 2 - Scraper Agent Status", True, 
+                                f"✅ Scraper Agent working: Status={status}, GDPR={gdpr_compliant}")
+                    return True
+                else:
+                    self.log_test("PRIORITY 2 - Scraper Agent Status", False, 
+                                "❌ Invalid response structure", data)
+                    return False
+            else:
+                self.log_test("PRIORITY 2 - Scraper Agent Status", False, 
+                            f"❌ Request failed: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 2 - Scraper Agent Status", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_prospects_endpoint_priority(self):
+        """PRIORITY 2: Test /api/prospects (prospect management for modals)"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/prospects")
+            
+            if response.status_code == 200:
+                data = response.json()
+                if isinstance(data, list):
+                    self.log_test("PRIORITY 2 - Prospects Endpoint", True, 
+                                f"✅ Prospects endpoint working: {len(data)} prospects found")
+                    return True
+                elif isinstance(data, dict) and "prospects" in data:
+                    prospects = data["prospects"]
+                    self.log_test("PRIORITY 2 - Prospects Endpoint", True, 
+                                f"✅ Prospects endpoint working: {len(prospects)} prospects found")
+                    return True
+                else:
+                    self.log_test("PRIORITY 2 - Prospects Endpoint", False, 
+                                "❌ Invalid response structure", data)
+                    return False
+            elif response.status_code == 404:
+                # Try alternative endpoint
+                response = self.session.get(f"{BACKEND_URL}/crm/leads")
+                if response.status_code == 200:
+                    data = response.json()
+                    self.log_test("PRIORITY 2 - Prospects Endpoint", True, 
+                                f"✅ Prospects available via /crm/leads: {len(data)} leads found")
+                    return True
+                else:
+                    self.log_test("PRIORITY 2 - Prospects Endpoint", False, 
+                                "❌ Neither /prospects nor /crm/leads working")
+                    return False
+            else:
+                self.log_test("PRIORITY 2 - Prospects Endpoint", False, 
+                            f"❌ Request failed: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 2 - Prospects Endpoint", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_public_unsubscribe_priority(self):
+        """PRIORITY 3: Test /api/public/unsubscribe?token=test (public unsubscribe page)"""
+        try:
+            # Test with a test token
+            response = self.session.get(f"{BACKEND_URL}/public/unsubscribe?token=test")
+            
+            if response.status_code == 200:
+                content = response.text
+                content_type = response.headers.get('content-type', '').lower()
+                
+                # Check if it returns HTML content (not JSON)
+                if 'text/html' in content_type or '<html' in content.lower():
+                    if 'unsubscribe' in content.lower() or 'désinscription' in content.lower():
+                        self.log_test("PRIORITY 3 - Public Unsubscribe", True, 
+                                    "✅ Public unsubscribe returns proper HTML page")
+                        return True
+                    else:
+                        self.log_test("PRIORITY 3 - Public Unsubscribe", False, 
+                                    "❌ HTML returned but doesn't contain unsubscribe content")
+                        return False
+                else:
+                    self.log_test("PRIORITY 3 - Public Unsubscribe", False, 
+                                f"❌ Wrong content type: {content_type} (expected HTML)")
+                    return False
+            else:
+                # Try alternative endpoint without /public prefix
+                response = self.session.get(f"{BACKEND_URL}/unsubscribe?token=test")
+                
+                if response.status_code == 200:
+                    content = response.text
+                    content_type = response.headers.get('content-type', '').lower()
+                    
+                    if 'text/html' in content_type or '<html' in content.lower():
+                        self.log_test("PRIORITY 3 - Public Unsubscribe", True, 
+                                    "✅ Unsubscribe page found at /unsubscribe (not /public/unsubscribe)")
+                        return True
+                    else:
+                        self.log_test("PRIORITY 3 - Public Unsubscribe", False, 
+                                    "❌ Endpoint found but returns non-HTML content")
+                        return False
+                else:
+                    self.log_test("PRIORITY 3 - Public Unsubscribe", False, 
+                                f"❌ Both /public/unsubscribe and /unsubscribe failed: {response.status_code}")
+                    return False
+        except Exception as e:
+            self.log_test("PRIORITY 3 - Public Unsubscribe", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def test_unsubscribe_html_validation(self):
+        """PRIORITY 3: Verify unsubscribe returns backend HTML, not React HTML"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/unsubscribe?token=test")
+            
+            if response.status_code == 200:
+                content = response.text
+                
+                # Check if it's React HTML (contains React-specific elements)
+                react_indicators = [
+                    'id="root"',
+                    'react',
+                    'ReactDOM',
+                    'App.js',
+                    'bundle.js'
+                ]
+                
+                is_react_html = any(indicator in content for indicator in react_indicators)
+                
+                if is_react_html:
+                    self.log_test("PRIORITY 3 - HTML Validation", False, 
+                                "❌ CRITICAL: Returns React HTML instead of backend HTML")
+                    return False
+                else:
+                    # Check for backend-specific HTML elements
+                    backend_indicators = [
+                        'unsubscribe',
+                        'désinscription',
+                        'form',
+                        'token'
+                    ]
+                    
+                    has_backend_content = any(indicator in content.lower() for indicator in backend_indicators)
+                    
+                    if has_backend_content:
+                        self.log_test("PRIORITY 3 - HTML Validation", True, 
+                                    "✅ Returns proper backend HTML (not React)")
+                        return True
+                    else:
+                        self.log_test("PRIORITY 3 - HTML Validation", False, 
+                                    "❌ HTML content doesn't contain expected unsubscribe elements")
+                        return False
+            else:
+                self.log_test("PRIORITY 3 - HTML Validation", False, 
+                            f"❌ Cannot validate HTML - endpoint returns: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("PRIORITY 3 - HTML Validation", False, f"❌ Exception: {str(e)}")
+            return False
+
+    def run_priority_tests(self):
+        """Run priority tests as requested in review"""
+        print("🚀 Starting Priority Backend API Tests for CRM and Critical Endpoints...")
+        print("=" * 80)
+        
+        # PRIORITY 1 - CRM Authentication Tests
+        print("\n🔐 PRIORITY 1 - CRM AUTHENTICATION TESTS")
+        print("-" * 50)
+        self.test_manager_authentication_naima()
+        self.test_jwt_token_validation()
+        self.test_manager_role_verification()
+        
+        # PRIORITY 2 - Critical API Endpoints Tests
+        print("\n🎯 PRIORITY 2 - CRITICAL API ENDPOINTS TESTS")
+        print("-" * 50)
+        self.test_suppression_list_stats_priority()
+        self.test_email_sequencer_templates_priority()
+        self.test_scraper_status_priority()
+        self.test_prospects_endpoint_priority()
+        
+        # PRIORITY 3 - Public Routes Tests
+        print("\n🌐 PRIORITY 3 - PUBLIC ROUTES TESTS")
+        print("-" * 50)
+        self.test_public_unsubscribe_priority()
+        self.test_unsubscribe_html_validation()
+        
+        # Print priority summary
+        self.print_priority_summary()
+
+    def print_priority_summary(self):
+        """Print summary of priority tests"""
+        print("\n" + "=" * 80)
+        print("📊 PRIORITY TESTS SUMMARY")
+        print("=" * 80)
+        
+        priority_tests = [r for r in self.test_results if "PRIORITY" in r["test"]]
+        
+        if not priority_tests:
+            print("❌ No priority tests found")
+            return
+        
+        passed = sum(1 for result in priority_tests if result["success"])
+        failed = len(priority_tests) - passed
+        
+        print(f"Priority Tests: {len(priority_tests)}")
+        print(f"✅ Passed: {passed}")
+        print(f"❌ Failed: {failed}")
+        print(f"Success Rate: {(passed/len(priority_tests)*100):.1f}%")
+        
+        # Group by priority
+        priority_1 = [r for r in priority_tests if "PRIORITY 1" in r["test"]]
+        priority_2 = [r for r in priority_tests if "PRIORITY 2" in r["test"]]
+        priority_3 = [r for r in priority_tests if "PRIORITY 3" in r["test"]]
+        
+        print(f"\n🔐 PRIORITY 1 - CRM Authentication: {sum(1 for r in priority_1 if r['success'])}/{len(priority_1)} passed")
+        for result in priority_1:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test'].replace('PRIORITY 1 - ', '')}")
+        
+        print(f"\n🎯 PRIORITY 2 - Critical Endpoints: {sum(1 for r in priority_2 if r['success'])}/{len(priority_2)} passed")
+        for result in priority_2:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test'].replace('PRIORITY 2 - ', '')}")
+        
+        print(f"\n🌐 PRIORITY 3 - Public Routes: {sum(1 for r in priority_3 if r['success'])}/{len(priority_3)} passed")
+        for result in priority_3:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test'].replace('PRIORITY 3 - ', '')}")
+        
+        # Show failed tests details
+        failed_tests = [r for r in priority_tests if not r["success"]]
+        if failed_tests:
+            print(f"\n❌ FAILED PRIORITY TESTS DETAILS:")
+            for result in failed_tests:
+                print(f"  - {result['test']}: {result['details']}")
+        
+        print("=" * 80)
+
     def run_all_tests(self):
         """Run all backend tests including the new AI agents tests"""
         print("🚀 Starting Comprehensive Backend API Testing for Josmose.com")
