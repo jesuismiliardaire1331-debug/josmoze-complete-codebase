@@ -310,17 +310,19 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Email Sequencer Osmoseur - Backend Implementation"
-    - "Email Sequencer Osmoseur - API Endpoints"
-    - "Suppression List / Opt-out Guardian - Backend Implementation"
-    - "Suppression List / Opt-out Guardian - API Endpoints"
-    - "Suppression List / Opt-out Guardian - Public Unsubscribe Page"
+    - "CRM Routing Infrastructure - CRITIQUE"
+    - "Email Sequencer Osmoseur - Frontend Interface"
+    - "Suppression List / Opt-out Guardian - Frontend Interface"
+    - "Scraper Agent - Frontend Interface"
+    - "Scraper Agent - CRM Integration"
   stuck_tasks:
-    - "Email Sequencer Osmoseur - Python Import Conflict"
-    - "Twilio Daily SMS Limit Reached"
-    - "Suppression List / Opt-out Guardian - Authentication System"
+    - "CRM Routing Infrastructure - CRITIQUE"
+    - "Email Sequencer Osmoseur - Frontend Interface"
+    - "Suppression List / Opt-out Guardian - Frontend Interface"
+    - "Scraper Agent - Frontend Interface"
+    - "Scraper Agent - CRM Integration"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "critical_first"
 
   - task: "Email Sequencer Osmoseur - Backend Implementation"
     implemented: true
