@@ -6,40 +6,107 @@ import { useSafeCleanup } from './hooks/useSafeCleanup';
 // Configuration
 const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
-// Base de connaissances enrichie V2 (version frontend)
-const KNOWLEDGE_BASE_V2 = {
+// Base de connaissances enrichie V3 (version frontend) - Intégration contenu validé
+const KNOWLEDGE_BASE_V3 = {
   dangers_eau: {
     nitrates: {
-      chiffres: "15% des communes dépassent les seuils, 142 cas de syndrome du bébé bleu depuis 2020",
-      zones: "Bretagne (68% communes), Champagne-Ardenne (52%), Beauce (45%)",
-      risques: "Empêchent le sang de transporter l'oxygène chez les bébés, +18% risque cancer colorectal"
+      origine: "Agriculture intensive (78% des cas), élevages industriels (15%), eaux usées urbaines (7%)",
+      chiffres_choc: "142 cas syndrome bébé bleu recensés depuis 2020, 15% communes dépassent seuils",
+      zones_critiques: "Bretagne 68% communes, Champagne-Ardenne 52%, Beauce 45%",
+      risques_sante: "Empêchent sang transporter oxygène chez bébés, +18% risque cancer colorectal adultes",
+      elimination_josmoze: "98,5% élimination garantie"
     },
     pesticides: {
-      chiffres: "5,7 pesticides différents par verre, 68% des points de contrôle contaminés",
-      top_danger: "Glyphosate 65%, Atrazine 78%, Métolachlore 52%",
-      zones: "Champagne-Ardenne 82%, Centre-Val Loire 79%"
+      chiffres_alarmants: "5,7 pesticides différents par verre en moyenne, 200+ molécules détectées, 68% points contrôle contaminés",
+      top_dangers: "Glyphosate 65% (Roundup), Atrazine 78% (interdit mais persistant), Métolachlore 52%",
+      effet_cocktail: "Personne ne sait ce qui se passe quand ces molécules se mélangent dans organisme",
+      zones_rouges: "Champagne-Ardenne 82%, Centre-Val Loire 79%, Hauts-de-France 76%",
+      elimination_josmoze: "99,2% des 200+ molécules éliminées"
     },
     chlore: {
-      probleme: "Crée sous-produits cancérigènes (trihalométhanes)",
-      impact: "Détruit la flore intestinale (-23% en 6 mois)"
+      paradoxe: "Nécessaire pour désinfecter mais crée sous-produits cancérigènes (trihalométhanes)",
+      impact_microbiote: "Détruit flore intestinale (-23% diversité en 6 mois), troubles digestifs, affaiblissement immunitaire",
+      sous_produits_toxiques: "Trihalométhanes présents 45% réseaux, classés potentiellement cancérigènes",
+      elimination_josmoze: "99,8% suppression chlore + sous-produits"
     }
   },
-  solutions: {
-    carafe: "Inefficace sur nitrates/pesticides, juste améliore le goût",
-    robinet: "70% pesticides mais 0% nitrates/virus/métaux",
-    osmose: "99,9% élimination TOUT, seule solution complète"
+  
+  solutions_comparees: {
+    carafe_filtrante: {
+      avantages: "Simple, améliore goût chlore, prix achat 30-50€",
+      inconvenients: "Inefficace nitrates/pesticides, 180€/an filtres, nid bactéries si mal entretenue",
+      verdict: "Solution de confort, pas de santé"
+    },
+    filtre_robinet: {
+      avantages: "Filtre chlore + certains pesticides, plus pratique que carafe",
+      inconvenients: "N'élimine ni nitrates, ni virus, ni métaux lourds, efficacité diminue vite",
+      verdict: "Insuffisant pour protection familiale complète"
+    },
+    eau_bouteille: {
+      problemes: "Microplastiques + 40€/mois famille + désastre écologique",
+      comparaison_cout: "40€/mois famille vs 37€/mois osmoseur",
+      verdict: "Plus cher et moins écologique qu'osmose"
+    },
+    osmose_inverse_josmoze: {
+      efficacite: "99,9% élimination TOUT, goût parfait, membrane 0,0001 micron",
+      economie: "37€/mois 0% vs 40€/mois bouteilles, économies 4800€/5 ans",
+      ecologie: "Zéro déchet plastique, -87% empreinte carbone vs eau embouteillée",
+      verdict: "Seule solution complète sans compromis"
+    }
   },
-  josmoze: {
-    efficacite: "98,5% nitrates, 99,2% pesticides, 99,8% chlore",
-    prix: "890€ (au lieu de 1290€) = 37€/mois sur 24 mois",
-    economies: "4800€ économisés sur 5 ans vs eau bouteille",
-    garanties: "30 jours satisfait/remboursé, garantie 5 ans totale"
+  
+  offres_josmoze: {
+    pack_famille: {
+      prix_promo: "890€ (au lieu de 1290€) = -31% réduction exclusive",
+      financement: "37€/mois sur 24 mois à 0%",
+      bonus_animal: "1 produit animal OFFERT au choix (fontaine 49€, sac 29€, distributeur 39€)",
+      inclus: "Osmoseur 7 étapes, installation pro, analyse gratuite, formation, filtres 1ère année, app IoT, garantie 5 ans"
+    },
+    comparaison_economique: {
+      vs_bouteilles_5ans: "4800€ économisés",
+      roi: "8 mois d'amortissement",
+      cout_reel: "0,12€/L vs 0,25€/L bouteille",
+      ecologie: "15000 bouteilles évitées/an"
+    },
+    garanties_exclusives: {
+      satisfaction: "30 jours satisfait/remboursé",
+      garantie_totale: "5 ans pièces + main d'œuvre",
+      installation: "Dégâts couverts pendant installation",
+      qualite_vie: "Analyses gratuites à vie"
+    }
   },
-  animaux: {
-    fontaine: "49€ - Eau pure pour animaux avec filtration avancée",
-    sac: "29€ - Transport premium avec purificateur d'air intégré", 
-    distributeur: "39€ - Intelligent avec mini-fontaine intégrée",
-    offre: "1 produit animal OFFERT avec chaque osmoseur"
+  
+  nouveaux_produits_animaux: {
+    fontaine_animaux: {
+      prix: "49€",
+      description: "Fontaine eau pure pour animaux avec système filtration avancé",
+      avantages: "Même technologie osmoseurs, matériaux premium, garantie 2 ans"
+    },
+    sac_transport: {
+      prix: "29€", 
+      description: "Sac transport premium pour animaux avec mini-purificateur air intégré",
+      avantages: "Ventilation optimisée, filtres anti-odeurs, compatible IATA"
+    },
+    distributeur_nourriture: {
+      prix: "39€",
+      description: "Distributeur nourriture intelligent avec intégration mini-fontaine",
+      avantages: "Application dédiée, système conservation hermétique, compatible IoT"
+    }
+  },
+  
+  temoignages_clients: {
+    sophie_lille: "2 ans avec Josmoze. Mes enfants n'ont plus de problèmes digestifs. Je recommande !",
+    dr_claire_nice: "En tant que médecin, je salue cette qualité de filtration. Mes patients vont mieux.",
+    michel_bordeaux: "Installation parfaite, équipe pro. L'économie sur l'eau en bouteille est impressionnante.",
+    note_moyenne: "4,8/5 (847 avis vérifiés)"
+  },
+  
+  arguments_vente_choc: {
+    sante_famille: "Élimine 99,9% contaminants (nitrates, pesticides, chlore, métaux, virus, bactéries)",
+    economie_prouvee: "ROI 500% sur 10 ans, économies 12710€ vs eau bouteille",
+    impact_ecologique: "Zéro déchet plastique, 15000 bouteilles évitées/an/famille",
+    technologie_nasa: "Membrane 0,0001 micron, même technologie purification spatiale",
+    simplicite_totale: "Robinet dédié, réservoir 12L, maintenance 1 visite/an"
   }
 };
 
