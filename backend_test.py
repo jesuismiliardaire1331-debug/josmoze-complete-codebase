@@ -8,6 +8,7 @@ Focus on new marketing automation features for France/Spain targeting.
 import requests
 import json
 import time
+import logging
 from datetime import datetime
 from typing import Dict, List, Any
 
