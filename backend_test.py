@@ -8359,6 +8359,14 @@ class BackendTester:
         self.test_scraper_rate_limiting()
         self.test_scraper_audit_logs()
         
+        # STRIPE PAYMENT SYSTEM TESTS - JOSMOZE CAHIER DES CHARGES (NEW PRIORITY)
+        print("\n🔥 STRIPE PAYMENT SYSTEM TESTING - JOSMOZE CAHIER DES CHARGES")
+        print("="*70)
+        self.test_stripe_payment_packages()
+        self.test_stripe_checkout_session_creation()
+        self.test_stripe_ecommerce_integration()
+        self.test_stripe_payment_status()
+        
         # Other important tests
         self.test_checkout_session_creation()
         self.test_lead_creation()
