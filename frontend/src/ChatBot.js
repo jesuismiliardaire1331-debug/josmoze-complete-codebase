@@ -216,26 +216,26 @@ const ChatBot = () => {
   const backendUrl = API_BASE;
   const { safeSetTimeout, isMounted } = useSafeCleanup();
 
-  // Messages d'accueil selon la langue
+  // Messages d'accueil selon la langue - AMÉLIORÉS V2
   const welcomeMessages = {
     fr: {
-      initial: "👋 Salut ! Thomas, expert eau pure Josmoze. Préoccupé par votre eau du robinet ? Je peux vous éclairer sur les nitrates, pesticides, chlore... Comment puis-je vous aider ?",
+      initial: "👋 Salut ! Thomas, expert eau pure Josmoze. Préoccupé par nitrates, pesticides, chlore dans votre eau ? 142 cas syndrome bébé bleu en 2024 ! Comment puis-je vous aider ?",
       suggestions: [
-        "🚨 Dangers eau robinet (nitrates, pesticides, chlore)",
-        "💰 Prix et économies (890€ vs bouteilles)",
-        "🏆 Pourquoi osmose Josmoze vs carafes/filtres",
-        "📞 Analyse gratuite de mon eau",
-        "🐾 Nouveaux produits pour animaux"
+        "🚨 Dangers cachés eau robinet (nitrates/pesticides/chlore)",
+        "💰 Prix pack famille 890€ (-31%) + financement 0%",
+        "🏆 Osmose Josmoze vs carafe/bouteilles (99,9% efficace)",
+        "📞 Analyse gratuite eau à domicile (15 paramètres)",
+        "🐾 Nouveaux produits animaux (1 OFFERT)"
       ]
     },
     en: {
-      initial: "👋 Hello! I'm Thomas, water purification expert at Josmoze. Concerned about tap water contaminants? I can explain the real dangers... How can I help?",
+      initial: "👋 Hello! I'm Thomas, water purification expert at Josmoze. Concerned about nitrates, pesticides, chlorine? 142 baby blue syndrome cases in 2024! How can I help?",
       suggestions: [
-        "🚨 Tap water dangers (nitrates, pesticides, chlorine)",
-        "💰 Prices and savings (890€ vs bottles)",
-        "🏆 Why Josmoze osmosis vs carafes/filters", 
-        "📞 Free water analysis",
-        "🐾 New animal products range"
+        "🚨 Hidden tap water dangers (nitrates/pesticides/chlorine)",
+        "💰 Family pack 890€ (-31%) + 0% financing",
+        "🏆 Josmoze osmosis vs carafes/bottles (99.9% effective)",
+        "📞 Free home water analysis (15 parameters)",
+        "🐾 New animal products range (1 FREE)"
       ]
     }
   };
