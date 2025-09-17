@@ -82,11 +82,11 @@ class StripePaymentTester:
                     
                     # Vérifier les produits Josmoze requis avec prix fixes
                     expected_products = {
-                        "osmoseur-principal": 479.0,  # Osmoseur particulier (499€ → 479€ optimisé)
-                        "osmoseur-pro": 899.0,        # Osmoseur professionnel (899€)
-                        "fontaine-animaux": 49.0,     # Nouveau produit: Fontaine animaux (49€)
-                        "sac-transport": 29.0,        # Nouveau produit: Sac transport (29€)
-                        "distributeur-nourriture": 39.0  # Nouveau produit: Distributeur nourriture (39€)
+                        "osmoseur_particulier": 499.0,  # Osmoseur particulier
+                        "osmoseur_professionnel": 899.0,        # Osmoseur professionnel (899€)
+                        "fontaine_animaux": 49.0,     # Nouveau produit: Fontaine animaux (49€)
+                        "sac_transport": 29.0,        # Nouveau produit: Sac transport (29€)
+                        "distributeur_nourriture": 39.0  # Nouveau produit: Distributeur nourriture (39€)
                     }
                     
                     all_products_found = True
