@@ -230,7 +230,7 @@ const KNOWLEDGE_BASE_V3 = {
         `✅ Promesse blindée ! Installation garantie (dégâts couverts), qualité certifiée vie entière, satisfaction 30j remboursé. Engagement total !`
       ],
       
-      // Intentions d'engagement
+      // Intentions d engagement
       urgence_decision: [
         `⚡ URGENT santé famille ! Chaque jour = exposition nitrates/pesticides/chlore. Protection immédiate disponible ! Analyse gratuite 48h. Agissez MAINTENANT !`,
         `🚨 Temps compté ! Offre -31% limitée. Stock osmoseurs réduit. Syndrome bébé bleu +15% cette année. Protection ne peut attendre !`
