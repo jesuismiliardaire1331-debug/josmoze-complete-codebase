@@ -1095,29 +1095,33 @@ const CheckoutForm = () => {
         }
       }
 
-      // Prepare cart items for backend
+      // 💳 NOUVEAU FLUX DE PAIEMENT STRIPE INTÉGRÉ
       const cartItems = cart.map(item => ({
         product_id: item.id,
         quantity: item.quantity,
         price: item.price
       }));
 
-      // Create checkout session
+      // Créer session de paiement avec le nouveau système
       const response = await axios.post(`${API}/checkout/session`, {
         cart_items: cartItems,
-        customer_info: customerInfo,
+        customer_info: {
+          ...customerInfo,
+          customer_type: customerType // B2C ou B2B
+        },
         origin_url: window.location.origin
       });
 
       if (response.data.url) {
-        // Redirect to Stripe Checkout
+        // Redirection vers Stripe Checkout
+        console.log('🎯 Redirection vers Stripe:', response.data.session_id);
         window.location.href = response.data.url;
       } else {
-        throw new Error('No checkout URL received');
+        throw new Error('URL de paiement non reçue');
       }
 
     } catch (error) {
-      console.error('Checkout error:', error);
+      console.error('Erreur checkout:', error);
       setError(error.response?.data?.detail || 'Erreur lors du paiement. Veuillez réessayer.');
     } finally {
       setLoading(false);
