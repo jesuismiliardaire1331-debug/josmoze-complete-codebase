@@ -161,7 +161,7 @@ class StripePaymentTester:
                     self.stripe_session_id = data["session_id"]  # Store for status test
                     
                     # Vérifier que la session Stripe est créée correctement
-                    if data["package_id"] == "osmoseur-principal" and data["total_items"] == 1:
+                    if data["package_id"] == "osmoseur_particulier" and data["total_items"] == 1:
                         self.log_test("Stripe Checkout Session Creation", True, 
                                     f"Session created: {data['session_id'][:20]}..., Package: {data['package_id']}")
                         
