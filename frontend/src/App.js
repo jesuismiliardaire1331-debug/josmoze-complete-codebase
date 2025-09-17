@@ -19,7 +19,7 @@ import { NotificationProvider } from "./NotificationSystem";
 import ProductRecommendations from "./ProductRecommendations";
 
 // Import ChatBot
-import ChatBot from "./ChatBot";
+import ChatBotV2 from "./ChatBot_V2";
 
 // Import Translation Guardian  
 import TranslationGuardian from "./TranslationGuardian";
