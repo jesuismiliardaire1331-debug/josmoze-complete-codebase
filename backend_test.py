@@ -8424,6 +8424,13 @@ class BackendTester:
             status = "✅" if result["success"] else "❌"
             print(f"  {status} {result['test']}: {result['details']}")
         
+        # Show Stripe Payment System tests specifically
+        print("\n🔥 STRIPE PAYMENT SYSTEM TESTS - JOSMOZE CAHIER DES CHARGES:")
+        stripe_tests = [r for r in self.test_results if "Stripe" in r["test"]]
+        for result in stripe_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"  {status} {result['test']}: {result['details']}")
+        
         print("="*80)
         """Run all backend tests"""
         print("=" * 80)
