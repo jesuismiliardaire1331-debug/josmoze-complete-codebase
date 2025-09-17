@@ -57,7 +57,7 @@ const ChatBot = () => {
   // Messages d'accueil selon la langue
   const welcomeMessages = {
     fr: {
-      initial: "👋 Bonjour ! Je suis Thomas, votre conseiller en purification d'eau. Comment puis-je vous aider ?",
+      initial: "👋 Salut ! Thomas, expert eau pure Josmoze. Préoccupé par votre eau du robinet ? Je peux vous éclairer sur les nitrates, pesticides, chlore... Comment puis-je vous aider ?",
       suggestions: [
         "💧 En savoir plus sur l'osmose inverse",
         "💰 Voir les prix et offres",
