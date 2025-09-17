@@ -133,7 +133,7 @@ const KNOWLEDGE_BASE_V3 = {
       animaux_nouveaute: ['chien', 'chat', 'animal', 'fontaine', 'sac', 'transport', 'distributeur'],
       technologie_nasa: ['technique', 'technologie', 'nasa', 'membrane', 'micron', 'comment', 'fonctionne'],
       installation_service: ['installer', 'installation', 'pose', 'technicien', 'service'],
-      garanties_securite: ['garantie', 'sav', 'assurance', 'sécurité', 'remboursé', 'satisfait'],
+      garanties_securite: ['garantie', 'sav', 'assurance', 'securite', 'rembourse', 'satisfait'],
       
       // Intentions d'engagement
       urgence_decision: ['urgent', 'rapidement', 'maintenant', 'aujourd'hui', 'vite'],
