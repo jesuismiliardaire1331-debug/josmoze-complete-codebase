@@ -163,19 +163,21 @@ const ChatBot = () => {
     fr: {
       initial: "👋 Salut ! Thomas, expert eau pure Josmoze. Préoccupé par votre eau du robinet ? Je peux vous éclairer sur les nitrates, pesticides, chlore... Comment puis-je vous aider ?",
       suggestions: [
-        "💧 En savoir plus sur l'osmose inverse",
-        "💰 Voir les prix et offres",
-        "🔧 Comment ça fonctionne ?",
-        "📞 Parler à un humain"
+        "🚨 Dangers eau robinet (nitrates, pesticides, chlore)",
+        "💰 Prix et économies (890€ vs bouteilles)",
+        "🏆 Pourquoi osmose Josmoze vs carafes/filtres",
+        "📞 Analyse gratuite de mon eau",
+        "🐾 Nouveaux produits pour animaux"
       ]
     },
     en: {
-      initial: "👋 Hello! I'm Thomas, your water purification advisor. How can I help you?",
+      initial: "👋 Hello! I'm Thomas, water purification expert at Josmoze. Concerned about tap water contaminants? I can explain the real dangers... How can I help?",
       suggestions: [
-        "💧 Learn about reverse osmosis",
-        "💰 See prices and offers", 
-        "🔧 How does it work?",
-        "📞 Talk to a human"
+        "🚨 Tap water dangers (nitrates, pesticides, chlorine)",
+        "💰 Prices and savings (890€ vs bottles)",
+        "🏆 Why Josmoze osmosis vs carafes/filters", 
+        "📞 Free water analysis",
+        "🐾 New animal products range"
       ]
     }
   };
