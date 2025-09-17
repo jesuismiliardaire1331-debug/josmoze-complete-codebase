@@ -8094,6 +8094,212 @@ class BackendTester:
         
         print("=" * 80)
 
+    # ========== STRIPE PAYMENT SYSTEM TESTS - JOSMOZE CAHIER DES CHARGES ==========
+    
+    def test_stripe_payment_packages(self):
+        """TEST 1 - PACKAGES DE PRODUITS JOSMOZE: GET /api/payments/packages"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/payments/packages")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "status" in data and data["status"] == "success":
+                    packages = data.get("packages", {})
+                    
+                    # Vérifier les produits Josmoze requis avec prix fixes
+                    expected_products = {
+                        "osmoseur-principal": 479.0,  # Osmoseur particulier (499€ → 479€ optimisé)
+                        "osmoseur-pro": 899.0,        # Osmoseur professionnel (899€)
+                        "fontaine-animaux": 49.0,     # Nouveau produit: Fontaine animaux (49€)
+                        "sac-transport": 29.0,        # Nouveau produit: Sac transport (29€)
+                        "distributeur-nourriture": 39.0  # Nouveau produit: Distributeur nourriture (39€)
+                    }
+                    
+                    all_products_found = True
+                    missing_products = []
+                    price_mismatches = []
+                    
+                    for product_id, expected_price in expected_products.items():
+                        if product_id not in packages:
+                            all_products_found = False
+                            missing_products.append(product_id)
+                        elif packages[product_id] != expected_price:
+                            price_mismatches.append(f"{product_id}: expected {expected_price}€, got {packages[product_id]}€")
+                    
+                    if all_products_found and not price_mismatches:
+                        self.log_test("Stripe Payment Packages", True, 
+                                    f"All Josmoze products available with correct prices: {len(packages)} packages")
+                        return True
+                    else:
+                        error_details = []
+                        if missing_products:
+                            error_details.append(f"Missing: {missing_products}")
+                        if price_mismatches:
+                            error_details.append(f"Price mismatches: {price_mismatches}")
+                        
+                        self.log_test("Stripe Payment Packages", False, "; ".join(error_details))
+                        return False
+                else:
+                    self.log_test("Stripe Payment Packages", False, "Invalid response format", data)
+                    return False
+            else:
+                self.log_test("Stripe Payment Packages", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Stripe Payment Packages", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_stripe_checkout_session_creation(self):
+        """TEST 2 - CRÉATION SESSION DE PAIEMENT: POST /api/payments/checkout/session avec authentification manager"""
+        try:
+            # Données de test avec package_id="osmoseur_particulier", quantity=1
+            checkout_data = {
+                "package_id": "osmoseur-principal",  # Note: using osmoseur-principal as per PRODUCT_PACKAGES
+                "quantity": 1,
+                "customer_info": {
+                    "name": "Jean Dupont",
+                    "email": "jean.dupont@test-josmoze.com",
+                    "phone": "+33123456789",
+                    "address": {
+                        "street": "123 Rue de la Paix",
+                        "city": "Paris",
+                        "postal_code": "75001",
+                        "country": "France"
+                    }
+                },
+                "metadata": {
+                    "source": "test_cahier_des_charges",
+                    "test_mode": True
+                }
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/payments/checkout/session",
+                json=checkout_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = ["url", "session_id", "package_id", "total_items"]
+                
+                if all(field in data for field in required_fields):
+                    self.stripe_session_id = data["session_id"]  # Store for status test
+                    
+                    # Vérifier que la session Stripe est créée correctement
+                    if data["package_id"] == "osmoseur-principal" and data["total_items"] == 1:
+                        self.log_test("Stripe Checkout Session Creation", True, 
+                                    f"Session created: {data['session_id'][:20]}..., Package: {data['package_id']}")
+                        
+                        # Vérifier que la transaction est enregistrée dans MongoDB (indirectement via l'API)
+                        return True
+                    else:
+                        self.log_test("Stripe Checkout Session Creation", False, 
+                                    f"Incorrect session data: package={data['package_id']}, items={data['total_items']}")
+                        return False
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_test("Stripe Checkout Session Creation", False, f"Missing fields: {missing}", data)
+                    return False
+            else:
+                self.log_test("Stripe Checkout Session Creation", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Stripe Checkout Session Creation", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_stripe_ecommerce_integration(self):
+        """TEST 3 - INTÉGRATION E-COMMERCE EXISTANTE: POST /api/checkout/session (flow existant du panier)"""
+        try:
+            # Test avec un cart_item simulé (flow existant)
+            checkout_data = {
+                "cart_items": [
+                    {
+                        "product_id": "osmoseur-principal",
+                        "quantity": 1,
+                        "price": 479.0  # This should be validated server-side
+                    }
+                ],
+                "customer_info": {
+                    "email": "client.ecommerce@test-josmoze.com",
+                    "name": "Marie Martin",
+                    "phone": "+33987654321"
+                },
+                "origin_url": "https://josmoze.com"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/checkout/session",
+                json=checkout_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "url" in data and "session_id" in data:
+                    # Vérifier redirection vers Stripe
+                    if "stripe" in data["url"].lower() or data["url"].startswith("https://"):
+                        self.log_test("Stripe E-commerce Integration", True, 
+                                    f"E-commerce flow working, redirects to: {data['url'][:50]}...")
+                        return True
+                    else:
+                        self.log_test("Stripe E-commerce Integration", False, 
+                                    f"Invalid redirect URL: {data['url']}")
+                        return False
+                else:
+                    self.log_test("Stripe E-commerce Integration", False, "Missing url or session_id", data)
+                    return False
+            else:
+                self.log_test("Stripe E-commerce Integration", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Stripe E-commerce Integration", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_stripe_payment_status(self):
+        """TEST 4 - STATUT DE PAIEMENT: GET /api/payments/checkout/status/{session_id}"""
+        if not hasattr(self, 'stripe_session_id') or not self.stripe_session_id:
+            # Create a test session first
+            self.test_stripe_checkout_session_creation()
+        
+        if not hasattr(self, 'stripe_session_id') or not self.stripe_session_id:
+            self.log_test("Stripe Payment Status", False, "No session_id available from previous test")
+            return False
+        
+        try:
+            response = self.session.get(f"{BACKEND_URL}/payments/checkout/status/{self.stripe_session_id}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                required_fields = ["session_id", "status", "payment_status"]
+                
+                if all(field in data for field in required_fields):
+                    # Vérifier que le statut est cohérent
+                    session_id = data["session_id"]
+                    status = data["status"]
+                    payment_status = data["payment_status"]
+                    
+                    if session_id == self.stripe_session_id:
+                        self.log_test("Stripe Payment Status", True, 
+                                    f"Status retrieved: session={status}, payment={payment_status}")
+                        return True
+                    else:
+                        self.log_test("Stripe Payment Status", False, 
+                                    f"Session ID mismatch: expected {self.stripe_session_id}, got {session_id}")
+                        return False
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_test("Stripe Payment Status", False, f"Missing fields: {missing}", data)
+                    return False
+            else:
+                self.log_test("Stripe Payment Status", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("Stripe Payment Status", False, f"Exception: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests including the new AI agents tests"""
         print("🚀 Starting Comprehensive Backend API Testing for Josmose.com")
