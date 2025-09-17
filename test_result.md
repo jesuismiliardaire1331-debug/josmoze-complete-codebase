@@ -221,7 +221,7 @@ backend:
 
   - task: "Suppression List / Opt-out Guardian - API Endpoints"
     implemented: true
-    working: false
+    working: true
     file: "backend/server.py"
     stuck_count: 1
     priority: "critical"
@@ -233,6 +233,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "❌ ENDPOINTS EXIST BUT AUTH FAILING: All suppression list endpoints properly implemented and secured. Structure verified: POST /add (manual email), GET /stats (statistics), GET /list (paginated with filters), GET /check/{email} (individual verification), POST /import-csv, GET /export-csv, GET /gdpr-journal. All return 403 Forbidden correctly when not authenticated, but authentication system (naima@josmose.com) returns 401/422 errors."
+        - working: true
+          agent: "testing"
+          comment: "✅ SUPPRESSION LIST API ENDPOINTS WORKING: Authentication resolved - all endpoints accessible with manager credentials. GET /api/suppression-list/stats returns proper structure: {'status': 'success', 'stats': {'total_suppressed': 3, 'recent_suppressed_30d': 3, 'by_reason': [...], 'by_source': [...]}}. GDPR/CNIL compliance verified with proper statistics and audit trail."
 
   - task: "Suppression List / Opt-out Guardian - Public Unsubscribe Page"
     implemented: true
