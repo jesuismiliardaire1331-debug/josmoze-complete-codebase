@@ -137,9 +137,9 @@ const KNOWLEDGE_BASE_V3 = {
       
       // Intentions d engagement
       urgence_decision: ['urgent', 'rapidement', 'maintenant', 'aujourd'hui', 'vite'],
-      hesitation_doute: ['hésite', 'réfléchir', 'pas sûr', 'doute', 'incertain'],
-      temoignages_avis: ['avis', 'témoignage', 'retour', 'expérience', 'satisfaction'],
-      contact_humain: ['parler', 'contact', 'téléphone', 'rendez-vous', 'expert', 'conseiller'],
+      hesitation_doute: ['hesite', 'reflechir', 'pas sur', 'doute', 'incertain'],
+      temoignages_avis: ['avis', 'temoignage', 'retour', 'experience', 'satisfaction'],
+      contact_humain: ['parler', 'contact', 'telephone', 'rendez-vous', 'expert', 'conseiller'],
       
       // Intentions de base
       salutation: ['bonjour', 'bonsoir', 'salut', 'hello', 'coucou'],
