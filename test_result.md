@@ -251,6 +251,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "❌ ROUTING ISSUE: Public unsubscribe page GET /unsubscribe?token=XXX returns main website HTML instead of unsubscribe page. URL routing not working correctly - requests to /unsubscribe are being redirected to main React app instead of backend endpoint."
+        - working: false
+          agent: "testing"
+          comment: "❌ ROUTING ISSUE CONFIRMED: Backend endpoint exists at /unsubscribe with proper HTML template implementation, but Kubernetes ingress/routing configuration redirects all /unsubscribe requests to React frontend instead of backend. This is an infrastructure routing issue, not a backend code issue. Backend implementation is correct but inaccessible due to URL routing configuration."
 
 frontend:
   - task: "AI Agents Manager Interface"
