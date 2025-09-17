@@ -189,7 +189,7 @@ class StripePaymentTester:
             checkout_data = {
                 "cart_items": [
                     {
-                        "product_id": "osmoseur-principal",
+                        "product_id": "osmoseur_particulier",
                         "quantity": 1,
                         "price": 479.0  # This should be validated server-side
                     }
