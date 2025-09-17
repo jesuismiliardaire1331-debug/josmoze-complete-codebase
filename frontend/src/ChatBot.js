@@ -43,6 +43,110 @@ const KNOWLEDGE_BASE_V2 = {
   }
 };
 
+  // Système de réponses intelligentes V2 ENRICHI
+  const getIntelligentResponse = (message) => {
+    const lowerMessage = message.toLowerCase();
+    
+    // Détection d'intention enrichie V2
+    const intentions = {
+      prix: ['prix', 'coût', 'tarif', 'combien', 'cher', 'euro', '€', 'budget', 'financement'],
+      dangers_sante: ['danger', 'santé', 'risque', 'bébé', 'enfant', 'cancer', 'sécurisé', 'famille'],
+      nitrates: ['nitrate', 'nitrites', 'syndrome', 'bleu', 'nourrisson', 'agriculture'],
+      pesticides: ['pesticide', 'glyphosate', 'roundup', 'atrazine', 'chimique', 'agricole', 'cocktail'],
+      chlore: ['chlore', 'javel', 'goût', 'odeur', 'microbiote', 'intestin', 'désinfection'],
+      comparaison: ['comparaison', 'différence', 'mieux', 'versus', 'vs', 'carafe', 'brita', 'bouteille'],
+      efficacite: ['efficace', 'marche', 'fonctionne', 'résultat', 'qualité', 'élimine', 'filtre'],
+      animaux: ['chien', 'chat', 'animal', 'fontaine', 'sac', 'transport', 'distributeur', 'nourriture'],
+      installation: ['installer', 'installation', 'pose', 'montage', 'technicien'],
+      technique: ['technique', 'comment', 'principe', 'fonctionnement', 'osmose', 'membrane'],
+      contact: ['contact', 'téléphone', 'rendez-vous', 'devis', 'gratuit', 'analyse'],
+      salutation: ['bonjour', 'bonsoir', 'salut', 'hello', 'coucou'],
+      remerciements: ['merci', 'thanks', 'parfait', 'super', 'génial'],
+      hesitation: ['hésite', 'réfléchir', 'pas sûr', 'doute', 'cher', 'investissement']
+    };
+    
+    let detectedIntention = 'default';
+    let maxScore = 0;
+    
+    Object.entries(intentions).forEach(([intention, keywords]) => {
+      const score = keywords.reduce((acc, keyword) => {
+        return acc + (lowerMessage.includes(keyword) ? 1 : 0);
+      }, 0);
+      
+      if (score > maxScore) {
+        maxScore = score;
+        detectedIntention = intention;
+      }
+    });
+    
+    // Réponses V2 enrichies avec nouvelle base de connaissances
+    const responses = {
+      prix: [
+        `💰 Pack famille ${KNOWLEDGE_BASE_V2.josmoze.prix} = moins cher que l'eau en bouteille ! Économies ${KNOWLEDGE_BASE_V2.josmoze.economies}. ${KNOWLEDGE_BASE_V2.josmoze.garanties}. Calcul personnalisé ?`,
+        "💸 Investissement intelligent : 890€ = 2,44€/jour pour eau pure à vie ! Financement 0% disponible. ROI en 8 mois vs bouteilles. Simulation gratuite ?"
+      ],
+      dangers_sante: [
+        `🚨 Dangers réels confirmés ! ${KNOWLEDGE_BASE_V2.dangers_eau.pesticides.chiffres}. ${KNOWLEDGE_BASE_V2.dangers_eau.nitrates.chiffres}. Josmoze ${KNOWLEDGE_BASE_V2.josmoze.efficacite}. Votre famille mérite mieux !`,
+        "⚠️ Eau du robinet : 68% points contaminés pesticides, syndrome bébé bleu en hausse, chlore détruit microbiote. Protection urgente ? Notre analyse gratuite révèle tout !"
+      ],
+      nitrates: [
+        `🍼 ALERTE nitrates ! ${KNOWLEDGE_BASE_V2.dangers_eau.nitrates.chiffres}. Zones critiques: ${KNOWLEDGE_BASE_V2.dangers_eau.nitrates.zones}. ${KNOWLEDGE_BASE_V2.dangers_eau.nitrates.risques}. Bébés/enfants à la maison ?`,
+        "⚠️ Syndrome bébé bleu = nitrates empêchent oxygène sang ! 142 cas depuis 2020. Josmoze élimine 98,5% nitrates. Sécurité totale garantie. Famille à protéger ?"
+      ],
+      pesticides: [
+        `🌾 Cocktail chimique ! ${KNOWLEDGE_BASE_V2.dangers_eau.pesticides.chiffres}. Pires: ${KNOWLEDGE_BASE_V2.dangers_eau.pesticides.top_danger}. Zones rouge: ${KNOWLEDGE_BASE_V2.dangers_eau.pesticides.zones}. Effet mélange = inconnu !`,
+        "☢️ Glyphosate dans 65% échantillons ! Atrazine interdite mais présente 78% ! Josmoze élimine 99,2% des 200+ molécules. Protection immédiate disponible !"
+      ],
+      chlore: [
+        `💧 Paradoxe chlore ! ${KNOWLEDGE_BASE_V2.dangers_eau.chlore.probleme}. ${KNOWLEDGE_BASE_V2.dangers_eau.chlore.impact}. Troubles digestifs inexpliqués ? Solution: 99,8% suppression Josmoze !`,
+        "🦠 Chlore = faux ami ! Tue bactéries mais crée cancérigènes + détruit vos bonnes bactéries intestinales. Défenses immunitaires affaiblies. Stoppez ça maintenant !"
+      ],
+      comparaison: [
+        `📊 Comparaison claire ! ${KNOWLEDGE_BASE_V2.solutions.carafe} vs ${KNOWLEDGE_BASE_V2.solutions.robinet} vs ${KNOWLEDGE_BASE_V2.solutions.osmose}. Seul Josmoze = protection totale ! Priorité ?`,
+        "🎯 Brita/carafe = 0% nitrates ! Filtre robinet = 0% virus/métaux ! Bouteilles = microplastiques + ruine ! OSMOSE JOSMOZE = 99,9% TOUT éliminé. Évident non ?"
+      ],
+      efficacite: [
+        `✅ Efficacité laboratoire prouvée ! ${KNOWLEDGE_BASE_V2.josmoze.efficacite}. Certifié NSF International (standard NASA). Tests Suez confirment. Preuves scientifiques ?`,
+        "🏆 SEULE solution 99,9% ! Membrane 0,0001 micron = barrière infranchissable. Technologie spatiale pour votre cuisine. Démonstration gratuite ?"
+      ],
+      animaux: [
+        `🐾 Nouveauté ! ${KNOWLEDGE_BASE_V2.animaux.fontaine}, ${KNOWLEDGE_BASE_V2.animaux.sac}, ${KNOWLEDGE_BASE_V2.animaux.distributeur}. ${KNOWLEDGE_BASE_V2.animaux.offre} ! Vos compagnons aussi méritent le meilleur !`,
+        "🐕 Gamme animaux exclusive ! Eau pure pour toute la famille + compagnons. 1 produit animal OFFERT avec osmoseur. Chiens/chats à la maison ?"
+      ],
+      installation: [
+        "🔧 Installation pro 1h45, technicien certifié, garantie 5 ans ! Sous-évier discret, robinet dédié élégant. Formation famille incluse. Disponibilités 7j/7. Type logement ?",
+        "⚙️ Service clé en main total ! Analyse → installation → formation → maintenance. 890€ tout compris. Tranquillité absolue garantie. Planning souhaité ?"
+      ],
+      technique: [
+        "🔬 Technologie NASA ! Membrane 0,0001 micron = 100 000x plus fin cheveu ! Force H2O pure, rejette tout le reste. 7 étapes brevetées vs 3-5 concurrents. Détails techniques ?",
+        "⚛️ Osmose inverse = miracle physique ! Pression sépare molécules. Seule eau H2O passe. Contaminants rejetés 99,9%. Principe révolutionnaire démocratisé !"
+      ],
+      contact: [
+        "📞 Analyse gratuite à domicile ! Expert teste 15 paramètres, conseille solution parfaite. 100% gratuit. Réservation josmoze.com ou 0800 123 456. Région ?",
+        "🎯 Rendez-vous expert gratuit ! Diagnostic complet eau + calcul économies + devis personnalisé. Disponible partout France. Quand vous arrange ?"
+      ],
+      hesitation: [
+        "🤔 Compréhensible ! Gros investissement santé famille. MAIS : 30 jours satisfait/remboursé + financement 0% + économies immédiate. Risque zéro ! Quelle hésitation précisément ?",
+        "💭 Normal d'hésiter ! Analysons ensemble : coût réel 0,12€/L vs 0,25€/L bouteilles. ROI 8 mois. Santé famille = sans prix ! Questions spécifiques ?"
+      ],
+      salutation: [
+        "👋 Salut ! Thomas expert eau pure Josmoze. 68% eaux françaises contaminées ! 142 cas graves bébés ! Votre famille boit quoi ? Analyse gratuite révèle tout !",
+        "😊 Bonjour ! Spécialiste protection familiale eau. Nitrates, pesticides, chlore = dangers réels cachés ! Solutions immédiates disponibles. Situation actuelle ?"
+      ],
+      remerciements: [
+        "🙏 Mission accomplie ! Protéger familles = ma passion. Questions supplémentaires ? Analyse gratuite josmoze.com pour aller plus loin !",
+        "😊 Avec plaisir ! Santé famille = priorité absolue. Prochaine étape : analyse gratuite révèle état réel votre eau. Intéressé ?"
+      ],
+      default: [
+        "🤔 Précisez svp ? Spécialités : dangers eau (nitrates/pesticides/chlore), solutions filtration, prix économies, installation pro. Préoccupation principale ?",
+        "💡 Nombreux sujets possibles ! Qualité eau actuelle, protection famille, comparaisons solutions, prix financement, nouveautés animaux... Focus ?"
+      ]
+    };
+    
+    const intentionResponses = responses[detectedIntention] || responses.default;
+    return intentionResponses[Math.floor(Math.random() * intentionResponses.length)];
+  };
+
 const ChatBot = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
