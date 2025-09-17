@@ -18,7 +18,7 @@ async def test_debug_url():
     
     # URLs à tester
     urls_test = [
-        "https://josmoze-crm.preview.emergentagent.com",
+        "https://josmoze-ecommerce.preview.emergentagent.com",
         "http://0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com",
         "0d683f65-404e-4436-abda-79303fb40932.preview.emergentagent.com",
     ]

@@ -8,7 +8,7 @@ import json
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-crm.preview.emergentagent.com/api"
+BACKEND_URL = "https://josmoze-ecommerce.preview.emergentagent.com/api"
 
 def test_all_managers_abandoned_cart_access():
     """Test that all 3 managers can access abandoned cart endpoints"""

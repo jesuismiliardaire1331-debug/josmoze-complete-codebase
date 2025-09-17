@@ -11,7 +11,7 @@ from datetime import datetime
 from typing import Dict, List, Any
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-crm.preview.emergentagent.com/api"
+BACKEND_URL = "https://josmoze-ecommerce.preview.emergentagent.com/api"
 
 class SuppressionListTester:
     def __init__(self):
