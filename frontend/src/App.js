@@ -148,30 +148,40 @@ const pollPaymentStatus = async (sessionId, attempts = 0) => {
   const pollInterval = 2000; // 2 seconds
 
   if (attempts >= maxAttempts) {
-    return { success: false, message: 'Payment status check timed out. Please check your email for confirmation.' };
+    return { success: false, message: 'Vérification du paiement expirée. Veuillez consulter votre email de confirmation.' };
   }
 
   try {
-    const response = await fetch(`${API}/checkout/status/${sessionId}`);
+    // 🔄 NOUVEAU SYSTÈME DE POLLING STRIPE
+    const response = await fetch(`${API}/payments/checkout/status/${sessionId}`);
     if (!response.ok) {
-      throw new Error('Failed to check payment status');
+      throw new Error('Erreur vérification paiement');
     }
 
     const data = await response.json();
     
+    // Vérifier si paiement réussi
     if (data.payment_status === 'paid') {
-      return { success: true, message: 'Payment successful! Thank you for your purchase.', data };
+      return { 
+        success: true, 
+        message: 'Paiement réussi ! Merci pour votre commande.', 
+        data: data
+      };
     } else if (data.status === 'expired') {
-      return { success: false, message: 'Payment session expired. Please try again.' };
+      return { 
+        success: false, 
+        message: 'Session de paiement expirée. Veuillez réessayer.' 
+      };
     }
 
-    // If payment is still pending, continue polling
+    // Si paiement en cours, continuer le polling
+    console.log(`🔄 Polling paiement (${attempts + 1}/${maxAttempts}):`, data.payment_status);
     await new Promise(resolve => setTimeout(resolve, pollInterval));
     return await pollPaymentStatus(sessionId, attempts + 1);
     
   } catch (error) {
-    console.error('Error checking payment status:', error);
-    return { success: false, message: 'Error checking payment status. Please try again.' };
+    console.error('Erreur vérification paiement:', error);
+    return { success: false, message: 'Erreur lors de la vérification. Veuillez réessayer.' };
   }
 };
 
