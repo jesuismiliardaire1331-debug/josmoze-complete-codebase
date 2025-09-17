@@ -54,6 +54,7 @@ from ai_agents import get_marketing_automation, MarketingAutomation
 # Import new inventory management and social media automation systems
 from inventory_manager import get_inventory_manager, StockItem, CustomerProfile, OrderTracking, Invoice
 from social_media_automation import get_social_media_automation, SocialMediaAutomation, Campaign, AdCreative
+from backend.payment_manager import get_payment_manager
 
 
 ROOT_DIR = Path(__file__).parent
