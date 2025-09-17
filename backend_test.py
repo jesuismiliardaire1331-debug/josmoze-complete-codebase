@@ -8655,19 +8655,14 @@ class BackendTester:
         return success_rate >= 80
 
 if __name__ == "__main__":
-    print("🔄 JOSMOSE CRM - SUPPRESSION LIST / OPT-OUT GUARDIAN GDPR/CNIL TESTING")
-    print("Testing newly implemented GDPR/CNIL compliant suppression list module")
+    print("🎯 JOSMOSE CRM - PRIORITY BACKEND TESTING")
+    print("Testing CRM authentication and critical API endpoints as requested")
     print("="*80)
     
     tester = BackendTester()
     
-    # Run focused tests on suppression list module
-    tester.run_suppression_list_tests()
-    
-    # Also run some core API tests to ensure system is working
-    print("\n🔧 RUNNING CORE API TESTS...")
-    tester.test_root_endpoint()
-    tester.test_location_detection()
+    # Run priority tests as requested in review
+    tester.run_priority_tests()
     tester.test_product_catalog()
     
     # Generate final summary
