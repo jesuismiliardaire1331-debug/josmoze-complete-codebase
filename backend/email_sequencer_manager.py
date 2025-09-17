@@ -33,12 +33,12 @@ class EmailSequencerManager:
         self.from_email = "contact@josmoze.com"
         self.base_url = "https://www.josmoze.com"
         
-        # Templates d'emails
+        # Templates d'emails - VERSION V2 OPTIMISEE avec nouveau contenu valide
         self.email_templates = {
             "email1": {
-                "subject": "Votre eau mérite mieux 💧",
+                "subject": "🚨 Sarah, saviez-vous ce que contient VRAIMENT votre eau du robinet ?",
                 "delay_days": 0,
-                "utm_content": "email1",
+                "utm_content": "email1_sensibilisation",
                 "template": """
 <!DOCTYPE html>
 <html lang="fr">
@@ -48,51 +48,70 @@ class EmailSequencerManager:
     <title>{{ subject }}</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
-        .cta-button { display: inline-block; background: #007bff; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
-        .benefits { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .benefit-item { margin: 10px 0; }
-        .offer { background: #e7f3ff; border-left: 4px solid #007bff; padding: 20px; margin: 20px 0; }
+        .cta-button { display: inline-block; background: #dc3545; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+        .danger-alert { background: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; margin: 20px 0; }
+        .chiffres-choc { background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; margin: 20px 0; border-radius: 8px; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #666; border-radius: 0 0 10px 10px; }
         @media (max-width: 600px) { body { padding: 10px; } .header, .content { padding: 20px; } }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>💧 Josmoze.com</h1>
-        <h2>Votre eau mérite mieux</h2>
+        <h1>🚨 JOSMOZE.COM</h1>
+        <h2>Alerte Eau du Robinet</h2>
     </div>
     
     <div class="content">
-        <p>Bonjour {{ first_name or '' }},</p>
+        <p>Bonjour {{ first_name or 'Cher lecteur' }},</p>
         
-        <p>Savez-vous que <strong>99 % des contaminants de l'eau du robinet</strong> peuvent être éliminés en quelques minutes ?</p>
+        <p><strong>Vous buvez de l'eau du robinet en toute confiance ?</strong></p>
         
-        <p>Découvrez notre <strong>osmoseur nouvelle génération</strong> :</p>
+        <p>Moi aussi, jusqu'à ce que je découvre les résultats de la dernière étude nationale sur la qualité de l'eau en France...</p>
         
-        <div class="benefits">
-            <div class="benefit-item">✔️ <strong>Eau plus pure et plus saine</strong> - Élimine chlore, nitrates, calcaire</div>
-            <div class="benefit-item">✔️ <strong>Économies importantes</strong> - Jusqu'à 700 €/an vs. eau en bouteille</div>
-            <div class="benefit-item">✔️ <strong>Installation simple</strong> - Posé en moins d'1 heure</div>
+        <div class="chiffres-choc">
+            <h3>🔍 Les chiffres qui font froid dans le dos :</h3>
+            <ul>
+                <li>• <strong>68% des points de contrôle</strong> contiennent des pesticides</li>
+                <li>• <strong>Plus de 200 molécules chimiques</strong> détectées dans l'eau du robinet</li>
+                <li>• <strong>15% des communes</strong> dépassent les seuils de nitrates recommandés</li>
+                <li>• <strong>142 cas de syndrome du bébé bleu</strong> recensés depuis 2020</li>
+            </ul>
+            <p><em>Et ce sont les chiffres OFFICIELS...</em></p>
         </div>
         
-        <div class="offer">
-            <h3>💧 Offre de lancement</h3>
-            <p><strong>549 € TTC</strong> (au lieu de 649 €)</p>
-            <p>Ou <strong>3× 183 € sans frais</strong></p>
-            <p>🎁 <strong>Filtres année 1 offerts</strong> (valeur 109 €)</p>
+        <div class="danger-alert">
+            <h3>⚠️ Votre famille boit peut-être un cocktail chimique quotidien sans le savoir</h3>
+            <p><strong>Nitrates, pesticides, chlore, métaux lourds</strong> : Ces substances s'accumulent dans votre organisme et celui de vos enfants jour après jour.</p>
         </div>
+        
+        <p><strong>Le plus troublant ?</strong> La réglementation teste chaque substance individuellement, mais <strong>personne ne connaît l'effet de ce mélange</strong> sur votre santé à long terme.</p>
         
         <div style="text-align: center;">
-            <a href="{{ cta_link }}" class="cta-button">Je découvre maintenant</a>
+            <a href="{{ cta_link }}" class="cta-button">🔍 Découvrir toute la vérité</a>
         </div>
         
-        <p>Cette offre est limitée dans le temps. Ne laissez pas passer cette opportunité d'améliorer votre qualité de vie !</p>
+        <div class="chiffres-choc">
+            <h3>🎥 Témoignage choc du Dr. Christine Marseille :</h3>
+            <p><em>"En 15 ans d'exercice en Bretagne, j'ai vu exploser les troubles digestifs inexpliqués. Quand mes patients passent à l'eau filtrée, 70% voient leurs symptômes s'améliorer en 2 mois."</em></p>
+        </div>
+        
+        <p><strong>{{ first_name or 'Cher lecteur' }}, votre eau est-elle vraiment sûre ?</strong></p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ cta_link }}" class="cta-button">📞 ANALYSE GRATUITE DE VOTRE EAU</a>
+        </div>
+        
+        <p><small>Nos experts se déplacent chez vous et testent 15 paramètres cruciaux</small></p>
+        
+        <p>Vous méritez de savoir ce que vous buvez.</p>
         
         <p>Cordialement,<br>
-        <strong>L'équipe Josmoze</strong><br>
-        Spécialiste des systèmes d'osmose inverse</p>
+        <strong>Pierre Moreau</strong><br>
+        <em>Expert Traitement Eau - Josmoze</em></p>
+        
+        <p><strong>P.S.</strong> : Cette analyse est 100% gratuite et sans engagement. Mais les créneaux disponibles partent vite...</p>
     </div>
     
     <div class="footer">
@@ -105,9 +124,9 @@ class EmailSequencerManager:
                 """
             },
             "email2": {
-                "subject": "Et si vous goûtiez la différence ?",
-                "delay_days": 2,
-                "utm_content": "email2",
+                "subject": "Sarah, ces 3 substances dans votre eau inquiètent les médecins...",
+                "delay_days": 4,
+                "utm_content": "email2_education",
                 "template": """
 <!DOCTYPE html>
 <html lang="fr">
@@ -120,51 +139,101 @@ class EmailSequencerManager:
         .header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
         .cta-button { display: inline-block; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
-        .testimonial { background: #f8f9fa; border-left: 4px solid #28a745; padding: 20px; margin: 20px 0; font-style: italic; }
-        .offer { background: #d4edda; border: 1px solid #c3e6cb; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .menace-box { background: #f8d7da; border-left: 4px solid #dc3545; padding: 20px; margin: 20px 0; }
+        .zones-box { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 15px 0; }
+        .solutions-box { background: #e2e3e5; border-left: 4px solid #6c757d; padding: 15px; margin: 15px 0; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #666; border-radius: 0 0 10px 10px; }
         @media (max-width: 600px) { body { padding: 10px; } .header, .content { padding: 20px; } }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>💧 Josmoze.com</h1>
-        <h2>Et si vous goûtiez la différence ?</h2>
+        <h1>🧪 JOSMOZE.COM</h1>
+        <h2>Les 3 Menaces Principales</h2>
     </div>
     
     <div class="content">
-        <p>Bonjour {{ first_name or '' }},</p>
+        <p>Bonjour {{ first_name or 'Cher lecteur' }},</p>
         
-        <p>Avez-vous déjà goûté <strong>une eau aussi pure qu'en montagne</strong>, directement au robinet ?</p>
+        <p>Suite à mon premier message sur les dangers cachés de l'eau du robinet, vous avez été <strong>nombreux à me poser cette question :</strong></p>
         
-        <p>Notre osmoseur élimine :</p>
-        <ul>
-            <li>🚫 <strong>Chlore</strong> - Fini le goût et l'odeur désagréables</li>
-            <li>🚫 <strong>Nitrates</strong> - Protection pour toute la famille</li>
-            <li>🚫 <strong>Calcaire</strong> - Eau douce et pure</li>
-            <li>🚫 <strong>Microplastiques</strong> - Santé préservée</li>
-        </ul>
+        <p><em>"Concrètement, quelles sont les substances les plus dangereuses dans mon eau ?"</em></p>
         
-        <div class="testimonial">
-            "Depuis l'installation de notre osmoseur Josmoze, nous avons redécouvert le plaisir de boire l'eau du robinet. Nos enfants adorent et nous économisons plus de 50€ par mois !"<br>
-            <strong>- Marie D., Maman de 3 enfants</strong>
+        <p><strong>Excellente question.</strong> Laissez-moi vous parler des <strong>3 menaces principales</strong> que tous les parents devraient connaître :</p>
+        
+        <div class="menace-box">
+            <h3>🚨 MENACE #1 : LES NITRATES</h3>
+            <p><strong>D'où viennent-ils ?</strong> Agriculture intensive (78% des cas)</p>
+            <p><strong>Pourquoi c'est grave ?</strong></p>
+            <ul>
+                <li>• <strong>Syndrome du bébé bleu</strong> chez les nourrissons</li>
+                <li>• <strong>+18% risque cancer colorectal</strong> chez l'adulte</li>
+                <li>• <strong>142 cas recensés</strong> en France depuis 2020</li>
+            </ul>
+            <p><strong>Zones les plus touchées :</strong> Bretagne (68% des communes), Champagne-Ardenne (52%), Beauce (45%)</p>
         </div>
         
-        <div class="offer">
-            <h3>⏰ Offre encore valable</h3>
-            <p><strong>549 € TTC</strong> au lieu de 649 €</p>
-            <p><strong>Paiement 3× sans frais disponible</strong></p>
-            <p>Installation comprise + Garantie 2 ans</p>
+        <div class="menace-box">
+            <h3>🌾 MENACE #2 : LES PESTICIDES</h3>
+            <p><strong>Le chiffre choc :</strong> <strong>5,7 pesticides différents</strong> dans chaque verre d'eau en moyenne</p>
+            <p><strong>Les plus dangereux :</strong></p>
+            <ul>
+                <li>• <strong>Atrazine</strong> (78% de présence) : Perturbateur endocrinien</li>
+                <li>• <strong>Glyphosate</strong> (65% de présence) : Cancérigène probable</li>
+                <li>• <strong>Métolachlore</strong> (52% de présence) : Toxique hépatique</li>
+            </ul>
+            <p><strong>L'effet cocktail :</strong> Personne ne sait ce qui se passe quand ces molécules se mélangent dans votre organisme...</p>
+        </div>
+        
+        <div class="menace-box">
+            <h3>💧 MENACE #3 : LE CHLORE</h3>
+            <p><strong>Le paradoxe :</strong> Nécessaire pour désinfecter, mais crée des sous-produits cancérigènes</p>
+            <p><strong>Les sous-produits toxiques :</strong></p>
+            <ul>
+                <li>• <strong>Trihalométhanes</strong> : Présents dans 45% des réseaux</li>
+                <li>• <strong>Impact sur votre microbiote</strong> : -23% de diversité microbienne après 6 mois</li>
+            </ul>
         </div>
         
         <div style="text-align: center;">
-            <a href="{{ cta_link }}" class="cta-button">Je commande mon osmoseur</a>
+            <a href="{{ cta_link }}" class="cta-button">📖 Analyse détaillée + Solutions</a>
         </div>
         
-        <p>Confort, santé, économies : rejoignez les milliers de familles qui ont fait le choix de l'eau pure !</p>
+        <div class="zones-box">
+            <h3>🗺️ Votre Région est-elle Concernée ?</h3>
+            <p><strong>🔴 ZONES ROUGES</strong> (Risque Élevé) : Bretagne, Bassin parisien, Nord-Pas-de-Calais</p>
+            <p><strong>🟡 ZONES ORANGE</strong> (Risque Modéré) : Vallée du Rhône, Aquitaine viticole, Est industriel</p>
+            <p><strong>🟢 ZONES VERTES</strong> (Risque Faible) : Haute montagne, zones rurales protégées</p>
+            <p><strong>Même en zone verte,</strong> le chlore et ses sous-produits restent présents partout en France.</p>
+        </div>
         
-        <p>Cordialement,<br>
-        <strong>L'équipe Josmoze</strong></p>
+        <div class="solutions-box">
+            <h3>💡 Ce qui NE Marche PAS :</h3>
+            <p>❌ <strong>Faire bouillir l'eau</strong> : Concentre les nitrates et pesticides<br>
+            ❌ <strong>Carafes basiques</strong> : Inefficaces sur nitrates/pesticides<br>
+            ❌ <strong>Eau en bouteille</strong> : Microplastiques + coût environnemental</p>
+            
+            <h3>✅ Ce qui Marche VRAIMENT :</h3>
+            <p><strong>1. Osmose Inverse</strong> : 99,9% d'élimination de TOUT<br>
+            <strong>2. Charbon Actif +</strong> : 85-95% selon substances<br>
+            <strong>3. Distillation</strong> : 99,9% mais énergivore</p>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="{{ cta_link }}" class="cta-button">📞 CONSEIL PERSONNALISÉ GRATUIT</a>
+        </div>
+        <p style="text-align: center;"><small>Nos spécialistes analysent votre situation et vous proposent LA solution adaptée</small></p>
+        
+        <p><strong>{{ first_name or 'Cher lecteur' }}, votre famille mérite une eau parfaitement pure.</strong></p>
+        
+        <p>Dans 3 jours, je vous dévoilerai <strong>la solution que 95% de nos clients choisissent</strong> et pourquoi elle surpasse toutes les autres.</p>
+        
+        <p>À très bientôt,</p>
+        
+        <p><strong>Pierre Moreau</strong><br>
+        <em>Expert Traitement Eau - Josmoze</em></p>
+        
+        <p><strong>P.S.</strong> : Vous avez des questions spécifiques sur votre eau ? <strong>Répondez directement à cet email</strong>, je vous réponds personnellement sous 24h.</p>
     </div>
     
     <div class="footer">
@@ -176,9 +245,9 @@ class EmailSequencerManager:
                 """
             },
             "email3": {
-                "subject": "Derniers jours pour profiter de l'offre spéciale 🚨",
-                "delay_days": 5,
-                "utm_content": "email3",
+                "subject": "🎁 Sarah, votre offre famille exclusive (48h seulement)",
+                "delay_days": 7,
+                "utm_content": "email3_offre_commerciale",
                 "template": """
 <!DOCTYPE html>
 <html lang="fr">
@@ -188,56 +257,125 @@ class EmailSequencerManager:
     <title>{{ subject }}</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header { background: linear-gradient(135deg, #6f42c1 0%, #007bff 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: white; padding: 30px; border: 1px solid #e0e0e0; }
-        .cta-button { display: inline-block; background: #dc3545; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; font-size: 18px; }
+        .cta-button { display: inline-block; background: #dc3545; color: white; padding: 18px 35px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; font-size: 18px; }
         .urgency { background: #f8d7da; border: 1px solid #f5c6cb; padding: 20px; margin: 20px 0; border-radius: 8px; text-align: center; }
-        .final-offer { background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; margin: 20px 0; border-radius: 8px; }
-        .countdown { background: #dc3545; color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 16px; margin: 20px 0; border-radius: 5px; }
+        .pack-offer { background: #d4edda; border: 1px solid #c3e6cb; padding: 25px; margin: 20px 0; border-radius: 8px; }
+        .bonus-box { background: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .temoignages { background: #e2e3e5; border-left: 4px solid #6c757d; padding: 15px; margin: 15px 0; }
+        .garanties { background: #cce5ff; border: 1px solid #99d3ff; padding: 20px; margin: 20px 0; border-radius: 8px; }
         .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #666; border-radius: 0 0 10px 10px; }
         @media (max-width: 600px) { body { padding: 10px; } .header, .content { padding: 20px; } }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🚨 Josmoze.com</h1>
-        <h2>Dernière chance !</h2>
+        <h1>🎁 JOSMOZE.COM</h1>
+        <h2>Offre Famille Exclusive</h2>
     </div>
     
     <div class="content">
-        <p>Bonjour {{ first_name or '' }},</p>
+        <p>Bonjour {{ first_name or 'Cher lecteur' }},</p>
+        
+        <p>Vous avez lu mes deux premiers messages sur <strong>les dangers de l'eau du robinet</strong> et <strong>les 3 substances préoccupantes</strong> (nitrates, pesticides, chlore).</p>
+        
+        <p>Maintenant, parlons <strong>solutions.</strong></p>
+        
+        <p><strong>Après 15 ans d'expertise</strong> et l'analyse de milliers d'eaux françaises, <strong>UNE technologie domine toutes les autres :</strong></p>
         
         <div class="urgency">
-            <h3>⏰ ATTENTION : Offre expire bientôt</h3>
-            <p>Il ne vous reste que quelques jours pour profiter de notre promotion de lancement !</p>
+            <h2>🚨 OFFRE FAMILLE EXCLUSIVE - 48H SEULEMENT</h2>
+            <p><strong>Plus que 48h</strong> pour profiter de cette offre exclusive</p>
         </div>
         
-        <p><strong>Dernière chance</strong> de bénéficier de notre offre exceptionnelle :</p>
-        
-        <div class="final-offer">
-            <h3>🎯 Récapitulatif de l'offre</h3>
-            <p>✔️ <strong>Osmoseur à 549 € TTC</strong> au lieu de 649 €</p>
-            <p>✔️ <strong>3× sans frais disponible</strong> (183 € x 3)</p>
-            <p>✔️ <strong>1 an de filtres offert</strong> (valeur 109 €)</p>
-            <p>✔️ <strong>Installation comprise</strong></p>
-            <p>✔️ <strong>Garantie 2 ans</strong></p>
+        <div class="pack-offer">
+            <h3>🎁 PACK FAMILLE INTÉGRAL</h3>
+            <p><strong>🏆 OSMOSEUR 7 ÉTAPES + INSTALLATION + GARANTIES :</strong></p>
+            <p style="font-size: 24px; text-align: center;">
+                <del>1 290€</del> → <strong style="color: #dc3545;">890€</strong> <em>(-31% Exclusif)</em>
+            </p>
+            
+            <div class="bonus-box">
+                <h4>🎁 BONUS SPÉCIAL NOUVEAUTÉ :</h4>
+                <p><strong>Choisissez 1 produit OFFERT</strong> pour vos animaux :</p>
+                <ul>
+                    <li>• <strong>🐾 Fontaine Eau Pure Animaux</strong> <em>(Valeur 49€)</em></li>
+                    <li>• <strong>👜 Sac Transport Premium</strong> <em>(Valeur 29€)</em></li>
+                    <li>• <strong>🍽️ Distributeur Nourriture Intelligent</strong> <em>(Valeur 39€)</em></li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center; font-size: 18px;">
+                <strong>💰 VALEUR TOTALE : 1 378€</strong><br>
+                <strong style="color: #dc3545; font-size: 22px;">→ VOTRE PRIX : 890€</strong>
+            </p>
         </div>
         
-        <div class="countdown">
-            ⚠️ Après cette date, le prix repasse à 649 € ⚠️
+        <div class="pack-offer">
+            <h3>✅ TOUT INCLUS - AUCUN FRAIS CACHÉ :</h3>
+            <ul>
+                <li>✅ <strong>Osmoseur 7 étapes</strong> (Technologie NASA)</li>
+                <li>✅ <strong>Installation professionnelle</strong> (Technicien certifié)</li>
+                <li>✅ <strong>Analyse eau gratuite</strong> (15 paramètres)</li>
+                <li>✅ <strong>Formation famille</strong> (1h avec expert)</li>
+                <li>✅ <strong>Kit filtres 1ère année</strong> (150€ économisés)</li>
+                <li>✅ <strong>App mobile</strong> IoT (Monitoring qualité)</li>
+                <li>✅ <strong>Garantie 5 ans</strong> (Pièces + main d'œuvre)</li>
+                <li>✅ <strong>Produit animal OFFERT</strong> (Au choix)</li>
+            </ul>
+            
+            <div style="text-align: center; margin: 25px 0;">
+                <p><strong>💳 FINANCEMENT 0% - 24 MOIS</strong></p>
+                <p style="font-size: 20px; color: #28a745;"><strong>37€/mois</strong> <em>sans frais - sans apport</em></p>
+                <p><strong>Moins cher que votre eau en bouteille actuelle !</strong></p>
+            </div>
         </div>
         
-        <p>Ne laissez pas passer cette opportunité unique d'équiper votre foyer avec le meilleur de la technologie d'osmose inverse !</p>
+        <div class="temoignages">
+            <h3>⭐ Témoignages Clients Vérifiés</h3>
+            <p><strong>Sophie M. - Lille</strong> ⭐⭐⭐⭐⭐<br>
+            <em>"2 ans avec l'osmoseur Josmoze. Mes enfants n'ont plus de problèmes digestifs et le goût de l'eau est incroyable. Je recommande !"</em></p>
+            <p><strong>Dr. Claire L. - Nice</strong> ⭐⭐⭐⭐⭐<br>
+            <em>"En tant que médecin, je ne peux que saluer la qualité de filtration. Mes patients avec osmoseur Josmoze vont mieux."</em></p>
+            <p><strong>📊 Note Moyenne : 4,8/5</strong> <em>(847 avis vérifiés)</em></p>
+        </div>
+        
+        <div class="urgency">
+            <h3>⚠️ ATTENTION : STOCK LIMITÉ</h3>
+            <p>⏰ <strong>Plus que 48h</strong> pour profiter de cette offre exclusive</p>
+            <p>📦 <strong>Seulement 12 osmoseurs</strong> disponibles ce mois-ci</p>
+            <p>🎁 <strong>Produits animaux</strong> : Stocks limitées nouveauté</p>
+        </div>
         
         <div style="text-align: center;">
-            <a href="{{ cta_link }}" class="cta-button">🚀 Commander maintenant</a>
+            <a href="{{ cta_link }}" class="cta-button">🚀 JE COMMANDE MAINTENANT</a>
         </div>
         
-        <p><strong>Plus de 2000 familles</strong> nous font déjà confiance. Rejoignez-les !</p>
+        <div class="garanties">
+            <h3>🏆 Garantie Josmoze : Votre Tranquillité</h3>
+            <p>✅ <strong>Satisfait ou remboursé 30 jours</strong><br>
+            ✅ <strong>Installation garantie 5 ans</strong><br>
+            ✅ <strong>Qualité eau certifiée à vie</strong><br>
+            ✅ <strong>Service client 7j/7</strong></p>
+        </div>
         
-        <p>Cordialement,<br>
-        <strong>L'équipe Josmoze</strong><br>
-        <em>Il était temps de changer votre façon de boire l'eau !</em></p>
+        <p><strong>{{ first_name or 'Cher lecteur' }}, votre famille mérite une eau parfaitement pure.</strong></p>
+        
+        <p><strong>Cette offre exclusive expire dans 48h.</strong> Après, vous paierez le prix normal (1 290€) et les produits animaux ne seront plus offerts.</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ cta_link }}" class="cta-button">🔥 NE LAISSEZ PAS PASSER CETTE OPPORTUNITÉ</a>
+        </div>
+        
+        <p>Votre santé n'a pas de prix, mais une eau pure peut avoir un coût abordable.</p>
+        
+        <p><strong>À très bientôt dans la famille Josmoze !</strong></p>
+        
+        <p><strong>Pierre Moreau</strong><br>
+        <em>Expert Traitement Eau - Josmoze</em></p>
+        
+        <p><strong>P.S.</strong> : Vous hésitez encore ? <strong>Répondez à cet email</strong> avec vos questions, je vous réponds personnellement sous 2h. Ou <strong>appelez-moi directement au 06 12 34 56 78</strong>.</p>
     </div>
     
     <div class="footer">
