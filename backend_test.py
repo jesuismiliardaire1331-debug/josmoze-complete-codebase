@@ -7967,7 +7967,9 @@ class BackendTester:
     def test_unsubscribe_html_validation(self):
         """PRIORITY 3: Verify unsubscribe returns backend HTML, not React HTML"""
         try:
-            response = self.session.get(f"{BACKEND_URL}/unsubscribe?token=test")
+            # Test the root level unsubscribe endpoint
+            base_url = BACKEND_URL.replace('/api', '')  # Remove /api prefix
+            response = self.session.get(f"{base_url}/unsubscribe?token=test")
             
             if response.status_code == 200:
                 content = response.text
