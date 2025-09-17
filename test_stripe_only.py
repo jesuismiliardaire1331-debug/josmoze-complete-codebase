@@ -128,7 +128,7 @@ class StripePaymentTester:
         try:
             # Données de test avec package_id="osmoseur_particulier", quantity=1
             checkout_data = {
-                "package_id": "osmoseur-principal",  # Note: using osmoseur-principal as per PRODUCT_PACKAGES
+                "package_id": "osmoseur_particulier",  # Note: using osmoseur_particulier as per JOSMOZE_PACKAGES
                 "quantity": 1,
                 "customer_info": {
                     "name": "Jean Dupont",
