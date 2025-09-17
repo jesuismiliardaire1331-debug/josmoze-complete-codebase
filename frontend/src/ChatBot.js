@@ -3,6 +3,46 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useSafeCleanup } from './hooks/useSafeCleanup';
 
+// Configuration
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
+// Base de connaissances enrichie V2 (version frontend)
+const KNOWLEDGE_BASE_V2 = {
+  dangers_eau: {
+    nitrates: {
+      chiffres: "15% des communes dépassent les seuils, 142 cas de syndrome du bébé bleu depuis 2020",
+      zones: "Bretagne (68% communes), Champagne-Ardenne (52%), Beauce (45%)",
+      risques: "Empêchent le sang de transporter l'oxygène chez les bébés, +18% risque cancer colorectal"
+    },
+    pesticides: {
+      chiffres: "5,7 pesticides différents par verre, 68% des points de contrôle contaminés",
+      top_danger: "Glyphosate 65%, Atrazine 78%, Métolachlore 52%",
+      zones: "Champagne-Ardenne 82%, Centre-Val Loire 79%"
+    },
+    chlore: {
+      probleme: "Crée sous-produits cancérigènes (trihalométhanes)",
+      impact: "Détruit la flore intestinale (-23% en 6 mois)"
+    }
+  },
+  solutions: {
+    carafe: "Inefficace sur nitrates/pesticides, juste améliore le goût",
+    robinet: "70% pesticides mais 0% nitrates/virus/métaux",
+    osmose: "99,9% élimination TOUT, seule solution complète"
+  },
+  josmoze: {
+    efficacite: "98,5% nitrates, 99,2% pesticides, 99,8% chlore",
+    prix: "890€ (au lieu de 1290€) = 37€/mois sur 24 mois",
+    economies: "4800€ économisés sur 5 ans vs eau bouteille",
+    garanties: "30 jours satisfait/remboursé, garantie 5 ans totale"
+  },
+  animaux: {
+    fontaine: "49€ - Eau pure pour animaux avec filtration avancée",
+    sac: "29€ - Transport premium avec purificateur d'air intégré", 
+    distributeur: "39€ - Intelligent avec mini-fontaine intégrée",
+    offre: "1 produit animal OFFERT avec chaque osmoseur"
+  }
+};
+
 const ChatBot = () => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
