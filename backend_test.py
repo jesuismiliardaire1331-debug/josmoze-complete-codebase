@@ -7916,10 +7916,11 @@ class BackendTester:
             return False
 
     def test_public_unsubscribe_priority(self):
-        """PRIORITY 3: Test /api/public/unsubscribe?token=test (public unsubscribe page)"""
+        """PRIORITY 3: Test public unsubscribe page (should be at root level, not /api)"""
         try:
-            # Test with a test token
-            response = self.session.get(f"{BACKEND_URL}/public/unsubscribe?token=test")
+            # The unsubscribe endpoint is at the root level, not under /api
+            base_url = BACKEND_URL.replace('/api', '')  # Remove /api prefix
+            response = self.session.get(f"{base_url}/unsubscribe?token=test")
             
             if response.status_code == 200:
                 content = response.text
@@ -7940,8 +7941,8 @@ class BackendTester:
                                 f"❌ Wrong content type: {content_type} (expected HTML)")
                     return False
             else:
-                # Try alternative endpoint without /public prefix
-                response = self.session.get(f"{BACKEND_URL}/unsubscribe?token=test")
+                # Try with /api prefix as fallback
+                response = self.session.get(f"{BACKEND_URL}/public/unsubscribe?token=test")
                 
                 if response.status_code == 200:
                     content = response.text
@@ -7949,7 +7950,7 @@ class BackendTester:
                     
                     if 'text/html' in content_type or '<html' in content.lower():
                         self.log_test("PRIORITY 3 - Public Unsubscribe", True, 
-                                    "✅ Unsubscribe page found at /unsubscribe (not /public/unsubscribe)")
+                                    "✅ Unsubscribe page found at /api/public/unsubscribe")
                         return True
                     else:
                         self.log_test("PRIORITY 3 - Public Unsubscribe", False, 
@@ -7957,7 +7958,7 @@ class BackendTester:
                         return False
                 else:
                     self.log_test("PRIORITY 3 - Public Unsubscribe", False, 
-                                f"❌ Both /public/unsubscribe and /unsubscribe failed: {response.status_code}")
+                                f"❌ Both root /unsubscribe and /api/public/unsubscribe failed: {response.status_code}")
                     return False
         except Exception as e:
             self.log_test("PRIORITY 3 - Public Unsubscribe", False, f"❌ Exception: {str(e)}")
