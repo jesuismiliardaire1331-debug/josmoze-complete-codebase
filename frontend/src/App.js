@@ -1459,6 +1459,82 @@ const PaymentCancelled = () => {
   );
 };
 
+const UnsubscribeHandler = () => {
+  const [status, setStatus] = useState({ message: 'Traitement de votre désinscription...', type: 'pending' });
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const token = searchParams.get('token');
+    
+    if (!token) {
+      setStatus({
+        message: 'Token de désinscription manquant',
+        type: 'error'
+      });
+      return;
+    }
+
+    const processUnsubscribe = async () => {
+      try {
+        // WORKAROUND: Appeler l'API backend directement
+        const response = await axios.get(`${API}/public/unsubscribe?token=${token}`);
+        
+        setStatus({
+          message: 'Désinscription réussie! Vous ne recevrez plus d\'emails de JOSMOSE.COM',
+          type: 'success'
+        });
+      } catch (error) {
+        console.error('Erreur désinscription:', error);
+        setStatus({
+          message: 'Erreur lors de la désinscription. Le lien peut être expiré.',
+          type: 'error'
+        });
+      }
+    };
+
+    processUnsubscribe();
+  }, [searchParams]);
+
+  return (
+    <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <div className="text-6xl mb-6">
+        {status.type === 'success' ? '✅' : status.type === 'error' ? '❌' : '⏳'}
+      </div>
+      
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        {status.type === 'success' ? 'Désinscription Réussie' : 
+         status.type === 'error' ? 'Erreur de Désinscription' : 'Traitement...'}
+      </h2>
+      
+      <p className={`text-lg mb-8 ${
+        status.type === 'success' ? 'text-green-600' : 
+        status.type === 'error' ? 'text-red-600' : 'text-gray-600'
+      }`}>
+        {status.message}
+      </p>
+      
+      {status.type === 'success' && (
+        <div className="bg-green-50 rounded-lg p-6 mb-8">
+          <h3 className="text-lg font-semibold text-green-800 mb-2">Conformité GDPR</h3>
+          <ul className="text-green-700 text-sm space-y-1">
+            <li>🛡️ Vos données ont été supprimées de nos listes</li>
+            <li>📧 Vous ne recevrez plus d'emails marketing</li>
+            <li>🔒 Action enregistrée dans notre journal de conformité</li>
+            <li>📞 Pour toute question: contact@josmoze.com</li>
+          </ul>
+        </div>
+      )}
+      
+      <button
+        onClick={() => window.location.href = 'https://www.josmoze.com'}
+        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+      >
+        Retour au site
+      </button>
+    </div>
+  );
+};
+
 const ContactForm = () => {
   const { customerType } = useApp();
   const [formData, setFormData] = useState({
@@ -1813,6 +1889,8 @@ function App() {
                     {/* CRM Routes */}
                     <Route path="/crm-login" element={<CRMLogin />} />
                     <Route path="/crm" element={<CRMDashboard />} />
+                    {/* WORKAROUND: Route publique désinscription */}
+                    <Route path="/unsubscribe" element={<UnsubscribeHandler />} />
                   </Routes>
                 </main>
                 <Footer />
