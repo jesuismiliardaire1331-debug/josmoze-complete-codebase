@@ -440,6 +440,18 @@ test_plan:
           agent: "testing"
           comment: "❌ CRITICAL ROUTING ISSUE PREVENTS FRONTEND TESTING: Cannot access CRM interface due to URL routing problem - all CRM URLs (https://josmoze-crm.preview.emergentagent.com/crm-login) redirect to main website instead of CRM login/dashboard. EmailSequencer.js component is properly implemented with all required features (4 sub-tabs: Dashboard, Séquences Actives, Templates, Événements), GDPR compliance sections, test mode functionality, real-time metrics, sequence management, but cannot be accessed due to infrastructure routing issue. Backend API integration confirmed working (100% success rate). Frontend component exists and is integrated into CRM.js but cannot be tested due to routing problem."
 
+  - task: "CRM Routing Infrastructure - CRITIQUE"
+    implemented: false
+    working: false
+    file: "infrastructure/routing"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "🚨 PROBLÈME CRITIQUE DÉCOUVERT: Configuration de routage Kubernetes/ingress défaillante. Toutes les routes CRM (/crm-login, /crm) redirigent vers le site principal au lieu d'afficher l'interface CRM. Test direct confirmé: https://osmosis-suite.preview.emergentagent.com/crm-login → redirection vers https://osmosis-suite.preview.emergentagent.com/ (site principal). IMPACT: Impossible de tester les modales CRM demandées (Ajouter Prospect, Import CSV) et les nouveaux modules (Suppression List, Email Sequencer). Backend CRM 100% fonctionnel mais frontend inaccessible."
+
 agent_communication:
     - agent: "main"
       message: "🎯 FINALISATION PROJET JOSMOZE - PARTIE 1 TECHNIQUE DÉMARRÉE: Plan d'action complet reçu. Priorités: 1) Correction routage /crm avec solutions contournement, 2) Tests modales CRM (Ajouter prospect, Import CSV), 3) Infrastructure paiement Stripe/PayPal (prêt pour clés API), 4) En parallèle: analyse marché 3 nouveaux produits + contenu blog. OBJECTIF: josmoze.com 100% opérationnel."
