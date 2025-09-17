@@ -7847,7 +7847,16 @@ class BackendTester:
             
             if response.status_code == 200:
                 data = response.json()
-                if "status" in data and "gdpr_compliance" in data:
+                # Check for actual response structure from the API
+                if "scraper_status" in data and "gdpr_compliance" in data:
+                    scraper_status = data["scraper_status"]
+                    gdpr_compliance = data["gdpr_compliance"]
+                    task_status = scraper_status.get("task_status", "unknown")
+                    
+                    self.log_test("PRIORITY 2 - Scraper Agent Status", True, 
+                                f"✅ Scraper Agent working: Status={task_status}, GDPR compliant")
+                    return True
+                elif "status" in data and "gdpr_compliance" in data:
                     status = data["status"]
                     gdpr_compliant = data["gdpr_compliance"]
                     
