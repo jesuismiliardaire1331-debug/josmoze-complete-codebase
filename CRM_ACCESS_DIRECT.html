@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Josmoze - Accès Direct</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .crm-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 90%;
+            max-width: 1200px;
+            min-height: 600px;
+        }
+        
+        .crm-header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .crm-header h1 {
+            margin-bottom: 10px;
+        }
+        
+        .login-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #2196F3;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .quick-access {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-btn {
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .quick-btn:hover {
+            background: #e3f2fd;
+            border-color: #2196F3;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .status.success {
+            background: #e8f5e8;
+            color: #2e7d2e;
+            border: 1px solid #4caf50;
+        }
+        
+        .status.error {
+            background: #ffeaea;
+            color: #d32f2f;
+            border: 1px solid #f44336;
+        }
+        
+        .status.loading {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #2196F3;
+        }
+        
+        .crm-tabs {
+            display: none;
+            border-top: 1px solid #ddd;
+        }
+        
+        .tabs-nav {
+            display: flex;
+            background: #f8f9fa;
+            overflow-x: auto;
+        }
+        
+        .tab-btn {
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-btn.active {
+            background: white;
+            border-bottom-color: #2196F3;
+            color: #2196F3;
+        }
+        
+        .tab-content {
+            padding: 20px;
+            min-height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="crm-container">
+        <div class="crm-header">
+            <h1>💧 CRM Josmoze</h1>
+            <p>Système de Gestion Commerciale</p>
+        </div>
+        
+        <div id="loginSection" class="login-section">
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="email">Email Professionnel</label>
+                    <input type="email" id="email" placeholder="votre.email@josmoze.com" value="naima@josmoze.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" placeholder="Votre mot de passe">
+                </div>
+                
+                <button class="login-btn" onclick="loginToCRM()">
+                    🔐 Se Connecter
+                </button>
+                
+                <div class="quick-access">
+                    <div class="quick-btn" onclick="fillManagerCredentials('naima')">👩 Naima (Manager)</div>
+                    <div class="quick-btn" onclick="fillManagerCredentials('aziza')">👩 Aziza (Manager)</div>
+                    <div class="quick-btn" onclick="fillManagerCredentials('antonio')">👨 Antonio (Manager)</div>
+                </div>
+                
+                <div id="loginStatus" class="status" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <div id="crmTabs" class="crm-tabs">
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="showTab('prospects')">👥 Prospects</button>
+                <button class="tab-btn" onclick="showTab('analytics')">📊 Analytics</button>
+                <button class="tab-btn" onclick="showTab('suppression')">🛡️ Suppression List</button>
+                <button class="tab-btn" onclick="showTab('sequencer')">📧 Email Sequencer</button>
+                <button class="tab-btn" onclick="showTab('scraper')">🕷️ Scraper IA</button>
+                <button class="tab-btn" onclick="showTab('agents')">🤖 Agents IA</button>
+            </div>
+            
+            <div id="tabContent" class="tab-content">
+                <div id="prospectsTab">
+                    <h2>📋 Gestion des Prospects</h2>
+                    <div style="margin: 20px 0;">
+                        <button onclick="openModal('addProspect')" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer;">
+                            ➕ Ajouter Prospect
+                        </button>
+                        <button onclick="openModal('importCSV')" style="background: #2196F3; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                            📥 Import CSV
+                        </button>
+                    </div>
+                    <div id="prospectsList">Chargement des prospects...</div>
+                </div>
+                
+                <div id="suppressionTab" style="display: none;">
+                    <h2>🛡️ Liste de Suppression GDPR</h2>
+                    <div id="suppressionStats">Chargement des statistiques...</div>
+                </div>
+                
+                <div id="sequencerTab" style="display: none;">
+                    <h2>📧 Email Sequencer Osmoseur</h2>
+                    <div id="sequencerTemplates">Chargement des templates...</div>
+                </div>
+                
+                <div id="scraperTab" style="display: none;">
+                    <h2>🕷️ Scraper Agent IA</h2>
+                    <div id="scraperStatus">Chargement du statut...</div>
+                </div>
+                
+                <div id="agentsTab" style="display: none;">
+                    <h2>🤖 Agents IA Schopenhauer</h2>
+                    <div id="agentsStatus">Chargement des agents...</div>
+                </div>
+                
+                <div id="analyticsTab" style="display: none;">
+                    <h2>📊 Analytics Dashboard</h2>
+                    <div id="analyticsData">Chargement des données...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Ajouter Prospect -->
+    <div id="addProspectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px;">
+            <h3>➕ Ajouter un Nouveau Prospect</h3>
+            <div style="margin: 15px 0;">
+                <label>Email *</label>
+                <input type="email" id="newProspectEmail" style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Nom *</label>
+                <input type="text" id="newProspectNom" style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Prénom</label>
+                <input type="text" id="newProspectPrenom" style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Téléphone</label>
+                <input type="tel" id="newProspectTelephone" style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Source Prospect</label>
+                <select id="newProspectSource" style="width: 100%; padding: 8px; margin-top: 5px;">
+                    <option value="manuel">Ajout Manuel</option>
+                    <option value="site_web">Site Web</option>
+                    <option value="scraping">Scraping IA</option>
+                    <option value="import_csv">Import CSV</option>
+                </select>
+            </div>
+            <div style="margin-top: 20px; text-align: right;">
+                <button onclick="closeModal('addProspect')" style="background: #ccc; padding: 8px 16px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer;">Annuler</button>
+                <button onclick="addNewProspect()" style="background: #4CAF50; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;">Ajouter</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Import CSV -->
+    <div id="importCSVModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px;">
+            <h3>📥 Import de Prospects en CSV</h3>
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <h4>📋 Format CSV Requis :</h4>
+                <p><strong>Colonnes obligatoires :</strong> email, nom, prenom, telephone, source_prospect</p>
+                <p><strong>Exemple :</strong></p>
+                <code style="background: white; padding: 5px; display: block; margin: 5px 0;">
+email,nom,prenom,telephone,source_prospect<br>
+jean.dupont@email.com,Dupont,Jean,0123456789,import_csv<br>
+marie.martin@email.com,Martin,Marie,0987654321,import_csv
+                </code>
+            </div>
+            <div style="margin: 15px 0;">
+                <label>Fichier CSV</label>
+                <input type="file" id="csvFile" accept=".csv" style="width: 100%; padding: 8px; margin-top: 5px;">
+            </div>
+            <div style="margin-top: 20px; text-align: right;">
+                <button onclick="closeModal('importCSV')" style="background: #ccc; padding: 8px 16px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer;">Annuler</button>
+                <button onclick="importCSVFile()" style="background: #2196F3; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer;">Importer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://osmosis-suite.preview.emergentagent.com/api';
+        let authToken = '';
+        
+        // Fonctions d'authentification
+        function fillManagerCredentials(manager) {
+            const credentials = {
+                'naima': { email: 'naima@josmoze.com', password: 'Naima@2024!Commerce' },
+                'aziza': { email: 'aziza@josmoze.com', password: 'Aziza@2024!Commerce' },
+                'antonio': { email: 'antonio@josmoze.com', password: 'Antonio@2024!Commerce' }
+            };
+            
+            if (credentials[manager]) {
+                document.getElementById('email').value = credentials[manager].email;
+                document.getElementById('password').value = credentials[manager].password;
+            }
+        }
+        
+        async function loginToCRM() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const statusDiv = document.getElementById('loginStatus');
+            const loginBtn = document.querySelector('.login-btn');
+            
+            if (!email || !password) {
+                showStatus('Veuillez remplir tous les champs', 'error');
+                return;
+            }
+            
+            loginBtn.disabled = true;
+            showStatus('Connexion en cours...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: email, password: password })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.access_token;
+                    
+                    showStatus('✅ Connexion réussie! Chargement du CRM...', 'success');
+                    
+                    setTimeout(() => {
+                        document.getElementById('loginSection').style.display = 'none';
+                        document.getElementById('crmTabs').style.display = 'block';
+                        loadCRMData();
+                    }, 1000);
+                } else {
+                    showStatus('❌ Identifiants incorrects', 'error');
+                }
+            } catch (error) {
+                showStatus('❌ Erreur de connexion', 'error');
+                console.error('Login error:', error);
+            }
+            
+            loginBtn.disabled = false;
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('loginStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+        }
+        
+        // Gestion des onglets
+        function showTab(tabName) {
+            // Masquer tous les onglets
+            const tabs = ['prospects', 'analytics', 'suppression', 'sequencer', 'scraper', 'agents'];
+            tabs.forEach(tab => {
+                const tabElement = document.getElementById(tab + 'Tab');
+                if (tabElement) {
+                    tabElement.style.display = 'none';
+                }
+            });
+            
+            // Désactiver tous les boutons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Afficher l'onglet sélectionné
+            const selectedTab = document.getElementById(tabName + 'Tab');
+            if (selectedTab) {
+                selectedTab.style.display = 'block';
+                event.target.classList.add('active');
+                
+                // Charger les données spécifiques à l'onglet
+                loadTabData(tabName);
+            }
+        }
+        
+        // Chargement des données CRM
+        async function loadCRMData() {
+            loadTabData('prospects');
+        }
+        
+        async function loadTabData(tabName) {
+            const headers = { 'Authorization': `Bearer ${authToken}` };
+            
+            try {
+                switch(tabName) {
+                    case 'prospects':
+                        const prospectsResponse = await fetch(`${API_BASE}/prospects`, { headers });
+                        if (prospectsResponse.ok) {
+                            const prospects = await prospectsResponse.json();
+                            displayProspects(prospects);
+                        }
+                        break;
+                        
+                    case 'suppression':
+                        const suppressionResponse = await fetch(`${API_BASE}/suppression-list/stats`, { headers });
+                        if (suppressionResponse.ok) {
+                            const stats = await suppressionResponse.json();
+                            displaySuppressionStats(stats);
+                        }
+                        break;
+                        
+                    case 'sequencer':
+                        const sequencerResponse = await fetch(`${API_BASE}/email-sequencer/templates`, { headers });
+                        if (sequencerResponse.ok) {
+                            const templates = await sequencerResponse.json();
+                            displaySequencerTemplates(templates);
+                        }
+                        break;
+                        
+                    case 'scraper':
+                        const scraperResponse = await fetch(`${API_BASE}/scraper/status`, { headers });
+                        if (scraperResponse.ok) {
+                            const status = await scraperResponse.json();
+                            displayScraperStatus(status);
+                        }
+                        break;
+                }
+            } catch (error) {
+                console.error(`Erreur chargement ${tabName}:`, error);
+            }
+        }
+        
+        function displayProspects(prospects) {
+            const container = document.getElementById('prospectsList');
+            if (prospects && prospects.length > 0) {
+                container.innerHTML = `
+                    <p><strong>${prospects.length} prospects trouvés</strong></p>
+                    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
+                        ${prospects.slice(0, 10).map(p => `
+                            <div style="padding: 10px; border-bottom: 1px solid #eee;">
+                                <strong>${p.email}</strong> - ${p.nom || 'N/A'} ${p.prenom || ''}
+                                <br><small>Source: ${p.source_prospect || 'N/A'} | Statut: ${p.status || 'nouveau'}</small>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '<p>Aucun prospect trouvé</p>';
+            }
+        }
+        
+        function displaySuppressionStats(stats) {
+            const container = document.getElementById('suppressionStats');
+            container.innerHTML = `
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                    <h3>📊 Statistiques GDPR</h3>
+                    <p><strong>Emails supprimés:</strong> ${stats.total_suppressed || 0}</p>
+                    <p><strong>Conformité:</strong> ✅ RGPD/CNIL</p>
+                </div>
+            `;
+        }
+        
+        function displaySequencerTemplates(templates) {
+            const container = document.getElementById('sequencerTemplates');
+            if (templates && templates.templates) {
+                const templatesList = Object.keys(templates.templates).map(key => 
+                    `<li><strong>${key}:</strong> ${templates.templates[key].subject}</li>`
+                ).join('');
+                
+                container.innerHTML = `
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                        <h3>📧 Templates Email Osmoseur</h3>
+                        <ul>${templatesList}</ul>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayScraperStatus(status) {
+            const container = document.getElementById('scraperStatus');
+            container.innerHTML = `
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
+                    <h3>🕷️ Statut Scraper</h3>
+                    <p><strong>Statut:</strong> ${status.scraper_status?.task_status || 'Arrêté'}</p>
+                    <p><strong>GDPR:</strong> ✅ Conforme</p>
+                </div>
+            `;
+        }
+        
+        // Gestion des modales
+        function openModal(modalType) {
+            document.getElementById(modalType + 'Modal').style.display = 'block';
+        }
+        
+        function closeModal(modalType) {
+            document.getElementById(modalType + 'Modal').style.display = 'none';
+        }
+        
+        async function addNewProspect() {
+            const prospectData = {
+                email: document.getElementById('newProspectEmail').value,
+                nom: document.getElementById('newProspectNom').value,
+                prenom: document.getElementById('newProspectPrenom').value,
+                telephone: document.getElementById('newProspectTelephone').value,
+                source_prospect: document.getElementById('newProspectSource').value
+            };
+            
+            if (!prospectData.email || !prospectData.nom) {
+                alert('Email et nom sont obligatoires');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/prospects`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(prospectData)
+                });
+                
+                if (response.ok) {
+                    alert('✅ Prospect ajouté avec succès!');
+                    closeModal('addProspect');
+                    loadTabData('prospects');
+                    
+                    // Vider le formulaire
+                    document.getElementById('newProspectEmail').value = '';
+                    document.getElementById('newProspectNom').value = '';
+                    document.getElementById('newProspectPrenom').value = '';
+                    document.getElementById('newProspectTelephone').value = '';
+                } else {
+                    alert('❌ Erreur lors de l\'ajout');
+                }
+            } catch (error) {
+                alert('❌ Erreur de connexion');
+                console.error('Add prospect error:', error);
+            }
+        }
+        
+        async function importCSVFile() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Veuillez sélectionner un fichier CSV');
+                return;
+            }
+            
+            // Simulation de l'import (à implémenter côté backend)
+            alert('🚧 Fonctionnalité d\'import CSV en cours d\'implémentation');
+            closeModal('importCSV');
+        }
+        
+        // Auto-remplir pour test
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pré-remplir avec les identifiants manager
+            fillManagerCredentials('naima');
+        });
+    </script>
+</body>
+</html>
