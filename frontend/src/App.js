@@ -1869,7 +1869,7 @@ function App() {
         <AppProvider>
           <AuthProvider>
             <div className="App min-h-screen bg-gray-50">
-              <BrowserRouter>
+              <BrowserRouter basename={window.location.pathname.includes('/crm') ? '/crm' : '/'}>
                 <AutoLanguageDetector />
                 <CustomerTypeHandler />
                 <Header />
@@ -1886,9 +1886,19 @@ function App() {
                     <Route path="/comment-ca-marche" element={<ProductExplanation />} />
                     <Route path="/payment-success" element={<PaymentSuccess />} />
                     <Route path="/payment-cancelled" element={<PaymentCancelled />} />
-                    {/* CRM Routes */}
-                    <Route path="/crm-login" element={<CRMLogin />} />
-                    <Route path="/crm" element={<CRMDashboard />} />
+                    {/* CRM Routes - Conditional routing based on current path */}
+                    {window.location.pathname.includes('/crm') ? (
+                      <>
+                        <Route path="/" element={<CRMLogin />} />
+                        <Route path="/login" element={<CRMLogin />} />
+                        <Route path="/dashboard" element={<CRMDashboard />} />
+                      </>
+                    ) : (
+                      <>
+                        <Route path="/crm-login" element={<CRMLogin />} />
+                        <Route path="/crm" element={<CRMDashboard />} />
+                      </>
+                    )}
                     {/* WORKAROUND: Route publique désinscription */}
                     <Route path="/unsubscribe" element={<UnsubscribeHandler />} />
                   </Routes>
