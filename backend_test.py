@@ -8081,6 +8081,15 @@ class BackendTester:
         print(f"Backend URL: {BACKEND_URL}")
         print("="*80)
         
+        # PRIORITY TESTS FIRST (as requested in review)
+        print("\n🎯 RUNNING PRIORITY TESTS FIRST")
+        print("="*50)
+        self.run_priority_tests()
+        
+        print("\n" + "="*80)
+        print("🔧 ADDITIONAL COMPREHENSIVE TESTS")
+        print("="*80)
+        
         # Core API tests
         self.test_root_endpoint()
         self.test_location_detection()
