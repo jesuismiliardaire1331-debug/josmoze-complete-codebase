@@ -40,19 +40,32 @@ const AppProvider = ({ children }) => {
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
 
-  // Auto-popup questionnaire après 20 secondes
+  // Auto-popup questionnaire après 15 secondes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      // Vérifier si l'utilisateur n'a pas déjà interagi avec le questionnaire
-      const hasSeenQuestionnaire = localStorage.getItem('josmoze_questionnaire_seen');
-      if (!hasSeenQuestionnaire && customerType === 'B2C') {
-        setShowQuestionnaire(true);
-        localStorage.setItem('josmoze_questionnaire_seen', 'true');
-      }
-    }, 20000); // 20 secondes
+    if (customerType === 'B2C') {
+      const timer = setTimeout(() => {
+        // Vérifier si l'utilisateur n'a pas déjà vu le questionnaire
+        const hasSeenQuestionnaire = localStorage.getItem('josmoze_questionnaire_seen');
+        if (!hasSeenQuestionnaire) {
+          console.log('🎯 Déclenchement auto-popup questionnaire');
+          setShowQuestionnaire(true);
+          localStorage.setItem('josmoze_questionnaire_seen', 'true');
+        }
+      }, 15000); // 15 secondes
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, [customerType]);
+
+  // Reset questionnaire seen pour tests (dev only)
+  useEffect(() => {
+    // Réinitialiser pour permettre le test du popup
+    const resetTimer = setTimeout(() => {
+      localStorage.removeItem('josmoze_questionnaire_seen');
+    }, 1000);
+    
+    return () => clearTimeout(resetTimer);
+  }, []);
   const { i18n } = useTranslation();
   const { currentCurrency, formatPrice } = useTranslationService();
 
