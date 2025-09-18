@@ -2471,6 +2471,7 @@ async def startup_db():
     # Initialize PromotionsManager
     global promotions_manager
     promotions_manager = PromotionsManager(db)
+    logging.info("✅ PromotionsManager initialized successfully")
     
     # 🌐 Démarrage automatique du Translation Guardian Agent 24/7
     logging.info("🌐 Démarrage automatique du Translation Guardian Agent...")
