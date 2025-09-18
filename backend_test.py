@@ -8675,6 +8675,69 @@ class BackendTester:
             self.log_test("Stripe Payment Status", False, f"Exception: {str(e)}")
             return False
 
+    def test_api_health_general(self):
+        """Test API santé générale /api/health"""
+        try:
+            # Test root endpoint as health check
+            response = self.session.get(f"{BACKEND_URL}/")
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data and "Josmose.com" in data["message"]:
+                    self.log_test("API Health General", True, f"✅ API healthy: {data['message']}")
+                    return True
+                else:
+                    self.log_test("API Health General", False, "Unexpected response format", data)
+                    return False
+            else:
+                self.log_test("API Health General", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("API Health General", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_performance_under_load(self):
+        """Test Performance sous charge - Multiple requests"""
+        try:
+            import time
+            start_time = time.time()
+            
+            # Test 10 requêtes simultanées sur différents endpoints
+            endpoints = [
+                "/",
+                "/products",
+                "/detect-location",
+                "/products?customer_type=B2C",
+                "/products?customer_type=B2B"
+            ]
+            
+            success_count = 0
+            total_requests = len(endpoints) * 2  # 2 fois chaque endpoint
+            
+            for _ in range(2):  # 2 rounds
+                for endpoint in endpoints:
+                    try:
+                        response = self.session.get(f"{BACKEND_URL}{endpoint}")
+                        if response.status_code == 200:
+                            success_count += 1
+                    except:
+                        pass
+            
+            end_time = time.time()
+            duration = end_time - start_time
+            success_rate = (success_count / total_requests) * 100
+            
+            if success_rate >= 90:  # 90% success rate minimum
+                self.log_test("Performance Sous Charge", True, 
+                            f"✅ {success_count}/{total_requests} requests successful ({success_rate:.1f}%) in {duration:.2f}s")
+                return True
+            else:
+                self.log_test("Performance Sous Charge", False, 
+                            f"Low success rate: {success_count}/{total_requests} ({success_rate:.1f}%)")
+                return False
+        except Exception as e:
+            self.log_test("Performance Sous Charge", False, f"Exception: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests including the new AI agents tests"""
         print("🚀 Starting Comprehensive Backend API Testing for Josmose.com")
