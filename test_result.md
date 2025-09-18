@@ -306,6 +306,18 @@ backend:
           agent: "testing"
           comment: "✅ BACKEND SYSTEM HEALTH EXCELLENT: API root endpoint responding correctly with 'Josmoze.com API - Système d'Osmose Inverse avec CRM'. All critical CRM endpoints functional (/crm/dashboard, /crm/leads, /crm/team-contacts) with 100% success rate. System stability confirmed with 10/10 requests successful under load testing. No regression detected on existing functionality. Backend ready to support V2 improvements with full stability."
 
+  - task: "Language Detection Service - French Default Fix"
+    implemented: true
+    working: false
+    file: "backend/translation_service.py"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "❌ PROBLÈME CRITIQUE DÉTECTÉ: Service de détection langue retourne systématiquement EN-US/US/USD au lieu de FR/FR/EUR pour site français Josmose. IP serveur (35.184.53.215) géolocalisé comme US par ip2geotools, mais logique devrait defaulter au français pour domaine .com français. Headers Accept-Language français (fr-FR,fr;q=0.9) complètement ignorés. Endpoint /api/localization/detect et /api/products/translated affectés. IMPACT: Site ne se charge pas en français par défaut comme rapporté par utilisateur. SOLUTION REQUISE: Modifier translation_service.py pour forcer français par défaut ou détecter domaine français."
+
 frontend:
   - task: "AI Agents Manager Interface"
     implemented: true
