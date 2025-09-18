@@ -1139,69 +1139,28 @@ async def get_user_info(current_user: User = Depends(get_current_user)):
         )
 
 async def get_all_products():
-    """Get all products from the initialized products list"""
-    # This function returns the same products as initialized in initialize_products()
-    products = [
-        {
-            "id": "osmoseur-principal",
-            "name": "Fontaine à Eau Osmosée BlueMountain",
-            "description": "Système d'osmose inverse professionnel BlueMountain. Production 380L/jour (16L/h). Eau chaude, froide et tempérée. Membrane 100GPD encapsulée. Prix spécial : 479€ au lieu de 599€.",
-            "price": 479.0,
-            "original_price": 599.0,
-            "image": "https://www.josmoze.com/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
-            "category": "osmoseur",
-            "target_audience": "both",
-            "in_stock": True,
-            "created_at": datetime.now()
-        },
-        {
-            "id": "fontaine-ultrafiltration",
-            "name": "Fontaine Intelligente H₂O",
-            "description": "Fontaine d'eau intelligente avec contrôle digital du bout des doigts. Température réglable en 3 secondes, installation plug & play, sécurité enfant intégrée. Prix attractif : 419€ au lieu de 499€.",
-            "price": 419.0,
-            "original_price": 499.0,
-            "image": "https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png",
-            "category": "osmoseur", 
-            "target_audience": "both",
-            "in_stock": True,
-            "created_at": datetime.now()
-        },
-        {
-            "id": "osmoseur-pro",
-            "name": "Système Osmose Inverse Professionnel BlueMountain Grand Format",
-            "description": "Solution professionnelle BlueMountain grand format pour restaurants, bureaux et commerces. Dimensions 1040×330×300mm avec même performance 15L/h.",
-            "price": 899.0,
-            "original_price": 1199.0,
-            "image": "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
-            "category": "osmoseur",
-            "target_audience": "B2B",
-            "in_stock": True,
-            "created_at": datetime.now()
-        },
-        {
-            "id": "filtres-rechange",
-            "name": "Kit Filtres de Rechange - 4 Étapes",
-            "description": "Kit complet de filtres de rechange selon CDC. Kit 4 étapes : PP + GAC + CTO + Membrane UF. Qualité premium - À partir du 6ème mois - 59€.",
-            "price": 59.0,
-            "image": "https://static.wixstatic.com/media/6af6bd_1b0ed5e9b180466baeee7436019f6fef~mv2.png/v1/fill/w_520,h_692,al_c,lg_1,q_85,enc_avif,quality_auto/H10e839a4d05e44ab881e05d9aeb3e0d80_jpg_720x720q50-removebg-preview.png",
-            "category": "accessoire",
-            "target_audience": "both",
-            "in_stock": True,
-            "created_at": datetime.now()
-        },
-        {
-            "id": "garantie-2ans", 
-            "name": "Extension Garantie 2 ans - 39€",
-            "description": "Étendez votre garantie à 2 ans selon tarif CDC. Tranquillité d'esprit totale avec support technique.",
-            "price": 39.0,
-            "image": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=400&h=300&fit=crop&auto=format",
-            "category": "service",
-            "target_audience": "both",
-            "in_stock": True,
-            "created_at": datetime.now()
-        }
-    ]
-    return products
+    """Get all products from database - UPDATED VERSION"""
+    try:
+        # Récupérer tous les produits depuis la base de données
+        products = await db.products.find({}).to_list(1000)
+        
+        # Nettoyer les ObjectId MongoDB et préparer pour JSON
+        for product in products:
+            if '_id' in product:
+                del product['_id']
+            
+            # S'assurer que tous les champs requis sont présents
+            product.setdefault('in_stock', True)
+            product.setdefault('created_at', datetime.utcnow())
+            product.setdefault('target_audience', 'both')
+            product.setdefault('category', 'osmoseur')
+        
+        logging.info(f"✅ {len(products)} produits récupérés depuis la base de données")
+        return products
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération produits: {e}")
+        return []
 
 # ========== LOYALTY PROGRAM ENDPOINTS ==========
 
