@@ -9744,14 +9744,5 @@ class BackendTester:
         return success_rate >= 70
 
 if __name__ == "__main__":
-    print("🎯 JOSMOSE CRM - EMAIL SEQUENCER V2 + THOMAS CHATBOT V2 TESTING")
-    print("Testing backend improvements V2 as requested in review")
-    print("="*80)
-    
     tester = BackendTester()
-    
-    # Run V2 specific tests
-    tester.run_email_sequencer_v2_tests()
-    
-    print("\n🎯 FOCUS: Email Sequencer V2 Templates Optimisés + Thomas ChatBot V2 Enriched Knowledge")
-    print("✅ Test completed - Check results above for verification")
+    tester.run_all_tests()
