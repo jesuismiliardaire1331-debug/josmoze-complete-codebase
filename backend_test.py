@@ -9912,6 +9912,74 @@ class BackendTester:
         
         return success_rate >= 70
 
+    def run_priority_tests(self):
+        """Exécute les tests prioritaires pour la devise EUR et nouveaux produits"""
+        print("🎯 DÉMARRAGE TESTS PRIORITAIRES - DEVISE EUR ET NOUVEAUX PRODUITS BLUEMOUNTAIN")
+        print("=" * 80)
+        
+        # PRIORITÉ 1: Tests devise EUR
+        print("\n📍 PRIORITÉ 1: TESTS DEVISE EUR")
+        print("-" * 50)
+        priority1_tests = [
+            self.test_eur_currency_detection,
+            self.test_products_translated_eur_currency,
+        ]
+        
+        priority1_passed = 0
+        for test in priority1_tests:
+            if test():
+                priority1_passed += 1
+        
+        # PRIORITÉ 2: Tests nouveaux prix produits
+        print("\n📍 PRIORITÉ 2: TESTS NOUVEAUX PRIX PRODUITS")
+        print("-" * 50)
+        priority2_tests = [
+            self.test_new_product_pricing_bluemountain,
+        ]
+        
+        priority2_passed = 0
+        for test in priority2_tests:
+            if test():
+                priority2_passed += 1
+        
+        # PRIORITÉ 3: Tests cohérence
+        print("\n📍 PRIORITÉ 3: TESTS COHÉRENCE")
+        print("-" * 50)
+        priority3_tests = [
+            self.test_no_old_product_references,
+            self.test_recommendations_use_new_products,
+        ]
+        
+        priority3_passed = 0
+        for test in priority3_tests:
+            if test():
+                priority3_passed += 1
+        
+        # Résumé final
+        print("\n" + "=" * 80)
+        print("📊 RÉSUMÉ TESTS PRIORITAIRES")
+        print("=" * 80)
+        
+        total_tests = len(priority1_tests) + len(priority2_tests) + len(priority3_tests)
+        total_passed = priority1_passed + priority2_passed + priority3_passed
+        
+        print(f"PRIORITÉ 1 - Devise EUR: {priority1_passed}/{len(priority1_tests)} tests réussis")
+        print(f"PRIORITÉ 2 - Nouveaux Prix: {priority2_passed}/{len(priority2_tests)} tests réussis")
+        print(f"PRIORITÉ 3 - Cohérence: {priority3_passed}/{len(priority3_tests)} tests réussis")
+        print(f"\n🎯 TOTAL: {total_passed}/{total_tests} tests réussis ({(total_passed/total_tests)*100:.1f}%)")
+        
+        if total_passed == total_tests:
+            print("✅ TOUS LES TESTS PRIORITAIRES RÉUSSIS!")
+        else:
+            print(f"❌ {total_tests - total_passed} tests ont échoué")
+        
+        return total_passed, total_tests
+
 if __name__ == "__main__":
     tester = BackendTester()
-    tester.run_all_tests()
+    passed, total = tester.run_priority_tests()
+    
+    if passed == total:
+        exit(0)  # Success
+    else:
+        exit(1)  # Some tests failed
