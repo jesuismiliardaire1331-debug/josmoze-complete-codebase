@@ -1947,6 +1947,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/particuliers" element={<Home />} />
                     <Route path="/professionnels" element={<BusinessHome />} />
+                    <Route path="/produit/:productId" element={<ProductDetail />} />
                     <Route path="/panier" element={<Cart />} />
                     <Route path="/checkout" element={<Checkout />} />
                     <Route path="/contact" element={<Contact />} />
