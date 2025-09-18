@@ -2416,8 +2416,7 @@ async def initialize_products():
                 "Certification qualité professionnelle"
             ],
             "in_stock": True
-        }
-    ],
+        },
         {
             "id": "garantie-2ans", 
             "name": "Extension Garantie 2 ans - 39€",
