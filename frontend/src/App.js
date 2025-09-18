@@ -37,6 +37,7 @@ const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const { i18n } = useTranslation();
   const { currentCurrency, formatPrice } = useTranslationService();
 
