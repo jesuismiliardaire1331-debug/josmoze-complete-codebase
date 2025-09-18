@@ -1956,7 +1956,7 @@ function App() {
                 {/* ChatBot pour prospects */}
                 <ChatBotV2 />
                 {/* Questionnaire produits */}
-                <ProductQuestionnaire />
+                <QuestionnaireWrapper />
               </BrowserRouter>
             </div>
           </AuthProvider>
