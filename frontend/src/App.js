@@ -107,6 +107,28 @@ const AppProvider = ({ children }) => {
     return { subtotal, shipping, total: subtotal + shipping };
   };
 
+  const openQuestionnaire = () => {
+    setShowQuestionnaire(true);
+  };
+
+  const closeQuestionnaire = () => {
+    setShowQuestionnaire(false);
+  };
+
+  const handleQuestionnaireRecommendation = (recommendation) => {
+    // Scroll vers le produit recommandé
+    setTimeout(() => {
+      const productElement = document.getElementById(recommendation.id);
+      if (productElement) {
+        productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        productElement.classList.add('highlight-product');
+        setTimeout(() => {
+          productElement.classList.remove('highlight-product');
+        }, 3000);
+      }
+    }, 500);
+  };
+
   return (
     <AppContext.Provider value={{
       userLocation,
