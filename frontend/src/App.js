@@ -355,6 +355,7 @@ const ProductGrid = () => {
   const [products, setProducts] = useState([]);
   const { addToCart, formatPrice, customerType } = useApp();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
