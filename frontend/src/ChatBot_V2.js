@@ -342,32 +342,34 @@ const ChatBotV2 = () => {
     setIsLoading(true);
 
     try {
-      // Utiliser la reponse intelligente V2 enrichie en premier
-      const intelligentResponse = getIntelligentResponseV2(message);
+      // Appeler le nouveau Thomas Chatbot API
+      const response = await axios.post(`${API_BASE}/api/ai-agents/chat`, {
+        message: message,
+        session_id: 'chatbot_v2_session'
+      });
       
       const botMessage = {
         type: 'bot',
-        content: intelligentResponse,
+        content: response.data.response || "Désolé, je n'ai pas pu traiter votre message.",
         timestamp: new Date().toISOString(),
-        suggestions: [
-          "💰 Voir les prix et offres",
-          "🚨 En savoir plus sur les dangers",
-          "📞 Parler a un expert humain",
-          "🐾 Decouvrir produits animaux"
+        suggestions: response.data.suggestions || [
+          "💰 Voir les prix",
+          "📞 Parler à un expert",
+          "💧 En savoir plus"
         ]
       };
 
       setMessages(prev => [...prev, botMessage]);
 
     } catch (error) {
-      console.error('❌ Erreur chatbot V2:', error);
+      console.error('❌ Erreur Thomas chatbot:', error);
       
-      // Reponse de fallback intelligente en francais
+      // Réponse de fallback bienveillante
       const fallbackMessage = {
         type: 'bot',
-        content: "Je suis temporairement indisponible, mais notre equipe peut vous aider ! 📞 Appelez-nous ou envoyez un email a commercial@josmoze.com",
+        content: "Désolé, j'ai eu un petit problème technique ! 😅\n\nJe suis Thomas, expert osmoseurs chez Josmose.com. Je peux vous aider à choisir l'osmoseur parfait pour avoir une eau pure illimitée chez vous !\n\n💧 Comment puis-je vous aider ?",
         timestamp: new Date().toISOString(),
-        suggestions: ['💰 Voir les prix', '📞 Contacter l equipe', '💧 En savoir plus']
+        suggestions: ['💧 Comment ça marche ?', '💰 Voir les prix', '📞 Expert au téléphone']
       };
 
       setMessages(prev => [...prev, fallbackMessage]);
