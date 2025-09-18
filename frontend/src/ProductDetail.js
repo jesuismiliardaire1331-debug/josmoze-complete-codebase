@@ -43,16 +43,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        quantity: quantity
-      });
-      
-      // Feedback visuel
-      alert(`${product.name} ajouté au panier (${quantity} unité${quantity > 1 ? 's' : ''})`);
+      addToCart(product);
     }
   };
 
