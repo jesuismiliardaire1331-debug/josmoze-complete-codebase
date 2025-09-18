@@ -373,17 +373,15 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Language Detection Service - French Default Fix"
     - "CRM Routing Infrastructure - CRITIQUE"
     - "Email Sequencer Osmoseur - Frontend Interface"
     - "Suppression List / Opt-out Guardian - Frontend Interface"
-    - "Scraper Agent - Frontend Interface"
-    - "Scraper Agent - CRM Integration"
   stuck_tasks:
+    - "Language Detection Service - French Default Fix"
     - "CRM Routing Infrastructure - CRITIQUE"
     - "Email Sequencer Osmoseur - Frontend Interface"
     - "Suppression List / Opt-out Guardian - Frontend Interface"
-    - "Scraper Agent - Frontend Interface"
-    - "Scraper Agent - CRM Integration"
   test_all: false
   test_priority: "critical_first"
 
