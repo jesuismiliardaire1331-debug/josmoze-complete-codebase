@@ -496,6 +496,102 @@ async def get_products(customer_type: str = "B2C"):
     
     return enriched_products
 
+@api_router.get("/products/{product_id}")
+async def get_product_detail(product_id: str):
+    """
+    Récupère les détails complets d'un produit spécifique
+    """
+    try:
+        # Chercher le produit dans la base de données
+        product = await db.products.find_one({"id": product_id})
+        
+        if not product:
+            raise HTTPException(status_code=404, detail="Produit non trouvé")
+        
+        # Enrichir avec des spécifications techniques détaillées
+        specifications = {
+            "osmoseur-essentiel": {
+                "Capacité": "75 GPD (284 L/jour)",
+                "Étapes de filtration": "5 étapes",
+                "Pression d'eau requise": "40-100 PSI",
+                "Température d'eau": "4-38°C",
+                "Dimensions": "38 x 15 x 46 cm",
+                "Garantie": "2 ans pièces et main d'œuvre",
+                "Certification": "NSF/ANSI 58",
+                "Consommation électrique": "0W (sans électricité)"
+            },
+            "osmoseur-premium": {
+                "Capacité": "100 GPD (378 L/jour)",
+                "Étapes de filtration": "6 étapes + reminéralisation",
+                "Pression d'eau requise": "35-100 PSI",
+                "Température d'eau": "4-38°C",
+                "Dimensions": "42 x 18 x 50 cm",
+                "Garantie": "3 ans pièces et main d'œuvre",
+                "Certification": "NSF/ANSI 58, CE",
+                "Reminéralisation": "Cartouche alcaline intégrée"
+            },
+            "osmoseur-prestige": {
+                "Capacité": "150 GPD (567 L/jour)",
+                "Étapes de filtration": "7 étapes + UV + reminéralisation",
+                "Pression d'eau requise": "30-100 PSI",
+                "Température d'eau": "4-38°C",
+                "Dimensions": "45 x 20 x 55 cm",
+                "Garantie": "5 ans pièces et main d'œuvre",
+                "Certification": "NSF/ANSI 58, CE, FDA",
+                "Fonctionnalités": "Affichage LCD, alarmes de maintenance"
+            }
+        }
+        
+        # Enrichir avec des caractéristiques détaillées
+        features = {
+            "osmoseur-essentiel": [
+                "Filtration 5 étapes haute performance",
+                "Réservoir de stockage 12 litres",
+                "Robinet dédié en acier inoxydable",
+                "Cartouches faciles à remplacer",
+                "Installation sous évier",
+                "Réduction de 99% des contaminants",
+                "Sans électricité, écologique"
+            ],
+            "osmoseur-premium": [
+                "Filtration 6 étapes + reminéralisation",
+                "Réservoir de stockage 15 litres",
+                "Robinet premium avec indicateur LED",
+                "Système auto-rinçage",
+                "Cartouche alcaline pour pH équilibré",
+                "Réduction de 99.9% des contaminants",
+                "Installation professionnelle incluse"
+            ],
+            "osmoseur-prestige": [
+                "Filtration 7 étapes + UV + reminéralisation",
+                "Double réservoir 20 litres",
+                "Robinet intelligent avec écran tactile",
+                "Système de nettoyage automatique",
+                "Monitoring qualité d'eau en temps réel",
+                "Connexion Wi-Fi et app mobile",
+                "Service de maintenance premium inclus"
+            ]
+        }
+        
+        # Ajouter les spécifications et caractéristiques
+        product["specifications"] = specifications.get(product_id, {})
+        product["features"] = features.get(product_id, [])
+        
+        # Ajouter une galerie d'images (pour l'instant une seule image)
+        product["images_gallery"] = [product.get("image")]
+        
+        # Convertir ObjectId en string si nécessaire
+        if "_id" in product:
+            del product["_id"]
+            
+        return product
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Erreur récupération produit {product_id}: {e}")
+        raise HTTPException(status_code=500, detail="Erreur serveur")
+
 @api_router.get("/products/translated")
 async def get_translated_products(
     customer_type: str = "B2C", 
