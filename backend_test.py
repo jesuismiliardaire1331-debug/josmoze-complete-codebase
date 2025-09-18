@@ -91,51 +91,79 @@ class BackendTester:
             self.log_test("Location Detection", False, f"Exception: {str(e)}")
             return False
     
-    def test_product_catalog(self):
-        """Test GET /api/products (product catalog)"""
+    def test_new_product_catalog_restructured(self):
+        """Test GET /api/products - NOUVEAUX PRODUITS JOSMOZE: Gamme restructurée + nouveaux produits"""
         try:
             response = self.session.get(f"{BACKEND_URL}/products")
             if response.status_code == 200:
                 data = response.json()
                 
-                if isinstance(data, list) and len(data) >= 4:
-                    # Check for expected products including new B2B products
-                    expected_products = {
-                        "osmoseur-principal": 499.0,
-                        "filtres-rechange": 49.0,
-                        "garantie-2ans": 39.0,
-                        "garantie-5ans": 59.0,
-                        "installation-service": 150.0
+                if isinstance(data, list) and len(data) >= 8:
+                    # NOUVELLE GAMME OSMOSEURS RESTRUCTURÉE
+                    expected_new_products = {
+                        "osmoseur-essentiel": 449.0,    # Nouveau: Essentiel 449€
+                        "osmoseur-premium": 549.0,      # Nouveau: Premium 549€  
+                        "osmoseur-prestige": 899.0,     # Nouveau: Prestige 899€
+                        "purificateur-portable-hydrogene": 79.0,  # Nouveau: Purificateur H2 79€
+                        "fontaine-eau-animaux": 49.0,   # Nouveau: Fontaine Animaux 49€
+                        "osmoseur-pro": 1299.0,         # B2B maintenu
+                        "filtres-rechange": 59.0,       # Accessoire maintenu
+                        "filtres-pro": 89.0             # B2B accessoire
                     }
                     
                     found_products = {}
+                    promotion_eligible_products = []
+                    gift_eligible_products = []
+                    
                     for product in data:
                         if "id" in product and "price" in product:
                             found_products[product["id"]] = product["price"]
+                            
+                            # Vérifier éligibilité promotions
+                            if product.get("promotion_eligible", False):
+                                promotion_eligible_products.append(product["id"])
+                            
+                            # Vérifier éligibilité cadeaux
+                            if product.get("is_gift_eligible", False):
+                                gift_eligible_products.append(product["id"])
                     
-                    # Verify all expected products exist with correct prices
-                    all_correct = True
-                    for product_id, expected_price in expected_products.items():
+                    # Vérifier tous les nouveaux produits
+                    missing_products = []
+                    wrong_prices = []
+                    
+                    for product_id, expected_price in expected_new_products.items():
                         if product_id not in found_products:
-                            all_correct = False
-                            self.log_test("Product Catalog", False, f"Missing product: {product_id}")
+                            missing_products.append(product_id)
                         elif found_products[product_id] != expected_price:
-                            all_correct = False
-                            self.log_test("Product Catalog", False, f"Wrong price for {product_id}: expected {expected_price}, got {found_products[product_id]}")
+                            wrong_prices.append(f"{product_id}: expected {expected_price}€, got {found_products[product_id]}€")
                     
-                    if all_correct:
-                        self.log_test("Product Catalog", True, f"All expected products found with correct prices")
-                        return True
-                    else:
+                    # Vérifier restructuration complète
+                    total_products = len(data)
+                    new_osmoseur_count = sum(1 for pid in found_products.keys() if pid.startswith("osmoseur-"))
+                    
+                    if missing_products:
+                        self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, 
+                                    f"Produits manquants: {missing_products}")
                         return False
+                    elif wrong_prices:
+                        self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, 
+                                    f"Prix incorrects: {wrong_prices}")
+                        return False
+                    else:
+                        self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", True, 
+                                    f"✅ {total_products} produits total, {new_osmoseur_count} osmoseurs, "
+                                    f"Gamme: Essentiel 449€, Premium 549€, Prestige 899€, "
+                                    f"Nouveaux: Purificateur H2 79€, Fontaine Animaux 49€")
+                        return True
                 else:
-                    self.log_test("Product Catalog", False, f"Expected at least 4 products, got {len(data) if isinstance(data, list) else 'non-list'}", data)
+                    self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, 
+                                f"Expected at least 8 products, got {len(data) if isinstance(data, list) else 'non-list'}")
                     return False
             else:
-                self.log_test("Product Catalog", False, f"Status: {response.status_code}", response.text)
+                self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, f"Status: {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_test("Product Catalog", False, f"Exception: {str(e)}")
+            self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, f"Exception: {str(e)}")
             return False
 
     def test_enhanced_product_catalog(self):
