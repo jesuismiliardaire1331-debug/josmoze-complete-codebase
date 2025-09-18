@@ -321,6 +321,18 @@ backend:
           agent: "testing"
           comment: "✅ DEVISE EUR CORRECTEMENT FORCÉE: Tests prioritaires confirment que la correction fonctionne parfaitement. Endpoint /api/localization/detect retourne maintenant currency.code='EUR', currency.symbol='€', detected_country='FR', detected_language='FR'. Endpoint /api/products/translated utilise la bonne devise avec 11 produits traduits en FR. Aucune trace de CAD détectée. Le forçage du français/EUR dans translation_service.py résout complètement le problème critique."
 
+  - task: "Product Database Cleanup - Remove Old Products"
+    implemented: false
+    working: false
+    file: "backend/products database"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "❌ ANCIEN PRODUIT DÉTECTÉ: Le produit 'osmoseur-principal' est encore présent dans la base de données alors qu'il devrait être remplacé par la nouvelle gamme BlueMountain (Essentiel 449€, Premium 549€, Prestige 899€). Les nouveaux prix sont corrects mais l'ancien produit doit être supprimé pour éviter la confusion. Recommandation: Nettoyer la base de données pour supprimer les anciens produits (osmoseur-principal, osmoseur-standard, etc.) et ne garder que la nouvelle gamme."
+
 frontend:
   - task: "AI Agents Manager Interface"
     implemented: true
