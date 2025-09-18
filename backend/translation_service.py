@@ -212,24 +212,15 @@ class TranslationService:
     @lru_cache(maxsize=100)
     def detect_country_from_ip(self, ip_address: str) -> str:
         """
-        Détecte le pays à partir de l'adresse IP
-        Utilise un cache pour éviter les appels répétés
+        SITE FRANÇAIS - Force la France par défaut pour Josmose.com
+        Détecte le pays à partir de l'adresse IP avec override français pour site business français
         """
-        try:
-            if not ip_address or ip_address == "127.0.0.1" or ip_address.startswith("192.168."):
-                # IP locale - retourner France par défaut
-                return "FR"
-            
-            # Utilise ip2geotools pour détecter le pays
-            response = DbIpCity.get(ip_address, api_key='free')
-            country_code = response.country
-            
-            self.logger.info(f"IP {ip_address} -> Pays détecté: {country_code}")
-            return country_code or "FR"
-            
-        except Exception as e:
-            self.logger.error(f"Erreur détection pays pour IP {ip_address}: {str(e)}")
-            return "FR"  # Fallback vers France
+        # OVERRIDE POUR SITE FRANÇAIS - Toujours retourner France pour business français
+        # Ceci résout le problème où l'IP du serveur (US) forçait US comme pays
+        country_code = "FR"  # Force France par défaut pour Josmose.com
+        
+        self.logger.info(f"IP {ip_address} -> SITE FRANÇAIS forcé -> Pays: {country_code}")
+        return country_code
 
     def get_user_language_from_ip(self, ip_address: str) -> str:
         """
