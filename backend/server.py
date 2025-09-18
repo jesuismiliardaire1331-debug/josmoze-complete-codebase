@@ -2268,7 +2268,7 @@ async def initialize_products():
             "image": "https://static.wixstatic.com/media/6af6bd_16baeaf62afc42009cf6ece2f46c767a~mv2.png/v1/fill/w_797,h_487,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Les%20b%C3%A9b%C3%A9s%20pleurent%20quand%20ils%20ont%20faim%2C%20ne%20peuvent%20pas%20attendre__%20c'est%20touj_20250220_19362.png",
             "category": "portable",
             "target_audience": "both",
-            "is_gift_eligible": true,
+            "is_gift_eligible": True,
             "specifications": {
                 "Technologie": "SPE/PEM Électrolyse",
                 "Capacité": "420ml bouteille premium",
