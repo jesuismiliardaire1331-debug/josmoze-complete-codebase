@@ -1912,6 +1912,18 @@ const Consultation = () => {
   return <ConsultationExpert />;
 };
 
+const QuestionnaireWrapper = () => {
+  const { showQuestionnaire, closeQuestionnaire, handleQuestionnaireRecommendation } = useApp();
+  
+  return (
+    <ProductQuestionnaire
+      isOpen={showQuestionnaire}
+      onClose={closeQuestionnaire}
+      onRecommendation={handleQuestionnaireRecommendation}
+    />
+  );
+};
+
 function App() {
   return (
     <Suspense fallback={<div className="flex items-center justify-center min-h-screen">
