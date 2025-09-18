@@ -2304,7 +2304,7 @@ async def initialize_products():
             "image": "https://static.wixstatic.com/media/6af6bd_1b0ed5e9b180466baeee7436019f6fef~mv2.png/v1/fill/w_520,h_692,al_c,lg_1,q_85,enc_avif,quality_auto/H10e839a4d05e44ab881e05d9aeb3e0d80_jpg_720x720q50-removebg-preview.png",
             "category": "animaux",
             "target_audience": "both",
-            "is_gift_eligible": true,
+            "is_gift_eligible": True,
             "specifications": {
                 "Capacité": "2.4 litres",
                 "Matériaux": "ABS premium sans BPA",
