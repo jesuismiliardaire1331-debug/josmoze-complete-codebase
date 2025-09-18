@@ -8739,45 +8739,70 @@ class BackendTester:
             return False
 
     def run_all_tests(self):
-        """Run all backend tests including the new AI agents tests"""
-        print("🚀 Starting Comprehensive Backend API Testing for Josmose.com")
+        """Run all backend tests - FOCUS: SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE"""
+        print("🚀 TEST FINAL SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE")
         print(f"Backend URL: {BACKEND_URL}")
         print("="*80)
         
-        # PRIORITY TESTS FIRST (as requested in review)
-        print("\n🎯 RUNNING PRIORITY TESTS FIRST")
-        print("="*50)
-        self.run_priority_tests()
+        # MISSION POINTS 1 & 2 - TESTS PRIORITAIRES
+        print("\n🎯 MISSION POINTS 1 & 2 - TESTS PRIORITAIRES")
+        print("="*60)
         
-        print("\n" + "="*80)
-        print("🔧 ADDITIONAL COMPREHENSIVE TESTS")
-        print("="*80)
+        # 1. NOUVEAUX PRODUITS À TESTER
+        print("\n📦 1. NOUVEAUX PRODUITS - Gamme restructurée")
+        print("-" * 50)
+        self.test_new_product_catalog_restructured()
+        self.test_enhanced_product_catalog()
         
-        # Core API tests
+        # 2. SYSTÈME PROMOTIONS À TESTER
+        print("\n🎁 2. SYSTÈME PROMOTIONS - Parrainage + Offre Lancement")
+        print("-" * 60)
+        self.test_promotions_manager_initialization()
+        self.test_referral_code_generation()
+        self.test_referral_code_validation()
+        self.test_referral_discount_application()
+        self.test_referral_user_stats()
+        self.test_launch_offer_eligibility_check()
+        self.test_launch_offer_application()
+        self.test_promotion_rules_endpoint()
+        
+        # 3. INTÉGRATION ET STABILITÉ
+        print("\n⚡ 3. INTÉGRATION ET STABILITÉ")
+        print("-" * 40)
+        self.test_api_health_general()
+        self.test_performance_under_load()
+        
+        # 4. VÉRIFICATION RÉGRESSION (endpoints existants)
+        print("\n🔄 4. VÉRIFICATION RÉGRESSION - Endpoints existants")
+        print("-" * 55)
         self.test_root_endpoint()
         self.test_location_detection()
-        self.test_product_catalog()
+        self.test_checkout_session_creation()
+        self.test_crm_dashboard()
         
-        # Authentication and team structure tests
-        self.run_equal_managers_tests()
+        # TESTS COMPLÉMENTAIRES (si temps disponible)
+        print("\n📋 TESTS COMPLÉMENTAIRES")
+        print("-" * 30)
+        self.test_lead_creation()
+        self.test_enhanced_contact_form()
         
-        # AI AGENTS SYSTEM TESTS (NEW FOCUS)
-        print("\n🤖 AI AGENTS SYSTEM TESTING")
-        print("="*50)
-        self.test_ai_agents_dashboard()
-        self.test_agent_status_control()
-        self.test_client_profiling_system()
-        self.test_schopenhauer_strategies()
-        self.test_performance_analytics()
-        self.test_agent_interaction()
-        self.test_working_hours_configuration()
+        # RÉSULTATS FINAUX
+        print("\n" + "="*80)
+        self.print_final_results()
         
-        # EMAIL SEQUENCER OSMOSEUR TESTS - GDPR/CNIL COMPLIANT (NEW PRIORITY)
-        print("\n📧 EMAIL SEQUENCER OSMOSEUR TESTING - GDPR/CNIL COMPLIANCE")
-        print("="*65)
-        self.test_email_sequencer_templates()
-        self.test_email_sequencer_metrics_initial()
-        self.test_email_sequencer_start_test_mode()
+    def run_priority_tests(self):
+        """Run only the highest priority tests for promotions system"""
+        print("🎯 TESTS PRIORITAIRES - SYSTÈME PROMOTIONS JOSMOZE")
+        print("="*55)
+        
+        # Test core functionality first
+        self.test_api_health_general()
+        self.test_new_product_catalog_restructured()
+        self.test_promotions_manager_initialization()
+        self.test_referral_code_generation()
+        self.test_referral_code_validation()
+        self.test_launch_offer_eligibility_check()
+        self.test_promotion_rules_endpoint()
         self.test_email_sequencer_metrics_after_start()
         self.test_email_sequencer_sequence_details()
         self.test_email_sequencer_process_scheduled()
