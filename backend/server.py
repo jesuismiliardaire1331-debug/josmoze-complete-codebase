@@ -5442,6 +5442,137 @@ async def crm_direct_access():
         </html>
         """, status_code=500)
 
+# ========== PROMOTIONS & REFERRAL SYSTEM ENDPOINTS ==========
+
+@api_router.post("/promotions/referral/generate")
+async def generate_referral_code(user_data: Dict[str, Any]):
+    """Génère un code de parrainage pour un utilisateur"""
+    try:
+        promotions = get_promotions_manager()
+        code = await promotions.generate_referral_code(user_data.get("user_id"))
+        
+        return {
+            "success": True,
+            "referral_code": code,
+            "message": "Code de parrainage généré avec succès"
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur génération code parrainage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/promotions/referral/validate")
+async def validate_referral_code(code_data: Dict[str, str]):
+    """Valide un code de parrainage"""
+    try:
+        promotions = get_promotions_manager()
+        validation = await promotions.validate_referral_code(code_data.get("code"))
+        
+        if validation:
+            return {
+                "success": True,
+                "valid": True,
+                "discount_percentage": validation["discount_percentage"],
+                "description": validation["description"]
+            }
+        else:
+            return {
+                "success": True,
+                "valid": False,
+                "message": "Code de parrainage invalide ou expiré"
+            }
+            
+    except Exception as e:
+        logging.error(f"Erreur validation code parrainage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/promotions/referral/apply")
+async def apply_referral_discount(discount_data: Dict[str, Any]):
+    """Applique une réduction de parrainage à une commande"""
+    try:
+        promotions = get_promotions_manager()
+        result = await promotions.apply_referral_discount(
+            discount_data.get("code"),
+            discount_data.get("order_data", {})
+        )
+        
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur application réduction parrainage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/promotions/referral/stats/{user_id}")
+async def get_referral_stats(user_id: str):
+    """Récupère les statistiques de parrainage d'un utilisateur"""
+    try:
+        promotions = get_promotions_manager()
+        stats = await promotions.get_user_referral_stats(user_id)
+        
+        return {
+            "success": True,
+            "stats": stats
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération stats parrainage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/promotions/launch-offer/check")
+async def check_launch_offer(cart_data: Dict[str, Any]):
+    """Vérifie l'éligibilité à l'offre de lancement"""
+    try:
+        promotions = get_promotions_manager()
+        eligibility = await promotions.check_launch_offer_eligibility(
+            cart_data.get("items", [])
+        )
+        
+        return {
+            "success": True,
+            "eligibility": eligibility
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur vérification offre de lancement: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/promotions/launch-offer/apply")
+async def apply_launch_offer(offer_data: Dict[str, Any]):
+    """Applique l'offre de lancement au panier"""
+    try:
+        promotions = get_promotions_manager()
+        result = await promotions.apply_launch_offer(
+            offer_data.get("cart_items", []),
+            offer_data.get("selected_gift_id"),
+            offer_data.get("customer_email")
+        )
+        
+        return result
+        
+    except Exception as e:
+        logging.error(f"Erreur application offre de lancement: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/promotions/rules")
+async def get_promotion_rules():
+    """Récupère toutes les règles de promotion actives"""
+    try:
+        # Récupérer les règles depuis la base de données
+        launch_offer_rules = await db.promotion_rules.find_one({"type": "launch_offer"})
+        referral_rules = await db.referral_rules.find_one({"type": "referral_system"})
+        
+        return {
+            "success": True,
+            "rules": {
+                "launch_offer": launch_offer_rules.get("rules") if launch_offer_rules else {},
+                "referral_system": referral_rules.get("rules") if referral_rules else {}
+            }
+        }
+        
+    except Exception as e:
+        logging.error(f"Erreur récupération règles promotions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ========== ROUTER INCLUSION ==========
 # Include all routers after all routes are defined
 api_router.include_router(crm_router, prefix="/crm")  # Include crm_router in api_router with /crm prefix
