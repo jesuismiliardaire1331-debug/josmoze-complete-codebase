@@ -25,10 +25,27 @@ const AutoLanguageDetector = () => {
           console.log('✅ Langue déjà en français');
         }
         
+        // FORCER LA DEVISE EUR pour site français Josmose.com
+        const eurCurrency = { code: 'EUR', symbol: '€', name: 'Euro' };
+        
+        // Sauvegarder la devise EUR dans localStorage
+        localStorage.setItem('userCurrency', JSON.stringify(eurCurrency));
+        
+        // Dispatcher l'événement languageChanged avec la devise EUR
+        const languageEvent = new CustomEvent('languageChanged', {
+          detail: {
+            language: 'FR',
+            country: 'FR',
+            currency: eurCurrency
+          }
+        });
+        window.dispatchEvent(languageEvent);
+        console.log('💰 Devise EUR forcée via languageChanged event');
+        
         setDebugInfo({
           detected_language: 'FR',
           detected_country: 'FR', 
-          currency: { symbol: '€', code: 'EUR' },
+          currency: eurCurrency,
           current_language: 'FR',
           forced_french: true
         });
