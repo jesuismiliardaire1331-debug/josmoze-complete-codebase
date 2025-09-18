@@ -251,6 +251,8 @@ backend:
         - working: true
           agent: "testing"
           comment: "✅ EMAIL SEQUENCER V2 TEMPLATES VERIFIED: Endpoint /api/email-sequencer/templates exists and requires manager authentication (403 Forbidden - expected behavior). Backend implementation confirmed with 3 templates (email1, email2, email3) with optimized delays (0, 4, 5 days). V2 content integration confirmed in email_sequencer_manager.py with specific data: 142 cas syndrome bébé bleu, 5,7 pesticides par verre, -23% diversité microbiote. Templates include HTML optimization, CTA improvements, and GDPR compliance. System stable with 100% API response rate."
+
+  - task: "CRM Routing Fix - React Router SPA Configuration"
     implemented: true
     working: false
     file: "backend/server.py"
