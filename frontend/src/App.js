@@ -1955,6 +1955,8 @@ function App() {
                 <TranslationGuardian />
                 {/* ChatBot pour prospects */}
                 <ChatBotV2 />
+                {/* Questionnaire produits */}
+                <ProductQuestionnaire />
               </BrowserRouter>
             </div>
           </AuthProvider>
