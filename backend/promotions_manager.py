@@ -305,9 +305,15 @@ class PromotionsManager:
 # Instance globale (sera initialisée dans server.py)
 promotions_manager = None
 
+def init_promotions_manager(db):
+    """Initialise l'instance du gestionnaire de promotions"""
+    global promotions_manager
+    promotions_manager = PromotionsManager(db)
+    return promotions_manager
+
 def get_promotions_manager():
     """Récupère l'instance du gestionnaire de promotions"""
     global promotions_manager
     if not promotions_manager:
-        raise RuntimeError("PromotionsManager non initialisé")
+        raise RuntimeError("PromotionsManager non initialisé - appelez init_promotions_manager() d'abord")
     return promotions_manager
