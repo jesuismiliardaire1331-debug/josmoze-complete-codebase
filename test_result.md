@@ -388,12 +388,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Language Detection Service - French Default Fix"
+    - "Product Database Cleanup - Remove Old Products"
     - "CRM Routing Infrastructure - CRITIQUE"
     - "Email Sequencer Osmoseur - Frontend Interface"
     - "Suppression List / Opt-out Guardian - Frontend Interface"
   stuck_tasks:
-    - "Language Detection Service - French Default Fix"
     - "CRM Routing Infrastructure - CRITIQUE"
     - "Email Sequencer Osmoseur - Frontend Interface"
     - "Suppression List / Opt-out Guardian - Frontend Interface"
