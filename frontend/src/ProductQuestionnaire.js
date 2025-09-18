@@ -203,7 +203,7 @@ const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation, formatPrice }
                     {recommendation.name}
                   </h4>
                   <div className="text-2xl font-bold text-blue-600 mb-2">
-                    {formatPrice(recommendation.price)}
+                    {formatPrice ? formatPrice(recommendation.price) : defaultFormatPrice(recommendation.price)}
                   </div>
                   <p className="text-sm text-gray-600 mb-4">
                     {recommendation.reason}
