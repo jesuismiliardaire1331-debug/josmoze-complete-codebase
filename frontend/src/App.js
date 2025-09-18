@@ -142,7 +142,11 @@ const AppProvider = ({ children }) => {
       getCartTotal,
       formatPrice,
       loading,
-      currentCurrency
+      currentCurrency,
+      showQuestionnaire,
+      openQuestionnaire,
+      closeQuestionnaire,
+      handleQuestionnaireRecommendation
     }}>
       {children}
     </AppContext.Provider>
