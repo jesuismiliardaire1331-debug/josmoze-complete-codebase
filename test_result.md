@@ -310,7 +310,7 @@ backend:
     implemented: true
     working: true
     file: "backend/translation_service.py"
-    stuck_count: 1
+    stuck_count: 0
     priority: "critical"
     needs_retesting: false
     status_history:
@@ -320,6 +320,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "✅ DEVISE EUR CORRECTEMENT FORCÉE: Tests prioritaires confirment que la correction fonctionne parfaitement. Endpoint /api/localization/detect retourne maintenant currency.code='EUR', currency.symbol='€', detected_country='FR', detected_language='FR'. Endpoint /api/products/translated utilise la bonne devise avec 11 produits traduits en FR. Aucune trace de CAD détectée. Le forçage du français/EUR dans translation_service.py résout complètement le problème critique."
+        - working: true
+          agent: "main"
+          comment: "✅ CORRECTION DEVISE CAD → EUR APPLIQUÉE AVEC SUCCÈS ! Modifications critiques: 1) translation_service.py: Forcé EUR par défaut (lignes 243, 576), 2) AutoLanguageDetector.js: Ajout événement languageChanged avec EUR, 3) useTranslationService.js: Nettoyage localStorage CAD, 4) Produits mis à jour: Premium BlueMountain 549€. Tests validés: Backend retourne EUR, Frontend affiche €, aucune trace CAD. PROBLÈME RÉSOLU DÉFINITIVEMENT!"
 
   - task: "Product Database Cleanup - Remove Old Products"
     implemented: false
