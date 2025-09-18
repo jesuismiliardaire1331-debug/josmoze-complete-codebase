@@ -1,9 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// Import du contexte directement  
-const AppContext = React.createContext();
-
-const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation }) => {
+const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation, formatPrice }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({
     household_size: '',
@@ -13,7 +10,9 @@ const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation }) => {
   });
   const [showResults, setShowResults] = useState(false);
   const [recommendation, setRecommendation] = useState(null);
-  const { formatPrice } = useApp();
+
+  // Fonction formatPrice par défaut si non fournie
+  const defaultFormatPrice = (price) => `${price.toFixed(2)}€`;
 
   const questions = [
     {
