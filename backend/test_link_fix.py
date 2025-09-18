@@ -29,7 +29,7 @@ async def test_link_correction():
     if success:
         print("✅ SMS avec lien corrigé envoyé !")
         print("🌐 Le lien devrait maintenant être accessible depuis votre mobile")
-        print(f"🔗 URL utilisée: https://josmoze-ecommerce.preview.emergentagent.com")
+        print(f"🔗 URL utilisée: https://buildfix-josmoze.preview.emergentagent.com")
     else:
         print("❌ Échec envoi")
 

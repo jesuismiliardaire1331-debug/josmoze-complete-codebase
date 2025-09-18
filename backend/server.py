@@ -5029,7 +5029,7 @@ async def crm_direct_access():
                 </div>
                 
                 <script>
-                    const API_BASE = 'https://josmoze-ecommerce.preview.emergentagent.com/api';
+                    const API_BASE = 'https://buildfix-josmoze.preview.emergentagent.com/api';
                     let authToken = '';
                     
                     async function loginToCRM() {
