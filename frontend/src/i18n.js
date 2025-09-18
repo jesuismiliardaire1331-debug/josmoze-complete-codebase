@@ -305,8 +305,8 @@ i18n
     debug: process.env.NODE_ENV === 'development',
     
     detection: {
-      // Options de détection de langue
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      // Forcer le français par défaut, pas de détection automatique
+      order: ['localStorage'],
       caches: ['localStorage'],
       excludeCacheFor: ['cimode'],
       lookupLocalStorage: 'i18nextLng'
