@@ -1898,6 +1898,7 @@ function App() {
                     <Route path="/installation" element={<Installation />} />
                     <Route path="/consultation" element={<Consultation />} />
                     <Route path="/comment-ca-marche" element={<ProductExplanation />} />
+                    <Route path="/promotions-manager" element={<PromotionsManager />} />
                     <Route path="/payment-success" element={<PaymentSuccess />} />
                     <Route path="/payment-cancelled" element={<PaymentCancelled />} />
                     {/* CRM Routes - Solution simplifiée */}
