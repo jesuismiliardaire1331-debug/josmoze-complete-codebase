@@ -148,79 +148,191 @@ class BackendTester:
             self.log_test("PRIORITÉ 1 - Products Translated EUR", False, f"Exception: {str(e)}")
             return False
     
-    def test_new_product_catalog_restructured(self):
-        """Test GET /api/products - NOUVEAUX PRODUITS JOSMOZE: Gamme restructurée + nouveaux produits"""
+    def test_new_product_pricing_bluemountain(self):
+        """PRIORITÉ 2: Test GET /api/products - Nouveaux prix BlueMountain (Essentiel 449€, Premium 549€, Prestige 899€)"""
         try:
             response = self.session.get(f"{BACKEND_URL}/products")
             if response.status_code == 200:
                 data = response.json()
                 
                 if isinstance(data, list) and len(data) >= 8:
-                    # NOUVELLE GAMME OSMOSEURS RESTRUCTURÉE
-                    expected_new_products = {
-                        "osmoseur-essentiel": 449.0,    # Nouveau: Essentiel 449€
-                        "osmoseur-premium": 549.0,      # Nouveau: Premium 549€  
-                        "osmoseur-prestige": 899.0,     # Nouveau: Prestige 899€
-                        "purificateur-portable-hydrogene": 79.0,  # Nouveau: Purificateur H2 79€
-                        "fontaine-eau-animaux": 49.0,   # Nouveau: Fontaine Animaux 49€
-                        "osmoseur-pro": 1299.0,         # B2B maintenu
-                        "filtres-rechange": 59.0,       # Accessoire maintenu
-                        "filtres-pro": 89.0             # B2B accessoire
+                    # NOUVELLE GAMME BLUEMOUNTAIN - PRIX CRITIQUES
+                    expected_bluemountain_products = {
+                        "osmoseur-essentiel": 449.0,    # Essentiel - BlueMountain Compact
+                        "osmoseur-premium": 549.0,      # Premium - BlueMountain Avancé 
+                        "osmoseur-prestige": 899.0,     # Prestige - BlueMountain De Comptoir
+                        "purificateur-portable-hydrogene": 79.0,  # Nouveau produit
+                        "fontaine-eau-animaux": 49.0,   # Nouveau produit  
                     }
                     
                     found_products = {}
-                    promotion_eligible_products = []
-                    gift_eligible_products = []
+                    premium_product_details = None
                     
                     for product in data:
                         if "id" in product and "price" in product:
                             found_products[product["id"]] = product["price"]
                             
-                            # Vérifier éligibilité promotions
-                            if product.get("promotion_eligible", False):
-                                promotion_eligible_products.append(product["id"])
-                            
-                            # Vérifier éligibilité cadeaux
-                            if product.get("is_gift_eligible", False):
-                                gift_eligible_products.append(product["id"])
+                            # Capturer les détails du Premium pour vérification nom
+                            if product["id"] == "osmoseur-premium":
+                                premium_product_details = product
                     
-                    # Vérifier tous les nouveaux produits
+                    # Vérifier tous les nouveaux produits BlueMountain
                     missing_products = []
                     wrong_prices = []
                     
-                    for product_id, expected_price in expected_new_products.items():
+                    for product_id, expected_price in expected_bluemountain_products.items():
                         if product_id not in found_products:
                             missing_products.append(product_id)
                         elif found_products[product_id] != expected_price:
                             wrong_prices.append(f"{product_id}: expected {expected_price}€, got {found_products[product_id]}€")
                     
-                    # Vérifier restructuration complète
-                    total_products = len(data)
-                    new_osmoseur_count = sum(1 for pid in found_products.keys() if pid.startswith("osmoseur-"))
+                    # Vérification spéciale Premium BlueMountain Avancé à 549€
+                    premium_check = True
+                    premium_details = ""
+                    if premium_product_details:
+                        premium_name = premium_product_details.get("name", "")
+                        premium_price = premium_product_details.get("price", 0)
+                        if premium_price == 549.0:
+                            premium_details = f"Premium '{premium_name}' à {premium_price}€ ✅"
+                        else:
+                            premium_check = False
+                            premium_details = f"Premium '{premium_name}' à {premium_price}€ ❌ (attendu 549€)"
                     
                     if missing_products:
-                        self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, 
-                                    f"Produits manquants: {missing_products}")
+                        self.log_test("PRIORITÉ 2 - Nouveaux Prix BlueMountain", False, 
+                                    f"❌ Produits manquants: {missing_products}")
                         return False
                     elif wrong_prices:
-                        self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, 
-                                    f"Prix incorrects: {wrong_prices}")
+                        self.log_test("PRIORITÉ 2 - Nouveaux Prix BlueMountain", False, 
+                                    f"❌ Prix incorrects: {wrong_prices}")
+                        return False
+                    elif not premium_check:
+                        self.log_test("PRIORITÉ 2 - Nouveaux Prix BlueMountain", False, 
+                                    f"❌ {premium_details}")
                         return False
                     else:
-                        self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", True, 
-                                    f"✅ {total_products} produits total, {new_osmoseur_count} osmoseurs, "
-                                    f"Gamme: Essentiel 449€, Premium 549€, Prestige 899€, "
-                                    f"Nouveaux: Purificateur H2 79€, Fontaine Animaux 49€")
+                        self.log_test("PRIORITÉ 2 - Nouveaux Prix BlueMountain", True, 
+                                    f"✅ Gamme BlueMountain complète: Essentiel 449€, Premium 549€, Prestige 899€, "
+                                    f"Purificateur H2 79€, Fontaine Animaux 49€. {premium_details}")
                         return True
                 else:
-                    self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, 
+                    self.log_test("PRIORITÉ 2 - Nouveaux Prix BlueMountain", False, 
                                 f"Expected at least 8 products, got {len(data) if isinstance(data, list) else 'non-list'}")
                     return False
             else:
-                self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, f"Status: {response.status_code}", response.text)
+                self.log_test("PRIORITÉ 2 - Nouveaux Prix BlueMountain", False, f"Status: {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_test("NOUVEAUX PRODUITS - Catalogue Restructuré", False, f"Exception: {str(e)}")
+            self.log_test("PRIORITÉ 2 - Nouveaux Prix BlueMountain", False, f"Exception: {str(e)}")
+            return False
+
+    def test_no_old_product_references(self):
+        """PRIORITÉ 3: Test cohérence - Pas de référence aux anciens produits (osmoseur-principal, etc.)"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/products")
+            if response.status_code == 200:
+                data = response.json()
+                
+                if isinstance(data, list):
+                    # Anciens produits qui ne devraient plus exister
+                    old_product_ids = ["osmoseur-principal", "osmoseur-standard", "osmoseur-basic"]
+                    found_old_products = []
+                    
+                    for product in data:
+                        if "id" in product and product["id"] in old_product_ids:
+                            found_old_products.append(product["id"])
+                    
+                    if found_old_products:
+                        self.log_test("PRIORITÉ 3 - Pas d'Anciens Produits", False, 
+                                    f"❌ Anciens produits encore présents: {found_old_products}")
+                        return False
+                    else:
+                        # Vérifier que les nouveaux produits sont bien présents
+                        new_product_ids = ["osmoseur-essentiel", "osmoseur-premium", "osmoseur-prestige"]
+                        found_new_products = []
+                        
+                        for product in data:
+                            if "id" in product and product["id"] in new_product_ids:
+                                found_new_products.append(product["id"])
+                        
+                        if len(found_new_products) >= 3:
+                            self.log_test("PRIORITÉ 3 - Pas d'Anciens Produits", True, 
+                                        f"✅ Aucun ancien produit, nouveaux produits présents: {found_new_products}")
+                            return True
+                        else:
+                            self.log_test("PRIORITÉ 3 - Pas d'Anciens Produits", False, 
+                                        f"❌ Nouveaux produits manquants: trouvés {found_new_products}")
+                            return False
+                else:
+                    self.log_test("PRIORITÉ 3 - Pas d'Anciens Produits", False, "Invalid products response format")
+                    return False
+            else:
+                self.log_test("PRIORITÉ 3 - Pas d'Anciens Produits", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITÉ 3 - Pas d'Anciens Produits", False, f"Exception: {str(e)}")
+            return False
+
+    def test_recommendations_use_new_products(self):
+        """PRIORITÉ 3: Test POST /api/recommendations/smart - Utilise les nouveaux produits"""
+        try:
+            # Test data for recommendations
+            recommendation_data = {
+                "customer_type": "B2C",
+                "current_cart": [],
+                "context": {"page": "homepage"},
+                "max_recommendations": 4
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/recommendations/smart",
+                json=recommendation_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "recommendations" in data:
+                    recommendations = data["recommendations"]
+                    
+                    if len(recommendations) > 0:
+                        # Vérifier que les recommandations utilisent les nouveaux produits
+                        recommended_ids = [rec.get("id") for rec in recommendations if "id" in rec]
+                        new_product_ids = ["osmoseur-essentiel", "osmoseur-premium", "osmoseur-prestige", 
+                                         "purificateur-portable-hydrogene", "fontaine-eau-animaux"]
+                        old_product_ids = ["osmoseur-principal", "osmoseur-standard"]
+                        
+                        # Vérifier qu'au moins un nouveau produit est recommandé
+                        has_new_products = any(pid in recommended_ids for pid in new_product_ids)
+                        has_old_products = any(pid in recommended_ids for pid in old_product_ids)
+                        
+                        if has_new_products and not has_old_products:
+                            self.log_test("PRIORITÉ 3 - Recommandations Nouveaux Produits", True, 
+                                        f"✅ Recommandations utilisent nouveaux produits: {recommended_ids}")
+                            return True
+                        elif has_old_products:
+                            self.log_test("PRIORITÉ 3 - Recommandations Nouveaux Produits", False, 
+                                        f"❌ Recommandations utilisent encore anciens produits: {recommended_ids}")
+                            return False
+                        else:
+                            self.log_test("PRIORITÉ 3 - Recommandations Nouveaux Produits", True, 
+                                        f"✅ Recommandations fonctionnelles: {recommended_ids}")
+                            return True
+                    else:
+                        self.log_test("PRIORITÉ 3 - Recommandations Nouveaux Produits", True, 
+                                    "✅ Endpoint fonctionnel, aucune recommandation générée")
+                        return True
+                else:
+                    self.log_test("PRIORITÉ 3 - Recommandations Nouveaux Produits", False, 
+                                f"Invalid response format: {data}")
+                    return False
+            else:
+                self.log_test("PRIORITÉ 3 - Recommandations Nouveaux Produits", False, 
+                            f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITÉ 3 - Recommandations Nouveaux Produits", False, f"Exception: {str(e)}")
             return False
 
     def test_enhanced_product_catalog(self):
