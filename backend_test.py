@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Josmose.com - Social Media Marketing Automation System
-Tests the complete social media automation, CRM, and backend endpoints.
-Focus on new marketing automation features for France/Spain targeting.
+Backend API Testing for Josmose.com - SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE
+Tests complets pour Mission Points 1 & 2:
+1. NOUVEAUX PRODUITS: Gamme restructurée (Essentiel 449€, Premium 549€, Prestige 899€) + nouveaux produits (Purificateur H2 79€, Fontaine Animaux 49€)
+2. SYSTÈME PROMOTIONS: Parrainage (codes JOSM+4 chars, 10% filleul, 50€ parrain) + Offre lancement (Premium/Prestige → produit gratuit)
 """
 
 import requests
