@@ -363,6 +363,8 @@ const ProductGrid = () => {
         const response = await axios.get(`${API}/products/translated?customer_type=${customerType}`);
         setProducts(response.data.products || response.data);
         console.log('✅ Produits traduits chargés pour langue:', i18n.language);
+        console.log('📦 Nombre de produits chargés:', (response.data.products || response.data).length);
+        console.log('🏷️ Liste des produits:', (response.data.products || response.data).map(p => `${p.name} - ${p.price}€`));
       } catch (error) {
         console.error('Failed to fetch translated products:', error);
         // Fallback vers l'ancien endpoint
