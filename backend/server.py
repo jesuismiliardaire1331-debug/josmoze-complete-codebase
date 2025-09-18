@@ -2416,77 +2416,13 @@ async def initialize_products():
                 "Certification qualité professionnelle"
             ],
             "in_stock": True
-        },
-        {
-            "id": "garantie-2ans", 
-            "name": "Extension Garantie 2 ans - 39€",
-            "description": "Étendez votre garantie à 2 ans selon tarif CDC. Tranquillité d'esprit totale avec support technique.",
-            "price": 39.0,
-            "image": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?w=400&h=300&fit=crop&auto=format",
-            "category": "service",
-            "target_audience": "both",
-            "specifications": {
-                "Durée": "2 ans à partir de l'achat",
-                "Couverture": "Pièces et main d'œuvre",
-                "Service": "Support technique inclus"
-            },
-            "features": [
-                "Support téléphonique prioritaire",
-                "Remplacement gratuit des pièces défectueuses", 
-                "Service après-vente dédié"
-            ],
-            "in_stock": True
-        },
-        {
-            "id": "garantie-5ans", 
-            "name": "Extension Garantie 5 ans - 59€",
-            "description": "Protection maximale avec garantie étendue à 5 ans selon tarif CDC. Couverture complète premium.",
-            "price": 59.0,
-            "image": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=300&fit=crop&auto=format",
-            "category": "service",
-            "target_audience": "both",
-            "specifications": {
-                "Durée": "5 ans à partir de l'achat",
-                "Couverture": "Pièces et main d'œuvre",
-                "Service": "Support technique premium"
-            },
-            "features": [
-                "Support téléphonique prioritaire",
-                "Remplacement gratuit des pièces",
-                "Maintenance préventive incluse",
-                "Service après-vente premium"
-            ],
-            "in_stock": True
-        },
-        {
-            "id": "installation-service",
-            "name": "Service d'Installation Professionnel",
-            "description": "Installation complète par nos techniciens certifiés. Mise en service et formation incluses. Service après-vente garanti.",
-            "price": 150.0,
-            "image": "https://images.unsplash.com/photo-1589652717406-1c69efaf1ff8?w=400&h=300&fit=crop&auto=format",
-            "category": "service",
-            "target_audience": "both",
-            "specifications": {
-                "Durée": "2-3 heures",
-                "Inclus": "Installation, test, formation",
-                "Zone": "France et Espagne"
-            },
-            "features": [
-                "Technicien certifié à domicile",
-                "Installation simple sans électricité",
-                "Test complet du système 4 étapes",
-                "Formation complète à l'utilisation", 
-                "Garantie installation 2 ans",
-                "Support technique post-installation"
-            ],
-            "in_stock": True
         }
     ]
     
     for product in products:
         await db.products.replace_one({"id": product["id"]}, product, upsert=True)
     
-    logging.info("Products initialized with real CDC images and specifications")
+    logging.info("Products initialized with updated product range - NEW FINAL VERSION")
 
 # Router inclusion moved to end of file after all routes are defined
 
