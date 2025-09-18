@@ -250,26 +250,26 @@ const ChatBotV2 = () => {
   const backendUrl = API_BASE;
   const { safeSetTimeout, isMounted } = useSafeCleanup();
 
-  // Messages d'accueil selon la langue - VERSION V2 ENRICHIE
+  // Messages d'accueil Thomas Expert Osmoseurs
   const welcomeMessages = {
     fr: {
-      initial: "👋 Salut ! Thomas, expert eau pure Josmoze V2. Preoccupe par nitrates, pesticides, chlore dans votre eau ? 142 cas syndrome bebe bleu en 2024 ! Comment puis-je vous aider ?",
+      initial: "👋 Bonjour ! Je suis Thomas, votre expert osmoseurs chez Josmose.com.\n\n💧 Spécialiste en purification d'eau par osmose inverse, je vous aide à choisir l'osmoseur parfait pour avoir une eau pure illimitée chez vous !\n\n🎯 Notre gamme BlueMountain 2025 :\n• Essentiel 449€ (1-2 pers.)\n• Premium 549€ (3-4 pers.) ⭐\n• Prestige 899€ (5+ pers.)\n\nComment puis-je vous conseiller ?",
       suggestions: [
-        "🚨 Dangers caches eau robinet (nitrates/pesticides/chlore)",
-        "💰 Prix pack famille 890 euros (-31%) + financement 0%",
-        "🏆 Osmose Josmoze vs carafe/bouteilles (99,9% efficace)",
-        "📞 Analyse gratuite eau a domicile (15 parametres)",
-        "🐾 Nouveaux produits animaux (1 OFFERT)"
+        "💧 Comment ça marche ?",
+        "💰 Voir les prix",
+        "🏠 Lequel choisir ?",
+        "📞 Parler à un expert",
+        "🎯 Questionnaire personnalisé"
       ]
     },
     en: {
-      initial: "👋 Hello! I'm Thomas, water purification expert at Josmoze V2. Concerned about nitrates, pesticides, chlorine? 142 baby blue syndrome cases in 2024! How can I help?",
+      initial: "👋 Hello! I'm Thomas, your osmosis systems expert at Josmose.com.\n\n💧 Water purification specialist, I help you choose the perfect osmosis system for unlimited pure water at home!\n\n🎯 Our BlueMountain 2025 range:\n• Essential 449€ (1-2 people)\n• Premium 549€ (3-4 people) ⭐\n• Prestige 899€ (5+ people)\n\nHow can I help you?",
       suggestions: [
-        "🚨 Hidden tap water dangers (nitrates/pesticides/chlorine)",
-        "💰 Family pack 890 euros (-31%) + 0% financing",  
-        "🏆 Josmoze osmosis vs carafes/bottles (99.9% effective)",
-        "📞 Free home water analysis (15 parameters)",
-        "🐾 New animal products range (1 FREE)"
+        "💧 How does it work?",
+        "💰 See prices",
+        "🏠 Which one to choose?",
+        "📞 Talk to expert",
+        "🎯 Personal questionnaire"
       ]
     }
   };
