@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Josmose.com - VALIDATION CORRECTIONS CRITIQUES JOSMOZE
+Backend API Testing for Josmose.com - TEST DEVISE EUR ET NOUVEAUX PRODUITS
 Tests prioritaires pour valider les corrections appliquées:
-1. PromotionsManager initialization - Fix fonction init_promotions_manager()
-2. Services redémarrés - Backend et frontend relancés
-3. Base de données mise à jour - Produits et promotions rechargés
-4. Tests prioritaires: PromotionsManager Health, Génération codes parrainage, Validation codes, Offre de lancement, Règles promotions, Nouveaux produits
+
+PRIORITÉ 1: Test de la devise EUR
+- Endpoint `/api/localization/detect` doit retourner currency.code="EUR" et currency.symbol="€"
+- Endpoint `/api/products/translated` doit utiliser la bonne devise
+- Vérifier qu'aucune trace de CAD n'apparaît
+
+PRIORITÉ 2: Test prix produits mis à jour
+- Vérifier que "Osmoseur Premium - BlueMountain Avancé" est bien à 549€
+- Tester l'endpoint `/api/products` pour la nouvelle gamme
+- Vérifier les 8 nouveaux produits en base (Essentiel 449€, Premium 549€, Prestige 899€)
+
+PRIORITÉ 3: Test de cohérence
+- Les endpoints de recommandations utilisent les nouveaux produits
+- Pas de référence aux anciens produits (osmoseur-principal, etc.)
 """
 
 import requests
