@@ -285,7 +285,7 @@ const Header = () => {
 };
 
 const Hero = () => {
-  const { userLocation, formatPrice, customerType } = useApp();
+  const { userLocation, formatPrice, customerType, openQuestionnaire } = useApp();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
