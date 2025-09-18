@@ -518,8 +518,9 @@ test_plan:
 agent_communication:
     - agent: "main"
       message: "🎯 FINALISATION PROJET JOSMOZE - PARTIE 1 TECHNIQUE DÉMARRÉE: Plan d'action complet reçu. Priorités: 1) Correction routage /crm avec solutions contournement, 2) Tests modales CRM (Ajouter prospect, Import CSV), 3) Infrastructure paiement Stripe/PayPal (prêt pour clés API), 4) En parallèle: analyse marché 3 nouveaux produits + contenu blog. OBJECTIF: josmoze.com 100% opérationnel."
+agent_communication:
     - agent: "main"
-      message: "🎉 PROBLÈME CRITIQUE FRONTEND RÉSOLU ! Build configuration corrigée: PUBLIC_URL=/crm → PUBLIC_URL=/ dans .env.production. Assets maintenant référencés depuis racine (/static/ au lieu de /crm/static/). Page s'affiche avec style complet, navigation fonctionnelle, hero section visible. Screenshot confirme: plus de texte brut non stylé. Phase 1 terminée avec succès ✅"
+      message: "🎉 PHASE 1 TERMINÉE AVEC SUCCÈS ! Corrections critiques validées par utilisateur: 1) Service traduction backend corrigé (FR/FR/EUR forcé par défaut), 2) AutoLanguageDetector frontend optimisé pour français, 3) Stock produits tous forcés 'En stock', 4) Site s'affiche parfaitement en français, CSS fonctionnel, navigation fluide. PHASE 2 DÉMARRÉE: Activation fonctionnalités CRM - modales Add Prospect/Import CSV prioritaires."
     - agent: "main"
       message: "EQUAL MANAGER STRUCTURE IMPLEMENTED: Restored all three users (Naima, Aziza, Antonio) to manager role with identical permissions. Updated auth.py with equal manager roles and team contacts endpoint to reflect new structure. All three now have equal access to all manager endpoints including brand monitoring, abandoned cart dashboard, and email system."
     - agent: "main"
