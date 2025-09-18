@@ -529,10 +529,10 @@ async def get_translated_products(
             
             product_dict = product_obj.dict()
             product_dict["stock_info"] = {
-                "in_stock": stock_status.get("available_stock", 0) > 0,
-                "show_stock_warning": stock_status.get("show_stock_warning", False),
-                "stock_warning_text": stock_status.get("stock_warning_text"),
-                "available_stock": stock_status.get("available_stock", 0) if stock_status.get("available_stock", 0) > 5 else "Quelques unités disponibles"
+                "in_stock": True,  # Force TOUS les produits en stock selon exigence client
+                "show_stock_warning": False,  # Pas d'alerte stock
+                "stock_warning_text": None,
+                "available_stock": stock_status.get("available_stock", 50) if stock_status.get("available_stock", 0) > 0 else 50  # Stock minimum 50 unités
             }
             
             translated_products.append(product_dict)
