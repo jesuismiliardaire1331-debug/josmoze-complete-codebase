@@ -239,15 +239,19 @@ stripe_api_key = os.environ.get('STRIPE_API_KEY')
 if not stripe_api_key:
     logging.error("STRIPE_API_KEY not found in environment variables")
 
-# Product packages with pricing optimisé concurrentiel (2025)
+# Product packages with pricing nouvelle gamme BlueMountain (2025)
 PRODUCT_PACKAGES = {
-    "osmoseur-principal": 479.0,    # Optimisé: 499€ → 479€ (-20€)
-    "osmoseur-pro": 899.0,          # Inchangé (B2B)
-    "filtres-rechange": 59.0,       # Optimisé: 49€ → 59€ (+10€ premium)
-    "filtres-pro": 89.0,            # Inchangé (B2B)
-    "garantie-2ans": 39.0,          # Inchangé
-    "garantie-5ans": 79.0,          # Optimisé: 59€ → 79€ (+20€ valeur)
-    "installation-service": 129.0,  # Optimisé: 150€ → 129€ (-21€ attractif)
+    "osmoseur-essentiel": 449.0,       # Essentiel - BlueMountain Compact
+    "osmoseur-premium": 549.0,         # Premium - BlueMountain Avancé 
+    "osmoseur-prestige": 899.0,        # Prestige - BlueMountain De Comptoir
+    "osmoseur-pro": 1299.0,            # Professionnel B2B
+    "purificateur-portable-hydrogene": 79.0,  # Nouveau produit
+    "fontaine-eau-animaux": 49.0,      # Nouveau produit  
+    "filtres-rechange": 59.0,          # Particuliers
+    "filtres-pro": 89.0,               # Professionnels
+    "garantie-2ans": 39.0,             # Extension 2 ans
+    "garantie-5ans": 79.0,             # Extension 5 ans
+    "installation-service": 129.0,     # Service installation
     "consultation-expert": 0.0      # Gratuit maintenu
 }
 
