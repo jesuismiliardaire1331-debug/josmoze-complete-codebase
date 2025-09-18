@@ -2190,7 +2190,7 @@ async def initialize_products():
             "category": "osmoseur",
             "target_audience": "both",
             "product_tier": "premium",
-            "promotion_eligible": true,
+            "promotion_eligible": True,
             "specifications": {
                 "Production d'eau": "Jusqu'à 300 litres/jour (12L/h)",
                 "Membrane": "100GPD encapsulée haute performance",
