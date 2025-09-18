@@ -308,15 +308,18 @@ backend:
 
   - task: "Language Detection Service - French Default Fix"
     implemented: true
-    working: false
+    working: true
     file: "backend/translation_service.py"
     stuck_count: 1
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: false
           agent: "testing"
           comment: "❌ PROBLÈME CRITIQUE DÉTECTÉ: Service de détection langue retourne systématiquement EN-US/US/USD au lieu de FR/FR/EUR pour site français Josmose. IP serveur (35.184.53.215) géolocalisé comme US par ip2geotools, mais logique devrait defaulter au français pour domaine .com français. Headers Accept-Language français (fr-FR,fr;q=0.9) complètement ignorés. Endpoint /api/localization/detect et /api/products/translated affectés. IMPACT: Site ne se charge pas en français par défaut comme rapporté par utilisateur. SOLUTION REQUISE: Modifier translation_service.py pour forcer français par défaut ou détecter domaine français."
+        - working: true
+          agent: "testing"
+          comment: "✅ DEVISE EUR CORRECTEMENT FORCÉE: Tests prioritaires confirment que la correction fonctionne parfaitement. Endpoint /api/localization/detect retourne maintenant currency.code='EUR', currency.symbol='€', detected_country='FR', detected_language='FR'. Endpoint /api/products/translated utilise la bonne devise avec 11 produits traduits en FR. Aucune trace de CAD détectée. Le forçage du français/EUR dans translation_service.py résout complètement le problème critique."
 
 frontend:
   - task: "AI Agents Manager Interface"
