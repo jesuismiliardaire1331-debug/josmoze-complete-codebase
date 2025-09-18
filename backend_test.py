@@ -69,38 +69,83 @@ class BackendTester:
             self.log_test("Root Endpoint", False, f"Exception: {str(e)}")
             return False
     
-    def test_location_detection(self):
-        """Test GET /api/detect-location (country/currency detection)"""
+    def test_eur_currency_detection(self):
+        """PRIORITÉ 1: Test GET /api/localization/detect - Devise EUR forcée"""
         try:
-            response = self.session.get(f"{BACKEND_URL}/detect-location")
+            response = self.session.get(f"{BACKEND_URL}/localization/detect")
             if response.status_code == 200:
                 data = response.json()
-                required_fields = ["country_code", "country_name", "currency", "language", "shipping_cost"]
+                required_fields = ["detected_language", "detected_country", "currency", "available_languages"]
                 
                 if all(field in data for field in required_fields):
-                    # Should default to France/EUR
-                    expected_defaults = {
-                        "country_code": "FR",
-                        "currency": "EUR",
-                        "shipping_cost": 19.0
-                    }
+                    currency = data.get("currency", {})
                     
-                    matches_expected = all(data.get(key) == value for key, value in expected_defaults.items())
-                    
-                    if matches_expected:
-                        self.log_test("Location Detection", True, f"Correct defaults: {data['country_code']}/{data['currency']}, Shipping: {data['shipping_cost']}")
+                    # VÉRIFICATION CRITIQUE: EUR forcé
+                    if (currency.get("code") == "EUR" and 
+                        currency.get("symbol") == "€" and
+                        data.get("detected_country") == "FR" and
+                        data.get("detected_language") == "FR"):
+                        
+                        # Vérifier qu'aucune trace de CAD n'apparaît
+                        response_str = str(data)
+                        if "CAD" not in response_str and "C$" not in response_str:
+                            self.log_test("PRIORITÉ 1 - Devise EUR Forcée", True, 
+                                        f"✅ EUR correctement forcé: {currency['code']}/{currency['symbol']}, Pays: {data['detected_country']}, Langue: {data['detected_language']}")
+                            return True
+                        else:
+                            self.log_test("PRIORITÉ 1 - Devise EUR Forcée", False, 
+                                        f"❌ Traces de CAD détectées dans la réponse: {response_str}")
+                            return False
                     else:
-                        self.log_test("Location Detection", True, f"Valid response but different defaults: {data['country_code']}/{data['currency']}, Shipping: {data['shipping_cost']}")
-                    return True
+                        self.log_test("PRIORITÉ 1 - Devise EUR Forcée", False, 
+                                    f"❌ Devise incorrecte: {currency}, Pays: {data.get('detected_country')}, Langue: {data.get('detected_language')}")
+                        return False
                 else:
                     missing = [f for f in required_fields if f not in data]
-                    self.log_test("Location Detection", False, f"Missing fields: {missing}", data)
+                    self.log_test("PRIORITÉ 1 - Devise EUR Forcée", False, f"Missing fields: {missing}", data)
                     return False
             else:
-                self.log_test("Location Detection", False, f"Status: {response.status_code}", response.text)
+                self.log_test("PRIORITÉ 1 - Devise EUR Forcée", False, f"Status: {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_test("Location Detection", False, f"Exception: {str(e)}")
+            self.log_test("PRIORITÉ 1 - Devise EUR Forcée", False, f"Exception: {str(e)}")
+            return False
+
+    def test_products_translated_eur_currency(self):
+        """PRIORITÉ 1: Test GET /api/products/translated - Utilise la bonne devise EUR"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/products/translated?language=FR")
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "products" in data and "language" in data:
+                    language = data.get("language")
+                    products = data.get("products", [])
+                    
+                    # Vérifier que la langue est FR (pas EN-US)
+                    if language == "FR":
+                        # Vérifier qu'aucune trace de CAD dans les produits
+                        products_str = str(products)
+                        if "CAD" not in products_str and "C$" not in products_str:
+                            self.log_test("PRIORITÉ 1 - Products Translated EUR", True, 
+                                        f"✅ Produits traduits en {language}, {len(products)} produits, aucune trace CAD")
+                            return True
+                        else:
+                            self.log_test("PRIORITÉ 1 - Products Translated EUR", False, 
+                                        f"❌ Traces de CAD détectées dans les produits")
+                            return False
+                    else:
+                        self.log_test("PRIORITÉ 1 - Products Translated EUR", False, 
+                                    f"❌ Langue incorrecte: {language} (attendu: FR)")
+                        return False
+                else:
+                    self.log_test("PRIORITÉ 1 - Products Translated EUR", False, "Missing products or language field", data)
+                    return False
+            else:
+                self.log_test("PRIORITÉ 1 - Products Translated EUR", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PRIORITÉ 1 - Products Translated EUR", False, f"Exception: {str(e)}")
             return False
     
     def test_new_product_catalog_restructured(self):
