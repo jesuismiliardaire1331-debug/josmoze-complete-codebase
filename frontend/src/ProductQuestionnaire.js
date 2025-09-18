@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useApp } from './App';
+import React, { useState, useEffect, useContext } from 'react';
+
+// Import du contexte directement  
+const AppContext = React.createContext();
 
 const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
