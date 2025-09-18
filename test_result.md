@@ -509,6 +509,8 @@ agent_communication:
     - agent: "main"
       message: "🎯 FINALISATION PROJET JOSMOZE - PARTIE 1 TECHNIQUE DÉMARRÉE: Plan d'action complet reçu. Priorités: 1) Correction routage /crm avec solutions contournement, 2) Tests modales CRM (Ajouter prospect, Import CSV), 3) Infrastructure paiement Stripe/PayPal (prêt pour clés API), 4) En parallèle: analyse marché 3 nouveaux produits + contenu blog. OBJECTIF: josmoze.com 100% opérationnel."
     - agent: "main"
+      message: "🎉 PROBLÈME CRITIQUE FRONTEND RÉSOLU ! Build configuration corrigée: PUBLIC_URL=/crm → PUBLIC_URL=/ dans .env.production. Assets maintenant référencés depuis racine (/static/ au lieu de /crm/static/). Page s'affiche avec style complet, navigation fonctionnelle, hero section visible. Screenshot confirme: plus de texte brut non stylé. Phase 1 terminée avec succès ✅"
+    - agent: "main"
       message: "EQUAL MANAGER STRUCTURE IMPLEMENTED: Restored all three users (Naima, Aziza, Antonio) to manager role with identical permissions. Updated auth.py with equal manager roles and team contacts endpoint to reflect new structure. All three now have equal access to all manager endpoints including brand monitoring, abandoned cart dashboard, and email system."
     - agent: "main"
       message: "🤖 AMÉLIORATION AGENT IA THOMAS + EMAIL SEQUENCER V2.0: Début optimisation temps d'attente routage CRM. Plan: 1) Enrichir agent conversationnel avec nouveaux contenus validés (articles blog dangers eau, nouveaux produits animaux), 2) Intégrer base de connaissances V2 nitrates/pesticides/chlore, 3) Mettre à jour Email Sequencer avec nouvelles séquences optimisées. OBJECTIF: Agent ultra-performant + emails 2-4% conversion vs 1% standard."
