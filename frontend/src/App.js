@@ -20,6 +20,7 @@ import ProductRecommendations from "./ProductRecommendations";
 
 // Import ChatBot
 import ChatBotV2 from "./ChatBot_V2";
+import PromotionsManager from './PromotionsManager';
 
 // Import Translation Guardian  
 import TranslationGuardian from "./TranslationGuardian";
