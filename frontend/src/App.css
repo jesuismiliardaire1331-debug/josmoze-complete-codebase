@@ -300,3 +300,25 @@ textarea:focus {
     @apply border-gray-600;
   }
 }
+
+/* Questionnaire product highlight effect */
+.highlight-product {
+  animation: highlightPulse 3s ease-in-out;
+  border: 3px solid #10B981 !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6) !important;
+}
+
+@keyframes highlightPulse {
+  0% { 
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+  }
+  100% { 
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+  }
+}
