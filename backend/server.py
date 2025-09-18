@@ -55,7 +55,7 @@ from ai_agents import get_marketing_automation, MarketingAutomation
 from inventory_manager import get_inventory_manager, StockItem, CustomerProfile, OrderTracking, Invoice
 from social_media_automation import get_social_media_automation, SocialMediaAutomation, Campaign, AdCreative
 from payment_manager import get_payment_manager
-from promotions_manager import PromotionsManager, get_promotions_manager
+from promotions_manager import PromotionsManager, init_promotions_manager, get_promotions_manager
 
 
 ROOT_DIR = Path(__file__).parent
