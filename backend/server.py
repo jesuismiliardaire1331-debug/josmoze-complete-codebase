@@ -2469,8 +2469,7 @@ async def startup_db():
     security_audit_agent = get_security_audit_agent(db)
     
     # Initialize PromotionsManager
-    global promotions_manager
-    promotions_manager = PromotionsManager(db)
+    promotions_manager = init_promotions_manager(db)
     logging.info("✅ PromotionsManager initialized successfully")
     
     # 🌐 Démarrage automatique du Translation Guardian Agent 24/7
