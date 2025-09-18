@@ -305,11 +305,12 @@ i18n
     debug: process.env.NODE_ENV === 'development',
     
     detection: {
-      // Forcer le français par défaut, pas de détection automatique
-      order: ['localStorage'],
-      caches: ['localStorage'],
+      // Force French as default language - no automatic detection
+      order: ['queryString', 'cookie'], // Removed localStorage to prevent caching issues
+      caches: [], // Disable all caching to force French
       excludeCacheFor: ['cimode'],
-      lookupLocalStorage: 'i18nextLng'
+      lookupQuerystring: 'lang',
+      lookupCookie: 'i18next'
     },
     
     backend: {
