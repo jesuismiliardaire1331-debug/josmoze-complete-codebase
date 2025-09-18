@@ -675,7 +675,352 @@ class BackendTester:
             self.log_test("Email Automation System", False, f"Exception: {str(e)}")
             return False
 
-    # ========== NEW ADVANCED FEATURES TESTS ==========
+    # ========== SYSTÈME PROMOTIONS JOSMOZE - TESTS COMPLETS ==========
+    
+    def test_promotions_manager_initialization(self):
+        """Test PromotionsManager initialization and health"""
+        try:
+            # Test via health endpoint or root to verify PromotionsManager is initialized
+            response = self.session.get(f"{BACKEND_URL}/")
+            if response.status_code == 200:
+                data = response.json()
+                if "message" in data and "Josmose.com" in data["message"]:
+                    self.log_test("PromotionsManager Initialization", True, "Backend running, PromotionsManager should be initialized")
+                    return True
+                else:
+                    self.log_test("PromotionsManager Initialization", False, "Backend response unexpected")
+                    return False
+            else:
+                self.log_test("PromotionsManager Initialization", False, f"Backend not responding: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("PromotionsManager Initialization", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_referral_code_generation(self):
+        """Test POST /api/promotions/referral/generate - Génération codes parrainage JOSM+4 chars"""
+        try:
+            user_data = {
+                "user_id": "test_user_parrain_001"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/promotions/referral/generate",
+                json=user_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "referral_code" in data:
+                    referral_code = data["referral_code"]
+                    
+                    # Vérifier format JOSM+4 caractères
+                    if referral_code.startswith("JOSM") and len(referral_code) == 8:
+                        self.referral_code = referral_code  # Store for next tests
+                        self.log_test("PARRAINAGE - Génération Code", True, 
+                                    f"✅ Code généré: {referral_code} (format JOSM+4 chars correct)")
+                        return True
+                    else:
+                        self.log_test("PARRAINAGE - Génération Code", False, 
+                                    f"Format incorrect: {referral_code} (attendu: JOSM+4 chars)")
+                        return False
+                else:
+                    self.log_test("PARRAINAGE - Génération Code", False, "Missing success or referral_code", data)
+                    return False
+            else:
+                self.log_test("PARRAINAGE - Génération Code", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PARRAINAGE - Génération Code", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_referral_code_validation(self):
+        """Test POST /api/promotions/referral/validate - Validation codes parrainage"""
+        if not hasattr(self, 'referral_code'):
+            self.log_test("PARRAINAGE - Validation Code", False, "No referral code from previous test")
+            return False
+        
+        try:
+            code_data = {
+                "code": self.referral_code
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/promotions/referral/validate",
+                json=code_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and data.get("valid"):
+                    validation_data = data.get("validation", {})
+                    discount_percentage = validation_data.get("discount_percentage", 0)
+                    
+                    if discount_percentage == 10:
+                        self.log_test("PARRAINAGE - Validation Code", True, 
+                                    f"✅ Code {self.referral_code} valide, 10% de réduction confirmée")
+                        return True
+                    else:
+                        self.log_test("PARRAINAGE - Validation Code", False, 
+                                    f"Réduction incorrecte: {discount_percentage}% (attendu: 10%)")
+                        return False
+                else:
+                    self.log_test("PARRAINAGE - Validation Code", False, "Code invalide ou réponse incorrecte", data)
+                    return False
+            else:
+                self.log_test("PARRAINAGE - Validation Code", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PARRAINAGE - Validation Code", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_referral_discount_application(self):
+        """Test POST /api/promotions/referral/apply - Application réductions 10%"""
+        if not hasattr(self, 'referral_code'):
+            self.log_test("PARRAINAGE - Application Réduction", False, "No referral code from previous test")
+            return False
+        
+        try:
+            # Commande test avec osmoseur éligible
+            discount_data = {
+                "code": self.referral_code,
+                "order_data": {
+                    "items": [
+                        {
+                            "product_id": "osmoseur-premium",
+                            "quantity": 1,
+                            "price": 549.0
+                        }
+                    ],
+                    "customer_email": "filleul@test.com"
+                }
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/promotions/referral/apply",
+                json=discount_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success"):
+                    discount_percentage = data.get("discount_percentage", 0)
+                    discount_amount = data.get("discount_amount", 0)
+                    expected_discount = 549.0 * 0.10  # 10% de 549€ = 54.90€
+                    
+                    if discount_percentage == 10 and abs(discount_amount - expected_discount) < 0.01:
+                        self.log_test("PARRAINAGE - Application Réduction", True, 
+                                    f"✅ Réduction appliquée: 10% = {discount_amount}€ sur osmoseur Premium")
+                        return True
+                    else:
+                        self.log_test("PARRAINAGE - Application Réduction", False, 
+                                    f"Réduction incorrecte: {discount_percentage}% = {discount_amount}€ (attendu: 10% = {expected_discount}€)")
+                        return False
+                else:
+                    self.log_test("PARRAINAGE - Application Réduction", False, f"Application échouée: {data.get('message', 'Unknown error')}")
+                    return False
+            else:
+                self.log_test("PARRAINAGE - Application Réduction", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PARRAINAGE - Application Réduction", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_referral_user_stats(self):
+        """Test GET /api/promotions/referral/stats/{user_id} - Statistiques utilisateur"""
+        try:
+            user_id = "test_user_parrain_001"
+            response = self.session.get(f"{BACKEND_URL}/promotions/referral/stats/{user_id}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "stats" in data:
+                    stats = data["stats"]
+                    required_fields = ["referral_code", "total_referrals", "total_bonus_earned", "available_vouchers_amount"]
+                    
+                    if all(field in stats for field in required_fields):
+                        referral_code = stats.get("referral_code")
+                        total_referrals = stats.get("total_referrals", 0)
+                        total_bonus = stats.get("total_bonus_earned", 0)
+                        
+                        self.log_test("PARRAINAGE - Statistiques Utilisateur", True, 
+                                    f"✅ Stats parrain: Code {referral_code}, {total_referrals} filleuls, {total_bonus}€ bonus")
+                        return True
+                    else:
+                        missing = [f for f in required_fields if f not in stats]
+                        self.log_test("PARRAINAGE - Statistiques Utilisateur", False, f"Champs manquants: {missing}")
+                        return False
+                else:
+                    self.log_test("PARRAINAGE - Statistiques Utilisateur", False, "Réponse invalide", data)
+                    return False
+            else:
+                self.log_test("PARRAINAGE - Statistiques Utilisateur", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PARRAINAGE - Statistiques Utilisateur", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_launch_offer_eligibility_check(self):
+        """Test POST /api/promotions/launch-offer/check - Éligibilité offre lancement"""
+        try:
+            # Test avec osmoseur Premium (éligible)
+            cart_data = {
+                "items": [
+                    {
+                        "product_id": "osmoseur-premium",
+                        "quantity": 1,
+                        "price": 549.0
+                    }
+                ]
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/promotions/launch-offer/check",
+                json=cart_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "eligibility" in data:
+                    eligibility = data["eligibility"]
+                    
+                    if eligibility.get("eligible"):
+                        gift_options = eligibility.get("gift_options", [])
+                        expected_gifts = ["purificateur-portable-hydrogene", "fontaine-eau-animaux"]
+                        
+                        # Vérifier les options de cadeaux
+                        gift_ids = [gift.get("id") for gift in gift_options]
+                        
+                        if all(gift_id in gift_ids for gift_id in expected_gifts):
+                            self.log_test("OFFRE LANCEMENT - Éligibilité Check", True, 
+                                        f"✅ Premium éligible, cadeaux: Purificateur H2 79€, Fontaine Animaux 49€")
+                            return True
+                        else:
+                            self.log_test("OFFRE LANCEMENT - Éligibilité Check", False, 
+                                        f"Cadeaux incorrects: {gift_ids} (attendu: {expected_gifts})")
+                            return False
+                    else:
+                        self.log_test("OFFRE LANCEMENT - Éligibilité Check", False, 
+                                    f"Premium devrait être éligible: {eligibility.get('message', 'No message')}")
+                        return False
+                else:
+                    self.log_test("OFFRE LANCEMENT - Éligibilité Check", False, "Réponse invalide", data)
+                    return False
+            else:
+                self.log_test("OFFRE LANCEMENT - Éligibilité Check", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("OFFRE LANCEMENT - Éligibilité Check", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_launch_offer_application(self):
+        """Test POST /api/promotions/launch-offer/apply - Application produit gratuit"""
+        try:
+            # Test application offre avec Prestige + Purificateur H2 gratuit
+            offer_data = {
+                "cart_items": [
+                    {
+                        "product_id": "osmoseur-prestige",
+                        "quantity": 1,
+                        "price": 899.0
+                    }
+                ],
+                "selected_gift_id": "purificateur-portable-hydrogene",
+                "customer_email": "client.offre@test.com"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/promotions/launch-offer/apply",
+                json=offer_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success"):
+                    gift_product = data.get("gift_product", {})
+                    
+                    if (gift_product.get("product_id") == "purificateur-portable-hydrogene" and 
+                        gift_product.get("price") == 0.0 and 
+                        gift_product.get("is_gift") == True):
+                        
+                        self.log_test("OFFRE LANCEMENT - Application", True, 
+                                    f"✅ Prestige + Purificateur H2 gratuit ajouté (valeur 79€)")
+                        return True
+                    else:
+                        self.log_test("OFFRE LANCEMENT - Application", False, 
+                                    f"Produit cadeau incorrect: {gift_product}")
+                        return False
+                else:
+                    self.log_test("OFFRE LANCEMENT - Application", False, 
+                                f"Application échouée: {data.get('message', 'Unknown error')}")
+                    return False
+            else:
+                self.log_test("OFFRE LANCEMENT - Application", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("OFFRE LANCEMENT - Application", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_promotion_rules_endpoint(self):
+        """Test GET /api/promotions/rules - Règles promotion actives"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/promotions/rules")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "rules" in data:
+                    rules = data["rules"]
+                    
+                    # Vérifier règles parrainage
+                    referral_rules = rules.get("referral_system", {})
+                    launch_offer_rules = rules.get("launch_offer", {})
+                    
+                    # Vérifier parrainage: 10% filleul, 50€ parrain
+                    if (referral_rules.get("discount_percentage") == 10 and 
+                        referral_rules.get("bonus_amount") == 50):
+                        
+                        # Vérifier offre lancement: Premium/Prestige → cadeaux
+                        eligible_products = launch_offer_rules.get("eligible_products", [])
+                        gift_options = launch_offer_rules.get("gift_options", [])
+                        
+                        if ("osmoseur-premium" in eligible_products and 
+                            "osmoseur-prestige" in eligible_products and
+                            "purificateur-portable-hydrogene" in gift_options and
+                            "fontaine-eau-animaux" in gift_options):
+                            
+                            self.log_test("RÈGLES PROMOTIONS", True, 
+                                        f"✅ Parrainage: 10% filleul + 50€ parrain, "
+                                        f"Offre lancement: Premium/Prestige → Purificateur/Fontaine gratuit")
+                            return True
+                        else:
+                            self.log_test("RÈGLES PROMOTIONS", False, 
+                                        f"Règles offre lancement incorrectes: {launch_offer_rules}")
+                            return False
+                    else:
+                        self.log_test("RÈGLES PROMOTIONS", False, 
+                                    f"Règles parrainage incorrectes: {referral_rules}")
+                        return False
+                else:
+                    self.log_test("RÈGLES PROMOTIONS", False, "Réponse invalide", data)
+                    return False
+            else:
+                self.log_test("RÈGLES PROMOTIONS", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("RÈGLES PROMOTIONS", False, f"Exception: {str(e)}")
+            return False
     
     def test_product_stock_info(self):
         """Test GET /api/products - Verify products include stock_info with show_stock_warning"""
