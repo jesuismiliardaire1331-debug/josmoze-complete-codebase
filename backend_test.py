@@ -8787,8 +8787,68 @@ class BackendTester:
         self.test_enhanced_contact_form()
         
         # RÉSULTATS FINAUX
+    def print_final_results(self):
+        """Print comprehensive test results summary"""
         print("\n" + "="*80)
-        self.print_final_results()
+        print("📊 RÉSULTATS FINAUX - SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS")
+        print("="*80)
+        
+        # Count results by category
+        total_tests = len(self.test_results)
+        passed_tests = sum(1 for result in self.test_results if result["success"])
+        failed_tests = total_tests - passed_tests
+        success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
+        
+        # Categorize results
+        nouveaux_produits = [r for r in self.test_results if "NOUVEAUX PRODUITS" in r["test"] or "Product" in r["test"]]
+        promotions_tests = [r for r in self.test_results if "PARRAINAGE" in r["test"] or "OFFRE LANCEMENT" in r["test"] or "RÈGLES PROMOTIONS" in r["test"]]
+        integration_tests = [r for r in self.test_results if "Health" in r["test"] or "Performance" in r["test"] or "PromotionsManager" in r["test"]]
+        regression_tests = [r for r in self.test_results if r not in nouveaux_produits + promotions_tests + integration_tests]
+        
+        print(f"\n📈 STATISTIQUES GLOBALES:")
+        print(f"   Total tests: {total_tests}")
+        print(f"   ✅ Réussis: {passed_tests}")
+        print(f"   ❌ Échoués: {failed_tests}")
+        print(f"   📊 Taux de réussite: {success_rate:.1f}%")
+        
+        print(f"\n📦 NOUVEAUX PRODUITS ({len(nouveaux_produits)} tests):")
+        for result in nouveaux_produits:
+            status = "✅" if result["success"] else "❌"
+            print(f"   {status} {result['test']}")
+        
+        print(f"\n🎁 SYSTÈME PROMOTIONS ({len(promotions_tests)} tests):")
+        for result in promotions_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"   {status} {result['test']}")
+        
+        print(f"\n⚡ INTÉGRATION & STABILITÉ ({len(integration_tests)} tests):")
+        for result in integration_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"   {status} {result['test']}")
+        
+        if failed_tests > 0:
+            print(f"\n❌ TESTS ÉCHOUÉS - DÉTAILS:")
+            for result in self.test_results:
+                if not result["success"]:
+                    print(f"   • {result['test']}: {result['details']}")
+        
+        print(f"\n🎯 MISSION POINTS 1 & 2 STATUS:")
+        nouveaux_produits_success = sum(1 for r in nouveaux_produits if r["success"])
+        promotions_success = sum(1 for r in promotions_tests if r["success"])
+        
+        if nouveaux_produits_success == len(nouveaux_produits) and len(nouveaux_produits) > 0:
+            print("   ✅ Point 1 - NOUVEAUX PRODUITS: 100% OPÉRATIONNEL")
+        else:
+            print(f"   ⚠️  Point 1 - NOUVEAUX PRODUITS: {nouveaux_produits_success}/{len(nouveaux_produits)} tests réussis")
+        
+        if promotions_success == len(promotions_tests) and len(promotions_tests) > 0:
+            print("   ✅ Point 2 - SYSTÈME PROMOTIONS: 100% OPÉRATIONNEL")
+        else:
+            print(f"   ⚠️  Point 2 - SYSTÈME PROMOTIONS: {promotions_success}/{len(promotions_tests)} tests réussis")
+        
+        print("\n" + "="*80)
+        
+        return success_rate >= 80  # Consider 80%+ as overall success
         
     def run_priority_tests(self):
         """Run only the highest priority tests for promotions system"""
