@@ -233,12 +233,14 @@ class TranslationService:
 
     def get_user_language_from_ip(self, ip_address: str) -> str:
         """
-        Détermine la langue préférée basée sur l'IP
+        SITE FRANÇAIS - Force le français par défaut pour Josmose.com
+        Détermine la langue préférée basée sur l'IP avec override français pour site business français
         """
-        country = self.detect_country_from_ip(ip_address)
-        language = COUNTRY_TO_LANGUAGE.get(country, "FR")
+        # OVERRIDE POUR SITE FRANÇAIS - Toujours retourner français pour business français
+        # Ceci résout le problème où l'IP du serveur (US) forçait l'anglais
+        language = "FR"  # Force français par défaut pour Josmose.com
         
-        self.logger.info(f"IP {ip_address} -> Pays: {country} -> Langue: {language}")
+        self.logger.info(f"IP {ip_address} -> SITE FRANÇAIS forcé -> Langue: {language}")
         return language
 
     def get_user_currency_from_ip(self, ip_address: str) -> Dict[str, str]:
