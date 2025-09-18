@@ -8,7 +8,7 @@ import json
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = "https://buildfix-josmoze.preview.emergentagent.com/api"
+BACKEND_URL = "https://ecomm-rescue.preview.emergentagent.com/api"
 
 def test_all_managers_abandoned_cart_access():
     """Test that all 3 managers can access abandoned cart endpoints"""

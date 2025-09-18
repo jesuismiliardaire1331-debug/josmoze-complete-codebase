@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = "https://buildfix-josmoze.preview.emergentagent.com/api"
+BACKEND_URL = "https://ecomm-rescue.preview.emergentagent.com/api"
 
 class OsmoseEmailTester:
     def __init__(self):

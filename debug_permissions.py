@@ -6,7 +6,7 @@ Debug script to check the actual structure of permissions response
 import requests
 import json
 
-BACKEND_URL = "https://buildfix-josmoze.preview.emergentagent.com/api"
+BACKEND_URL = "https://ecomm-rescue.preview.emergentagent.com/api"
 
 def debug_permissions():
     session = requests.Session()
