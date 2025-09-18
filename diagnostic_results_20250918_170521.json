@@ -1,0 +1,474 @@
+{
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "success_rate": "66.7%"
+  },
+  "critical_issues": [
+    {
+      "test": "Backend Root Endpoint",
+      "issue": "Format de réponse inattendu"
+    },
+    {
+      "test": "Détection Langue Automatique",
+      "issue": "❌ Langue par défaut incorrecte: EN-US/US, Devise: {'code': 'USD', 'symbol': '$', 'name': 'Dollar US'} (attendu: FR/FR/EUR)"
+    }
+  ],
+  "detailed_results": [
+    {
+      "test": "Backend Root Endpoint",
+      "success": false,
+      "details": "Format de réponse inattendu",
+      "timestamp": "2025-09-18T17:03:55.648377",
+      "response_data": {
+        "message": "Josmoze.com API - Système d'Osmose Inverse avec CRM"
+      }
+    },
+    {
+      "test": "Détection Langue Automatique",
+      "success": false,
+      "details": "❌ Langue par défaut incorrecte: EN-US/US, Devise: {'code': 'USD', 'symbol': '$', 'name': 'Dollar US'} (attendu: FR/FR/EUR)",
+      "timestamp": "2025-09-18T17:03:56.661279",
+      "response_data": {
+        "detected_language": "EN-US",
+        "detected_country": "US",
+        "currency": {
+          "code": "USD",
+          "symbol": "$",
+          "name": "Dollar US"
+        },
+        "available_languages": {
+          "FR": {
+            "name": "Français",
+            "native_name": "Français",
+            "flag": "🇫🇷"
+          },
+          "EN-GB": {
+            "name": "English",
+            "native_name": "English",
+            "flag": "🇬🇧"
+          },
+          "EN-US": {
+            "name": "English (US)",
+            "native_name": "English (US)",
+            "flag": "🇺🇸"
+          },
+          "ES": {
+            "name": "Español",
+            "native_name": "Español",
+            "flag": "🇪🇸"
+          },
+          "IT": {
+            "name": "Italiano",
+            "native_name": "Italiano",
+            "flag": "🇮🇹"
+          },
+          "DE": {
+            "name": "Deutsch",
+            "native_name": "Deutsch",
+            "flag": "🇩🇪"
+          },
+          "NL": {
+            "name": "Nederlands",
+            "native_name": "Nederlands",
+            "flag": "🇳🇱"
+          },
+          "PT-PT": {
+            "name": "Português",
+            "native_name": "Português",
+            "flag": "🇵🇹"
+          },
+          "PL": {
+            "name": "Polski",
+            "native_name": "Polski",
+            "flag": "🇵🇱"
+          }
+        },
+        "ip_address": "35.184.53.215"
+      }
+    },
+    {
+      "test": "Statut Stock Produits",
+      "success": true,
+      "details": "✅ TOUS les produits sont disponibles: 11/11 produits in_stock: true",
+      "timestamp": "2025-09-18T17:03:57.683214",
+      "response_data": {
+        "total_products": 11,
+        "available_products": 11
+      }
+    },
+    {
+      "test": "Produits Traduits Français",
+      "success": true,
+      "details": "✅ Langue: EN-US, 11/11 produits disponibles, 3 avec contenu français",
+      "timestamp": "2025-09-18T17:05:18.722178",
+      "response_data": {
+        "language": "EN-US",
+        "total_products": 11,
+        "available_products": 11,
+        "french_content_products": 3
+      }
+    },
+    {
+      "test": "Analyse Détaillée Produits",
+      "success": true,
+      "details": "✅ Analyse complète: 11 produits, tous disponibles",
+      "timestamp": "2025-09-18T17:05:19.744949",
+      "response_data": {
+        "total_products": 11,
+        "products_by_category": {
+          "osmoseur": 5,
+          "accessoire": 1,
+          "service": 3,
+          "portable": 1,
+          "animaux": 1
+        },
+        "products_by_target_audience": {
+          "both": 11
+        },
+        "stock_analysis": {
+          "with_stock_info": 11,
+          "without_stock_info": 0,
+          "in_stock_true": 11,
+          "in_stock_false": 0,
+          "stock_info_details": [
+            {
+              "product_id": "osmoseur-principal",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 50,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "fontaine-ultrafiltration",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 50,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "filtres-rechange",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 100,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "garantie-2ans",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 999,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "garantie-5ans",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 999,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "installation-service",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 999,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "osmoseur-essentiel",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 50,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "osmoseur-premium",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 40,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "osmoseur-prestige",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 30,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "purificateur-portable-hydrogene",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 60,
+              "show_stock_warning": false
+            },
+            {
+              "product_id": "fontaine-eau-animaux",
+              "root_in_stock": true,
+              "stock_info_in_stock": true,
+              "available_stock": 45,
+              "show_stock_warning": false
+            }
+          ]
+        },
+        "price_analysis": {
+          "min_price": 39.0,
+          "max_price": 899.0,
+          "products_with_prices": 11
+        },
+        "product_details": [
+          {
+            "id": "osmoseur-principal",
+            "name": "Fontaine à Eau Osmosée BlueMountain",
+            "price": 479.0,
+            "category": "osmoseur",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 50
+            }
+          },
+          {
+            "id": "fontaine-ultrafiltration",
+            "name": "Fontaine Intelligente H₂O",
+            "price": 419.0,
+            "category": "osmoseur",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 50
+            }
+          },
+          {
+            "id": "filtres-rechange",
+            "name": "Kit Filtres de Rechange - 4 Étapes",
+            "price": 59.0,
+            "category": "accessoire",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 100
+            }
+          },
+          {
+            "id": "garantie-2ans",
+            "name": "Extension Garantie 2 ans - 39€",
+            "price": 39.0,
+            "category": "service",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 999
+            }
+          },
+          {
+            "id": "garantie-5ans",
+            "name": "Extension Garantie 5 ans - 59€",
+            "price": 59.0,
+            "category": "service",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 999
+            }
+          },
+          {
+            "id": "installation-service",
+            "name": "Service d'Installation Professionnel",
+            "price": 150.0,
+            "category": "service",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 999
+            }
+          },
+          {
+            "id": "osmoseur-essentiel",
+            "name": "Osmoseur Essentiel - BlueMountain Compact",
+            "price": 449.0,
+            "category": "osmoseur",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 50
+            }
+          },
+          {
+            "id": "osmoseur-premium",
+            "name": "Osmoseur Premium - BlueMountain Avancé",
+            "price": 549.0,
+            "category": "osmoseur",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 40
+            }
+          },
+          {
+            "id": "osmoseur-prestige",
+            "name": "Osmoseur Prestige - BlueMountain De Comptoir",
+            "price": 899.0,
+            "category": "osmoseur",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 30
+            }
+          },
+          {
+            "id": "purificateur-portable-hydrogene",
+            "name": "Purificateur Portable à Hydrogène H2-Pro",
+            "price": 79.0,
+            "category": "portable",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 60
+            }
+          },
+          {
+            "id": "fontaine-eau-animaux",
+            "name": "Fontaine à Eau pour Animaux AquaPet Premium",
+            "price": 49.0,
+            "category": "animaux",
+            "target_audience": "both",
+            "in_stock": true,
+            "stock_info": {
+              "in_stock": true,
+              "show_stock_warning": false,
+              "stock_warning_text": null,
+              "available_stock": 45
+            }
+          }
+        ]
+      }
+    },
+    {
+      "test": "Configuration CORS",
+      "success": true,
+      "details": "✅ CORS configuré correctement pour 3 origins",
+      "timestamp": "2025-09-18T17:05:20.847199",
+      "response_data": [
+        {
+          "origin": "https://buildfix-josmoze.preview.emergentagent.com",
+          "options_status": 200,
+          "get_status": 200,
+          "options_headers": {
+            "access-control-allow-credentials": "true",
+            "access-control-allow-headers": "Content-Type",
+            "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+            "access-control-allow-origin": "https://buildfix-josmoze.preview.emergentagent.com",
+            "access-control-max-age": "600",
+            "Content-Length": "2",
+            "content-type": "text/plain; charset=utf-8",
+            "date": "Thu, 18 Sep 2025 17:05:19 GMT",
+            "server": "uvicorn",
+            "vary": "Origin",
+            "via": "1.1 google",
+            "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+          },
+          "get_headers": {
+            "access-control-allow-credentials": "true",
+            "access-control-allow-origin": "*",
+            "Content-Length": "66",
+            "content-type": "application/json",
+            "date": "Thu, 18 Sep 2025 17:05:19 GMT",
+            "server": "uvicorn",
+            "via": "1.1 google",
+            "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+          }
+        },
+        {
+          "origin": "https://josmoze.com",
+          "options_status": 200,
+          "get_status": 200,
+          "options_headers": {
+            "access-control-allow-credentials": "true",
+            "access-control-allow-headers": "Content-Type",
+            "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+            "access-control-allow-origin": "https://josmoze.com",
+            "access-control-max-age": "600",
+            "Content-Length": "2",
+            "content-type": "text/plain; charset=utf-8",
+            "date": "Thu, 18 Sep 2025 17:05:19 GMT",
+            "server": "uvicorn",
+            "vary": "Origin",
+            "via": "1.1 google",
+            "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+          },
+          "get_headers": {
+            "access-control-allow-credentials": "true",
+            "access-control-allow-origin": "*",
+            "Content-Length": "66",
+            "content-type": "application/json",
+            "date": "Thu, 18 Sep 2025 17:05:20 GMT",
+            "server": "uvicorn",
+            "vary": "Origin",
+            "via": "1.1 google",
+            "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+          }
+        },
+        {
+          "origin": "https://www.josmoze.com",
+          "options_status": 200,
+          "get_status": 200,
+          "options_headers": {
+            "access-control-allow-credentials": "true",
+            "access-control-allow-headers": "Content-Type",
+            "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+            "access-control-allow-origin": "https://www.josmoze.com",
+            "access-control-max-age": "600",
+            "Content-Length": "2",
+            "content-type": "text/plain; charset=utf-8",
+            "date": "Thu, 18 Sep 2025 17:05:20 GMT",
+            "server": "uvicorn",
+            "vary": "Origin",
+            "via": "1.1 google",
+            "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+          },
+          "get_headers": {
+            "access-control-allow-credentials": "true",
+            "access-control-allow-origin": "*",
+            "Content-Length": "66",
+            "content-type": "application/json",
+            "date": "Thu, 18 Sep 2025 17:05:20 GMT",
+            "server": "uvicorn",
+            "via": "1.1 google",
+            "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+          }
+        }
+      ]
+    }
+  ]
+}
