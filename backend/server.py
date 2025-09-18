@@ -881,121 +881,51 @@ async def submit_contact_form(form: ContactForm, request: Request):
         logging.error(f"Contact form submission failed: {e}")
         raise HTTPException(status_code=500, detail="Erreur lors de l'envoi")
 
-# API endpoint pour chatbot prospect
+# API endpoint pour chatbot Thomas V3.0 - Bienveillant et Commercial
 @app.post("/api/ai-agents/chat")
 async def chatbot_response(
     request: Request,
     data: dict
 ):
-    """Endpoint pour le chatbot des prospects sur le site"""
+    """Endpoint pour Thomas - Agent commercial bienveillant"""
+    from thomas_chatbot_fixed import get_thomas_response
+    
     try:
         message = data.get('message', '')
-        agent = data.get('agent', 'thomas')  # Par défaut Thomas
-        context = data.get('context', 'website_chat')
-        language = data.get('language', 'french')  # Par défaut français pour JOSMOSE
+        session_id = data.get('session_id', 'default')
         
         if not message:
             raise HTTPException(status_code=400, detail="Message requis")
         
         # Log pour debug
-        logging.info(f"🤖 ChatBot request: message='{message}', language='{language}', agent='{agent}'")
+        logging.info(f"🤖 Thomas ChatBot: message='{message}', session='{session_id}'")
         
-        # Obtenir le système d'agents IA
-        ai_system = get_ai_agent_system()
+        # Obtenir la réponse de Thomas
+        response_data = get_thomas_response(message, {
+            'session_id': session_id,
+            'timestamp': datetime.utcnow().isoformat()
+        })
         
-        # Détecter automatiquement la langue si non spécifiée
-        is_french = language == 'french' or any(word in message.lower() for word in [
-            'bonjour', 'salut', 'prix', 'comment', 'ça', 'marche', 'français', 'merci',
-            'osmoseur', 'eau', 'pure', 'système', 'garantie', 'installation'
-        ])
-        
-        # Messages de base selon la langue détectée
-        if is_french:
-            responses_fr = {
-                'purification': "💧 L'osmose inverse élimine 99% des contaminants : chlore, métaux lourds, bactéries, pesticides. C'est la technologie la plus avancée pour une eau pure !",
-                'prix': "💰 Notre osmoseur principal est à 499€ au lieu de 899€. Installation incluse + garantie 2 ans. Voulez-vous découvrir les détails ?",
-                'fonctionnement': "🔧 L'eau passe par 5 filtres successifs puis une membrane ultra-fine. Résultat : une eau pure comme en bouteille, directement au robinet !",
-                'installation': "🛠️ Installation simple en 2h par notre équipe. Nous nous occupons de tout : raccordement, tests, formation. Aucun stress pour vous !",
-                'garantie': "✅ Garantie 2 ans complète + SAV dédié. Si problème : intervention sous 48h. Satisfaction garantie ou remboursé !",
-                'contact': "📞 Parfait ! Notre équipe est disponible au 01.XX.XX.XX.XX ou par email à commercial@josmoze.com. Préférez-vous être rappelé ?",
-                'default': f"🤔 Excellente question ! Je suis Thomas, spécialiste en purification d'eau. Puis-je vous expliquer comment nos osmoseurs transforment votre eau du robinet en eau pure ?"
-            }
-            responses = responses_fr
-        else:
-            responses_en = {
-                'purification': "💧 Reverse osmosis removes 99% of contaminants: chlorine, heavy metals, bacteria, pesticides. It's the most advanced technology for pure water!",
-                'prix': "💰 Our main osmosis system is €499 instead of €899. Installation included + 2-year warranty. Would you like to see the details?",
-                'fonctionnement': "🔧 Water passes through 5 successive filters then an ultra-fine membrane. Result: bottled-quality water directly from your tap!",
-                'installation': "🛠️ Simple 2-hour installation by our team. We handle everything: connection, testing, training. No stress for you!",
-                'garantie': "✅ Complete 2-year warranty + dedicated support. If problems: intervention within 48h. Satisfaction guaranteed or money back!",
-                'contact': "📞 Perfect! Our team is available at 01.XX.XX.XX.XX or email commercial@josmoze.com. Would you prefer to be called back?",
-                'default': f"🤔 Great question! I'm Thomas, water purification specialist. Can I explain how our osmosis systems transform your tap water into pure water?"
-            }
-            responses = responses_en
-        
-        # Analyser le message pour donner une réponse appropriée
-        message_lower = message.lower()
-        
-        response_content = responses['default']
-        suggestions = []
-        
-        if any(word in message_lower for word in ['prix', 'coût', 'cost', 'price', 'combien', 'euro']):
-            response_content = responses['prix']
-            suggestions = ['🔧 Comment ça fonctionne ?', '🛠️ Installation incluse ?', '📞 Parler à un humain']
-            
-        elif any(word in message_lower for word in ['fonctionne', 'marche', 'how', 'work', 'principe']):
-            response_content = responses['fonctionnement']
-            suggestions = ['💰 Voir les prix', '🛠️ Installation facile ?', '✅ Garantie incluse ?']
-            
-        elif any(word in message_lower for word in ['purification', 'osmose', 'filtration', 'pure', 'clean']):
-            response_content = responses['purification']
-            suggestions = ['💰 Combien ça coûte ?', '🔧 Comment ça marche ?', '🛠️ Installation ?']
-            
-        elif any(word in message_lower for word in ['installation', 'installer', 'install', 'pose']):
-            response_content = responses['installation']
-            suggestions = ['💰 Voir les tarifs', '✅ Quelle garantie ?', '📞 Prendre RDV']
-            
-        elif any(word in message_lower for word in ['garantie', 'warranty', 'sav', 'support']):
-            response_content = responses['garantie']
-            suggestions = ['💰 Voir les prix', '🛠️ Comment ça marche ?', '📞 Contact direct']
-            
-        elif any(word in message_lower for word in ['contact', 'humain', 'human', 'tel', 'phone', 'appel']):
-            response_content = responses['contact']
-            suggestions = ['💧 En savoir plus sur l\'osmose', '💰 Voir une offre', '🔧 Comprendre le principe']
-            
-        elif any(word in message_lower for word in ['bonjour', 'salut', 'hello', 'hi', 'bonsoir']):
-            welcome_msg = "👋 Bonjour ! Je suis Thomas, votre conseiller en purification d'eau. Comment puis-je vous aider aujourd'hui ?" if is_french else "👋 Hello! I'm Thomas, your water purification advisor. How can I help you today?"
-            response_content = welcome_msg
-            suggestions = ['💧 En savoir plus sur l\'osmose', '💰 Voir les prix', '🔧 Comment ça fonctionne ?', '📞 Parler à un humain'] if is_french else ['💧 Learn about osmosis', '💰 See prices', '🔧 How it works?', '📞 Talk to human']
-        
-        # Statistiques de performance (simulation)
-        import random
-        performance_stats = {
-            'satisfaction_rate': round(95 + random.uniform(0, 3), 1),
-            'response_time': round(2 + random.uniform(0, 3), 1),
-            'conversion_probability': round(15 + random.uniform(0, 15), 1)
-        }
-        
+        # Structure de réponse standardisée
         return {
-            "response": response_content,
-            "suggestions": suggestions,
+            "response": response_data.get("message", ""),
+            "suggestions": response_data.get("suggestions", []),
+            "type": response_data.get("type", "general"),
             "agent": "thomas",
-            "timestamp": datetime.now().isoformat(),
-            "performance": performance_stats
+            "timestamp": datetime.utcnow().isoformat(),
+            "session_id": session_id
         }
         
     except Exception as e:
-        logging.error(f"Erreur chatbot: {str(e)}")
+        logging.error(f"Erreur Thomas chatbot: {str(e)}")
         
-        # Réponse d'erreur en français/anglais
-        error_msg_fr = "Désolé, je rencontre un problème technique. Notre équipe est disponible pour vous aider : commercial@josmoze.com 📧"
-        error_msg_en = "Sorry, I'm experiencing a technical issue. Our team is available to help you: commercial@josmoze.com 📧"
-        
+        # Réponse d'erreur bienveillante
         return {
-            "response": error_msg_fr,
-            "suggestions": ["📞 Contacter l'équipe", "🔄 Réessayer"],
+            "response": "Désolé, j'ai eu un petit problème technique ! 😅\n\nMais je suis toujours là pour vous aider à choisir votre osmoseur idéal.\n\nPour commencer :\n🎯 Utilisez notre questionnaire personnalisé\n📦 Consultez nos produits BlueMountain\n📞 Contactez un conseiller\n\nComment puis-je vous aider ?",
+            "suggestions": ["🎯 Questionnaire", "📦 Produits", "📞 Conseiller"],
+            "type": "error",
             "agent": "thomas",
-            "error": True
+            "timestamp": datetime.utcnow().isoformat()
         }
 
 # API endpoint pour traduction forcée par le Guardian
