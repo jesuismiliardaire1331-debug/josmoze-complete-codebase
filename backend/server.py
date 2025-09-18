@@ -511,8 +511,8 @@ async def get_translated_products(
         # Récupérer les produits originaux
         products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
         if not products_data:
-            await initialize_products()
-            products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
+            logging.warning("⚠️ Aucun produit trouvé pour traduction")
+            return {"products": [], "message": "Aucun produit disponible"}
         
         # Traduire chaque produit si nécessaire
         translated_products = []
