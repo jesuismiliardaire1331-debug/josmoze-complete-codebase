@@ -212,12 +212,8 @@ const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation, formatPrice }
                   <div className="flex space-x-2">
                     <button
                       onClick={() => {
-                        // Scroll vers le produit recommandé
-                        const productElement = document.getElementById(recommendation.id);
-                        if (productElement) {
-                          productElement.scrollIntoView({ behavior: 'smooth' });
-                        }
-                        handleClose();
+                        // Redirection directe vers la fiche produit
+                        window.location.href = `/produit/${recommendation.id}`;
                       }}
                       className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700"
                     >
