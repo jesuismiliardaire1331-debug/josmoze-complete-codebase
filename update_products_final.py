@@ -19,7 +19,7 @@ from products_final import FINAL_PRODUCTS, PROMOTION_RULES, REFERRAL_SYSTEM
 # Configuration MongoDB
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
 client = AsyncIOMotorClient(MONGO_URL)
-db = client.josmoze_ecommerce
+db = client[os.environ.get('DB_NAME', 'josmoze_production')]
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
