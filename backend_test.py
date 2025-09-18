@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Josmose.com - SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE
-Tests complets pour Mission Points 1 & 2:
-1. NOUVEAUX PRODUITS: Gamme restructurée (Essentiel 449€, Premium 549€, Prestige 899€) + nouveaux produits (Purificateur H2 79€, Fontaine Animaux 49€)
-2. SYSTÈME PROMOTIONS: Parrainage (codes JOSM+4 chars, 10% filleul, 50€ parrain) + Offre lancement (Premium/Prestige → produit gratuit)
+Backend API Testing for Josmose.com - VALIDATION CORRECTIONS CRITIQUES JOSMOZE
+Tests prioritaires pour valider les corrections appliquées:
+1. PromotionsManager initialization - Fix fonction init_promotions_manager()
+2. Services redémarrés - Backend et frontend relancés
+3. Base de données mise à jour - Produits et promotions rechargés
+4. Tests prioritaires: PromotionsManager Health, Génération codes parrainage, Validation codes, Offre de lancement, Règles promotions, Nouveaux produits
 """
 
 import requests
