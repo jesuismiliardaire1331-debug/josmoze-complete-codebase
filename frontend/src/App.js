@@ -338,7 +338,7 @@ const Hero = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <button 
+              <button
                 onClick={() => {
                   document.querySelector('#products-section')?.scrollIntoView({ behavior: 'smooth' });
                 }}
@@ -347,12 +347,21 @@ const Hero = () => {
                 {customerType === 'B2B' ? t('hero.cta') + ' 🏢' : t('hero.cta') + ' 🏠'}
               </button>
               
+              {customerType !== 'B2B' && (
+                <button
+                  onClick={openQuestionnaire}
+                  className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors shadow-lg"
+                >
+                  🎯 Trouvez votre osmoseur
+                </button>
+              )}
+              
               {customerType === 'B2B' && (
                 <button 
                   onClick={() => navigate('/consultation')}
-                  className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors"
+                  className="bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors shadow-lg"
                 >
-                  {t('consultation.title').replace(' avec un Expert 📞', '')} 📞
+                  📞 Consultation Pro
                 </button>
               )}
             </div>
