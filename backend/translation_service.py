@@ -245,12 +245,13 @@ class TranslationService:
 
     def get_user_currency_from_ip(self, ip_address: str) -> Dict[str, str]:
         """
-        Détermine la devise appropriée basée sur l'IP
+        SITE FRANÇAIS - Force l'Euro par défaut pour Josmose.com  
+        Détermine la devise appropriée basée sur l'IP avec override français pour site business français
         """
-        country = self.detect_country_from_ip(ip_address)
-        currency = COUNTRY_TO_CURRENCY.get(country, {"code": "EUR", "symbol": "€", "name": "Euro"})
+        # OVERRIDE POUR SITE FRANÇAIS - Toujours retourner EUR pour business français
+        currency = {"code": "EUR", "symbol": "€", "name": "Euro"}  # Force EUR par défaut pour Josmose.com
         
-        self.logger.info(f"IP {ip_address} -> Pays: {country} -> Devise: {currency}")
+        self.logger.info(f"IP {ip_address} -> SITE FRANÇAIS forcé -> Devise: {currency}")
         return currency
 
     def get_client_ip(self, request: Request) -> str:
