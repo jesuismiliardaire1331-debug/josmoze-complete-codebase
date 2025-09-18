@@ -112,15 +112,16 @@ class InventoryManager:
         self.db = db
         self.logger = logging.getLogger(__name__)
         
-        # Initialisation du stock par défaut
+        # Stock par défaut pour les nouveaux produits finalisés  
         self.default_stock_items = [
-            {"product_id": "osmoseur-principal", "name": "Fontaine à Eau Osmosée", "current_stock": 50},
-            {"product_id": "osmoseur-pro", "name": "Système Osmose Inverse Pro", "current_stock": 30},
-            {"product_id": "filtres-rechange", "name": "Lot de Filtres de Rechange", "current_stock": 100},
-            {"product_id": "filtres-pro", "name": "Filtres Professionnels", "current_stock": 50},
-            {"product_id": "garantie-2ans", "name": "Extension Garantie 2 ans", "current_stock": 999},  # Service
-            {"product_id": "garantie-5ans", "name": "Extension Garantie 5 ans", "current_stock": 999},  # Service
-            {"product_id": "installation-service", "name": "Service d'Installation", "current_stock": 999}  # Service
+            {"product_id": "osmoseur-essentiel", "name": "Osmoseur Essentiel", "current_stock": 50},
+            {"product_id": "osmoseur-premium", "name": "Osmoseur Premium", "current_stock": 40},
+            {"product_id": "osmoseur-prestige", "name": "Osmoseur Prestige", "current_stock": 30},
+            {"product_id": "purificateur-portable-hydrogene", "name": "Purificateur Portable H2", "current_stock": 60},
+            {"product_id": "fontaine-eau-animaux", "name": "Fontaine Animaux", "current_stock": 45},
+            {"product_id": "osmoseur-pro", "name": "Système Osmose Inverse Pro", "current_stock": 25},
+            {"product_id": "filtres-rechange", "name": "Kit Filtres de Rechange", "current_stock": 100},
+            {"product_id": "filtres-pro", "name": "Filtres Professionnels", "current_stock": 50}
         ]
     
     async def initialize_stock(self):
