@@ -13,88 +13,29 @@ const AutoLanguageDetector = () => {
   useEffect(() => {
     const detectAndChangeLanguage = async () => {
       try {
-        console.log('🔍 Détection automatique de la langue en cours...');
+        console.log('🔍 Langue française forcée par défaut - détection automatique désactivée');
         
-        // Appel à l'API de détection
-        const response = await axios.get(`${backendUrl}/api/localization/detect`);
-        const { detected_language, detected_country, currency } = response.data;
-        
-        console.log('🌍 Détection réussie:', {
-          detected_language,
-          detected_country,
-          currency,
-          current_i18n_language: i18n.language
-        });
-        
-        // Mettre à jour les infos de debug pour affichage
-        setDebugInfo({
-          detected_language,
-          detected_country,
-          currency,
-          current_language: i18n.language,
-          ip_address: response.data.ip_address
-        });
-        
-        // Forcer le changement de langue si différente
-        if (detected_language && detected_language !== 'FR') {
-          // Convertir le code DeepL vers le code i18next
-          const i18nLanguageCode = convertDeepLToI18n(detected_language);
-          
-          if (i18nLanguageCode !== i18n.language) {
-            console.log(`🔄 Changement de langue: ${i18n.language} → ${i18nLanguageCode} (DeepL: ${detected_language})`);
-            
-            // Changer la langue dans i18next
-            await i18n.changeLanguage(i18nLanguageCode);
-            
-            // Sauvegarder dans localStorage
-            localStorage.setItem('i18nextLng', i18nLanguageCode);
-            localStorage.setItem('userCurrency', JSON.stringify(currency));
-            
-            // Déclencher un événement personnalisé pour d'autres composants
-            const event = new CustomEvent('autoLanguageChanged', {
-              detail: { 
-                language: i18nLanguageCode, 
-                deepl_language: detected_language,
-                country: detected_country,
-                currency: currency 
-              }
-            });
-            window.dispatchEvent(event);
-            
-            console.log('✅ Langue changée automatiquement vers:', i18nLanguageCode);
-          } else {
-            console.log('ℹ️ Langue déjà correcte:', i18nLanguageCode);
-          }
+        // FORCER LE FRANÇAIS PAR DÉFAUT - Exigence client
+        if (i18n.language !== 'FR') {
+          console.log(`🔄 Forçage du français: ${i18n.language} → FR`);
+          await i18n.changeLanguage('FR');
+          localStorage.setItem('i18nextLng', 'FR');
+          console.log('✅ Langue forcée vers le français');
         } else {
-          console.log('ℹ️ Langue détectée est le français, pas de changement nécessaire');
+          console.log('✅ Langue déjà en français');
         }
+        
+        setDebugInfo({
+          detected_language: 'FR',
+          detected_country: 'FR', 
+          currency: { symbol: '€', code: 'EUR' },
+          current_language: 'FR',
+          forced_french: true
+        });
         
       } catch (error) {
-        console.error('❌ Erreur détection automatique langue:', error);
-        
-        // Essayer avec l'ancien endpoint en fallback
-        try {
-          console.log('🔄 Tentative avec l\'ancien endpoint...');
-          const fallbackResponse = await axios.get(`${backendUrl}/api/detect-location`);
-          const { language: fallbackLang, country_code } = fallbackResponse.data;
-          
-          if (fallbackLang && fallbackLang !== i18n.language) {
-            console.log(`🔄 Fallback: changement de langue vers ${fallbackLang}`);
-            await i18n.changeLanguage(fallbackLang);
-            localStorage.setItem('i18nextLng', fallbackLang);
-          }
-          
-          setDebugInfo({
-            detected_language: fallbackLang,
-            detected_country: country_code,
-            current_language: i18n.language,
-            fallback_used: true
-          });
-          
-        } catch (fallbackError) {
-          console.error('❌ Fallback également échoué:', fallbackError);
-          setDebugInfo({ error: 'Detection failed' });
-        }
+        console.error('❌ Erreur forçage français:', error);
+        setDebugInfo({ error: 'French forcing failed' });
       } finally {
         setDetectionComplete(true);
       }
