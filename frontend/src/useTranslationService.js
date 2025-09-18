@@ -7,9 +7,30 @@ const useTranslationService = () => {
   const [translationCache, setTranslationCache] = useState(new Map());
   const [isTranslating, setIsTranslating] = useState(false);
   const [currentCurrency, setCurrentCurrency] = useState(() => {
-    // Récupérer la devise depuis localStorage
+    // FORCE EUR par défaut pour site français Josmose.com
+    const eurDefault = { code: 'EUR', symbol: '€', name: 'Euro' };
+    
+    // Vérifier localStorage et nettoyer si CAD détecté
     const saved = localStorage.getItem('userCurrency');
-    return saved ? JSON.parse(saved) : { code: 'EUR', symbol: '€', name: 'Euro' };
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.code === 'CAD' || parsed.code === 'USD' || parsed.symbol === 'C$' || parsed.symbol === '$') {
+          console.log('🧹 Nettoyage devise incorrecte:', parsed.code);
+          localStorage.setItem('userCurrency', JSON.stringify(eurDefault));
+          return eurDefault;
+        }
+        return parsed;
+      } catch (e) {
+        console.log('🧹 Erreur parse devise, forçage EUR');
+        localStorage.setItem('userCurrency', JSON.stringify(eurDefault));
+        return eurDefault;
+      }
+    }
+    
+    // Sauvegarder EUR par défaut
+    localStorage.setItem('userCurrency', JSON.stringify(eurDefault));
+    return eurDefault;
   });
   
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
