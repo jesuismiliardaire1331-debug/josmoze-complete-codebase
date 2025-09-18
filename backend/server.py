@@ -2468,6 +2468,10 @@ async def startup_db():
     global security_audit_agent  
     security_audit_agent = get_security_audit_agent(db)
     
+    # Initialize PromotionsManager
+    global promotions_manager
+    promotions_manager = PromotionsManager(db)
+    
     # 🌐 Démarrage automatique du Translation Guardian Agent 24/7
     logging.info("🌐 Démarrage automatique du Translation Guardian Agent...")
     try:
