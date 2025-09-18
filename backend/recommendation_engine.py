@@ -353,9 +353,9 @@ class ProductRecommendationEngine:
             # Fallback avec produits par défaut
             return [
                 {
-                    "id": "osmoseur-principal",
-                    "name": "Fontaine à Eau Osmosée BlueMountain",
-                    "price": 499.0,
+                    "id": "osmoseur-premium",
+                    "name": "Osmoseur Premium - BlueMountain Avancé",
+                    "price": 549.0,
                     "category": "osmoseur",
                     "target_audience": "both",
                     "in_stock": True
