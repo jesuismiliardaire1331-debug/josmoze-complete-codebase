@@ -1913,13 +1913,14 @@ const Consultation = () => {
 };
 
 const QuestionnaireWrapper = () => {
-  const { showQuestionnaire, closeQuestionnaire, handleQuestionnaireRecommendation } = useApp();
+  const { showQuestionnaire, closeQuestionnaire, handleQuestionnaireRecommendation, formatPrice } = useApp();
   
   return (
     <ProductQuestionnaire
       isOpen={showQuestionnaire}
       onClose={closeQuestionnaire}
       onRecommendation={handleQuestionnaireRecommendation}
+      formatPrice={formatPrice}
     />
   );
 };
