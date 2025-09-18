@@ -466,10 +466,10 @@ async def detect_location(request: Request):
 async def get_products(customer_type: str = "B2C"):
     """Get products filtered by customer type (B2C/B2B) with stock info"""
     products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
+    
     if not products_data:
-        # Initialize with default products if empty
-        await initialize_products()
-        products_data = await db.products.find({"target_audience": {"$in": [customer_type, "both"]}}).to_list(1000)
+        logging.warning("⚠️ Aucun produit trouvé en base de données")
+        return []
     
     # Enrichir avec les informations de stock
     enriched_products = []
