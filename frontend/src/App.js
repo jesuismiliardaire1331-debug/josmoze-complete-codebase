@@ -487,6 +487,13 @@ const ProductGrid = () => {
                   )}
                 </div>
               </div>
+
+              <button
+                onClick={() => navigate(`/produit/${product.id}`)}
+                className="w-full mb-2 bg-gray-100 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm"
+              >
+                📋 Voir les Détails
+              </button>
               
               {product.features && product.features.length > 0 && (
                 <ul className="text-xs text-gray-600 mb-4 space-y-1">
