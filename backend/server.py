@@ -2403,7 +2403,7 @@ logger = logging.getLogger(__name__)
 
 @app.on_event("startup")
 async def startup_db():
-    await initialize_products()
+    logging.info("🚀 Application démarrage - Base de données prête")
     
     # Initialize marketing automation
     global marketing_automation
