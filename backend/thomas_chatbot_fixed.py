@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-🤖 THOMAS CHATBOT - AGENT COMMERCIAL BIENVEILLANT V3.0
-====================================================
-Agent conversationnel optimisé pour Josmose.com avec:
-- Ton bienveillant et commercial (pas agressif)
-- Connaissance complète des nouveaux produits BlueMountain
-- Redirection vers questionnaire
-- Aide au choix produit personnalisée
+🤖 THOMAS CHATBOT OSMOSEURS - VERSION DÉFINITIVE
+===============================================
+Agent commercial expert en osmoseurs Josmose.com
+- Focus 100% osmoseurs et purification d'eau
+- Ton bienveillant et commercial
+- Connaissance parfaite du catalogue BlueMountain 2025
 """
 
 import json
@@ -18,188 +17,174 @@ logger = logging.getLogger(__name__)
 
 class ThomasChatbot:
     def __init__(self):
-        """Initialise Thomas avec la base des connaissances actualisée"""
-        self.context = []
-        self.user_preferences = {}
+        """Thomas - Expert Osmoseurs Josmose.com"""
         
-        # BASE DE CONNAISSANCES NOUVEAUX PRODUITS JOSMOSE.COM 2025
-        self.knowledge = {
-            "products": {
-                "osmoseur-essentiel": {
-                    "name": "Osmoseur Essentiel - BlueMountain Compact",
-                    "price": 449.0,
-                    "description": "Solution économique parfaite pour les petits foyers. Filtration 5 étapes, réservoir 12L.",
-                    "ideal_for": "1-2 personnes, appartements, budgets 200-400€",
-                    "features": ["5 étapes filtration", "Réservoir 12L", "Robinet inox", "Installation facile"]
-                },
-                "osmoseur-premium": {
-                    "name": "Osmoseur Premium - BlueMountain Avancé", 
-                    "price": 549.0,
-                    "description": "Notre bestseller! Filtration 6 étapes + reminéralisation. Idéal familles 3-4 personnes.",
-                    "ideal_for": "3-4 personnes, maisons, budgets 400-700€",
-                    "features": ["6 étapes + reminéralisation", "Réservoir 15L", "Robinet LED", "Auto-rinçage"]
-                },
-                "osmoseur-prestige": {
-                    "name": "Osmoseur Prestige - BlueMountain De Comptoir",
-                    "price": 899.0,
-                    "description": "Le haut de gamme! 7 étapes + UV + reminéralisation avec écran tactile.",
-                    "ideal_for": "5+ personnes, maisons, budgets 700€+",
-                    "features": ["7 étapes + UV", "Double réservoir 20L", "Écran tactile", "App mobile"]
-                },
-                "fontaine-animaux": {
-                    "name": "Fontaine à Eau pour Animaux AquaPet Premium",
-                    "price": 49.0,
-                    "description": "Fontaine intelligente pour chiens et chats avec filtration avancée.",
-                    "features": ["Filtration intégrée", "Débit ajustable", "Capteur niveau", "Design moderne"]
-                },
-                "purificateur-portable": {
-                    "name": "Purificateur Portable à Hydrogène H2 Pro",
-                    "price": 79.0,
-                    "description": "Purificateur nomade qui enrichit l'eau en hydrogène antioxydant.",
-                    "features": ["Technologie H2", "Batterie longue durée", "Léger et portable", "Anti-oxydant"]
-                }
+        # BASE DE CONNAISSANCES OSMOSEURS JOSMOSE.COM
+        self.osmoseurs_catalog = {
+            "osmoseur-essentiel": {
+                "name": "Osmoseur Essentiel - BlueMountain Compact",
+                "price": 449.0,
+                "description": "Osmoseur économique 5 étapes pour petits foyers. Élimine 99% des contaminants.",
+                "ideal_for": "1-2 personnes, appartements, budget serré",
+                "features": ["5 étapes de filtration", "Réservoir 12L", "Robinet inox", "Installation simple"],
+                "benefits": "Eau pure à petit prix, parfait pour débuter"
             },
-            "benefits": {
-                "health": "99.9% des contaminants éliminés (nitrates, pesticides, chlore, métaux lourds)",
-                "taste": "Eau pure au goût neutre, plus de goût de chlore ou d'odeurs",
-                "economy": "Jusqu'à 80% d'économies vs eau en bouteille",
-                "ecology": "Fini les bouteilles plastiques, 1 osmoseur = 10 000 bouteilles évitées/an"
+            "osmoseur-premium": {
+                "name": "Osmoseur Premium - BlueMountain Avancé", 
+                "price": 549.0,
+                "description": "Notre bestseller ! Osmoseur 6 étapes + reminéralisation pour familles.",
+                "ideal_for": "3-4 personnes, maisons, meilleur rapport qualité-prix",
+                "features": ["6 étapes + reminéralisation", "Réservoir 15L", "Robinet LED", "Auto-rinçage"],
+                "benefits": "Le plus populaire, eau parfaitement équilibrée"
             },
-            "guarantees": {
-                "warranty": "Garantie 2 à 5 ans selon modèle",
-                "installation": "Installation professionnelle gratuite",
-                "support": "Support technique 7j/7",
-                "satisfaction": "Satisfait ou remboursé 30 jours"
+            "osmoseur-prestige": {
+                "name": "Osmoseur Prestige - BlueMountain De Comptoir",
+                "price": 899.0,
+                "description": "Osmoseur haut de gamme 7 étapes + UV avec écran tactile.",
+                "ideal_for": "5+ personnes, technologie premium, budget confortable",
+                "features": ["7 étapes + UV", "Double réservoir 20L", "Écran tactile", "App mobile"],
+                "benefits": "Technologie de pointe, monitoring temps réel"
             }
         }
         
-        # QUESTIONS QUESTIONNAIRE
-        self.questionnaire_questions = [
-            "Combien de personnes dans votre foyer ?",
-            "Type de logement ?", 
-            "Niveau de bricolage ?",
-            "Budget approximatif ?"
+        # AVANTAGES OSMOSE INVERSE
+        self.osmosis_benefits = {
+            "pureté": "Élimine 99% des contaminants : chlore, nitrates, pesticides, métaux lourds, bactéries",
+            "santé": "Eau pure comme en montagne, sans goût ni odeur, idéale pour toute la famille",
+            "économie": "Divise par 10 le coût de l'eau pure vs bouteilles plastique",
+            "écologie": "Fini les bouteilles plastique, geste écologique majeur",
+            "praticité": "Eau pure illimitée directement au robinet, 24h/24"
+        }
+        
+        # PROCESSUS OSMOSE INVERSE SIMPLIFIÉ
+        self.how_it_works = [
+            "1️⃣ Pré-filtration : Élimine sédiments et chlore",
+            "2️⃣ Membrane osmose : Filtre ultra-fin (0.0001 micron)",
+            "3️⃣ Post-filtration : Affinage du goût",
+            "4️⃣ Reminéralisation : Équilibre parfait (modèles Premium/Prestige)",
+            "5️⃣ Stockage : Réservoir eau pure toujours disponible"
         ]
     
-    def get_product_recommendation(self, budget: str = None, household_size: str = None) -> Dict:
-        """Recommande un produit basé sur les critères"""
+    def get_product_recommendation(self, budget: str = None, household_size: str = None, housing_type: str = None) -> Dict:
+        """Recommande l'osmoseur idéal selon les critères"""
         
-        # Logique de recommandation
-        if budget == "700+":
-            return self.knowledge["products"]["osmoseur-prestige"]
-        elif budget == "400-700" or household_size == "3-4":
-            return self.knowledge["products"]["osmoseur-premium"]
-        elif budget == "200-400" or household_size == "1-2":
-            return self.knowledge["products"]["osmoseur-essentiel"]
+        # Logique de recommandation osmoseurs
+        if budget == "700+" or household_size == "5+":
+            return self.osmoseurs_catalog["osmoseur-prestige"]
+        elif budget == "400-700" or household_size == "3-4" or housing_type == "maison":
+            return self.osmoseurs_catalog["osmoseur-premium"]
+        elif budget == "200-400" or household_size == "1-2" or housing_type == "appartement":
+            return self.osmoseurs_catalog["osmoseur-essentiel"]
         else:
-            # Par défaut, recommander le Premium
-            return self.knowledge["products"]["osmoseur-premium"]
+            # Par défaut Premium (le plus populaire)
+            return self.osmoseurs_catalog["osmoseur-premium"]
     
     def generate_response(self, user_message: str, user_context: Dict = None) -> Dict:
         """
-        Génère une réponse bienveillante et commerciale de Thomas
+        Génère une réponse expert en osmoseurs
         """
         try:
-            user_message_lower = user_message.lower()
+            message_lower = user_message.lower()
             
-            # Salutation initiale
-            if any(word in user_message_lower for word in ["bonjour", "salut", "hello", "bonsoir"]):
+            # Salutation
+            if any(word in message_lower for word in ["bonjour", "salut", "hello", "bonsoir", "coucou"]):
                 return {
-                    "message": "Bonjour ! 👋 Je suis Thomas, votre conseiller eau pure chez Josmose.com.\n\nJe suis là pour vous aider à choisir l'osmoseur parfait pour votre foyer ! 💧\n\n✨ **Nos nouveaux osmoseurs BlueMountain** sont arrivés avec des technologies révolutionnaires.\n\nPour vous conseiller au mieux, préférez-vous :\n🎯 **Faire notre questionnaire personnalisé** (2 minutes)\n📦 **Voir directement nos produits**\n❓ **Me poser une question spécifique**",
-                    "suggestions": ["🎯 Questionnaire personnalisé", "📦 Voir les produits", "❓ Question spécifique"],
+                    "message": "Bonjour ! 👋 Je suis Thomas, votre expert osmoseurs chez Josmose.com.\n\n💧 **Spécialiste en purification d'eau par osmose inverse**\n\nJe vous aide à choisir l'osmoseur parfait pour avoir une eau pure illimitée chez vous !\n\n🎯 **Notre gamme BlueMountain 2025** :\n• **Essentiel** 449€ (1-2 pers.)\n• **Premium** 549€ (3-4 pers.) ⭐ *Le plus populaire*\n• **Prestige** 899€ (5+ pers.)\n\nComment puis-je vous conseiller ? 😊",
+                    "suggestions": ["💧 Comment ça marche ?", "💰 Lequel pour mon budget ?", "🏠 Lequel pour ma famille ?"],
                     "type": "greeting"
                 }
             
-            # Questionnaire
-            if any(word in user_message_lower for word in ["questionnaire", "personnalisé", "conseiller", "recommandation"]):
+            # Fonctionnement osmose inverse
+            if any(word in message_lower for word in ["marche", "fonctionne", "comment", "principe", "osmose"]):
+                steps = "\n".join(self.how_it_works)
                 return {
-                    "message": "Parfait ! 🎯 Notre questionnaire personnalisé va identifier l'osmoseur idéal pour vous.\n\n**4 questions simples :**\n1️⃣ Combien de personnes dans votre foyer ?\n2️⃣ Type de logement ?\n3️⃣ Niveau de bricolage ?\n4️⃣ Budget approximatif ?\n\n➡️ **Cliquez sur le bouton 'Trouvez votre osmoseur' sur la page pour commencer !**",
-                    "suggestions": ["🔍 Autres questions", "📦 Voir tous les produits"],
-                    "type": "questionnaire_redirect"
-                }
-            
-            # Questions sur produits spécifiques
-            if any(word in user_message_lower for word in ["produits", "osmoseur", "prix", "comparaison"]):
-                return {
-                    "message": "Excellente question ! 😊 Voici notre nouvelle gamme **BlueMountain 2025** :\n\n💧 **Essentiel Compact** - 449€\n• 1-2 personnes, appartements\n• 5 étapes, réservoir 12L\n• Économique et efficace\n\n🌟 **Premium Avancé** - 549€ ⭐ *Le plus populaire*\n• 3-4 personnes, maisons\n• 6 étapes + reminéralisation\n• Notre bestseller!\n\n👑 **Prestige De Comptoir** - 899€\n• 5+ personnes, haut de gamme\n• 7 étapes + UV + écran tactile\n• Technologie premium\n\nQuel type de foyer avez-vous ? Je peux vous conseiller plus précisément ! 🏠",
-                    "suggestions": ["🎯 Questionnaire personnalisé", "❓ Quelle différence entre les modèles ?", "💰 Garanties et services"],
-                    "type": "product_info"
-                }
-            
-            # Questions sur les bénéfices
-            if any(word in user_message_lower for word in ["pourquoi", "bénéfices", "avantages", "santé", "qualité"]):
-                return {
-                    "message": "Excellente question ! 🌟 Un osmoseur Josmose vous apporte :\n\n🏥 **Pour votre santé :**\n• 99.9% des contaminants éliminés\n• Fini nitrates, pesticides, chlore\n• Eau pure comme en montagne\n\n💰 **Pour votre budget :**\n• Jusqu'à 80% d'économie vs bouteilles\n• 1 osmoseur = 10 ans d'eau pure\n• Retour sur investissement en 8 mois\n\n🌍 **Pour la planète :**\n• Plus de bouteilles plastiques\n• 1 osmoseur = 10 000 bouteilles évitées/an\n• Geste écologique majeur\n\nVoulez-vous que je vous aide à choisir le modèle idéal ? 😊",
-                    "suggestions": ["🎯 Oui, conseille-moi !", "💧 Plus d'infos techniques", "📞 Parler à un expert"],
-                    "type": "benefits"
-                }
-            
-            # Questions techniques
-            if any(word in user_message_lower for word in ["installation", "technique", "comment", "marche", "étapes"]):
-                return {
-                    "message": "C'est un point important ! 🔧 Chez Josmose, tout est prévu :\n\n✅ **Installation professionnelle GRATUITE**\n• Technicien certifié se déplace\n• Installation sous évier en 2h\n• Test et mise en service inclus\n\n📋 **Maintenance simplifiée :**\n• Changement filtres 1 fois/an\n• Cartouches livrées à domicile\n• Guide illustré fourni\n\n🛡️ **Garanties complètes :**\n• 2 à 5 ans selon modèle\n• Support technique 7j/7\n• Satisfait ou remboursé 30 jours\n\nPas de stress, on s'occupe de tout ! 😊\n\nQuel modèle vous intéresse ?",
-                    "suggestions": ["🎯 Conseille-moi un modèle", "📦 Voir tous les produits", "📞 Appeler un technicien"],
-                    "type": "technical"
+                    "message": f"Excellente question ! 🔬 **L'osmose inverse expliquée simplement** :\n\n{steps}\n\n💡 **Résultat** : Eau 99% pure, sans chlore, sans nitrates, sans pesticides !\n\nC'est la même technologie que les stations spatiales. Votre eau du robinet devient plus pure que l'eau en bouteille ! 🚀\n\nQuel aspect vous intéresse le plus ?",
+                    "suggestions": ["💰 Prix des osmoseurs", "🏠 Lequel choisir ?", "🔧 Installation facile ?"],
+                    "type": "explanation"
                 }
             
             # Prix et budget
-            if any(word in user_message_lower for word in ["prix", "coût", "budget", "combien", "cher"]):
+            if any(word in message_lower for word in ["prix", "coût", "budget", "combien", "tarif"]):
                 return {
-                    "message": "Parlons budget ! 💰 Nos osmoseurs sont un investissement rentable :\n\n🏷️ **Nos prix 2025 :**\n• **Essentiel** : 449€ (parfait 1-2 pers.)\n• **Premium** : 549€ (idéal familles)\n• **Prestige** : 899€ (haut de gamme)\n\n💡 **Rentabilité garantie :**\n• Famille 4 pers. : 150€/mois bouteilles ➜ **STOP !**\n• Avec osmoseur : 15€/mois (filtres)\n• **Économie : 135€/mois = 1620€/an**\n\n🎁 **Inclus :**\n• Installation gratuite\n• Garantie longue durée\n• Support technique illimité\n\nQuel est votre budget approximatif ? Je vous guide ! 😊",
+                    "message": "💰 **Nos osmoseurs BlueMountain 2025** - Prix tout inclus :\n\n🥉 **Essentiel Compact** - **449€**\n• 1-2 personnes, appartements\n• 5 étapes, réservoir 12L\n• Installation + garantie 2 ans\n\n🥈 **Premium Avancé** - **549€** ⭐\n• 3-4 personnes, maisons\n• 6 étapes + reminéralisation\n• Notre bestseller ! Installation + garantie 3 ans\n\n🥇 **Prestige De Comptoir** - **899€**\n• 5+ personnes, haut de gamme\n• 7 étapes + UV + écran tactile\n• Installation + garantie 5 ans\n\n💡 **Rentabilité** : Famille 4 pers. économise 1500€/an vs bouteilles !\n\nQuel budget avez-vous en tête ?",
                     "suggestions": ["💰 200-400€", "💰 400-700€", "💰 700€+"],
                     "type": "pricing"
                 }
             
-            # Budget spécifique - réponses ciblées
+            # Recommandations par budget
             if "200-400" in user_message or "400-700" in user_message or "700+" in user_message:
                 if "200-400" in user_message:
-                    product = self.knowledge["products"]["osmoseur-essentiel"]
+                    product = self.osmoseurs_catalog["osmoseur-essentiel"]
                     return {
-                        "message": f"Parfait ! 🎯 Pour votre budget, je recommande l'**{product['name']}** à **{product['price']}€**\n\n✨ **Pourquoi c'est le bon choix :**\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n• Tout inclus : installation + garantie 2 ans\n\n💧 **Vous obtenez :**\n• Eau pure 99.9% des contaminants éliminés\n• Économie immédiate sur les bouteilles\n• Installation professionnelle gratuite\n\nVoulez-vous voir cette fiche produit complète ? 📋",
-                        "suggestions": ["📋 Voir la fiche produit", "🎯 Questionnaire complet", "📞 Parler à un conseiller"],
+                        "message": f"🎯 **Pour votre budget, je recommande l'{product['name']}** !\n\n✨ **Pourquoi c'est parfait** :\n• Prix : **{product['price']}€** tout inclus\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n\n🔧 **Vous obtenez** :\n• Installation professionnelle gratuite\n• Garantie 2 ans complète\n• Eau pure illimitée immédiatement\n• Économie dès le 1er mois vs bouteilles\n\nVoulez-vous voir sa fiche technique complète ?",
+                        "suggestions": ["📋 Fiche technique", "🔧 Comment ça marche ?", "📞 Parler à un expert"],
                         "type": "recommendation"
                     }
                 elif "400-700" in user_message:
-                    product = self.knowledge["products"]["osmoseur-premium"]
+                    product = self.osmoseurs_catalog["osmoseur-premium"]
                     return {
-                        "message": f"Excellent choix ! 🌟 Pour votre budget, l'**{product['name']}** à **{product['price']}€** est PARFAIT !\n\n⭐ **Notre bestseller car :**\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n• Reminéralisation = eau équilibrée\n• Installation + garantie 3 ans incluses\n\n🏆 **Le plus populaire car :**\n• Rapport qualité-prix exceptionnel\n• Technologie avancée accessible\n• Satisfait 95% de nos clients\n\nJe vous montre sa fiche détaillée ? 📋",
-                        "suggestions": ["📋 Voir la fiche produit", "🔍 Comparer avec d'autres", "✅ Commander maintenant"],
+                        "message": f"🌟 **Excellent choix ! L'{product['name']}** est PARFAIT !\n\n⭐ **Pourquoi c'est notre bestseller** :\n• Prix : **{product['price']}€** tout inclus\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n\n🏆 **Avantages exclusifs** :\n• Reminéralisation = eau parfaitement équilibrée\n• Robinet LED indicateur de qualité\n• Auto-rinçage automatique\n• 95% de nos clients le choisissent !\n\nJe vous montre pourquoi il cartonne ?",
+                        "suggestions": ["📋 Pourquoi si populaire ?", "🔧 Installation incluse ?", "✅ Je le veux !"],
                         "type": "recommendation"
                     }
                 else:  # 700€+
-                    product = self.knowledge["products"]["osmoseur-prestige"]
+                    product = self.osmoseurs_catalog["osmoseur-prestige"]
                     return {
-                        "message": f"Magnifique ! 👑 Pour un budget premium, l'**{product['name']}** à **{product['price']}€** est exceptionnel !\n\n✨ **Le top de la technologie :**\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n• Écran tactile + app mobile\n• Garantie 5 ans premium\n\n🚀 **Fonctionnalités uniques :**\n• Monitoring qualité temps réel\n• Nettoyage automatique\n• Service maintenance inclus\n• Technologie connectée\n\nVoulez-vous découvrir toutes ses capacités ? 📋",
-                        "suggestions": ["📋 Voir la fiche complète", "📱 Démo app mobile", "📞 Consultation expert"],
+                        "message": f"👑 **Pour un budget premium, l'{product['name']}** est exceptionnel !\n\n🚀 **Le top de la technologie osmoseurs** :\n• Prix : **{product['price']}€** tout inclus\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n\n✨ **Technologie unique** :\n• Écran tactile avec monitoring temps réel\n• App mobile pour contrôle à distance\n• UV stérilisation supplémentaire\n• Service maintenance premium 5 ans\n\nC'est l'osmoseur du futur ! Intéressé ?",
+                        "suggestions": ["📱 Voir app mobile", "🏆 Toutes les fonctions", "📞 Consultation expert"],
                         "type": "recommendation"
                     }
             
-            # Contact/rendez-vous
-            if any(word in user_message_lower for word in ["contact", "appeler", "téléphone", "rendez-vous", "conseiller"]):
+            # Avantages et bénéfices
+            if any(word in message_lower for word in ["avantage", "bénéfice", "pourquoi", "intérêt", "santé"]):
                 return {
-                    "message": "Bien sûr ! 📞 Nos experts sont là pour vous :\n\n🕒 **Disponibilité :**\n• Lundi-Vendredi : 9h-18h\n• Support technique : 7j/7\n• Conseils gratuits et sans engagement\n\n📞 **Plusieurs options :**\n• **Cliquez sur 'Contact'** dans le menu\n• **Consultation vidéo** disponible\n• **Visite technicien gratuite** pour devis\n\nNos conseillers connaissent parfaitement chaque produit et votre région. Ils vous guideront vers le choix optimal ! 😊\n\nUne préférence pour le contact ?",
-                    "suggestions": ["📞 Appel téléphonique", "💻 Consultation vidéo", "🏠 Visite à domicile"],
+                    "message": "🌟 **Pourquoi choisir un osmoseur Josmose ?**\n\n🏥 **Pour votre santé** :\n• 99% des contaminants éliminés\n• Fini chlore, nitrates, pesticides, métaux lourds\n• Eau pure comme en montagne\n\n💰 **Pour votre porte-monnaie** :\n• Famille 4 pers : 150€/mois bouteilles → 15€/mois osmoseur\n• Économie : 1620€/an !\n• Retour sur investissement en 4-6 mois\n\n🌍 **Pour la planète** :\n• Plus de bouteilles plastique\n• 1 osmoseur = 10 000 bouteilles évitées/an\n• Empreinte carbone divisée par 100\n\n🚰 **Pour le confort** :\n• Eau pure illimitée 24h/24\n• Direct au robinet, toujours fraîche\n• Plus de courses bouteilles lourdes\n\nQuel aspect vous motive le plus ?",
+                    "suggestions": ["💰 Calculer mes économies", "🏠 Lequel choisir ?", "🔧 Installation facile ?"],
+                    "type": "benefits"
+                }
+            
+            # Installation
+            if any(word in message_lower for word in ["installation", "installer", "pose", "technique"]):
+                return {
+                    "message": "🔧 **Installation osmoseur - Simple et rapide !**\n\n✅ **Service inclus gratuit** :\n• Technicien expert se déplace chez vous\n• Installation complète en 2h maximum\n• Sous évier, raccordement eau froide\n• Tests et mise en service immédiate\n\n📋 **Étapes installation** :\n1️⃣ Perçage évier pour robinet dédié\n2️⃣ Raccordement arrivée d'eau\n3️⃣ Installation système + réservoir\n4️⃣ Tests complets + formation\n\n🛡️ **Garanties** :\n• 2 à 5 ans selon modèle\n• Maintenance annuelle simple\n• Support technique 7j/7\n• Satisfait ou remboursé 30 jours\n\nAucun stress, on gère tout ! Des questions sur l'installation ?",
+                    "suggestions": ["🏠 Convient à mon logement ?", "💰 Voir les prix", "📞 Prendre RDV"],
+                    "type": "installation"
+                }
+            
+            # Contact
+            if any(word in message_lower for word in ["contact", "téléphone", "appeler", "rdv", "expert"]):
+                return {
+                    "message": "📞 **Parfait ! Nos experts osmoseurs vous attendent :**\n\n🕒 **Disponibilité** :\n• Lundi-Vendredi : 9h-18h\n• Conseils gratuits et sans engagement\n• Devis personnalisé immédiat\n\n💬 **Plusieurs options** :\n• **Formulaire contact** sur le site\n• **Consultation vidéo** pour voir les produits\n• **Visite technique gratuite** pour devis sur-mesure\n\nNos conseillers sont des vrais experts osmoseurs. Ils connaissent chaque produit par cœur et sauront vous orienter selon votre situation exacte ! 😊\n\nComment préférez-vous être contacté ?",
+                    "suggestions": ["📞 Appel téléphonique", "💻 Consultation vidéo", "🏠 Visite gratuite"],
                     "type": "contact"
                 }
             
-            # Message par défaut - bienveillant
+            # Questions famille/logement
+            if any(word in message_lower for word in ["famille", "personnes", "maison", "appartement", "logement"]):
+                return {
+                    "message": "🏠 **Choisir selon votre foyer** :\n\n👥 **1-2 personnes** (appartement) :\n➜ **Essentiel 449€** - Compact et économique\n\n👨‍👩‍👧 **3-4 personnes** (maison) :\n➜ **Premium 549€** - Notre bestseller ! ⭐\n\n👨‍👩‍👧‍👦 **5+ personnes** (grande maison) :\n➜ **Prestige 899€** - Capacité maximale\n\n💡 **Conseil d'expert** : Le Premium convient à 90% des foyers français. Réservoir 15L, reminéralisation, auto-rinçage... C'est le sweet spot qualité-prix !\n\nCombien êtes-vous à la maison ?",
+                    "suggestions": ["👥 1-2 personnes", "👨‍👩‍👧 3-4 personnes", "👨‍👩‍👧‍👦 5+ personnes"],
+                    "type": "family_sizing"
+                }
+            
+            # Message par défaut - expert osmoseurs
             return {
-                "message": "Je comprends votre question ! 😊 \n\nJe suis Thomas, votre conseiller spécialisé en osmoseurs Josmose. Je peux vous aider avec :\n\n🎯 **Choisir votre osmoseur idéal**\n📋 **Comparer nos modèles BlueMountain**\n💰 **Calculer vos économies**\n🔧 **Infos installation et garanties**\n📞 **Vous mettre en contact avec un expert**\n\nQue puis-je faire pour vous aujourd'hui ? N'hésitez pas à être précis, je suis là pour vous guider ! 💧",
-                "suggestions": ["🎯 Questionnaire personnalisé", "📦 Voir les produits", "💰 Calculer mes économies"],
+                "message": "🤔 Bonne question ! Je suis Thomas, **expert osmoseurs** chez Josmose.com 💧\n\n**Je peux vous aider avec** :\n🎯 Choisir l'osmoseur parfait pour votre foyer\n💰 Calculer vos économies vs bouteilles\n🔧 Tout savoir sur l'installation gratuite\n🏥 Comprendre les bénéfices santé\n📞 Vous mettre en contact avec un expert\n\n**Notre spécialité** : Transformer votre eau du robinet en eau plus pure que les bouteilles, directement chez vous !\n\nQue voulez-vous savoir sur nos osmoseurs ?",
+                "suggestions": ["💧 Comment ça marche ?", "💰 Voir les prix", "🏠 Lequel choisir ?"],
                 "type": "help"
             }
             
         except Exception as e:
-            logger.error(f"Erreur génération réponse Thomas: {e}")
+            logger.error(f"Erreur Thomas osmoseurs: {e}")
             return {
-                "message": "Désolé, j'ai eu un petit problème technique ! 😅\n\nMais je suis toujours là pour vous aider à choisir votre osmoseur idéal.\n\nPour commencer, vous préférez :\n🎯 Faire notre questionnaire personnalisé\n📦 Voir nos produits BlueMountain\n📞 Parler directement à un conseiller",
-                "suggestions": ["🎯 Questionnaire", "📦 Produits", "📞 Conseiller"],
+                "message": "Désolé pour ce petit bug ! 😅\n\nJe suis Thomas, votre expert osmoseurs Josmose.com.\n\n💧 **Je peux vous aider à** :\n🎯 Choisir votre osmoseur idéal\n💰 Calculer vos économies\n🔧 Tout savoir sur l'installation\n\nQue souhaitez-vous savoir sur nos osmoseurs BlueMountain ?",
+                "suggestions": ["💧 Comment ça marche ?", "💰 Prix osmoseurs", "📞 Expert au téléphone"],
                 "type": "error"
             }
 
-# Instance globale
-thomas_chatbot = ThomasChatbot()
+# Instance globale Thomas Osmoseurs
+thomas_osmoseurs = ThomasChatbot()
 
 def get_thomas_response(message: str, user_context: Dict = None) -> Dict:
-    """Interface principale pour obtenir une réponse de Thomas"""
-    return thomas_chatbot.generate_response(message, user_context)
+    """Interface pour Thomas Expert Osmoseurs"""
+    return thomas_osmoseurs.generate_response(message, user_context)
