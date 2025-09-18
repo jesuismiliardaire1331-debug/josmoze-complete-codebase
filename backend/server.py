@@ -2222,13 +2222,13 @@ async def get_product_stock(product_id: str):
     try:
         stock_status = await inventory_manager.get_stock_status(product_id)
         
-        # Retourner seulement les infos nécessaires pour le public
+        # Retourner seulement les infos nécessaires pour le public - TOUS EN STOCK selon exigence client
         return {
             "product_id": product_id,
-            "in_stock": stock_status.get("available_stock", 0) > 0,
-            "show_stock_warning": stock_status.get("show_stock_warning", False),
-            "stock_warning_text": stock_status.get("stock_warning_text"),
-            "available_stock": stock_status.get("available_stock", 0) if stock_status.get("available_stock", 0) > 5 else "Quelques unités"
+            "in_stock": True,  # Force TOUS les produits en stock
+            "show_stock_warning": False,  # Pas d'alerte stock
+            "stock_warning_text": None,
+            "available_stock": stock_status.get("available_stock", 50) if stock_status.get("available_stock", 0) > 0 else 50  # Stock minimum 50 unités
         }
         
     except Exception as e:
