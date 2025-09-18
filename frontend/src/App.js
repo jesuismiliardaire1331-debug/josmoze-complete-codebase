@@ -39,6 +39,20 @@ const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+
+  // Auto-popup questionnaire après 20 secondes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Vérifier si l'utilisateur n'a pas déjà interagi avec le questionnaire
+      const hasSeenQuestionnaire = localStorage.getItem('josmoze_questionnaire_seen');
+      if (!hasSeenQuestionnaire && customerType === 'B2C') {
+        setShowQuestionnaire(true);
+        localStorage.setItem('josmoze_questionnaire_seen', 'true');
+      }
+    }, 20000); // 20 secondes
+
+    return () => clearTimeout(timer);
+  }, [customerType]);
   const { i18n } = useTranslation();
   const { currentCurrency, formatPrice } = useTranslationService();
 
