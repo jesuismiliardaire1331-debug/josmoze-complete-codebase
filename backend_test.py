@@ -1239,6 +1239,369 @@ class BackendTester:
             self.log_test("Product Stock Info", False, f"Exception: {str(e)}")
             return False
 
+    # ========== THOMAS V2 CHATBOT TESTS - VALIDATION CRITIQUE ==========
+    
+    def test_thomas_v2_welcome_message(self):
+        """Test 1: Thomas doit dire 'Bonjour ! Je suis Thomas, votre conseiller Josmoze...'"""
+        try:
+            # Simuler une première connexion pour déclencher le message d'accueil
+            chat_data = {
+                "message": "Bonjour",
+                "session_id": "test_session_welcome",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "prompt": "THOMAS_PROMPT_V2",
+                    "knowledge_base": {}
+                },
+                "language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data:
+                    response_text = data["response"].lower()
+                    
+                    # Vérifier les éléments clés du message d'accueil
+                    welcome_indicators = [
+                        "bonjour",
+                        "thomas",
+                        "conseiller",
+                        "josmoze" or "josmose"
+                    ]
+                    
+                    found_indicators = [indicator for indicator in welcome_indicators 
+                                     if indicator in response_text]
+                    
+                    if len(found_indicators) >= 3:
+                        self.log_test("THOMAS V2 - Message d'Accueil", True, 
+                                    f"✅ Message d'accueil détecté avec éléments: {found_indicators}")
+                        return True
+                    else:
+                        self.log_test("THOMAS V2 - Message d'Accueil", False, 
+                                    f"❌ Message d'accueil incomplet. Trouvé: {found_indicators}, Réponse: {data['response'][:100]}...")
+                        return False
+                else:
+                    self.log_test("THOMAS V2 - Message d'Accueil", False, "Pas de réponse dans la structure", data)
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Message d'Accueil", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Message d'Accueil", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_greeting_response(self):
+        """Test 2: Réponse à 'Bonjour Thomas' avec personnalité bienveillante"""
+        try:
+            chat_data = {
+                "message": "Bonjour Thomas",
+                "session_id": "test_session_greeting",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "prompt": "THOMAS_PROMPT_V2",
+                    "knowledge_base": {}
+                },
+                "language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data:
+                    response_text = data["response"].lower()
+                    
+                    # Vérifier personnalité bienveillante
+                    benevolent_indicators = [
+                        "bonjour",
+                        "ravi" or "heureux" or "plaisir",
+                        "aider" or "accompagner" or "conseiller",
+                        "osmoseur" or "eau pure"
+                    ]
+                    
+                    found_indicators = [indicator for indicator in benevolent_indicators 
+                                     if any(word in response_text for word in indicator.split(" or "))]
+                    
+                    # Vérifier qu'il n'y a pas de ton agressif
+                    aggressive_words = ["urgent", "maintenant", "immédiatement", "obligé"]
+                    has_aggressive = any(word in response_text for word in aggressive_words)
+                    
+                    if len(found_indicators) >= 2 and not has_aggressive:
+                        self.log_test("THOMAS V2 - Réponse Bienveillante", True, 
+                                    f"✅ Ton bienveillant confirmé: {found_indicators}")
+                        return True
+                    else:
+                        self.log_test("THOMAS V2 - Réponse Bienveillante", False, 
+                                    f"❌ Ton insuffisamment bienveillant. Trouvé: {found_indicators}, Agressif: {has_aggressive}")
+                        return False
+                else:
+                    self.log_test("THOMAS V2 - Réponse Bienveillante", False, "Pas de réponse", data)
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Réponse Bienveillante", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Réponse Bienveillante", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_family_recommendation(self):
+        """Test 3: 'Quel osmoseur pour 4 personnes ?' doit recommander Premium 549€"""
+        try:
+            chat_data = {
+                "message": "Quel osmoseur pour 4 personnes ?",
+                "session_id": "test_session_family",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "prompt": "THOMAS_PROMPT_V2",
+                    "knowledge_base": {}
+                },
+                "language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data:
+                    response_text = data["response"].lower()
+                    
+                    # Vérifier recommandation Premium 549€
+                    premium_indicators = [
+                        "premium",
+                        "549" or "549€",
+                        "4 personnes" or "famille",
+                        "recommande" or "conseille" or "idéal"
+                    ]
+                    
+                    found_indicators = []
+                    for indicator in premium_indicators:
+                        if any(word in response_text for word in indicator.split(" or ")):
+                            found_indicators.append(indicator.split(" or ")[0])
+                    
+                    if len(found_indicators) >= 3:
+                        self.log_test("THOMAS V2 - Recommandation Famille 4 Personnes", True, 
+                                    f"✅ Premium 549€ recommandé pour famille 4 personnes: {found_indicators}")
+                        return True
+                    else:
+                        self.log_test("THOMAS V2 - Recommandation Famille 4 Personnes", False, 
+                                    f"❌ Recommandation Premium 549€ manquante. Trouvé: {found_indicators}, Réponse: {data['response'][:150]}...")
+                        return False
+                else:
+                    self.log_test("THOMAS V2 - Recommandation Famille 4 Personnes", False, "Pas de réponse", data)
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Recommandation Famille 4 Personnes", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Recommandation Famille 4 Personnes", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_premium_price_inquiry(self):
+        """Test 4: 'Prix de l'Osmoseur Premium ?' doit mentionner 549€ et caractéristiques"""
+        try:
+            chat_data = {
+                "message": "Prix de l'Osmoseur Premium ?",
+                "session_id": "test_session_price",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "prompt": "THOMAS_PROMPT_V2",
+                    "knowledge_base": {}
+                },
+                "language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data:
+                    response_text = data["response"].lower()
+                    
+                    # Vérifier prix 549€ et caractéristiques
+                    price_indicators = [
+                        "549" or "549€",
+                        "premium",
+                        "étapes" or "filtration",
+                        "reminéralisation" or "alcaline" or "ph"
+                    ]
+                    
+                    found_indicators = []
+                    for indicator in price_indicators:
+                        if any(word in response_text for word in indicator.split(" or ")):
+                            found_indicators.append(indicator.split(" or ")[0])
+                    
+                    if len(found_indicators) >= 3:
+                        self.log_test("THOMAS V2 - Prix Premium avec Caractéristiques", True, 
+                                    f"✅ Prix 549€ et caractéristiques Premium mentionnés: {found_indicators}")
+                        return True
+                    else:
+                        self.log_test("THOMAS V2 - Prix Premium avec Caractéristiques", False, 
+                                    f"❌ Prix 549€ ou caractéristiques manquants. Trouvé: {found_indicators}, Réponse: {data['response'][:150]}...")
+                        return False
+                else:
+                    self.log_test("THOMAS V2 - Prix Premium avec Caractéristiques", False, "Pas de réponse", data)
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Prix Premium avec Caractéristiques", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Prix Premium avec Caractéristiques", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_price_objection_handling(self):
+        """Test 5: 'C'est trop cher' doit proposer Essentiel 449€ avec ton bienveillant"""
+        try:
+            chat_data = {
+                "message": "C'est trop cher",
+                "session_id": "test_session_objection",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [
+                        {"role": "user", "content": "Prix de l'Osmoseur Premium ?"},
+                        {"role": "assistant", "content": "L'Osmoseur Premium BlueMountain est à 549€..."}
+                    ],
+                    "prompt": "THOMAS_PROMPT_V2",
+                    "knowledge_base": {}
+                },
+                "language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data:
+                    response_text = data["response"].lower()
+                    
+                    # Vérifier proposition Essentiel 449€ avec ton bienveillant
+                    objection_handling = [
+                        "comprends" or "comprendre",
+                        "essentiel",
+                        "449" or "449€",
+                        "budget" or "économique" or "abordable"
+                    ]
+                    
+                    # Vérifier ton bienveillant (pas de pression)
+                    benevolent_tone = [
+                        "comprends",
+                        "solution" or "alternative",
+                        "adapté" or "convient"
+                    ]
+                    
+                    found_objection = []
+                    found_benevolent = []
+                    
+                    for indicator in objection_handling:
+                        if any(word in response_text for word in indicator.split(" or ")):
+                            found_objection.append(indicator.split(" or ")[0])
+                    
+                    for indicator in benevolent_tone:
+                        if any(word in response_text for word in indicator.split(" or ")):
+                            found_benevolent.append(indicator.split(" or ")[0])
+                    
+                    # Vérifier absence de pression agressive
+                    aggressive_words = ["urgent", "maintenant", "limité", "dernière chance"]
+                    has_aggressive = any(word in response_text for word in aggressive_words)
+                    
+                    if len(found_objection) >= 3 and len(found_benevolent) >= 2 and not has_aggressive:
+                        self.log_test("THOMAS V2 - Gestion Objection Prix", True, 
+                                    f"✅ Essentiel 449€ proposé avec ton bienveillant: {found_objection}, {found_benevolent}")
+                        return True
+                    else:
+                        self.log_test("THOMAS V2 - Gestion Objection Prix", False, 
+                                    f"❌ Gestion objection insuffisante. Objection: {found_objection}, Bienveillant: {found_benevolent}, Agressif: {has_aggressive}")
+                        return False
+                else:
+                    self.log_test("THOMAS V2 - Gestion Objection Prix", False, "Pas de réponse", data)
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Gestion Objection Prix", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Gestion Objection Prix", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_api_endpoint_functionality(self):
+        """Test 6: Vérifier que l'endpoint /api/ai-agents/chat fonctionne correctement"""
+        try:
+            # Test basique de fonctionnalité de l'endpoint
+            chat_data = {
+                "message": "Test de fonctionnalité",
+                "session_id": "test_session_api",
+                "agent": "thomas",
+                "context": {},
+                "language": "fr"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Vérifier structure de réponse V2
+                required_fields = ["response", "agent", "timestamp"]
+                optional_fields = ["suggestions", "type", "session_id"]
+                
+                found_required = [field for field in required_fields if field in data]
+                found_optional = [field for field in optional_fields if field in data]
+                
+                if len(found_required) == len(required_fields):
+                    # Vérifier que l'agent est bien Thomas
+                    if data.get("agent") == "thomas":
+                        self.log_test("THOMAS V2 - API Endpoint Fonctionnel", True, 
+                                    f"✅ Endpoint fonctionnel, structure V2 correcte: {found_required + found_optional}")
+                        return True
+                    else:
+                        self.log_test("THOMAS V2 - API Endpoint Fonctionnel", False, 
+                                    f"Agent incorrect: {data.get('agent')} (attendu: thomas)")
+                        return False
+                else:
+                    missing = [field for field in required_fields if field not in data]
+                    self.log_test("THOMAS V2 - API Endpoint Fonctionnel", False, 
+                                f"Champs requis manquants: {missing}")
+                    return False
+            else:
+                self.log_test("THOMAS V2 - API Endpoint Fonctionnel", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - API Endpoint Fonctionnel", False, f"Exception: {str(e)}")
+            return False
+
     # ========== AI AGENTS SYSTEM TESTS - VALIDATION PHASE 1 ==========
     
     def test_ai_agents_dashboard(self):
