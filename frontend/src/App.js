@@ -2091,6 +2091,7 @@ function App() {
                     <Route path="/admin/upload" element={<AdminUpload />} />
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/blog/:slug" element={<BlogArticle />} />
+                    <Route path="/temoignages" element={<TestimonialsPage />} />
                   </Routes>
                 </main>
                 <Footer />
