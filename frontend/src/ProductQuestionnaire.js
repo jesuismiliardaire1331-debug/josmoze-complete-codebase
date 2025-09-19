@@ -50,6 +50,14 @@ const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation, formatPrice }
         { value: '400-700', label: '400€ - 700€' },
         { value: '700+', label: '700€+' }
       ]
+    },
+    {
+      id: 'shower_interest',
+      question: 'En plus de votre eau de boisson, seriez-vous intéressé(e) par l\'amélioration de la qualité de l\'eau de votre douche pour prendre soin de votre peau et de vos cheveux ?',
+      options: [
+        { value: 'oui', label: 'Oui, cela m\'intéresse' },
+        { value: 'non', label: 'Non, merci' }
+      ]
     }
   ];
 
