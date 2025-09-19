@@ -189,7 +189,11 @@ const AppProvider = ({ children }) => {
   };
 
   const closeQuestionnaire = () => {
+    console.log('🎯 Fermeture définitive questionnaire');
     setShowQuestionnaire(false);
+    // Marquer comme vu de façon permanente
+    sessionStorage.setItem('josmoze_questionnaire_shown', 'true');
+    localStorage.setItem('josmoze_questionnaire_seen', 'true');
   };
 
   const handleQuestionnaireRecommendation = (recommendation) => {
