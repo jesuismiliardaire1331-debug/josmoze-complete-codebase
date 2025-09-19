@@ -138,7 +138,7 @@ CRM_USERS = {
         "professional_email": "admin@josmoze.com",
         "full_name": "Administrateur Principal",
         "role": "admin",  # Rôle admin avec toutes les permissions
-        "password_hash": "$2b$12$ZrO5kKcFkm.zLaI4Vb9Y3u7nF8xHdcQpG2lS1eWwNm5t6rXpJzK4s",  # "JosmozAdmin2025!"
+        "password_hash": "$2b$12$BFms58wxInAD2gGTFAOOTOJ5XJGb0YGNbXq/45v55zdu5SM/vyVj6",  # "JosmozAdmin2025!"
         "department": "Administration",
         "position": "Administrateur Système",
         "is_active": True,
