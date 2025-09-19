@@ -4,6 +4,8 @@
   "private": true,
   "homepage": "/",
   "dependencies": {
+    "@stripe/react-stripe-js": "^4.0.2",
+    "@stripe/stripe-js": "^7.9.0",
     "axios": "^1.8.4",
     "cra-template": "1.2.0",
     "i18next": "^23.7.8",
