@@ -1453,6 +1453,203 @@ class BackendTester:
             self.log_test("Thomas Chatbot V2", False, f"Exception: {str(e)}")
             return False
 
+    def test_thomas_chatbot_v2_refonte_validation(self):
+        """🤖 VALIDATION PHASE 5 - THOMAS CHATBOT V2 REFONTE - Tests complets selon spécifications"""
+        try:
+            print("\n" + "="*80)
+            print("🤖 VALIDATION PHASE 5 - THOMAS CHATBOT V2 REFONTE")
+            print("="*80)
+            
+            # Test 1: Accueil avec nouveau prompt professionnel
+            print("\n✅ TEST 1 - ACCUEIL THOMAS V2")
+            chat_data_1 = {
+                "message": "Bonjour",
+                "agent": "thomas",
+                "session_id": "test_refonte_001"
+            }
+            
+            response_1 = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data_1,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response_1.status_code == 200:
+                data_1 = response_1.json()
+                response_text_1 = data_1.get("response", "")
+                
+                # Vérifier identité Thomas et ton bienveillant
+                thomas_identity_check = any(word in response_text_1.lower() for word in ["thomas", "conseiller", "expert", "josmoze"])
+                friendly_tone_check = any(word in response_text_1 for word in ["😊", "👋", "Bonjour", "Comment puis-je"])
+                
+                print(f"   - Identité Thomas: {'✅' if thomas_identity_check else '❌'}")
+                print(f"   - Ton bienveillant: {'✅' if friendly_tone_check else '❌'}")
+                print(f"   - Réponse: {response_text_1[:150]}...")
+            else:
+                print(f"   ❌ Erreur API: {response_1.status_code}")
+                return False
+            
+            # Test 2: Vérification des prix corrects (Essentiel 449€, Premium 549€, Prestige 899€)
+            print("\n✅ TEST 2 - PRIX CORRECTS THOMAS V2")
+            chat_data_2 = {
+                "message": "Quels sont vos prix d'osmoseurs ?",
+                "agent": "thomas",
+                "session_id": "test_refonte_002"
+            }
+            
+            response_2 = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data_2,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response_2.status_code == 200:
+                data_2 = response_2.json()
+                response_text_2 = data_2.get("response", "")
+                
+                # Vérifier les prix corrects
+                prix_essentiel = "449" in response_text_2
+                prix_premium = "549" in response_text_2
+                prix_prestige = "899" in response_text_2
+                
+                print(f"   - Essentiel 449€: {'✅' if prix_essentiel else '❌'}")
+                print(f"   - Premium 549€: {'✅' if prix_premium else '❌'}")
+                print(f"   - Prestige 899€: {'✅' if prix_prestige else '❌'}")
+                print(f"   - Réponse: {response_text_2[:200]}...")
+                
+                if not all([prix_essentiel, prix_premium, prix_prestige]):
+                    print("   ⚠️ ATTENTION: Prix incorrects détectés!")
+            else:
+                print(f"   ❌ Erreur API: {response_2.status_code}")
+                return False
+            
+            # Test 3: Ton commercial bienveillant (pas agressif)
+            print("\n✅ TEST 3 - TON COMMERCIAL BIENVEILLANT")
+            chat_data_3 = {
+                "message": "C'est un peu cher pour moi",
+                "agent": "thomas",
+                "session_id": "test_refonte_003"
+            }
+            
+            response_3 = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data_3,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response_3.status_code == 200:
+                data_3 = response_3.json()
+                response_text_3 = data_3.get("response", "")
+                
+                # Vérifier ton bienveillant (pas de pression agressive)
+                mots_agressifs = ["immédiatement", "maintenant", "urgent", "dernière chance", "limité"]
+                mots_bienveillants = ["comprends", "budget", "essentiel", "débuter", "rentabilisé"]
+                
+                ton_agressif = any(mot in response_text_3.lower() for mot in mots_agressifs)
+                ton_bienveillant = any(mot in response_text_3.lower() for mot in mots_bienveillants)
+                
+                print(f"   - Pas de pression agressive: {'✅' if not ton_agressif else '❌'}")
+                print(f"   - Ton bienveillant: {'✅' if ton_bienveillant else '❌'}")
+                print(f"   - Réponse: {response_text_3[:200]}...")
+            else:
+                print(f"   ❌ Erreur API: {response_3.status_code}")
+                return False
+            
+            # Test 4: Nouveau prompt THOMAS_PROMPT_V2 utilisé
+            print("\n✅ TEST 4 - NOUVEAU PROMPT V2 ACTIF")
+            chat_data_4 = {
+                "message": "Parlez-moi du filtre douche",
+                "agent": "thomas",
+                "session_id": "test_refonte_004"
+            }
+            
+            response_4 = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data_4,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response_4.status_code == 200:
+                data_4 = response_4.json()
+                response_text_4 = data_4.get("response", "")
+                
+                # Vérifier mention du filtre douche à 39.90€
+                filtre_douche_prix = "39" in response_text_4 and ("90" in response_text_4 or "€" in response_text_4)
+                filtre_douche_mention = "filtre" in response_text_4.lower() and "douche" in response_text_4.lower()
+                
+                print(f"   - Filtre douche mentionné: {'✅' if filtre_douche_mention else '❌'}")
+                print(f"   - Prix 39.90€ correct: {'✅' if filtre_douche_prix else '❌'}")
+                print(f"   - Réponse: {response_text_4[:200]}...")
+            else:
+                print(f"   ❌ Erreur API: {response_4.status_code}")
+                return False
+            
+            # Test 5: Personnalité Thomas (expert technique accessible)
+            print("\n✅ TEST 5 - PERSONNALITÉ THOMAS EXPERT")
+            chat_data_5 = {
+                "message": "Comment fonctionne l'osmose inverse ?",
+                "agent": "thomas",
+                "session_id": "test_refonte_005"
+            }
+            
+            response_5 = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data_5,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response_5.status_code == 200:
+                data_5 = response_5.json()
+                response_text_5 = data_5.get("response", "")
+                
+                # Vérifier expertise technique accessible
+                termes_techniques = ["membrane", "filtration", "étapes", "micron", "contaminants"]
+                explication_accessible = any(mot in response_text_5.lower() for mot in ["simple", "expliqué", "facile", "comprendre"])
+                expertise_technique = any(mot in response_text_5.lower() for mot in termes_techniques)
+                
+                print(f"   - Expertise technique: {'✅' if expertise_technique else '❌'}")
+                print(f"   - Explication accessible: {'✅' if explication_accessible else '❌'}")
+                print(f"   - Réponse: {response_text_5[:200]}...")
+            else:
+                print(f"   ❌ Erreur API: {response_5.status_code}")
+                return False
+            
+            # Résumé des tests
+            print("\n" + "="*80)
+            print("📊 RÉSUMÉ VALIDATION THOMAS CHATBOT V2 REFONTE")
+            print("="*80)
+            
+            tests_results = [
+                ("Accueil professionnel", thomas_identity_check and friendly_tone_check),
+                ("Prix corrects (449€/549€/899€)", prix_essentiel and prix_premium and prix_prestige),
+                ("Ton commercial bienveillant", not ton_agressif and ton_bienveillant),
+                ("Filtre douche 39.90€", filtre_douche_mention and filtre_douche_prix),
+                ("Expert technique accessible", expertise_technique and explication_accessible)
+            ]
+            
+            success_count = sum(1 for _, result in tests_results if result)
+            total_tests = len(tests_results)
+            
+            for test_name, result in tests_results:
+                status = "✅ PASS" if result else "❌ FAIL"
+                print(f"{status} {test_name}")
+            
+            success_rate = (success_count / total_tests) * 100
+            print(f"\n🎯 TAUX DE RÉUSSITE: {success_count}/{total_tests} ({success_rate:.1f}%)")
+            
+            if success_rate >= 80:
+                self.log_test("🤖 THOMAS CHATBOT V2 REFONTE - VALIDATION COMPLÈTE", True, 
+                            f"✅ Validation réussie: {success_count}/{total_tests} tests passés ({success_rate:.1f}%)")
+                return True
+            else:
+                self.log_test("🤖 THOMAS CHATBOT V2 REFONTE - VALIDATION COMPLÈTE", False, 
+                            f"❌ Validation échouée: {success_count}/{total_tests} tests passés ({success_rate:.1f}%)")
+                return False
+                
+        except Exception as e:
+            self.log_test("🤖 THOMAS CHATBOT V2 REFONTE - VALIDATION COMPLÈTE", False, f"Exception: {str(e)}")
+            return False
+
     def test_inventory_dashboard(self):
         """Test GET /api/crm/inventory/dashboard - Dashboard stock avec alertes colorées"""
         try:
