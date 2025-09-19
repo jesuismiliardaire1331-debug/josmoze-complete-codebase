@@ -650,6 +650,7 @@ async def get_blog_manager():
 async def initialize_default_articles():
     """Initialiser les articles par défaut"""
     manager = await get_blog_manager()
+    await manager.initialize()  # S'assurer que la DB est initialisée
     
     for article_data in JOSMOZE_DEFAULT_ARTICLES:
         # Vérifier si l'article existe déjà
