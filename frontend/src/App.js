@@ -36,11 +36,13 @@ const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
   const [userLocation, setUserLocation] = useState(null);
-  // 🛒 CORRECTION PANIER - Persistance localStorage
+  // 🛒 CORRECTION PANIER - Initialisation CORRECTE depuis localStorage
   const [cart, setCart] = useState(() => {
     try {
       const savedCart = localStorage.getItem('josmoze_cart');
-      return savedCart ? JSON.parse(savedCart) : [];
+      const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+      console.log('🛒 INIT - Panier chargé depuis localStorage:', parsedCart.length, 'articles');
+      return parsedCart;
     } catch (error) {
       console.error('Error loading cart from localStorage:', error);
       return [];
@@ -62,15 +64,33 @@ const AppProvider = ({ children }) => {
     }
   });
 
-  // 🛒 SAUVEGARDE AUTOMATIQUE PANIER dans localStorage
+  // 🛒 CORRECTION CRITIQUE - Synchronisation bidirectionnelle localStorage ↔ état
   useEffect(() => {
     try {
       localStorage.setItem('josmoze_cart', JSON.stringify(cart));
-      console.log('🛒 Panier sauvegardé:', cart.length, 'articles');
+      console.log('🛒 Panier synchronisé avec localStorage:', cart.length, 'articles', cart);
     } catch (error) {
       console.error('Error saving cart to localStorage:', error);
     }
   }, [cart]);
+
+  // 🛒 CORRECTION - Synchronisation inverse localStorage → état (page refresh)
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'josmoze_cart') {
+        try {
+          const newCart = e.newValue ? JSON.parse(e.newValue) : [];
+          console.log('🛒 Synchronisation localStorage → état:', newCart.length);
+          setCart(newCart);
+        } catch (error) {
+          console.error('Error syncing cart from localStorage:', error);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   // Auto-popup questionnaire après 15 secondes - UNE SEULE FOIS PAR SESSION
   useEffect(() => {
