@@ -1239,6 +1239,190 @@ class BackendTester:
             self.log_test("Product Stock Info", False, f"Exception: {str(e)}")
             return False
 
+    # ========== AGENT AI UPLOAD - TESTS CRITIQUES ==========
+    
+    def test_ai_product_scraper_endpoint_exists(self):
+        """Test POST /api/ai-product-scraper/analyze - Endpoint exists"""
+        try:
+            # Test with minimal data to check if endpoint exists
+            test_data = {"url": "https://www.aliexpress.com/item/1005006854441059.html"}
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-product-scraper/analyze",
+                json=test_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            # Endpoint should exist (not 404)
+            if response.status_code != 404:
+                self.log_test("AI Product Scraper - Endpoint Exists", True, 
+                            f"✅ Endpoint exists (status: {response.status_code})")
+                return True
+            else:
+                self.log_test("AI Product Scraper - Endpoint Exists", False, 
+                            "❌ Endpoint not found (404)")
+                return False
+        except Exception as e:
+            self.log_test("AI Product Scraper - Endpoint Exists", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_ai_product_scraper_aliexpress_analysis(self):
+        """Test POST /api/ai-product-scraper/analyze - AliExpress product analysis"""
+        try:
+            # Test with real AliExpress URL as specified in review request
+            aliexpress_data = {
+                "url": "https://www.aliexpress.com/item/1005006854441059.html"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-product-scraper/analyze",
+                json=aliexpress_data,
+                headers={"Content-Type": "application/json"},
+                timeout=30  # Longer timeout for scraping
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields
+                required_fields = ["success", "title", "price", "images", "platform"]
+                
+                if all(field in data for field in required_fields):
+                    success = data.get("success", False)
+                    title = data.get("title", "")
+                    price = data.get("price", 0)
+                    images_count = data.get("images", 0)
+                    platform = data.get("platform", "")
+                    
+                    # Critical check: Images should be > 0 (user reported "0 images found" issue)
+                    if success and images_count > 0:
+                        self.log_test("AI Product Scraper - AliExpress Analysis", True, 
+                                    f"✅ AliExpress analysis successful: '{title}', {price}€, {images_count} images, platform: {platform}")
+                        return True
+                    elif success and images_count == 0:
+                        self.log_test("AI Product Scraper - AliExpress Analysis", False, 
+                                    f"❌ CRITICAL ISSUE: 0 images found! Title: '{title}', Price: {price}€, Platform: {platform}")
+                        return False
+                    else:
+                        self.log_test("AI Product Scraper - AliExpress Analysis", False, 
+                                    f"❌ Analysis failed: success={success}, images={images_count}")
+                        return False
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_test("AI Product Scraper - AliExpress Analysis", False, 
+                                f"❌ Missing fields: {missing}", data)
+                    return False
+            else:
+                self.log_test("AI Product Scraper - AliExpress Analysis", False, 
+                            f"❌ Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("AI Product Scraper - AliExpress Analysis", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_ai_product_scraper_data_extraction(self):
+        """Test AI Product Scraper - Data extraction validation"""
+        try:
+            # Test with another AliExpress URL to validate data extraction
+            test_data = {
+                "url": "https://www.aliexpress.com/item/1005006854441059.html"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-product-scraper/analyze",
+                json=test_data,
+                headers={"Content-Type": "application/json"},
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success"):
+                    product_data = data.get("product_data", {})
+                    
+                    # Validate extracted data structure
+                    title = product_data.get("title", data.get("title", ""))
+                    price = product_data.get("price", data.get("price", 0))
+                    images_count = product_data.get("images_count", data.get("images", 0))
+                    platform = product_data.get("platform", data.get("platform", ""))
+                    
+                    # Validation criteria
+                    title_valid = len(title) > 5  # Title should be meaningful
+                    price_valid = price > 0  # Price should be positive
+                    images_valid = images_count > 0  # Images should be found
+                    platform_valid = platform in ["aliexpress", "temu", "amazon", "generic"]
+                    
+                    validation_results = {
+                        "title": title_valid,
+                        "price": price_valid, 
+                        "images": images_valid,
+                        "platform": platform_valid
+                    }
+                    
+                    passed_validations = sum(validation_results.values())
+                    total_validations = len(validation_results)
+                    
+                    if passed_validations >= 3:  # At least 3/4 validations should pass
+                        self.log_test("AI Product Scraper - Data Extraction", True, 
+                                    f"✅ Data extraction valid ({passed_validations}/{total_validations}): "
+                                    f"Title: '{title[:50]}...', Price: {price}€, Images: {images_count}, Platform: {platform}")
+                        return True
+                    else:
+                        failed_validations = [k for k, v in validation_results.items() if not v]
+                        self.log_test("AI Product Scraper - Data Extraction", False, 
+                                    f"❌ Data extraction failed ({passed_validations}/{total_validations}): "
+                                    f"Failed: {failed_validations}")
+                        return False
+                else:
+                    self.log_test("AI Product Scraper - Data Extraction", False, 
+                                f"❌ Analysis not successful: {data.get('message', 'Unknown error')}")
+                    return False
+            else:
+                self.log_test("AI Product Scraper - Data Extraction", False, 
+                            f"❌ Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("AI Product Scraper - Data Extraction", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_ai_product_scraper_supported_platforms(self):
+        """Test GET /api/ai-scraper/platforms - Supported platforms"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/ai-scraper/platforms")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if data.get("success") and "platforms" in data:
+                    platforms = data["platforms"]
+                    expected_platforms = ["aliexpress", "temu", "amazon", "alibaba"]
+                    
+                    found_platforms = []
+                    for platform in expected_platforms:
+                        if platform in platforms and platforms[platform].get("supported"):
+                            found_platforms.append(platform)
+                    
+                    if len(found_platforms) >= 3:  # At least 3 major platforms supported
+                        self.log_test("AI Product Scraper - Supported Platforms", True, 
+                                    f"✅ {len(found_platforms)} platforms supported: {found_platforms}")
+                        return True
+                    else:
+                        self.log_test("AI Product Scraper - Supported Platforms", False, 
+                                    f"❌ Only {len(found_platforms)} platforms supported: {found_platforms}")
+                        return False
+                else:
+                    self.log_test("AI Product Scraper - Supported Platforms", False, 
+                                "❌ Invalid response format", data)
+                    return False
+            else:
+                self.log_test("AI Product Scraper - Supported Platforms", False, 
+                            f"❌ Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("AI Product Scraper - Supported Platforms", False, f"Exception: {str(e)}")
+            return False
+
     # ========== THOMAS V2 CHATBOT TESTS - VALIDATION CRITIQUE ==========
     
     def test_thomas_v2_welcome_message(self):
