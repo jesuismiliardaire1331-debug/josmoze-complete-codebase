@@ -266,9 +266,9 @@ backend:
 
   - task: "Thomas ChatBot V2 - Agent IA Enrichi"
     implemented: true
-    working: true
+    working: false
     file: "frontend/src/ChatBot_V2.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -284,6 +284,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "🤖 THOMAS CHATBOT TESTS PRIORITAIRES COMPLETS - VALIDATION RÉUSSIE! ✅ PHASE 1 - Accès chatbot: Bouton chat 💬 visible en bas droite avec badge V2, interface Thomas accessible ✅ PHASE 2 - Tests réponses produits: 4/4 messages testés avec succès via API backend (UI bloqué par modal questionnaire) ✅ PHASE 3 - Validation réponses: Thomas répond précisément avec prix corrects (Essentiel 449€, Premium 549€, Prestige 899€), caractéristiques techniques détaillées, recommandations personnalisées famille 4 personnes → Premium 549€ ✅ PHASE 4 - Ton commercial bienveillant: Persona Thomas expert confirmé, suggestions pertinentes, pas de réponses génériques ⚠️ PROBLÈME MINEUR UI: Modal questionnaire bloque interaction directe chat (problème overlay), mais backend API 100% fonctionnel. RÉSULTAT: Thomas Chatbot répond précisément sur tous les produits comme spécifié, backend parfaitement opérationnel, seul problème UI overlay facilement corrigible."
+        - working: false
+          agent: "testing"
+          comment: "🤖 VALIDATION PHASE 5 - THOMAS CHATBOT V2 REFONTE ÉCHOUÉE (60% réussite): ✅ RÉUSSIS: Accueil professionnel (identité Thomas + ton bienveillant), Filtre douche 39.90€ mentionné correctement, Expertise technique accessible avec explications simples, Endpoint API fonctionnel (200 OK). ❌ ÉCHECS CRITIQUES: Prix corrects (449€/549€/899€) non mentionnés lors demande prix - Thomas donne explications générales au lieu des prix spécifiques, Ton commercial bienveillant insuffisant lors objection budget. 🔍 DIAGNOSTIC: Le nouveau THOMAS_PROMPT_V2 du frontend n'est pas correctement utilisé par le backend thomas_chatbot_fixed.py. Les réponses utilisent l'ancienne logique au lieu du nouveau prompt professionnel. CORRECTION REQUISE: Synchroniser backend avec nouveau prompt V2 pour réponses prix spécifiques et ton bienveillant renforcé."
 
   - task: "JOSMOZE Promotions System - Corrections Validation"
     implemented: true
