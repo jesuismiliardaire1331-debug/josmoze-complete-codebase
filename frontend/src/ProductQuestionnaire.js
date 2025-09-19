@@ -6,7 +6,8 @@ const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation, formatPrice }
     household_size: '',
     housing_type: '',
     skill_level: '',
-    budget: ''
+    budget: '',
+    shower_interest: ''
   });
   const [showResults, setShowResults] = useState(false);
   const [recommendation, setRecommendation] = useState(null);
