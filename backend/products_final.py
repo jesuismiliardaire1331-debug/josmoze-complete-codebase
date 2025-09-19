@@ -125,7 +125,7 @@ FINAL_PRODUCTS = [
         "description": "Révolutionnaire ! Purificateur portable qui enrichit l'eau en hydrogène moléculaire. Batterie 8h d'autonomie. Technologie SPE/PEM. Bouteille 420ml incluse. Antioxydant naturel puissant.",
         "price": 79.0,
         "original_price": 99.0,
-        "image": "https://static.wixstatic.com/media/6af6bd_16baeaf62afc42009cf6ece2f46c767a~mv2.png/v1/fill/w_797,h_487,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Les%20b%C3%A9b%C3%A9s%20pleurent%20quand%20ils%20ont%20faim%2C%20ne%20peuvent%20pas%20attendre__%20c'est%20touj_20250220_19362.png",
+        "image": "https://images.unsplash.com/photo-1570615541379-e6b7ab6d4eb9?w=800&h=800&fit=crop&q=80",
         "category": "portable",
         "target_audience": "both",
         "is_gift_eligible": True,
