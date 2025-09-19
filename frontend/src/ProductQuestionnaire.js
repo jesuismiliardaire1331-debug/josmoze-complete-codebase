@@ -64,45 +64,57 @@ const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation, formatPrice }
 
   const getRecommendation = (answers) => {
     // Logique de recommandation basée sur les réponses
-    const { household_size, housing_type, skill_level, budget } = answers;
+    const { household_size, housing_type, skill_level, budget, shower_interest } = answers;
     
-    // Recommandation Prestige pour gros budgets
+    // Recommandation osmoseur principal
+    let mainRecommendation;
     if (budget === '700+') {
-      return {
+      mainRecommendation = {
         id: 'osmoseur-prestige',
         name: 'Osmoseur Prestige - BlueMountain De Comptoir', 
         price: 899.0,
         reason: 'Parfait pour votre budget et besoins premium'
       };
-    }
-    
-    // Recommandation Premium pour budget moyen
-    if (budget === '400-700') {
-      return {
+    } else if (budget === '400-700') {
+      mainRecommendation = {
         id: 'osmoseur-premium',
         name: 'Osmoseur Premium - BlueMountain Avancé',
         price: 549.0,
         reason: 'Excellent rapport qualité-prix pour votre situation'
       };
-    }
-    
-    // Recommandation Essentiel pour petit budget
-    if (budget === '200-400') {
-      return {
+    } else if (budget === '200-400') {
+      mainRecommendation = {
         id: 'osmoseur-essentiel',
         name: 'Osmoseur Essentiel - BlueMountain Compact',
         price: 449.0,
         reason: 'Solution efficace et économique'
       };
+    } else {
+      // Par défaut Premium
+      mainRecommendation = {
+        id: 'osmoseur-premium',
+        name: 'Osmoseur Premium - BlueMountain Avancé',
+        price: 549.0,
+        reason: 'Notre meilleure vente, adapté à la plupart des foyers'
+      };
+    }
+
+    // Ajouter le filtre douche si intéressé
+    if (shower_interest === 'oui') {
+      return {
+        ...mainRecommendation,
+        showerFilter: {
+          id: 'filtre-purificateur-douche-anti-calcaire',
+          name: 'Filtre Purificateur de Douche Anti-Calcaire',
+          price: 39.90,
+          reason: 'Pour une peau plus douce et des cheveux plus brillants'
+        },
+        totalPrice: mainRecommendation.price + 39.90,
+        hasBundle: true
+      };
     }
     
-    // Par défaut Premium
-    return {
-      id: 'osmoseur-premium',
-      name: 'Osmoseur Premium - BlueMountain Avancé',
-      price: 549.0,
-      reason: 'Notre meilleure vente, adapté à la plupart des foyers'
-    };
+    return mainRecommendation;
   };
 
   const handleAnswer = (value) => {
