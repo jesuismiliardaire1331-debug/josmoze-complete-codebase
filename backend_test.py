@@ -10244,7 +10244,7 @@ class BackendTester:
     def print_final_results(self):
         """Print comprehensive test results summary"""
         print("\n" + "="*80)
-        print("📊 RÉSULTATS FINAUX - SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS")
+        print("📊 RÉSULTATS FINAUX - AGENT AI UPLOAD + SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS")
         print("="*80)
         
         # Count results by category
@@ -10254,16 +10254,29 @@ class BackendTester:
         success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
         
         # Categorize results
+        ai_upload_tests = [r for r in self.test_results if "AI Product Scraper" in r["test"]]
         nouveaux_produits = [r for r in self.test_results if "NOUVEAUX PRODUITS" in r["test"] or "Product" in r["test"]]
         promotions_tests = [r for r in self.test_results if "PARRAINAGE" in r["test"] or "OFFRE LANCEMENT" in r["test"] or "RÈGLES PROMOTIONS" in r["test"]]
         integration_tests = [r for r in self.test_results if "Health" in r["test"] or "Performance" in r["test"] or "PromotionsManager" in r["test"]]
-        regression_tests = [r for r in self.test_results if r not in nouveaux_produits + promotions_tests + integration_tests]
+        regression_tests = [r for r in self.test_results if r not in ai_upload_tests + nouveaux_produits + promotions_tests + integration_tests]
         
         print(f"\n📈 STATISTIQUES GLOBALES:")
         print(f"   Total tests: {total_tests}")
         print(f"   ✅ Réussis: {passed_tests}")
         print(f"   ❌ Échoués: {failed_tests}")
         print(f"   📊 Taux de réussite: {success_rate:.1f}%")
+        
+        # PRIORITÉ ABSOLUE - AI UPLOAD AGENT
+        print(f"\n🤖 AGENT AI UPLOAD - PRIORITÉ ABSOLUE ({len(ai_upload_tests)} tests):")
+        ai_upload_passed = sum(1 for r in ai_upload_tests if r["success"])
+        ai_upload_failed = len(ai_upload_tests) - ai_upload_passed
+        print(f"   📊 Résultats: {ai_upload_passed}/{len(ai_upload_tests)} réussis")
+        
+        for result in ai_upload_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"   {status} {result['test']}")
+            if not result["success"] and "0 images" in result["details"]:
+                print(f"      🚨 CRITIQUE: {result['details']}")
         
         print(f"\n📦 NOUVEAUX PRODUITS ({len(nouveaux_produits)} tests):")
         for result in nouveaux_produits:
