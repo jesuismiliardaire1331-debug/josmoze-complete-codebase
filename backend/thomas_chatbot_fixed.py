@@ -119,6 +119,14 @@ class ThomasChatbot:
                     "type": "pricing"
                 }
             
+            # Questions sur produits spécifiques
+            if any(word in message_lower for word in ["produits", "osmoseur", "prix", "comparaison", "catalogue"]):
+                return {
+                    "message": "Excellente question ! 😊 Voici notre gamme complète **Josmose 2025** :\n\n💧 **OSMOSEURS BLUEMOUNTAIN :**\n• **Essentiel Compact** - 449€ (1-2 pers., appartements)\n• **Premium Avancé** - 549€ ⭐ *Le plus populaire* (3-4 pers.)\n• **Prestige De Comptoir** - 899€ (5+ pers., haut de gamme)\n\n🚿 **NOUVEAU ! FILTRE DOUCHE ANTI-CALCAIRE** - 39,90€\n• Peau plus douce, cheveux plus brillants\n• Installation 2 minutes sans outils\n• Idéal peaux sensibles et familles\n• Cartouche 6-8 mois\n\nQuel type de foyer avez-vous ? Je peux vous conseiller plus précisément ! 🏠",
+                    "suggestions": ["🎯 Questionnaire personnalisé", "💧 Osmoseurs seulement", "🚿 Filtre douche détails"],
+                    "type": "product_info"
+                }
+            
             # Recommandations par budget
             if "200-400" in user_message or "400-700" in user_message or "700+" in user_message:
                 if "200-400" in user_message:
