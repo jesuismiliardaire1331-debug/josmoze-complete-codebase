@@ -47,6 +47,9 @@ from translation_guardian_agent import get_translation_guardian, start_translati
 abandoned_cart_service = None
 security_audit_agent = None
 
+# Import admin upload manager
+from admin_upload import get_admin_upload_manager
+
 # Import authentication and AI agents
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info, get_user_permissions
 from ai_agents import get_marketing_automation, MarketingAutomation
