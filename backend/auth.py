@@ -129,6 +129,27 @@ CRM_USERS = {
         "department": "Service Commercial",
         "position": "Équipe Commerciale",
         "is_active": True
+    },
+    # 🔧 COMPTE ADMINISTRATEUR PRINCIPAL - CRÉÉ POUR L'UTILISATEUR
+    "admin@josmoze.com": {
+        "id": "user_admin_principal",
+        "username": "admin@josmoze.com",
+        "email": "admin@josmoze.com",
+        "professional_email": "admin@josmoze.com",
+        "full_name": "Administrateur Principal",
+        "role": "admin",  # Rôle admin avec toutes les permissions
+        "password_hash": "$2b$12$ZrO5kKcFkm.zLaI4Vb9Y3u7nF8xHdcQpG2lS1eWwNm5t6rXpJzK4s",  # "JosmozAdmin2025!"
+        "department": "Administration",
+        "position": "Administrateur Système",
+        "is_active": True,
+        "permissions": {
+            "upload_media": True,
+            "manage_blog": True,
+            "moderate_testimonials": True,
+            "manage_products": True,
+            "manage_users": True,
+            "full_access": True
+        }
     }
 }
 
