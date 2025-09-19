@@ -5641,3 +5641,131 @@ async def initialize_blog_content():
     except Exception as e:
         logging.error(f"❌ Erreur initialisation blog: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# ========== TÉMOIGNAGES ENDPOINTS - AVIS CLIENTS ==========
+
+@app.post("/api/testimonials", tags=["Témoignages"])
+async def submit_testimonial(testimonial: CustomerTestimonial):
+    """⭐ Soumettre un nouveau témoignage client"""
+    try:
+        testimonials_manager = await get_testimonials_manager()
+        result = await testimonials_manager.submit_testimonial(testimonial)
+        
+        return result
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur soumission témoignage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/testimonials", tags=["Témoignages"])
+async def get_testimonials(
+    status: TestimonialStatus = TestimonialStatus.APPROVED,
+    product_id: Optional[str] = None,
+    limit: int = 10,
+    skip: int = 0,
+    min_rating: Optional[int] = None
+):
+    """⭐ Récupérer liste des témoignages"""
+    try:
+        testimonials_manager = await get_testimonials_manager()
+        testimonials = await testimonials_manager.get_testimonials(
+            status=status,
+            product_id=product_id,
+            limit=limit,
+            skip=skip,
+            min_rating=min_rating
+        )
+        
+        return {
+            "success": True,
+            "testimonials": testimonials,
+            "count": len(testimonials)
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération témoignages: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/testimonials/stats", tags=["Témoignages"])
+async def get_testimonial_stats(product_id: Optional[str] = None):
+    """📊 Statistiques des témoignages"""
+    try:
+        testimonials_manager = await get_testimonials_manager()
+        stats = await testimonials_manager.get_testimonial_stats(product_id)
+        
+        return {
+            "success": True,
+            "stats": stats
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur statistiques témoignages: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/api/testimonials/{testimonial_id}/moderate", tags=["Témoignages"])
+async def moderate_testimonial(
+    testimonial_id: str,
+    action: TestimonialStatus,
+    admin_notes: Optional[str] = None
+):
+    """🛡️ Modérer un témoignage - ADMIN"""
+    try:
+        testimonials_manager = await get_testimonials_manager()
+        result = await testimonials_manager.moderate_testimonial(
+            testimonial_id, action, admin_notes
+        )
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur modération témoignage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/testimonials/{testimonial_id}/vote", tags=["Témoignages"])
+async def vote_testimonial_helpful(testimonial_id: str, helpful: bool = True):
+    """👍 Voter pour l'utilité d'un témoignage"""
+    try:
+        testimonials_manager = await get_testimonials_manager()
+        result = await testimonials_manager.vote_helpful(testimonial_id, helpful)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur vote témoignage: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/testimonials/featured", tags=["Témoignages"])
+async def get_featured_testimonials():
+    """🌟 Témoignages vedettes (pour homepage)"""
+    try:
+        testimonials_manager = await get_testimonials_manager()
+        testimonials = await testimonials_manager.get_featured_testimonials()
+        
+        return {
+            "success": True,
+            "testimonials": testimonials,
+            "count": len(testimonials)
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur témoignages vedettes: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/testimonials/initialize", tags=["Témoignages"])
+async def initialize_testimonials_content():
+    """🚀 Initialiser les témoignages par défaut - ADMIN UNIQUEMENT"""
+    try:
+        await initialize_default_testimonials()
+        
+        return {
+            "success": True,
+            "message": "Témoignages par défaut initialisés avec succès"
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur initialisation témoignages: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
