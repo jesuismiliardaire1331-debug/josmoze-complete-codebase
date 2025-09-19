@@ -2085,6 +2085,8 @@ function App() {
                     {/* WORKAROUND: Route publique désinscription */}
                     <Route path="/unsubscribe" element={<UnsubscribeHandler />} />
                     <Route path="/admin/upload" element={<AdminUpload />} />
+                    <Route path="/blog" element={<BlogPage />} />
+                    <Route path="/blog/:slug" element={<BlogArticle />} />
                   </Routes>
                 </main>
                 <Footer />
