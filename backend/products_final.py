@@ -83,7 +83,7 @@ FINAL_PRODUCTS = [
         "description": "Le nec plus ultra de l'osmose inverse ! Osmoseur de comptoir design avec contrôle digital intelligent. Production 380L/jour (16L/h). 7 étapes de filtration premium. Installation plug & play.",
         "price": 899.0,
         "original_price": 1199.0,
-        "image": "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
+        "image": "https://images.unsplash.com/photo-1669211659110-3f3db4119b65?w=800&h=800&fit=crop&q=80",
         "category": "osmoseur",
         "target_audience": "both",
         "product_tier": "prestige",
