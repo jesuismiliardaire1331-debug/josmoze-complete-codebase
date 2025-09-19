@@ -8907,6 +8907,263 @@ class BackendTester:
             self.log_test("Performance Sous Charge", False, f"Exception: {str(e)}")
             return False
 
+    # ========== THOMAS CHATBOT TESTS - CORRECTION RÉPÉTITION PHRASE ==========
+    
+    def test_thomas_chatbot_first_message(self):
+        """Test Thomas ChatBot - Premier message: 'Bonjour Thomas'"""
+        try:
+            chat_data = {
+                "message": "Bonjour Thomas",
+                "session_id": "test_session_thomas_001"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data and "agent" in data:
+                    response_text = data["response"]
+                    agent = data["agent"]
+                    
+                    # Vérifier que c'est bien Thomas qui répond
+                    if agent == "thomas":
+                        # Vérifier que la réponse est une présentation normale (pas vide, pas d'erreur)
+                        if len(response_text) > 20 and "erreur" not in response_text.lower():
+                            # Stocker la première réponse pour comparaison
+                            self.thomas_first_response = response_text
+                            self.log_test("THOMAS - Premier Message", True, 
+                                        f"✅ Présentation normale reçue: '{response_text[:100]}...'")
+                            return True
+                        else:
+                            self.log_test("THOMAS - Premier Message", False, 
+                                        f"Réponse trop courte ou erreur: '{response_text}'")
+                            return False
+                    else:
+                        self.log_test("THOMAS - Premier Message", False, 
+                                    f"Mauvais agent: {agent} (attendu: thomas)")
+                        return False
+                else:
+                    self.log_test("THOMAS - Premier Message", False, "Champs manquants dans la réponse", data)
+                    return False
+            else:
+                self.log_test("THOMAS - Premier Message", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS - Premier Message", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_thomas_chatbot_second_message(self):
+        """Test Thomas ChatBot - Deuxième message: 'Quels sont vos osmoseurs ?'"""
+        try:
+            chat_data = {
+                "message": "Quels sont vos osmoseurs ?",
+                "session_id": "test_session_thomas_001"  # Même session
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data and "agent" in data:
+                    response_text = data["response"]
+                    agent = data["agent"]
+                    
+                    if agent == "thomas":
+                        # Vérifier que la réponse est différente de la première
+                        if hasattr(self, 'thomas_first_response'):
+                            if response_text != self.thomas_first_response:
+                                # Vérifier que la réponse parle d'osmoseurs (appropriée à la question)
+                                osmoseur_keywords = ["osmoseur", "bluemountain", "essentiel", "premium", "prestige", "filtration"]
+                                has_osmoseur_content = any(keyword in response_text.lower() for keyword in osmoseur_keywords)
+                                
+                                if has_osmoseur_content:
+                                    # Stocker la deuxième réponse
+                                    self.thomas_second_response = response_text
+                                    self.log_test("THOMAS - Deuxième Message", True, 
+                                                f"✅ Réponse différente et appropriée sur osmoseurs: '{response_text[:100]}...'")
+                                    return True
+                                else:
+                                    self.log_test("THOMAS - Deuxième Message", False, 
+                                                f"Réponse ne parle pas d'osmoseurs: '{response_text[:100]}...'")
+                                    return False
+                            else:
+                                self.log_test("THOMAS - Deuxième Message", False, 
+                                            "❌ RÉPÉTITION DÉTECTÉE: Même réponse que le premier message")
+                                return False
+                        else:
+                            # Pas de première réponse à comparer, mais on peut quand même valider
+                            self.thomas_second_response = response_text
+                            self.log_test("THOMAS - Deuxième Message", True, 
+                                        f"✅ Réponse reçue (pas de comparaison possible): '{response_text[:100]}...'")
+                            return True
+                    else:
+                        self.log_test("THOMAS - Deuxième Message", False, 
+                                    f"Mauvais agent: {agent} (attendu: thomas)")
+                        return False
+                else:
+                    self.log_test("THOMAS - Deuxième Message", False, "Champs manquants dans la réponse", data)
+                    return False
+            else:
+                self.log_test("THOMAS - Deuxième Message", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS - Deuxième Message", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_thomas_chatbot_third_message(self):
+        """Test Thomas ChatBot - Troisième message: 'Prix du modèle Premium'"""
+        try:
+            chat_data = {
+                "message": "Prix du modèle Premium",
+                "session_id": "test_session_thomas_001"  # Même session
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if "response" in data and "agent" in data:
+                    response_text = data["response"]
+                    agent = data["agent"]
+                    
+                    if agent == "thomas":
+                        # Vérifier que la réponse est différente des précédentes
+                        is_different_from_first = True
+                        is_different_from_second = True
+                        
+                        if hasattr(self, 'thomas_first_response'):
+                            is_different_from_first = response_text != self.thomas_first_response
+                        
+                        if hasattr(self, 'thomas_second_response'):
+                            is_different_from_second = response_text != self.thomas_second_response
+                        
+                        if is_different_from_first and is_different_from_second:
+                            # Vérifier que la réponse parle de prix/Premium (appropriée à la question)
+                            price_keywords = ["549", "premium", "prix", "€", "euro", "coût", "tarif"]
+                            has_price_content = any(keyword in response_text.lower() for keyword in price_keywords)
+                            
+                            if has_price_content:
+                                self.thomas_third_response = response_text
+                                self.log_test("THOMAS - Troisième Message", True, 
+                                            f"✅ Réponse différente et appropriée sur prix Premium: '{response_text[:100]}...'")
+                                return True
+                            else:
+                                self.log_test("THOMAS - Troisième Message", False, 
+                                            f"Réponse ne parle pas de prix: '{response_text[:100]}...'")
+                                return False
+                        else:
+                            self.log_test("THOMAS - Troisième Message", False, 
+                                        "❌ RÉPÉTITION DÉTECTÉE: Même réponse qu'un message précédent")
+                            return False
+                    else:
+                        self.log_test("THOMAS - Troisième Message", False, 
+                                    f"Mauvais agent: {agent} (attendu: thomas)")
+                        return False
+                else:
+                    self.log_test("THOMAS - Troisième Message", False, "Champs manquants dans la réponse", data)
+                    return False
+            else:
+                self.log_test("THOMAS - Troisième Message", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS - Troisième Message", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_thomas_chatbot_no_repeated_phrases(self):
+        """Test Thomas ChatBot - Vérification qu'aucune phrase n'est répétée systématiquement"""
+        try:
+            # Vérifier qu'on a les 3 réponses de Thomas
+            if not all(hasattr(self, attr) for attr in ['thomas_first_response', 'thomas_second_response', 'thomas_third_response']):
+                self.log_test("THOMAS - Pas de Répétition", False, "Tests précédents requis pour cette vérification")
+                return False
+            
+            responses = [self.thomas_first_response, self.thomas_second_response, self.thomas_third_response]
+            
+            # Vérifier qu'aucune phrase spécifique problématique n'apparaît
+            problematic_phrases = [
+                "Répond-il sur les osmoseurs spécifiquement ?",
+                "répond-il sur les osmoseurs spécifiquement",
+                "Répond-il sur",
+                "répond-il sur"
+            ]
+            
+            repeated_phrases_found = []
+            for phrase in problematic_phrases:
+                count = sum(1 for response in responses if phrase in response)
+                if count > 1:
+                    repeated_phrases_found.append(f"'{phrase}' ({count} fois)")
+            
+            # Vérifier qu'aucune réponse n'est identique
+            identical_responses = []
+            for i, response1 in enumerate(responses):
+                for j, response2 in enumerate(responses[i+1:], i+1):
+                    if response1 == response2:
+                        identical_responses.append(f"Réponse {i+1} = Réponse {j+1}")
+            
+            if repeated_phrases_found or identical_responses:
+                issues = repeated_phrases_found + identical_responses
+                self.log_test("THOMAS - Pas de Répétition", False, 
+                            f"❌ Répétitions détectées: {', '.join(issues)}")
+                return False
+            else:
+                self.log_test("THOMAS - Pas de Répétition", True, 
+                            "✅ Aucune phrase répétée, toutes les réponses sont différentes et appropriées")
+                return True
+                
+        except Exception as e:
+            self.log_test("THOMAS - Pas de Répétition", False, f"Exception: {str(e)}")
+            return False
+
+    def run_thomas_chatbot_tests(self):
+        """Run Thomas ChatBot tests specifically"""
+        print("🤖 TESTS THOMAS CHATBOT - CORRECTION RÉPÉTITION PHRASE")
+        print("=" * 60)
+        
+        thomas_tests = [
+            self.test_thomas_chatbot_first_message,
+            self.test_thomas_chatbot_second_message, 
+            self.test_thomas_chatbot_third_message,
+            self.test_thomas_chatbot_no_repeated_phrases
+        ]
+        
+        thomas_results = []
+        for test in thomas_tests:
+            result = test()
+            thomas_results.append(result)
+            time.sleep(1)  # Pause entre les messages pour simuler conversation réelle
+        
+        # RÉSULTATS THOMAS
+        print("\n" + "=" * 60)
+        print("📊 RÉSULTATS TESTS THOMAS CHATBOT")
+        print("=" * 60)
+        
+        total_thomas_tests = len(thomas_results)
+        total_thomas_passed = sum(thomas_results)
+        
+        print(f"✅ Tests Thomas réussis: {total_thomas_passed}/{total_thomas_tests} ({(total_thomas_passed/total_thomas_tests)*100:.1f}%)")
+        
+        if total_thomas_passed == total_thomas_tests:
+            print("🎉 THOMAS CHATBOT FONCTIONNE PARFAITEMENT - Pas de répétition détectée!")
+        else:
+            print("❌ PROBLÈME THOMAS DÉTECTÉ - Voir détails ci-dessus")
+        
+        return total_thomas_passed == total_thomas_tests
+
     def run_all_tests(self):
         """Run all backend tests - FOCUS: SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE"""
         print("🚀 TEST FINAL SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE")
