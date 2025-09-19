@@ -87,6 +87,6 @@ if __name__ == "__main__":
     if decoded_email == test_email:
         print("✅ Token valide!")
         print(f"\n🔗 Lien de test complet:")
-        print(f"https://ecomm-rescue.preview.emergentagent.com/unsubscribe?token={token}")
+        print(f"https://ecommerce-repair-2.preview.emergentagent.com/unsubscribe?token={token}")
     else:
         print("❌ Erreur de validation du token!")
