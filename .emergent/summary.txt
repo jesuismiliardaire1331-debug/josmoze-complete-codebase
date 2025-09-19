@@ -1,91 +1,113 @@
 <analysis>
-The previous AI engineer worked on the  e-commerce platform. Initial tasks involved fixing server routing and product/promotion integration. A major hurdle was a  static asset path issue, resolved by modifying . Subsequent critical feedback from the user led to iterative fixes across currency, product prices, images, product detail pages, a recommendation questionnaire, the Thomas Chatbot, cart functionality, and Stripe payment integration. The process was characterized by frequent user feedback highlighting persistent critical issues after reported fixes. The latest state shows the frontend displaying a blank page, attributed to backend  conflicts and resource consumption from  and , which were subsequently disabled. The core problem now is a non-rendering frontend despite previous fixes.
+The trajectory details the AI engineer's work on the  e-commerce platform. Initially, the focus was on fixing a critical blank frontend issue, which was resolved by importing  in . Subsequently, significant effort was dedicated to fixing cart persistence, refining the product recommendation questionnaire's single appearance logic, and integrating professional product images from a PDF. Stripe payment integration and Thomas Chatbot functionality were also validated.
+
+Major feature additions included a comprehensive admin interface for media uploads, a full-fledged blog system, a customer testimonials section, and a revolutionary AI Product Upload Agent designed for scraping e-commerce sites. Throughout the process, the AI engineer faced challenges with reconciling internal test results with user-reported critical bugs, leading to iterative diagnostics and fixes. The latest focus involves implementing a full admin dashboard and integrating AI agent management into the CRM, with work currently ongoing to integrate the Agents IA tab within the CRM frontend.
 </analysis>
 
 <product_requirements>
-The  e-commerce platform sells water purifiers with multi-currency/language support and a CRM. Initial objectives included server routing, payment integration, CRM activation, catalog enrichment, promotions, content strategy, email sequences, and an AI chatbot (Thomas).
-Current and critical requirements from user feedback include:
-- Change all currency from CAD to EUR.
-- Adjust Fontaine à Eau Osmosée BlueMountain price to 549€.
-- Fix missing/incorrect product images (using provided PDF for exact visuals).
-- Implement a questionnaire pop-up with specific questions for product recommendations (including a new question on shower water).
+The  e-commerce platform aims to sell water purifiers, featuring multi-currency/language support and a CRM. Initial requirements included server routing, payment, CRM activation, catalog enrichment, promotions, content strategy, email sequences, and an AI chatbot (Thomas).
+
+User feedback evolved into critical requirements:
+- Change currency from CAD to EUR, specifically updating Fontaine à Eau Osmosée BlueMountain to 549€.
+- Fix missing/incorrect product images, using a provided PDF for visuals.
+- Implement a questionnaire pop-up for product recommendations (including a new question on shower water), appearing only once per session.
 - Implement detailed product sheets with technical specifications.
-- Reprogram Thomas Chatbot for a commercial/benevolent tone, new product knowledge, and direct responses.
-- Fix critical bugs related to the questionnaire's auto-popup (single appearance), chatbot's repetitiveness, broken cart functionality, non-clickable product pages, and integrate Stripe test payment.
+- Reprogram Thomas Chatbot for a benevolent/commercial tone, new product knowledge, and direct responses.
+- Fix critical bugs: questionnaire auto-popup (single appearance), chatbot repetitiveness, broken cart, non-clickable product pages, and integrate Stripe test payment.
+
+Latest critical requirements added:
+- Create full admin access for manual image/video uploads, blog content management, and review moderation.
+- Develop a blog section with specific articles, images, videos, and infographies.
+- Implement a customer testimonials section with a dedicated page, product widgets, 5-star rating, and client photos.
+- Integrate blog and testimonials into the main menu, product pages, and homepage.
+- Create an AI Agent Upload feature to scrape product data (images, specs, descriptions) from e-commerce sites like AliExpress, Temu, Amazon.
+- Implement an Admin Dashboard after login for managing manual uploads, products, blog, and reviews.
+- Enhance AI Agent Upload for better image extraction.
+- Add clickable product links within blog articles and remove Test gratuit de votre eau button.
+- Integrate an Agents IA section into the CRM for managing AI agents (Product Hunter, Content Creator, Email Marketer, SEO Master) with ON/OFF toggles and a link to the AI Upload Agent.
 </product_requirements>
 
 <key_technical_concepts>
 - **Full-stack:** React.js, FastAPI, MongoDB, Python, JavaScript.
-- **AI/LLM:** Custom AI agents (Thomas ChatBot) using , .
-- **Frontend:** i18next, , React Router, Context API, CRACO, .
-- **Backend:** FastAPI, MongoDB, , , , .
+- **AI/LLM:** Custom AI agents (Thomas ChatBot, AI Product Scraper) using , , .
+- **Frontend:** i18next, , React Router, Context API, CRACO, , .
+- **Backend:** FastAPI, MongoDB, , , , , , , , , .
+- **State Management:** React Context API,  for cart and questionnaire persistence.
 </key_technical_concepts>
 
 <code_architecture>
 
 
--   : Main FastAPI application, centralizing API routes.
-    -   **Importance:** Handles product, translation, chatbot, and checkout endpoints.
-    -   **Changes:** Configured for product/promotion, CRM mocks, forced , forced FR/EUR (via ), updated product prices, integrated , and added Stripe checkout logic.
--   : Service for automatic language and currency detection.
-    -   **Importance:** Manages internationalization settings, crucial for correct currency/language display.
-    -   **Changes:** Modified  and  to explicitly return 'FR' and 'EUR'.
--    (NEW): Contains the updated logic and knowledge base for the Thomas Chatbot.
-    -   **Importance:** Replaces previous chatbot implementation; crucial for correct chatbot behavior.
-    -   **Changes:** Created to provide benevolent/commercial tone, new product knowledge, and recommendation logic.
--   : Background agent for brand surveillance.
-    -   **Importance:** Performs continuous monitoring tasks.
-    -   **Changes:** Temporarily disabled () due to  conflicts and resource consumption.
--   : Background agent for security audits.
-    -   **Importance:** Performs scheduled security audits.
-    -   **Changes:** Temporarily disabled () due to  conflicts and resource consumption.
--   : Script to seed and update product data in MongoDB.
-    -   **Importance:** Manages the product catalog, including prices and images.
-    -   **Changes:** Updated to use  from , corrected product prices, and incorporated placeholder image URLs based on user's PDF guide.
--   : The main React application component.
+
+-   : Central FastAPI application routing.
+    -   **Importance:** Orchestrates all API endpoints for products, authentication, AI agents, payments, admin, blog, and testimonials.
+    -   **Changes:** Integrated endpoints for admin upload, blog, testimonials, and AI product scraper. Corrected Pydantic validation errors that caused API failures.
+-   : Handles user authentication and CRM user management.
+    -   **Importance:** Crucial for secure access to admin and CRM functionalities.
+    -   **Changes:** Added  user with a hashed password to the  dictionary.
+-   : Defines the product catalog data.
+    -   **Importance:** Source of truth for product details, including images and pricing.
+    -   **Changes:** Updated image URLs for various products (Osmoseur Essentiel, Prestige, Purificateur H2-Pro, Fontaine Animaux) with professional Unsplash URLs.
+-    (NEW): Backend logic for handling file uploads.
+    -   **Importance:** Enables administrators to upload media (images/videos) for products and other content.
+    -   **Changes:** Created to support JPG, PNG, MP4, WebM formats, and to manage associations with product IDs.
+-    (NEW): Backend service for managing blog articles.
+    -   **Importance:** Provides CRUD operations for blog posts, categories, and content.
+    -   **Changes:** Created for blog article management, including initial population with default articles, and added logic to dynamically link products.
+-    (NEW): Backend service for managing customer testimonials.
+    -   **Importance:** Handles review submission, retrieval, and moderation for customer feedback.
+    -   **Changes:** Created for testimonials management, including default testimonials. Fixed a Pydantic validation issue.
+-    (NEW): Backend service for AI-driven product data scraping.
+    -   **Importance:** Automates product data extraction from external e-commerce platforms.
+    -   **Changes:** Created to scrape product links, extract images, specifications, and descriptions from sites like AliExpress, Temu, Amazon. Implemented for improved image extraction.
+-   : Main React application component.
     -   **Importance:** Manages global state (cart, language, questionnaire), routing, and main layout.
-    -   **Changes:** Integrated , , , managed their states, logic, and context. Fixed  logic,  handlers, and implemented questionnaire auto-popup/localStorage persistence.
--   : Frontend component handling automatic language detection.
-    -   **Importance:** Ensures correct default language and currency are set in the frontend.
-    -   **Changes:** Updated to explicitly dispatch  events with EUR currency.
--    (NEW): Component for displaying detailed product information.
-    -   **Importance:** Provides dedicated pages for products with full specifications.
-    -   **Changes:** Created to fetch and display individual product data from the backend.
--    (NEW): Component for the interactive product recommendation questionnaire.
-    -   **Importance:** Guides users to suitable products based on their answers.
-    -   **Changes:** Created with user-provided questions, progress tracking, and recommendation logic for osmoseurs and the new shower filter.
--    (NEW): Component for Stripe payment integration.
-    -   **Importance:** Facilitates secure payment processing for orders.
-    -   **Changes:** Created to handle Stripe Elements for payment collection and integrated into the checkout flow.
--    (NEW): Frontend interface for the Thomas Chatbot.
-    -   **Importance:** Provides the user-facing chat interface for the AI agent.
-    -   **Changes:** Modified to communicate with the  API endpoint and updated welcome messages.
+    -   **Changes:** Integrated  (fixing blank page), , . Implemented  for cart persistence and questionnaire's single appearance logic. Added routes and links for AdminUpload, Blog, Testimonials, AdminLogin, AIUploadAgent, and AdminDashboard.
+-   : Component for displaying detailed product information.
+    -   **Importance:** Essential for individual product pages.
+    -   **Changes:** Added a section for testimonials and related logic.
+-    (NEW): Frontend interface for media uploads.
+    -   **Importance:** User-facing component for admin to upload product media.
+    -   **Changes:** Created with file selection, media type, product ID inputs, and drag-and-drop functionality.
+-    (NEW): Frontend component for displaying blog articles.
+    -   **Importance:** Presents the list of blog posts to users.
+    -   **Changes:** Created to display articles, categories, and a search bar. Removed Test gratuit de votre eau button.
+-    (NEW): Frontend component for individual blog articles.
+    -   **Importance:** Displays the full content of a specific blog post.
+    -   **Changes:** Created to render markdown content, removed Test gratuit de votre eau button.
+-    (NEW): Frontend component for displaying customer testimonials.
+    -   **Importance:** Dedicated page for user reviews and ratings.
+    -   **Changes:** Created to showcase customer feedback.
+-    (NEW): Frontend component for administrator login.
+    -   **Importance:** Provides a login interface for admin access.
+    -   **Changes:** Created to handle admin authentication and redirect to  on success.
+-    (NEW): Frontend interface for the AI Product Scraper.
+    -   **Importance:** User interface for administrators to trigger AI-driven product imports.
+    -   **Changes:** Created with a URL input field and an Analyze and Import button.
+-    (NEW): Frontend component for the administrator dashboard.
+    -   **Importance:** Central hub for admin functionalities after login.
+    -   **Changes:** Created to provide a dashboard for managing various aspects of the site.
+-   : Frontend component for the Customer Relationship Management dashboard.
+    -   **Importance:** Displays CRM-related information and functionalities.
+    -   **Changes:** Currently being modified to add a new tab for Agents IA to manage AI agents.
+
 </code_architecture>
 
 <pending_tasks>
--   **Images Products:** Implement actual image uploads/hosting using the provided PDF (the AI engineer used placeholder URLs as direct PDF extraction was not possible).
--   **CRM Activation:** Implement full functionality for Add Prospect, Import CSV, Surveillance, Audit, and Paniers Abandonnés (currently mocked).
--   **Site Package/Installation Guide:** Prepare a complete site package and installation guide for Namecheap migration.
--   **Frontend Rendering:** Resolve the critical issue causing the frontend to display a completely blank page.
+- **CRM - Agents IA:** Integrate a section within the CRM dashboard to manage AI agents with ON/OFF toggles and a link to the AI Upload Agent.
+- **AI Agent Upload - Image Extraction:** Improve the image extraction functionality from external e-commerce sites (AliExpress, Alibaba) as it's currently showing 0 images found. Optionally, add image selection.
+- **Blog - Product Links:** Add clickable links to relevant products within blog articles.
+- **Images Products - Replacement Final:** Provide an admin interface to upload the true product images from the provided PDF, rather than using placeholder Unsplash images.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary request, the AI engineer was tackling a critical situation where the application's frontend displayed a completely blank page, rendering it non-functional.
-The diagnosis identified:
-1.  **Backend  conflicts:** Errors like  were present in the .
-2.  **Resource Overconsumption:**  and  were actively logging 625 violations détectées and consuming significant CPU resources, contributing to system instability.
-To address this, the AI engineer **temporarily disabled** these problematic background agents:
--   Modified  to set  in its  method (Chat 357).
--   Modified  to set  in its  method (Chat 359).
-After restarting all services (code-server: stopped
-mongodb: stopped
-backend: stopped
-backend: started
-code-server: started
-frontend: started
-mongodb: started), the frontend continued to display a **completely blank page** (0 characters of text detected), indicating that the core rendering issue persists despite the attempts to stabilize the backend. The AI engineer's last action was initiating an Urgent Technical Diagnosis for this blank page.
+Immediately before this summary request, the AI engineer was working on integrating the Agents IA section into the CRM dashboard, as requested by the user. This task is part of a larger set of final critical corrections that include adding a full admin dashboard, improving AI Agent image extraction, adding product links to blog articles, and implementing actual PDF images via an admin interface.
+
+The AI engineer has already created the  component and configured  to redirect to this dashboard upon successful login. The routes for the admin dashboard have also been added to . A fix was attempted for the AI Agent's image extraction in , and the Test gratuit de votre eau button has been removed from  and .
+
+The current specific action is to modify the  frontend component to add a new tab for managing AI agents, complete with ON/OFF toggles for different agents (Product Hunter, Content Creator, Email Marketer, SEO Master) and a direct link to the AI Upload Agent. The engineer is in the process of locating the appropriate section within  to implement these new tabs and their content, trying to identify existing tab structures or navigation elements to integrate the new functionality.
 </current_work>
 
 <optional_next_step>
-The next step is to thoroughly diagnose why the frontend is rendering a blank page by inspecting frontend logs, network requests, and the browser console.
+Continue modifying  to implement the Agents IA tab and its associated content within the CRM dashboard.
 </optional_next_step>

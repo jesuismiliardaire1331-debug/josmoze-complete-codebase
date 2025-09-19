@@ -169,7 +169,7 @@ Une fois le routage corrigé, accès immédiat à :
 
 En attendant la correction, utiliser :
 - **API directe** : `curl` pour tester endpoints backend
-- **Page désinscription** : https://ecommerce-repair-2.preview.emergentagent.com/api/public/unsubscribe
+- **Page désinscription** : https://josmoze-admin.preview.emergentagent.com/api/public/unsubscribe
 
 ## 📞 **CONTACT TECHNIQUE**
 

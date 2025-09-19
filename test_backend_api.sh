@@ -6,7 +6,7 @@
 echo "🧪 TEST DES APIs BACKEND CRM JOSMOZE"
 echo "=================================="
 
-BASE_URL="https://ecommerce-repair-2.preview.emergentagent.com"
+BASE_URL="https://josmoze-admin.preview.emergentagent.com"
 
 # Test 1: Authentification
 echo -e "\n1️⃣ Test Authentification Manager"
