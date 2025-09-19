@@ -50,6 +50,16 @@ const AppProvider = ({ children }) => {
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
 
+  // 🛒 SAUVEGARDE AUTOMATIQUE PANIER dans localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('josmoze_cart', JSON.stringify(cart));
+      console.log('🛒 Panier sauvegardé:', cart.length, 'articles');
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
+  }, [cart]);
+
   // Auto-popup questionnaire après 15 secondes - UNE SEULE FOIS PAR SESSION
   useEffect(() => {
     if (customerType === 'B2C') {
