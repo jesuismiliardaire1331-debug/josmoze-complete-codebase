@@ -75,25 +75,41 @@ const AppProvider = ({ children }) => {
   // Auto-popup questionnaire après 15 secondes - UNE SEULE FOIS PAR SESSION
   useEffect(() => {
     if (customerType === 'B2C') {
+      // Vérifier IMMÉDIATEMENT les flags pour éviter le timer inutile
+      const hasSeenThisSession = sessionStorage.getItem('josmoze_questionnaire_shown');
+      const hasSeenPermanent = localStorage.getItem('josmoze_questionnaire_seen');
+      
+      console.log('🎯 Vérification questionnaire:', { hasSeenThisSession, hasSeenPermanent });
+      
+      // Si déjà vu, ne pas démarrer le timer
+      if (hasSeenThisSession || hasSeenPermanent) {
+        console.log('🎯 Questionnaire déjà vu - aucun popup');
+        return;
+      }
+      
+      // Sinon démarrer le timer
+      console.log('🎯 Démarrage timer questionnaire (15s)');
       const timer = setTimeout(() => {
-        // Vérifier STRICTEMENT si l'utilisateur n'a pas déjà vu le questionnaire CETTE SESSION
-        const hasSeenThisSession = sessionStorage.getItem('josmoze_questionnaire_shown');
-        const hasSeenPermanent = localStorage.getItem('josmoze_questionnaire_seen');
+        // Double vérification avant affichage
+        const hasSeenNow = sessionStorage.getItem('josmoze_questionnaire_shown') || localStorage.getItem('josmoze_questionnaire_seen');
         
-        if (!hasSeenThisSession && !hasSeenPermanent) {
+        if (!hasSeenNow) {
           console.log('🎯 Déclenchement auto-popup questionnaire UNIQUE');
           setShowQuestionnaire(true);
           // Marquer comme vu pour cette session ET de façon permanente
           sessionStorage.setItem('josmoze_questionnaire_shown', 'true');
           localStorage.setItem('josmoze_questionnaire_seen', 'true');
         } else {
-          console.log('🎯 Questionnaire déjà vu - pas de popup répétitif');
+          console.log('🎯 Questionnaire marqué vu pendant le timer - annulation');
         }
       }, 15000); // 15 secondes
 
-      return () => clearTimeout(timer);
+      return () => {
+        console.log('🎯 Nettoyage timer questionnaire');
+        clearTimeout(timer);
+      };
     }
-  }, [customerType]);
+  }, [customerType]); // Seul customerType comme dépendance
   const { i18n } = useTranslation();
   const { currentCurrency, formatPrice } = useTranslationService();
 
