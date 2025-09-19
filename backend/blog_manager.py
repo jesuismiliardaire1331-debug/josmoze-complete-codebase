@@ -312,9 +312,9 @@ L'osmose inverse élimine 99% des contaminants :
 
 ### Nos osmoseurs Josmoze
 
-- **Osmoseur Essentiel (449€)** : Protection familiale efficace
-- **Osmoseur Premium (549€)** : Technologie avancée avec reminéralisation
-- **Osmoseur Prestige (899€)** : Solution professionnelle haut de gamme
+- **[Osmoseur Essentiel (449€)](/product/osmoseur-essentiel)** : Protection familiale efficace
+- **[Osmoseur Premium (549€)](/product/osmoseur-premium)** : Technologie avancée avec reminéralisation
+- **[Osmoseur Prestige (899€)](/product/osmoseur-prestige)** : Solution professionnelle haut de gamme
 
 ## 📊 Études scientifiques
 
@@ -324,9 +324,9 @@ Selon l'OMS, plus de 2 milliards de personnes n'ont pas accès à une eau vraime
 
 ## ⚡ Action immédiate
 
-Ne prenez plus de risques avec votre santé. Testez votre eau et découvrez nos solutions d'osmose inverse adaptées à vos besoins.
+Ne prenez plus de risques avec votre santé. [Découvrez nos solutions d'osmose inverse](/product/osmoseur-premium) adaptées à vos besoins.
 
-*Contactez nos experts pour une analyse gratuite de votre eau.*
+*[Contactez nos experts](/contact) pour une consultation personnalisée.*
         """,
         "category": "Santé",
         "tags": ["eau robinet", "santé", "contaminants", "chlore", "métaux lourds"],
