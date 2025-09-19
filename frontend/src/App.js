@@ -356,6 +356,9 @@ const Header = () => {
             <Link to="/installation" className="text-gray-700 hover:text-blue-600 transition-colors">
               {t('nav.installation', 'Installation')}
             </Link>
+            <Link to="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
+              📚 Blog
+            </Link>
             <Link to="/contact" className="text-gray-700 hover:text-blue-600 transition-colors">
               {t('nav.contact', 'Contact')}
             </Link>
