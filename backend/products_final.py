@@ -197,7 +197,7 @@ FINAL_PRODUCTS = [
         "description": "Solution professionnelle BlueMountain grand format pour restaurants, bureaux et commerces. Dimensions 1040×330×300mm avec performance 15L/h.",
         "price": 1299.0,
         "original_price": 1599.0,
-        "image": "https://www.josmoze.com/img/cms/fontaine_a_eau_entreprise%20-%20copie.jpg",
+        "image": "https://images.unsplash.com/photo-1669211659110-3f3db4119b65?w=800&h=800&fit=crop&q=80",
         "category": "osmoseur",
         "target_audience": "B2B",
         "product_tier": "professionnel",
