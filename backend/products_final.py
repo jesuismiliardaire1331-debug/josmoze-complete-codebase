@@ -160,7 +160,7 @@ FINAL_PRODUCTS = [
         "description": "Fontaine intelligente pour chiens et chats avec filtration avancée. Débit ajustable, niveau d'eau LED, matériaux premium sans BPA. Encourage l'hydratation naturelle de vos compagnons.",
         "price": 49.0,
         "original_price": 69.0,
-        "image": "https://static.wixstatic.com/media/6af6bd_1b0ed5e9b180466baeee7436019f6fef~mv2.png/v1/fill/w_520,h_692,al_c,lg_1,q_85,enc_avif,quality_auto/H10e839a4d05e44ab881e05d9aeb3e0d80_jpg_720x720q50-removebg-preview.png",
+        "image": "https://images.unsplash.com/photo-1614598642118-7841d2d5bc18?w=800&h=800&fit=crop&q=80",
         "category": "animaux",
         "target_audience": "both",
         "is_gift_eligible": True,
