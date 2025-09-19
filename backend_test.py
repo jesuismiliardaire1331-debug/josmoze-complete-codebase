@@ -10234,9 +10234,16 @@ class BackendTester:
 
 if __name__ == "__main__":
     tester = BackendTester()
-    passed, total = tester.run_priority_tests()
     
-    if passed == total:
+    # Run Thomas ChatBot tests specifically as requested
+    print("🎯 DÉMARRAGE TESTS THOMAS CHATBOT - CORRECTION RÉPÉTITION PHRASE")
+    print("=" * 80)
+    
+    thomas_success = tester.run_thomas_chatbot_tests()
+    
+    if thomas_success:
+        print("\n🎉 TOUS LES TESTS THOMAS RÉUSSIS!")
         exit(0)  # Success
     else:
+        print("\n❌ PROBLÈMES DÉTECTÉS AVEC THOMAS CHATBOT")
         exit(1)  # Some tests failed
