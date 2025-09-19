@@ -432,26 +432,28 @@ Parfait pour familles de 2-4 personnes
 - Filtration 5 étapes
 - Production : 200L/jour
 - Garantie 5 ans
+- [➤ Voir le produit](/product/osmoseur-essentiel)
 
 ### Osmoseur Premium - 549€  
 Recommandé pour familles de 4-6 personnes
 - Filtration 7 étapes avec reminéralisation
 - Production : 300L/jour
 - Écran de contrôle intelligent
+- [➤ Voir le produit](/product/osmoseur-premium)
 
 ### Osmoseur Prestige - 899€
 Solution professionnelle pour grandes familles
 - Technologie de pointe
 - Production : 500L/jour
 - Design premium avec écran tactile
+- [➤ Voir le produit](/product/osmoseur-prestige)
 
 ## 📞 Votre eau pure en 48h
 
 Nos experts vous accompagnent :
-1. **Analyse gratuite** de votre eau actuelle
-2. **Conseil personnalisé** selon vos besoins
-3. **Installation professionnelle** sous 48h
-4. **Suivi et maintenance** garantis
+1. **[Conseil personnalisé](/contact)** selon vos besoins
+2. **Installation professionnelle** sous 48h
+3. **Suivi et maintenance** garantis
 
 *Rejoignez les 15 000 familles qui ont choisi Josmoze pour leur santé !*
         """,
