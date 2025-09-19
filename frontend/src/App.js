@@ -112,16 +112,21 @@ const AppProvider = ({ children }) => {
   }, []);
 
   const addToCart = (product, quantity = 1) => {
+    console.log('🛒 AJOUT PANIER - Produit:', product.name, 'Quantité:', quantity);
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
       if (existingItem) {
-        return prevCart.map(item =>
+        const newCart = prevCart.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
+        console.log('🛒 PANIER MIS À JOUR:', newCart.length, 'articles');
+        return newCart;
       }
-      return [...prevCart, { ...product, quantity }];
+      const newCart = [...prevCart, { ...product, quantity }];
+      console.log('🛒 NOUVEL ARTICLE AJOUTÉ:', newCart.length, 'articles');
+      return newCart;
     });
   };
 
