@@ -394,11 +394,13 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Panier E-commerce Fonctionnel - Tests Critiques"
     - "Product Database Cleanup - Remove Old Products"
     - "CRM Routing Infrastructure - CRITIQUE"
     - "Email Sequencer Osmoseur - Frontend Interface"
     - "Suppression List / Opt-out Guardian - Frontend Interface"
   stuck_tasks:
+    - "Panier E-commerce Fonctionnel - Tests Critiques"
     - "CRM Routing Infrastructure - CRITIQUE"
     - "Email Sequencer Osmoseur - Frontend Interface"
     - "Suppression List / Opt-out Guardian - Frontend Interface"
