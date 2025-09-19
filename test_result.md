@@ -343,9 +343,20 @@ backend:
           comment: "❌ ANCIEN PRODUIT DÉTECTÉ: Le produit 'osmoseur-principal' est encore présent dans la base de données alors qu'il devrait être remplacé par la nouvelle gamme BlueMountain (Essentiel 449€, Premium 549€, Prestige 899€). Les nouveaux prix sont corrects mais l'ancien produit doit être supprimé pour éviter la confusion. Recommandation: Nettoyer la base de données pour supprimer les anciens produits (osmoseur-principal, osmoseur-standard, etc.) et ne garder que la nouvelle gamme."
 
 frontend:
-  - task: "AI Agents Manager Interface"
+  - task: "CRM - Agents IA Tab Implementation"
     implemented: true
     working: true
+    file: "frontend/src/AIAgentsManager.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NOUVELLE INTERFACE AGENTS IA CRÉÉE: Refactorisation complète de AIAgentsManager.js selon spécifications utilisateur. Implémenté 4 agents (Product Hunter 🔍, Content Creator ✍️, Email Marketer 📧, SEO Master 🎯) avec toggles ON/OFF design vert/gris, cartes avec nom/description/statut/bouton configurer. Ajouté bouton 'Agent AI Upload' bien visible avec navigation vers /ai-upload-agent. Interface moderne avec statistiques rapides et design professionnel."
+        - working: true
+          agent: "main"
+          comment: "✅ INTERFACE AGENTS IA INTÉGRÉE AVEC SUCCÈS: Nouvelle interface implémentée dans CRM onglet 'Agents IA' 🤖. Design conforme aux spécifications: 4 agents avec toggles fonctionnels, bouton AI Upload Agent accessible, statistiques rapides affichées. Code nettoyé et optimisé, navigation vers /ai-upload-agent configurée. Interface prête pour tests utilisateur."
   - task: "Acheter Button Fix - Product Display Issue"
     implemented: true
     working: true
