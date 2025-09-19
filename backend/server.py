@@ -5903,3 +5903,50 @@ async def delete_imported_product(product_id: str):
     except Exception as e:
         logging.error(f"❌ Erreur suppression produit importé: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/ai-product-scraper/analyze", tags=["Agent AI"])
+async def analyze_product_url(request: dict):
+    """
+    🤖 AGENT AI UPLOAD - Analyser un produit depuis une URL (AliExpress, Temu, Amazon, etc.)
+    
+    Args:
+        request: {"url": "https://www.aliexpress.com/item/1005006854441059.html"}
+        
+    Returns:
+        Données du produit analysé avec images et spécifications
+    """
+    try:
+        url = request.get("url")
+        if not url:
+            raise HTTPException(400, "URL requise")
+            
+        ai_scraper = await get_ai_scraper()
+        
+        # Validation URL
+        if not url.startswith(('http://', 'https://')):
+            raise HTTPException(400, "URL invalide")
+        
+        # Analyse automatique du produit
+        result = await ai_scraper.scrape_product(url)
+        
+        return {
+            "success": True,
+            "title": result.get("title", ""),
+            "price": result.get("price", 0),
+            "images": result.get("images_count", 0),
+            "platform": result.get("platform", ""),
+            "product_data": {
+                "title": result.get("title", ""),
+                "price": result.get("price", 0),
+                "images_count": result.get("images_count", 0),
+                "platform": result.get("platform", ""),
+                "specifications": {}
+            },
+            "message": result.get("message", "Produit analysé avec succès!")
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur Agent AI Analyze: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
