@@ -5386,3 +5386,97 @@ async def get_security_reports(current_user: User = Depends(require_role(["manag
 # Include all routers after all routes are defined
 api_router.include_router(crm_router, prefix="/crm")  # Include crm_router in api_router with /crm prefix
 app.include_router(api_router)
+
+# ========== ADMINISTRATION ENDPOINTS - UPLOAD MANAGER ==========
+
+@app.post("/api/admin/upload/media", tags=["Administration"])
+async def upload_media_file(
+    file: UploadFile = File(...),
+    product_id: Optional[str] = Form(None),
+    media_type: str = Form("image"),
+    description: Optional[str] = Form(None)
+):
+    """
+    📤 Upload d'un fichier média (image ou vidéo) - ADMIN UNIQUEMENT
+    
+    Args:
+        file: Fichier à uploader (JPG, PNG, MP4, WebM)
+        product_id: ID du produit associé (optionnel)
+        media_type: Type de média ('image' ou 'video')
+        description: Description du média
+    """
+    try:
+        admin_manager = await get_admin_upload_manager()
+        result = await admin_manager.upload_media_file(
+            file=file,
+            product_id=product_id,
+            media_type=media_type,
+            description=description
+        )
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur upload administrateur: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/admin/media/library", tags=["Administration"])
+async def get_media_library(
+    media_type: Optional[str] = None,
+    product_id: Optional[str] = None
+):
+    """📚 Récupérer la bibliothèque de médias - ADMIN"""
+    try:
+        admin_manager = await get_admin_upload_manager()
+        media_list = await admin_manager.get_media_library(
+            media_type=media_type,
+            product_id=product_id
+        )
+        
+        return {
+            "success": True,
+            "media_count": len(media_list),
+            "media_list": media_list
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération bibliothèque: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/admin/media/{media_id}", tags=["Administration"])
+async def delete_media_file(media_id: str):
+    """🗑️ Supprimer un média - ADMIN"""
+    try:
+        admin_manager = await get_admin_upload_manager()
+        result = await admin_manager.delete_media(media_id)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur suppression média: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/api/admin/products/{product_id}/image", tags=["Administration"])
+async def update_product_image(
+    product_id: str,
+    image_url: str = Form(...)
+):
+    """🔄 Mettre à jour l'image principale d'un produit - ADMIN"""
+    try:
+        admin_manager = await get_admin_upload_manager()
+        result = await admin_manager.update_product_image(product_id, image_url)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur mise à jour image produit: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Servir les fichiers statiques uploadés
+app.mount("/static", StaticFiles(directory="/app/backend/static"), name="static")
