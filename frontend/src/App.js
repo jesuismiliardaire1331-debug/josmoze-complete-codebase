@@ -36,7 +36,16 @@ const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
   const [userLocation, setUserLocation] = useState(null);
-  const [cart, setCart] = useState([]);
+  // 🛒 CORRECTION PANIER - Persistance localStorage
+  const [cart, setCart] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem('josmoze_cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      return [];
+    }
+  });
   const [loading, setLoading] = useState(true);
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
