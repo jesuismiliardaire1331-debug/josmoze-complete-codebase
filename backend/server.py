@@ -890,32 +890,42 @@ async def submit_contact_form(form: ContactForm, request: Request):
         logging.error(f"Contact form submission failed: {e}")
         raise HTTPException(status_code=500, detail="Erreur lors de l'envoi")
 
-# API endpoint pour chatbot Thomas V3.0 - Bienveillant et Commercial
 @app.post("/api/ai-agents/chat")
 async def chatbot_response(
     request: Request,
     data: dict
 ):
-    """Endpoint pour Thomas - Agent commercial bienveillant"""
+    """Endpoint pour Thomas V2 - Synchronisation complète avec frontend"""
     from thomas_chatbot_fixed import get_thomas_response
     
     try:
         message = data.get('message', '')
         session_id = data.get('session_id', 'default')
+        agent = data.get('agent', 'thomas')
+        context = data.get('context', {})
+        language = data.get('language', 'fr')
         
         if not message:
             raise HTTPException(status_code=400, detail="Message requis")
         
-        # Log pour debug
-        logging.info(f"🤖 Thomas ChatBot: message='{message}', session='{session_id}'")
+        # Log complet pour debug Thomas V2
+        logging.info(f"🤖 Thomas V2 ChatBot: message='{message}', agent='{agent}', session='{session_id}', language='{language}'")
         
-        # Obtenir la réponse de Thomas
-        response_data = get_thomas_response(message, {
+        # Contexte enrichi avec données frontend
+        enhanced_context = {
             'session_id': session_id,
-            'timestamp': datetime.utcnow().isoformat()
-        })
+            'timestamp': datetime.utcnow().isoformat(),
+            'agent': agent,
+            'language': language,
+            'conversation_history': context.get('conversation_history', []),
+            'prompt': context.get('prompt', ''),
+            'knowledge_base': context.get('knowledge_base', {})
+        }
         
-        # Structure de réponse standardisée
+        # Obtenir la réponse de Thomas V2 avec contexte complet
+        response_data = get_thomas_response(message, enhanced_context)
+        
+        # Structure de réponse standardisée V2
         return {
             "response": response_data.get("message", ""),
             "suggestions": response_data.get("suggestions", []),
