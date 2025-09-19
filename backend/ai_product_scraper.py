@@ -269,15 +269,91 @@ class AIProductScraper:
         return 0.0
     
     def _extract_images(self, soup: BeautifulSoup, selectors: List[str]) -> List[str]:
-        """Extraire URLs d'images"""
+        """Extraire URLs d'images avec amélioration pour AliExpress/Alibaba"""
         images = []
         
-        for selector in selectors:
+        # Chercher d'abord dans les balises meta et scripts (données JSON)
+        scripts = soup.find_all('script', type='application/ld+json')
+        for script in scripts:
+            try:
+                data = json.loads(script.string)
+                if 'image' in data:
+                    if isinstance(data['image'], list):
+                        images.extend(data['image'])
+                    else:
+                        images.append(data['image'])
+            except:
+                continue
+        
+        # Extraction améliorée pour AliExpress
+        aliexpress_selectors = [
+            'img[src*="alicd"]',
+            'img[data-src*="alicdn"]',
+            'img[src*="ae01.alicdn"]',
+            'img[data-original*="alicdn"]',
+            '.image-view img',
+            '.product-image img',
+            '[data-spm-anchor-id] img'
+        ]
+        
+        # Extraction pour Alibaba
+        alibaba_selectors = [
+            'img[src*="alibaba"]',
+            'img[data-src*="alibaba"]',
+            '.image-item img',
+            '.thumb-item img',
+            '.gallery-img'
+        ]
+        
+        # Combiner tous les sélecteurs
+        all_selectors = selectors + aliexpress_selectors + alibaba_selectors
+        
+        for selector in all_selectors:
             elements = soup.select(selector)
-            for img in elements[:10]:  # Limite à 10 images
-                src = img.get('src') or img.get('data-src') or img.get('data-original')
-                if src and src.startswith('http'):
+            for img in elements:
+                # Chercher dans différents attributs
+                src_attrs = ['src', 'data-src', 'data-original', 'data-lazy-src', 'data-img']
+                
+                for attr in src_attrs:
+                    src = img.get(attr)
+                    if src:
+                        # Nettoyer et valider l'URL
+                        if src.startswith('//'):
+                            src = 'https:' + src
+                        elif src.startswith('/'):
+                            continue  # Ignorer les chemins relatifs
+                        elif not src.startswith('http'):
+                            continue
+                        
+                        # Filtrer les images trop petites ou logo
+                        if any(keyword in src.lower() for keyword in ['logo', 'icon', 'avatar', '50x50', '100x100']):
+                            continue
+                            
+                        if src not in images:
+                            images.append(src)
+                        
+                        if len(images) >= 10:  # Limite à 10 images
+                            break
+                
+                if len(images) >= 10:
+                    break
+            
+            if len(images) >= 10:
+                break
+        
+        # Si aucune image trouvée, chercher toutes les images sur la page
+        if not images:
+            all_images = soup.find_all('img')
+            for img in all_images:
+                src = img.get('src') or img.get('data-src')
+                if src and src.startswith('http') and len(src) > 50:  # URL suffisamment longue
                     images.append(src)
+                    if len(images) >= 5:
+                        break
+        
+        print(f"🖼️ Images extraites: {len(images)}")
+        for i, img in enumerate(images[:3]):
+            print(f"   Image {i+1}: {img[:80]}...")
         
         return list(set(images))  # Supprimer doublons
     
