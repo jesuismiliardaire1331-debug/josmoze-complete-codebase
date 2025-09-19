@@ -26,6 +26,7 @@ import PromotionsManager from './PromotionsManager';
 import TranslationGuardian from "./TranslationGuardian";
 import ProductQuestionnaire from "./ProductQuestionnaire";
 import StripeCheckout from "./StripeCheckout";
+import ProductDetail from "./ProductDetail";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
