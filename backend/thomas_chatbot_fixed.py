@@ -119,6 +119,14 @@ class ThomasChatbot:
                     "type": "pricing"
                 }
             
+            # Questions spécifiques filtre douche
+            if any(word in message_lower for word in ["filtre douche", "douche", "peau", "cheveux", "calcaire", "chlore douche"]):
+                return {
+                    "message": "🚿 **Filtre Purificateur de Douche Anti-Calcaire** - 39,90€\n\nExcellent choix ! Ce produit révolutionnaire va transformer vos douches :\n\n✨ **Bénéfices immédiats :**\n• Peau plus douce et moins irritée\n• Cheveux plus brillants et soyeux\n• Fini les démangeaisons dues au chlore\n• Réduction du calcaire sur la peau\n\n🔧 **Ultra pratique :**\n• Installation universelle en 2 minutes\n• Aucun outil nécessaire\n• Compatible tous robinets de douche\n• Cartouche dure 6-8 mois\n\n👨‍👩‍👧‍👦 **Idéal pour :**\n• Peaux sensibles et allergiques\n• Familles avec enfants\n• Personnes aux cheveux fragiles\n\nVoulez-vous l'associer à un osmoseur pour une eau pure partout ?",
+                    "suggestions": ["✅ Oui, pack complet", "🚿 Filtre douche seul", "💧 Osmoseur seul"],
+                    "type": "shower_filter"
+                }
+            
             # Questions sur produits spécifiques
             if any(word in message_lower for word in ["produits", "osmoseur", "prix", "comparaison", "catalogue"]):
                 return {
