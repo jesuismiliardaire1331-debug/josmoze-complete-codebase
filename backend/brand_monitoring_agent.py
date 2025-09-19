@@ -433,7 +433,9 @@ class BrandMonitoringAgent:
         self.logger.info(f"🚨 Seuil d'alerte: IMMÉDIAT (1ère détection)")
         self.logger.info(f"🔍 Points de contrôle: 5 URLs web + Fichiers + Métadonnées")
         
-        self.running = True
+        # Agent temporairement désactivé pour performance critique
+        self.running = False
+        self.logger.info("🔧 Agent de surveillance temporairement désactivé pour urgence")
         
         while self.running:
             try:
