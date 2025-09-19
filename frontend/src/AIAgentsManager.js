@@ -130,5 +130,3 @@ const AIAgentsManager = () => {
 };
 
 export default AIAgentsManager;
-
-export default AIAgentsManager;
