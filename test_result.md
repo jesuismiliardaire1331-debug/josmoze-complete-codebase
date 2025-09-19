@@ -535,9 +535,26 @@ test_plan:
           agent: "testing"
           comment: "🚨 PROBLÈME CRITIQUE DÉCOUVERT: Configuration de routage Kubernetes/ingress défaillante. Toutes les routes CRM (/crm-login, /crm) redirigent vers le site principal au lieu d'afficher l'interface CRM. Test direct confirmé: https://ecommerce-repair-2.preview.emergentagent.com/crm-login → redirection vers https://ecommerce-repair-2.preview.emergentagent.com/ (site principal). IMPACT: Impossible de tester les modales CRM demandées (Ajouter Prospect, Import CSV) et les nouveaux modules (Suppression List, Email Sequencer). Backend CRM 100% fonctionnel mais frontend inaccessible."
 
+  - task: "Panier E-commerce Fonctionnel - Tests Critiques"
+    implemented: true
+    working: false
+    file: "frontend/src/App.js"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: false
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "🛒 TESTS PANIER JOSMOZE COMPLETS EFFECTUÉS: ✅ Site se charge correctement avec prix 499€ visible ✅ Questionnaire popup fonctionne et se ferme correctement (une seule fois par session) ✅ Navigation vers produits fonctionnelle ✅ 5 produits identifiés: Osmoseur Essentiel (449€), Premium (549€), Prestige (899€), Purificateur (6 trouvés), Fontaine (3 trouvés) ✅ 8 boutons 'Ajouter au Panier' détectés ✅ Ajout au panier réussi avec feedback visuel (✅ Ajouté!) ✅ Compteur panier fonctionne (affiche '1') ✅ Navigation vers /panier réussie ❌ PROBLÈME CRITIQUE: Page panier affiche 'Votre panier est vide' malgré l'ajout de produits. Le panier ne persiste pas les articles ajoutés. ❌ Impossible de tester le processus checkout complet à cause du panier vide. CAUSE: Problème de persistance des données panier entre les pages/sessions."
+        - working: false
+          agent: "testing"
+          comment: "🚨 PROBLÈME PANIER CRITIQUE CONFIRMÉ: Tests approfondis révèlent que le système d'ajout au panier fonctionne visuellement (compteur s'incrémente, feedback positif) mais les articles ne sont PAS persistés dans le panier. Navigation vers /panier montre systématiquement 'Votre panier est vide'. Impact: Impossible pour les clients de finaliser leurs achats. Processus e-commerce complètement bloqué. Nécessite correction urgente du système de gestion d'état du panier (localStorage, sessionStorage ou context React)."
+
 agent_communication:
     - agent: "main"
       message: "🎯 FINALISATION PROJET JOSMOZE - PARTIE 1 TECHNIQUE DÉMARRÉE: Plan d'action complet reçu. Priorités: 1) Correction routage /crm avec solutions contournement, 2) Tests modales CRM (Ajouter prospect, Import CSV), 3) Infrastructure paiement Stripe/PayPal (prêt pour clés API), 4) En parallèle: analyse marché 3 nouveaux produits + contenu blog. OBJECTIF: josmoze.com 100% opérationnel."
+    - agent: "testing"
+      message: "🛒 TESTS PANIER JOSMOZE TERMINÉS - PROBLÈME CRITIQUE DÉTECTÉ: ✅ Frontend fonctionne: site se charge, questionnaire popup OK, produits visibles (Essentiel 449€, Premium 549€, Prestige 899€, etc.) ✅ Ajout panier visuel: boutons fonctionnent, compteur s'incrémente, feedback positif ❌ BLOCAGE MAJEUR: Articles ne persistent pas dans le panier - page /panier toujours vide malgré ajouts ❌ Processus e-commerce cassé: impossible de finaliser achats ❌ Impact client: perte de ventes, frustration utilisateur 🔧 CORRECTION URGENTE REQUISE: Système de persistance panier (React Context, localStorage) défaillant. Sans cette correction, le site e-commerce est non-fonctionnel pour les ventes."
 agent_communication:
     - agent: "main"
       message: "🎉 PHASE 1 TERMINÉE AVEC SUCCÈS ! Corrections critiques validées par utilisateur: 1) Service traduction backend corrigé (FR/FR/EUR forcé par défaut), 2) AutoLanguageDetector frontend optimisé pour français, 3) Stock produits tous forcés 'En stock', 4) Site s'affiche parfaitement en français, CSS fonctionnel, navigation fluide. PHASE 2 DÉMARRÉE: Activation fonctionnalités CRM - modales Add Prospect/Import CSV prioritaires."
