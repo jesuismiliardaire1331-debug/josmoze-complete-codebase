@@ -268,7 +268,7 @@ backend:
     implemented: true
     working: false
     file: "frontend/src/ChatBot_V2.js"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -287,6 +287,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "🤖 VALIDATION PHASE 5 - THOMAS CHATBOT V2 REFONTE ÉCHOUÉE (60% réussite): ✅ RÉUSSIS: Accueil professionnel (identité Thomas + ton bienveillant), Filtre douche 39.90€ mentionné correctement, Expertise technique accessible avec explications simples, Endpoint API fonctionnel (200 OK). ❌ ÉCHECS CRITIQUES: Prix corrects (449€/549€/899€) non mentionnés lors demande prix - Thomas donne explications générales au lieu des prix spécifiques, Ton commercial bienveillant insuffisant lors objection budget. 🔍 DIAGNOSTIC: Le nouveau THOMAS_PROMPT_V2 du frontend n'est pas correctement utilisé par le backend thomas_chatbot_fixed.py. Les réponses utilisent l'ancienne logique au lieu du nouveau prompt professionnel. CORRECTION REQUISE: Synchroniser backend avec nouveau prompt V2 pour réponses prix spécifiques et ton bienveillant renforcé."
+        - working: false
+          agent: "testing"
+          comment: "🚨 THOMAS V2 RÉPARATION CRITIQUE - TESTS SPÉCIFIQUES ÉCHOUÉS (50% réussite): ✅ SUCCÈS PARTIELS: API endpoint fonctionnel (200 OK), Message d'accueil automatique opérationnel avec éléments corrects (bonjour, thomas, conseiller, josmoze), Ton bienveillant confirmé dans réponses générales. ❌ ÉCHECS CRITIQUES: Recommandation famille 4 personnes → Premium 549€ manquante (Thomas donne infos générales au lieu de recommandation spécifique), Prix Premium avec caractéristiques incomplet (prix mentionné mais caractéristiques techniques absentes), Gestion objection prix défaillante (ton agressif détecté au lieu de bienveillant). 🔍 DIAGNOSTIC PRÉCIS: Data structure mismatch partiellement résolu mais logique de recommandation spécifique et gestion objections encore défaillante. Thomas répond mais pas avec la précision commerciale requise. CORRECTION URGENTE: Améliorer logique de recommandation contextuelle et ton bienveillant lors objections prix."
 
   - task: "JOSMOZE Promotions System - Corrections Validation"
     implemented: true
