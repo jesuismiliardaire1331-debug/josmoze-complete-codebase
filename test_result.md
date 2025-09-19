@@ -278,6 +278,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "✅ THOMAS CHATBOT V2 BACKEND FUNCTIONAL: API endpoint /api/ai-agents/chat working perfectly (200 OK responses). Basic conversational functionality confirmed with proper Thomas persona and French responses. Backend supports enriched knowledge base structure in ChatBot_V2.js with V2 content (KNOWLEDGE_BASE_V2 includes nitrates, pesticides, chlore data). However, specific V2 enriched responses (142 cas syndrome, 5,7 pesticides, -23% microbiote) not yet fully activated in conversational responses - currently using default response patterns. Core infrastructure ready for V2 knowledge deployment."
+        - working: true
+          agent: "testing"
+          comment: "🎉 THOMAS CHATBOT RÉPÉTITION CORRIGÉE - TESTS COMPLETS RÉUSSIS: Tests séquentiels avec 3 messages différents (Bonjour Thomas, Quels sont vos osmoseurs?, Prix du modèle Premium) - AUCUNE répétition détectée! ✅ Premier message: Présentation normale avec persona Thomas ✅ Deuxième message: Réponse différente et appropriée sur osmoseurs (BlueMountain, filtration) ✅ Troisième message: Réponse différente sur prix Premium (449€ Essentiel, 549€ Premium, 899€ Prestige) ✅ Aucune phrase problématique répétée (pas de 'Répond-il sur les osmoseurs spécifiquement?'). Thomas répond maintenant normalement à chaque interaction sans répéter la même phrase. PROBLÈME RÉSOLU DÉFINITIVEMENT!"
 
   - task: "JOSMOZE Promotions System - Corrections Validation"
     implemented: true
