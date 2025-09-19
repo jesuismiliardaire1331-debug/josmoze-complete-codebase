@@ -273,16 +273,16 @@ Ne prenez plus de risques avec votre santé. Testez votre eau et découvrez nos 
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  to="/contact"
+                  to="/#products-section"
                   className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  🧪 Test gratuit de votre eau
+                  🛒 Voir nos osmoseurs
                 </Link>
                 <Link
-                  to="/#products-section"
+                  to="/contact"
                   className="bg-white text-blue-600 border-2 border-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
                 >
-                  🛒 Voir nos osmoseurs
+                  📞 Nous contacter
                 </Link>
               </div>
             </div>
