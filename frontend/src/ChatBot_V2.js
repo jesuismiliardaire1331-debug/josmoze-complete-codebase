@@ -371,6 +371,20 @@ const ChatBotV2 = () => {
     };
   }, [hasShownWelcome, isOpen, safeSetTimeout, isMounted]);
 
+  // Initialiser avec message d'accueil Thomas V2
+  useEffect(() => {
+    if (messages.length === 0) {
+      const welcomeMessage = {
+        id: Date.now(),
+        text: "Bonjour ! Je suis Thomas, votre conseiller Josmoze. Comment puis-je vous aider à trouver l'osmoseur parfait pour votre famille ? 😊",
+        sender: 'assistant',
+        timestamp: new Date().toISOString(),
+        agent: 'thomas'
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, []);
+
   const sendMessage = async (userMessage, retryCount = 0) => {
     if (!userMessage?.trim()) return;
 
