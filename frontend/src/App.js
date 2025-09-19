@@ -28,6 +28,8 @@ import ProductQuestionnaire from "./ProductQuestionnaire";
 import StripeCheckout from "./StripeCheckout";
 import ProductDetail from "./ProductDetail";
 import AdminUpload from "./AdminUpload";
+import BlogPage from "./BlogPage";
+import BlogArticle from "./BlogArticle";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
