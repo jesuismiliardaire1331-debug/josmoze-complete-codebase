@@ -48,7 +48,19 @@ const AppProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
-  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  // 🎯 QUESTIONNAIRE - Initialisation avec vérification localStorage
+  const [showQuestionnaire, setShowQuestionnaire] = useState(() => {
+    // Vérifier dès l'initialisation si l'utilisateur a déjà vu le questionnaire
+    try {
+      const hasSeenThisSession = sessionStorage.getItem('josmoze_questionnaire_shown');
+      const hasSeenPermanent = localStorage.getItem('josmoze_questionnaire_seen');
+      console.log('🎯 Vérification initiale questionnaire:', { hasSeenThisSession, hasSeenPermanent });
+      return false; // Ne jamais afficher par défaut
+    } catch (error) {
+      console.error('Error checking questionnaire status:', error);
+      return false;
+    }
+  });
 
   // 🛒 SAUVEGARDE AUTOMATIQUE PANIER dans localStorage
   useEffect(() => {
