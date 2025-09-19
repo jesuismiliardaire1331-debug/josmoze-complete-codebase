@@ -191,7 +191,56 @@ Je trouve l'osmoseur parfait selon vos besoins ! 😊""",
                     "suggestions": ["👨‍👩‍👧 2-3 personnes", "👨‍👩‍👧‍👦 4-5 personnes", "💰 Budget serré"]
                 }
             
-            # INFORMATIONS PRODUITS SPÉCIFIQUES V2
+            # RECOMMANDATION FAMILLE - LOGIQUE THOMAS V2
+            if any(word in message_lower for word in ["famille", "personnes", "foyer", "combien de personnes", "quel osmoseur"]):
+                # Logique de recommandation selon nombre de personnes
+                if any(word in message_lower for word in ["4", "quatre", "4-5", "4 personnes", "famille 4"]):
+                    produit = self.osmoseurs_catalog["osmoseur-premium"]
+                    return {
+                        "message": f"""🎯 **Pour une famille de 4 personnes, je recommande le {produit['name']} !**
+
+{produit['thomas_pitch']}
+
+✅ **Pourquoi c'est parfait pour vous** :
+• 4-5 personnes = consommation optimale
+• 6 étapes + reminéralisation = eau parfaitement équilibrée  
+• Réservoir 15L = débit suffisant
+• Auto-rinçage = maintenance minimale
+
+💰 **Prix** : {produit['price']}€ - Notre bestseller !
+
+{self.response_templates["call_to_action"][2]}""",
+                        "suggestions": ["🛒 Ajouter Premium 549€", "📋 Comparer modèles", "❓ Plus d'infos"]
+                    }
+                elif any(word in message_lower for word in ["2", "3", "deux", "trois", "couple", "petit"]):
+                    produit = self.osmoseurs_catalog["osmoseur-essentiel"]
+                    return {
+                        "message": f"""🎯 **Pour 2-3 personnes, l'{produit['name']} est idéal !**
+
+{produit['thomas_pitch']}
+
+✅ **Parfait pour votre foyer** :
+• 2-3 personnes = dimensionnement optimal
+• 5 étapes de filtration = efficacité prouvée
+• Installation professionnelle incluse
+• Économique sans compromis qualité
+
+{self.response_templates["call_to_action"][2]}""",
+                        "suggestions": ["🛒 Essentiel 449€", "⬆️ Voir Premium", "❓ Questions"]
+                    }
+                else:
+                    # Réponse générale pour recommandation
+                    return {
+                        "message": f"""🏠 **Laissez-moi vous conseiller selon votre foyer !**
+
+🎯 **Mes recommandations par famille** :
+• **2-3 personnes** → Essentiel 449€ (efficace et économique)
+• **4-5 personnes** → Premium 549€ ⭐ (notre bestseller !)
+• **5+ personnes** → Prestige 899€ (solution professionnelle)
+
+{self.response_templates["hesitation"]}""",
+                        "suggestions": ["👨‍👩‍👧 2-3 personnes", "👨‍👩‍👧‍👦 4-5 personnes", "👥 5+ personnes"]
+                    }
             if any(word in message_lower for word in ["essentiel", "premium", "prestige", "filtre douche"]):
                 if "essentiel" in message_lower:
                     produit = self.osmoseurs_catalog["osmoseur-essentiel"]
