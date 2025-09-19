@@ -1,12 +1,35 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AIAgentsManager = () => {
-    const [agentsData, setAgentsData] = useState(null);
-    const [selectedAgent, setSelectedAgent] = useState(null);
-    const [clientProfiles, setClientProfiles] = useState([]);
-    const [analytics, setAnalytics] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('dashboard');
+    const navigate = useNavigate();
+    const [agentsStatus, setAgentsStatus] = useState({
+        'product-hunter': { 
+            name: 'Agent Product Hunter', 
+            description: 'Recherche et analyse des tendances produits automatiquement',
+            status: false,
+            icon: '🔍'
+        },
+        'content-creator': { 
+            name: 'Agent Content Creator', 
+            description: 'Génération automatique de contenu marketing et articles',
+            status: false,
+            icon: '✍️'
+        },
+        'email-marketer': { 
+            name: 'Agent Email Marketer', 
+            description: 'Campagnes email automatisées et personnalisées',
+            status: true,
+            icon: '📧'
+        },
+        'seo-master': { 
+            name: 'Agent SEO Master', 
+            description: 'Optimisation SEO et référencement automatique',
+            status: false,
+            icon: '🎯'
+        }
+    });
+    const [loading, setLoading] = useState(false);
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://josmoze.com';
 
