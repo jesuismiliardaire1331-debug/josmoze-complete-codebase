@@ -125,121 +125,157 @@ class ThomasChatbot:
     
     def generate_response(self, user_message: str, user_context: Dict = None) -> Dict:
         """
-        Génère une réponse expert en osmoseurs
+        Génère une réponse Thomas V2 avec nouveau prompt professionnel
         """
         try:
             message_lower = user_message.lower()
             
-            # Salutation
+            # ACCUEIL THOMAS V2
             if any(word in message_lower for word in ["bonjour", "salut", "hello", "bonsoir", "coucou"]):
                 return {
-                    "message": "Bonjour ! 👋 Je suis Thomas, votre expert osmoseurs chez Josmose.com.\n\n💧 **Spécialiste en purification d'eau par osmose inverse**\n\nJe vous aide à choisir l'osmoseur parfait pour avoir une eau pure illimitée chez vous !\n\n🎯 **Notre gamme BlueMountain 2025** :\n• **Essentiel** 449€ (1-2 pers.)\n• **Premium** 549€ (3-4 pers.) ⭐ *Le plus populaire*\n• **Prestige** 899€ (5+ pers.)\n\nComment puis-je vous conseiller ? 😊",
-                    "suggestions": ["💧 Comment ça marche ?", "💰 Lequel pour mon budget ?", "🏠 Lequel pour ma famille ?"],
-                    "type": "greeting"
+                    "message": self.response_templates["accueil"],
+                    "suggestions": ["💰 Voir les prix", "🏠 Recommandation famille", "💧 Comment ça marche ?"]
                 }
             
-            # Fonctionnement osmose inverse
-            if any(word in message_lower for word in ["marche", "fonctionne", "comment", "principe", "osmose"]):
-                steps = "\n".join(self.how_it_works)
+            # DEMANDE DE PRIX AVEC PRIX CORRECTS V2
+            if any(word in message_lower for word in ["prix", "coût", "combien", "tarif", "budget"]):
+                prix_message = f"""💰 **Nos prix osmoseurs Josmoze** :
+
+🔹 **Osmoseur Essentiel** : **449€**
+   👨‍👩‍👧 Familles 2-3 personnes, efficace
+
+🔸 **Osmoseur Premium** : **549€** ⭐ *Le plus populaire*
+   👨‍👩‍👧‍👦 Familles 4-5 personnes, technologie avancée
+
+🔹 **Osmoseur Prestige** : **899€**
+   🏢 Solution professionnelle, écran tactile
+
+🚿 **Filtre Douche** : **39.90€**
+   ✨ Complément bien-être peau/cheveux
+
+{self.response_templates["objection_prix"]}
+
+{self.response_templates["call_to_action"][0]}"""
+                
                 return {
-                    "message": f"Excellente question ! 🔬 **L'osmose inverse expliquée simplement** :\n\n{steps}\n\n💡 **Résultat** : Eau 99% pure, sans chlore, sans nitrates, sans pesticides !\n\nC'est la même technologie que les stations spatiales. Votre eau du robinet devient plus pure que l'eau en bouteille ! 🚀\n\nQuel aspect vous intéresse le plus ?",
-                    "suggestions": ["💰 Prix des osmoseurs", "🏠 Lequel choisir ?", "🔧 Installation facile ?"],
-                    "type": "explanation"
+                    "message": prix_message,
+                    "suggestions": ["🛒 Ajouter au panier", "❓ Plus d'infos", "📞 Parler à un expert"]
                 }
             
-            # Prix et budget
-            if any(word in message_lower for word in ["prix", "coût", "budget", "combien", "tarif"]):
+            # OBJECTION BUDGET - TON BIENVEILLANT V2
+            if any(word in message_lower for word in ["cher", "chère", "budget", "trop", "moins cher", "économique"]):
                 return {
-                    "message": "💰 **Nos osmoseurs BlueMountain 2025** - Prix tout inclus :\n\n🥉 **Essentiel Compact** - **449€**\n• 1-2 personnes, appartements\n• 5 étapes, réservoir 12L\n• Installation + garantie 2 ans\n\n🥈 **Premium Avancé** - **549€** ⭐\n• 3-4 personnes, maisons\n• 6 étapes + reminéralisation\n• Notre bestseller ! Installation + garantie 3 ans\n\n🥇 **Prestige De Comptoir** - **899€**\n• 5+ personnes, haut de gamme\n• 7 étapes + UV + écran tactile\n• Installation + garantie 5 ans\n\n💡 **Rentabilité** : Famille 4 pers. économise 1500€/an vs bouteilles !\n\nQuel budget avez-vous en tête ?",
-                    "suggestions": ["💰 200-400€", "💰 400-700€", "💰 700€+"],
-                    "type": "pricing"
+                    "message": f"""{self.response_templates["budget_serre"]}
+
+💡 **Pourquoi l'Essentiel à 449€** :
+• ✅ Eau pure illimitée pour toute la famille
+• 💰 Économies bouteilles = rentabilisé en 6 mois  
+• 🏠 Parfait pour débuter sans compromis qualité
+• 🔧 Installation professionnelle incluse
+
+{self.response_templates["call_to_action"][1]}""",
+                    "suggestions": ["📋 Questionnaire rapide", "🛒 Essentiel 449€", "💬 Autres questions"]
                 }
             
-            # Questions spécifiques filtre douche
-            if any(word in message_lower for word in ["filtre douche", "douche", "peau", "cheveux", "calcaire", "chlore douche"]):
+            # HÉSITATION - ACCOMPAGNEMENT V2
+            if any(word in message_lower for word in ["hésite", "réfléchir", "voir", "décider", "peut-être"]):
                 return {
-                    "message": "🚿 **Filtre Purificateur de Douche Anti-Calcaire** - 39,90€\n\nExcellent choix ! Ce produit révolutionnaire va transformer vos douches :\n\n✨ **Bénéfices immédiats :**\n• Peau plus douce et moins irritée\n• Cheveux plus brillants et soyeux\n• Fini les démangeaisons dues au chlore\n• Réduction du calcaire sur la peau\n\n🔧 **Ultra pratique :**\n• Installation universelle en 2 minutes\n• Aucun outil nécessaire\n• Compatible tous robinets de douche\n• Cartouche dure 6-8 mois\n\n👨‍👩‍👧‍👦 **Idéal pour :**\n• Peaux sensibles et allergiques\n• Familles avec enfants\n• Personnes aux cheveux fragiles\n\nVoulez-vous l'associer à un osmoseur pour une eau pure partout ?",
-                    "suggestions": ["✅ Oui, pack complet", "🚿 Filtre douche seul", "💧 Osmoseur seul"],
-                    "type": "shower_filter"
+                    "message": f"""{self.response_templates["hesitation"]}
+
+🎯 **Questions pour vous conseiller** :
+1️⃣ Combien de personnes dans votre foyer ?
+2️⃣ Quel est votre budget approximatif ?
+3️⃣ Priorité : économique ou haut de gamme ?
+
+Je trouve l'osmoseur parfait selon vos besoins ! 😊""",
+                    "suggestions": ["👨‍👩‍👧 2-3 personnes", "👨‍👩‍👧‍👦 4-5 personnes", "💰 Budget serré"]
                 }
             
-            # Questions sur produits spécifiques
-            if any(word in message_lower for word in ["produits", "osmoseur", "prix", "comparaison", "catalogue"]):
-                return {
-                    "message": "Excellente question ! 😊 Voici notre gamme complète **Josmose 2025** :\n\n💧 **OSMOSEURS BLUEMOUNTAIN :**\n• **Essentiel Compact** - 449€ (1-2 pers., appartements)\n• **Premium Avancé** - 549€ ⭐ *Le plus populaire* (3-4 pers.)\n• **Prestige De Comptoir** - 899€ (5+ pers., haut de gamme)\n\n🚿 **NOUVEAU ! FILTRE DOUCHE ANTI-CALCAIRE** - 39,90€\n• Peau plus douce, cheveux plus brillants\n• Installation 2 minutes sans outils\n• Idéal peaux sensibles et familles\n• Cartouche 6-8 mois\n\nQuel type de foyer avez-vous ? Je peux vous conseiller plus précisément ! 🏠",
-                    "suggestions": ["🎯 Questionnaire personnalisé", "💧 Osmoseurs seulement", "🚿 Filtre douche détails"],
-                    "type": "product_info"
-                }
-            
-            # Recommandations par budget
-            if "200-400" in user_message or "400-700" in user_message or "700+" in user_message:
-                if "200-400" in user_message:
-                    product = self.osmoseurs_catalog["osmoseur-essentiel"]
+            # INFORMATIONS PRODUITS SPÉCIFIQUES V2
+            if any(word in message_lower for word in ["essentiel", "premium", "prestige", "filtre douche"]):
+                if "essentiel" in message_lower:
+                    produit = self.osmoseurs_catalog["osmoseur-essentiel"]
                     return {
-                        "message": f"🎯 **Pour votre budget, je recommande l'{product['name']}** !\n\n✨ **Pourquoi c'est parfait** :\n• Prix : **{product['price']}€** tout inclus\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n\n🔧 **Vous obtenez** :\n• Installation professionnelle gratuite\n• Garantie 2 ans complète\n• Eau pure illimitée immédiatement\n• Économie dès le 1er mois vs bouteilles\n\nVoulez-vous voir sa fiche technique complète ?",
-                        "suggestions": ["📋 Fiche technique", "🔧 Comment ça marche ?", "📞 Parler à un expert"],
-                        "type": "recommendation"
+                        "message": f"""🔹 **{produit['name']} - {produit['price']}€**
+
+{produit['thomas_pitch']}
+
+✅ **Caractéristiques** :
+{chr(10).join(f'• {feature}' for feature in produit['features'])}
+
+🎯 **Idéal pour** : {produit['ideal_for']}
+
+{self.response_templates["call_to_action"][2]}""",
+                        "suggestions": ["🛒 Ajouter au panier", "📋 Comparer", "❓ Questions"]
                     }
-                elif "400-700" in user_message:
-                    product = self.osmoseurs_catalog["osmoseur-premium"]
+                elif "premium" in message_lower:
+                    produit = self.osmoseurs_catalog["osmoseur-premium"]
                     return {
-                        "message": f"🌟 **Excellent choix ! L'{product['name']}** est PARFAIT !\n\n⭐ **Pourquoi c'est notre bestseller** :\n• Prix : **{product['price']}€** tout inclus\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n\n🏆 **Avantages exclusifs** :\n• Reminéralisation = eau parfaitement équilibrée\n• Robinet LED indicateur de qualité\n• Auto-rinçage automatique\n• 95% de nos clients le choisissent !\n\nJe vous montre pourquoi il cartonne ?",
-                        "suggestions": ["📋 Pourquoi si populaire ?", "🔧 Installation incluse ?", "✅ Je le veux !"],
-                        "type": "recommendation"
+                        "message": f"""🔸 **{produit['name']} - {produit['price']}€** ⭐
+
+{produit['thomas_pitch']}
+
+✅ **Caractéristiques** :
+{chr(10).join(f'• {feature}' for feature in produit['features'])}
+
+🎯 **Idéal pour** : {produit['ideal_for']}
+
+{self.response_templates["call_to_action"][2]}""",
+                        "suggestions": ["🛒 Ajouter au panier", "📋 Comparer", "❓ Questions"]
                     }
-                else:  # 700€+
-                    product = self.osmoseurs_catalog["osmoseur-prestige"]
+                elif "prestige" in message_lower:
+                    produit = self.osmoseurs_catalog["osmoseur-prestige"] 
                     return {
-                        "message": f"👑 **Pour un budget premium, l'{product['name']}** est exceptionnel !\n\n🚀 **Le top de la technologie osmoseurs** :\n• Prix : **{product['price']}€** tout inclus\n• {product['description']}\n• Idéal pour {product['ideal_for']}\n\n✨ **Technologie unique** :\n• Écran tactile avec monitoring temps réel\n• App mobile pour contrôle à distance\n• UV stérilisation supplémentaire\n• Service maintenance premium 5 ans\n\nC'est l'osmoseur du futur ! Intéressé ?",
-                        "suggestions": ["📱 Voir app mobile", "🏆 Toutes les fonctions", "📞 Consultation expert"],
-                        "type": "recommendation"
+                        "message": f"""🔹 **{produit['name']} - {produit['price']}€**
+
+{produit['thomas_pitch']}
+
+✅ **Caractéristiques** :
+{chr(10).join(f'• {feature}' for feature in produit['features'])}
+
+🎯 **Idéal pour** : {produit['ideal_for']}
+
+{self.response_templates["call_to_action"][2]}""",
+                        "suggestions": ["🛒 Ajouter au panier", "📋 Comparer", "❓ Questions"]
+                    }
+                elif "filtre" in message_lower and "douche" in message_lower:
+                    produit = self.osmoseurs_catalog["filtre-douche"]
+                    return {
+                        "message": f"""🚿 **{produit['name']} - {produit['price']}€**
+
+{produit['thomas_pitch']}
+
+✅ **Avantages** :
+{chr(10).join(f'• {feature}' for feature in produit['features'])}
+
+🎯 **Parfait pour** : {produit['ideal_for']}
+
+Installation en 2 minutes, résultats immédiats ! ✨""",
+                        "suggestions": ["🛒 Ajouter 39.90€", "💧 + Osmoseur", "❓ Installation"]
                     }
             
-            # Avantages et bénéfices
-            if any(word in message_lower for word in ["avantage", "bénéfice", "pourquoi", "intérêt", "santé"]):
-                return {
-                    "message": "🌟 **Pourquoi choisir un osmoseur Josmose ?**\n\n🏥 **Pour votre santé** :\n• 99% des contaminants éliminés\n• Fini chlore, nitrates, pesticides, métaux lourds\n• Eau pure comme en montagne\n\n💰 **Pour votre porte-monnaie** :\n• Famille 4 pers : 150€/mois bouteilles → 15€/mois osmoseur\n• Économie : 1620€/an !\n• Retour sur investissement en 4-6 mois\n\n🌍 **Pour la planète** :\n• Plus de bouteilles plastique\n• 1 osmoseur = 10 000 bouteilles évitées/an\n• Empreinte carbone divisée par 100\n\n🚰 **Pour le confort** :\n• Eau pure illimitée 24h/24\n• Direct au robinet, toujours fraîche\n• Plus de courses bouteilles lourdes\n\nQuel aspect vous motive le plus ?",
-                    "suggestions": ["💰 Calculer mes économies", "🏠 Lequel choisir ?", "🔧 Installation facile ?"],
-                    "type": "benefits"
-                }
-            
-            # Installation
-            if any(word in message_lower for word in ["installation", "installer", "pose", "technique"]):
-                return {
-                    "message": "🔧 **Installation osmoseur - Simple et rapide !**\n\n✅ **Service inclus gratuit** :\n• Technicien expert se déplace chez vous\n• Installation complète en 2h maximum\n• Sous évier, raccordement eau froide\n• Tests et mise en service immédiate\n\n📋 **Étapes installation** :\n1️⃣ Perçage évier pour robinet dédié\n2️⃣ Raccordement arrivée d'eau\n3️⃣ Installation système + réservoir\n4️⃣ Tests complets + formation\n\n🛡️ **Garanties** :\n• 2 à 5 ans selon modèle\n• Maintenance annuelle simple\n• Support technique 7j/7\n• Satisfait ou remboursé 30 jours\n\nAucun stress, on gère tout ! Des questions sur l'installation ?",
-                    "suggestions": ["🏠 Convient à mon logement ?", "💰 Voir les prix", "📞 Prendre RDV"],
-                    "type": "installation"
-                }
-            
-            # Contact
-            if any(word in message_lower for word in ["contact", "téléphone", "appeler", "rdv", "expert"]):
-                return {
-                    "message": "📞 **Parfait ! Nos experts osmoseurs vous attendent :**\n\n🕒 **Disponibilité** :\n• Lundi-Vendredi : 9h-18h\n• Conseils gratuits et sans engagement\n• Devis personnalisé immédiat\n\n💬 **Plusieurs options** :\n• **Formulaire contact** sur le site\n• **Consultation vidéo** pour voir les produits\n• **Visite technique gratuite** pour devis sur-mesure\n\nNos conseillers sont des vrais experts osmoseurs. Ils connaissent chaque produit par cœur et sauront vous orienter selon votre situation exacte ! 😊\n\nComment préférez-vous être contacté ?",
-                    "suggestions": ["📞 Appel téléphonique", "💻 Consultation vidéo", "🏠 Visite gratuite"],
-                    "type": "contact"
-                }
-            
-            # Questions famille/logement
-            if any(word in message_lower for word in ["famille", "personnes", "maison", "appartement", "logement"]):
-                return {
-                    "message": "🏠 **Choisir selon votre foyer** :\n\n👥 **1-2 personnes** (appartement) :\n➜ **Essentiel 449€** - Compact et économique\n\n👨‍👩‍👧 **3-4 personnes** (maison) :\n➜ **Premium 549€** - Notre bestseller ! ⭐\n\n👨‍👩‍👧‍👦 **5+ personnes** (grande maison) :\n➜ **Prestige 899€** - Capacité maximale\n\n💡 **Conseil d'expert** : Le Premium convient à 90% des foyers français. Réservoir 15L, reminéralisation, auto-rinçage... C'est le sweet spot qualité-prix !\n\nCombien êtes-vous à la maison ?",
-                    "suggestions": ["👥 1-2 personnes", "👨‍👩‍👧 3-4 personnes", "👨‍👩‍👧‍👦 5+ personnes"],
-                    "type": "family_sizing"
-                }
-            
-            # Message par défaut - expert osmoseurs
+            # RÉPONSE GÉNÉRALE THOMAS V2 - EXPERTISE ACCESSIBLE
             return {
-                "message": "🤔 Bonne question ! Je suis Thomas, **expert osmoseurs** chez Josmose.com 💧\n\n**Je peux vous aider avec** :\n🎯 Choisir l'osmoseur parfait pour votre foyer\n💰 Calculer vos économies vs bouteilles\n🔧 Tout savoir sur l'installation gratuite\n🏥 Comprendre les bénéfices santé\n📞 Vous mettre en contact avec un expert\n\n**Notre spécialité** : Transformer votre eau du robinet en eau plus pure que les bouteilles, directement chez vous !\n\nQue voulez-vous savoir sur nos osmoseurs ?",
-                "suggestions": ["💧 Comment ça marche ?", "💰 Voir les prix", "🏠 Lequel choisir ?"],
-                "type": "help"
+                "message": f"""Thomas ici ! 😊 Expert en purification d'eau chez Josmoze.
+
+🎯 **Ma mission** : Vous aider à choisir l'osmoseur parfait !
+
+💧 **Notre gamme 2025** :
+• **Essentiel 449€** : Familles 2-3 pers.
+• **Premium 549€** : Familles 4-5 pers. ⭐
+• **Prestige 899€** : Solution professionnelle  
+• **Filtre Douche 39.90€** : Bien-être quotidien
+
+{self.response_templates["call_to_action"][0]}""",
+                "suggestions": ["💰 Voir les prix", "📋 Questionnaire", "💬 Poser une question"]
             }
             
         except Exception as e:
-            logger.error(f"Erreur Thomas osmoseurs: {e}")
+            logger.error(f"Erreur génération réponse Thomas: {str(e)}")
+            # Fallback avec nouveau prompt V2
             return {
-                "message": "Désolé pour ce petit bug ! 😅\n\nJe suis Thomas, votre expert osmoseurs Josmose.com.\n\n💧 **Je peux vous aider à** :\n🎯 Choisir votre osmoseur idéal\n💰 Calculer vos économies\n🔧 Tout savoir sur l'installation\n\nQue souhaitez-vous savoir sur nos osmoseurs BlueMountain ?",
-                "suggestions": ["💧 Comment ça marche ?", "💰 Prix osmoseurs", "📞 Expert au téléphone"],
-                "type": "error"
+                "message": self.response_templates["accueil"],
+                "suggestions": ["💰 Voir les prix", "🏠 Recommandation", "❓ Questions"]
             }
 
 # Instance globale Thomas Osmoseurs
