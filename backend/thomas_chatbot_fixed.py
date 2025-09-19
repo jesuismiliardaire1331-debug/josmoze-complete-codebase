@@ -44,6 +44,14 @@ class ThomasChatbot:
                 "ideal_for": "5+ personnes, technologie premium, budget confortable",
                 "features": ["7 étapes + UV", "Double réservoir 20L", "Écran tactile", "App mobile"],
                 "benefits": "Technologie de pointe, monitoring temps réel"
+            },
+            "filtre-douche": {
+                "name": "Filtre Purificateur de Douche Anti-Calcaire",
+                "price": 39.90,
+                "description": "Filtre révolutionnaire pour douche. Peau plus douce, cheveux plus brillants.",
+                "ideal_for": "Peaux sensibles et familles, installation universelle",
+                "features": ["Installation 2 minutes sans outils", "Cartouche 6-8 mois", "Réduit chlore et calcaire", "Compatible tous robinets"],
+                "benefits": "Peau plus douce, cheveux plus brillants, idéal peaux sensibles"
             }
         }
         
