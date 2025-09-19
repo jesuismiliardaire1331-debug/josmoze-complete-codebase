@@ -33,129 +33,26 @@ const AIAgentsManager = () => {
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://josmoze.com';
 
-    // Load dashboard data
-    useEffect(() => {
-        loadAgentsDashboard();
-        loadClientProfiles();
-        loadAnalytics();
-    }, []);
-
-    const loadAgentsDashboard = async () => {
-        try {
-            const token = localStorage.getItem('crm_token');
-            const response = await fetch(`${backendUrl}/api/crm/ai-agents/dashboard`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setAgentsData(data);
-            }
-        } catch (error) {
-            console.error('Erreur lors du chargement du dashboard agents:', error);
-        }
-    };
-
-    const loadClientProfiles = async () => {
-        try {
-            const token = localStorage.getItem('crm_token');
-            const response = await fetch(`${backendUrl}/api/crm/ai-agents/client-profiles`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setClientProfiles(data.profiles || []);
-            }
-        } catch (error) {
-            console.error('Erreur lors du chargement des profils:', error);
-        }
-    };
-
-    const loadAnalytics = async () => {
-        try {
-            const token = localStorage.getItem('crm_token');
-            const response = await fetch(`${backendUrl}/api/crm/ai-agents/performance-analytics`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setAnalytics(data.analytics);
-            }
+    // Toggle agent status
+    const toggleAgentStatus = (agentId) => {
+        setLoading(true);
+        
+        // Simulate API call
+        setTimeout(() => {
+            setAgentsStatus(prev => ({
+                ...prev,
+                [agentId]: {
+                    ...prev[agentId],
+                    status: !prev[agentId].status
+                }
+            }));
             setLoading(false);
-        } catch (error) {
-            console.error('Erreur lors du chargement des analytics:', error);
-            setLoading(false);
-        }
+        }, 500);
     };
 
-    const toggleAgentStatus = async (agentName, newStatus) => {
-        try {
-            const token = localStorage.getItem('crm_token');
-            const response = await fetch(`${backendUrl}/api/crm/ai-agents/${agentName}/status`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ status: newStatus })
-            });
-
-            if (response.ok) {
-                await loadAgentsDashboard(); // Reload data
-                alert(`Agent ${agentName} mis à jour: ${newStatus}`);
-            }
-        } catch (error) {
-            console.error('Erreur lors du changement de statut:', error);
-            alert('Erreur lors du changement de statut');
-        }
-    };
-
-    const triggerAbandonedCartRecovery = async () => {
-        try {
-            const token = localStorage.getItem('crm_token');
-            const response = await fetch(`${backendUrl}/api/crm/ai-agents/abandoned-cart-recovery`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ hours_threshold: 2 })
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                alert(`Récupération lancée: ${result.abandoned_cart_recovery.recovery_attempts} paniers traités`);
-            }
-        } catch (error) {
-            console.error('Erreur lors de la récupération:', error);
-            alert('Erreur lors de la récupération des paniers');
-        }
-    };
-
-    const bulkContact = async (agentName, filters) => {
-        try {
-            const token = localStorage.getItem('crm_token');
-            const response = await fetch(`${backendUrl}/api/crm/ai-agents/bulk-contact`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    agent: agentName,
-                    filters: filters,
-                    message_type: agentName === 'aristote' ? 'call' : 'sms',
-                    max_contacts: 20
-                })
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                alert(`Contact en masse: ${result.bulk_contact_results.successfully_contacted} clients contactés`);
-            }
-        } catch (error) {
-            console.error('Erreur lors du contact en masse:', error);
-            alert('Erreur lors du contact en masse');
-        }
+    // Navigate to AI Upload Agent
+    const navigateToAIUpload = () => {
+        navigate('/ai-upload-agent');
     };
 
     if (loading) {
