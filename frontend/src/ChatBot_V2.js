@@ -287,6 +287,7 @@ const ChatBotV2 = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const messagesEndRef = useRef(null);
   const backendUrl = API_BASE;
