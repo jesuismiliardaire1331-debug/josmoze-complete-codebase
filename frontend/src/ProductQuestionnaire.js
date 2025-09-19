@@ -221,14 +221,44 @@ const ProductQuestionnaire = ({ isOpen, onClose, onRecommendation, formatPrice }
               <div className="bg-blue-50 rounded-lg p-4 mb-6">
                 <div className="text-center">
                   <h4 className="font-semibold text-gray-900 mb-2">
-                    {recommendation.name}
+                    {recommendation.hasBundle ? '🎁 Pack Recommandé' : recommendation.name}
                   </h4>
-                  <div className="text-2xl font-bold text-blue-600 mb-2">
-                    {formatPrice ? formatPrice(recommendation.price) : defaultFormatPrice(recommendation.price)}
-                  </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    {recommendation.reason}
-                  </p>
+                  
+                  {recommendation.hasBundle ? (
+                    <div className="space-y-3 mb-4">
+                      {/* Osmoseur principal */}
+                      <div className="bg-white rounded p-3">
+                        <div className="font-medium text-gray-800">{recommendation.name}</div>
+                        <div className="text-blue-600 font-bold">{formatPrice ? formatPrice(recommendation.price) : defaultFormatPrice(recommendation.price)}</div>
+                        <div className="text-sm text-gray-600">{recommendation.reason}</div>
+                      </div>
+                      
+                      {/* Filtre douche */}
+                      <div className="bg-white rounded p-3">
+                        <div className="font-medium text-gray-800">{recommendation.showerFilter.name}</div>
+                        <div className="text-green-600 font-bold">{formatPrice ? formatPrice(recommendation.showerFilter.price) : defaultFormatPrice(recommendation.showerFilter.price)}</div>
+                        <div className="text-sm text-gray-600">{recommendation.showerFilter.reason}</div>
+                      </div>
+                      
+                      {/* Prix total */}
+                      <div className="bg-green-50 rounded p-3 border-2 border-green-200">
+                        <div className="font-bold text-green-800">Pack Eau Pure Complète</div>
+                        <div className="text-2xl font-bold text-green-600">
+                          {formatPrice ? formatPrice(recommendation.totalPrice) : defaultFormatPrice(recommendation.totalPrice)}
+                        </div>
+                        <div className="text-sm text-green-700">Eau pure pour boire ET se laver !</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mb-4">
+                      <div className="text-2xl font-bold text-blue-600 mb-2">
+                        {formatPrice ? formatPrice(recommendation.price) : defaultFormatPrice(recommendation.price)}
+                      </div>
+                      <p className="text-sm text-gray-600 mb-4">
+                        {recommendation.reason}
+                      </p>
+                    </div>
+                  )}
                   
                   <div className="flex space-x-2">
                     <button
