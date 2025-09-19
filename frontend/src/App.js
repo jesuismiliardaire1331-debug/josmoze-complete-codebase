@@ -2082,6 +2082,7 @@ function App() {
                     <Route path="/crm/*" element={<CRMDashboard />} />
                     {/* WORKAROUND: Route publique désinscription */}
                     <Route path="/unsubscribe" element={<UnsubscribeHandler />} />
+                    <Route path="/admin/upload" element={<AdminUpload />} />
                   </Routes>
                 </main>
                 <Footer />
