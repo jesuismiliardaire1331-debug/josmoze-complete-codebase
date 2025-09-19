@@ -50,6 +50,7 @@ security_audit_agent = None
 
 # Import admin upload manager
 from admin_upload import get_admin_upload_manager
+from blog_manager import get_blog_manager, BlogArticle, initialize_default_articles
 
 # Import authentication and AI agents
 from auth import User, UserAuth, Token, authenticate_user, create_access_token, get_current_user, require_role, get_company_info, get_user_permissions
