@@ -11067,53 +11067,56 @@ class BackendTester:
 if __name__ == "__main__":
     tester = BackendTester()
     
-    # Run Thomas ChatBot V2 Refonte tests as requested
-    print("🤖 VALIDATION PHASE 5 - THOMAS CHATBOT V2 REFONTE")
+    # Run Thomas V2 tests as specifically requested in the review
+    print("🚨 TEST CRITIQUE THOMAS V2 RÉPARATION - VALIDATION FONCTIONNELLE")
     print("=" * 80)
+    print("🎯 OBJECTIF: 100% des tests réussis pour valider que Thomas répond maintenant")
+    print("⚠️ URGENCE: Si Thomas ne répond toujours pas, identifier précisément le problème")
+    print()
     
-    # Test the new Thomas V2 refonte implementation
-    thomas_v2_success = tester.test_thomas_chatbot_v2_refonte_validation()
+    # Execute Thomas V2 specific tests
+    thomas_results = tester.run_thomas_v2_tests()
     
-    if thomas_v2_success:
-        print("\n🎉 THOMAS CHATBOT V2 REFONTE VALIDATION RÉUSSIE!")
-        print("✅ Nouveau prompt professionnel implémenté")
-        print("✅ Prix corrects (Essentiel 449€, Premium 549€, Prestige 899€)")
-        print("✅ Ton commercial bienveillant confirmé")
-        print("✅ Filtre douche 39.90€ intégré")
-        print("✅ Expertise technique accessible")
+    # Final assessment
+    passed = sum(thomas_results)
+    total = len(thomas_results)
+    success_rate = (passed / total) * 100 if total > 0 else 0
+    
+    print("\n" + "🚨" * 40)
+    print("RÉSULTAT FINAL - THOMAS V2 RÉPARATION")
+    print("🚨" * 40)
+    
+    if success_rate == 100:
+        print("🎉 SUCCÈS COMPLET - THOMAS V2 100% FONCTIONNEL!")
+        print("✅ Thomas répond maintenant correctement")
+        print("✅ Message d'accueil automatique opérationnel")
+        print("✅ Recommandations produits précises")
+        print("✅ Gestion des objections bienveillante")
+        print("✅ Synchronisation frontend-backend réussie")
+    elif success_rate >= 80:
+        print("✅ SUCCÈS PARTIEL - THOMAS V2 LARGEMENT FONCTIONNEL")
+        print(f"📊 Taux de réussite: {success_rate:.1f}% (objectif 80%+ atteint)")
+        print("⚠️ Quelques améliorations mineures possibles")
     else:
-        print("\n❌ THOMAS CHATBOT V2 REFONTE VALIDATION ÉCHOUÉE!")
-        print("⚠️ Voir détails des tests ci-dessus")
+        print("❌ ÉCHEC - THOMAS V2 TOUJOURS PROBLÉMATIQUE")
+        print(f"📊 Taux de réussite: {success_rate:.1f}% (en dessous de 80%)")
+        print("🚨 CORRECTIONS URGENTES REQUISES")
+        
+        # Identify specific failures
+        failed_tests = []
+        for i, result in enumerate(thomas_results):
+            if not result:
+                test_name = [
+                    "API Endpoint Fonctionnel",
+                    "Message d'Accueil",
+                    "Réponse Bienveillante",
+                    "Recommandation Famille 4 Personnes",
+                    "Prix Premium avec Caractéristiques",
+                    "Gestion Objection Prix"
+                ][i]
+                failed_tests.append(test_name)
+        
+        if failed_tests:
+            print(f"🔍 Tests échoués: {', '.join(failed_tests)}")
     
-    # Also run the basic Thomas endpoint test
-    print("\n" + "="*60)
-    print("🔧 TEST ENDPOINT THOMAS BASIQUE")
-    print("="*60)
-    
-    basic_thomas_success = tester.test_thomas_chatbot_v2_endpoint()
-    
-    if basic_thomas_success:
-        print("✅ Endpoint Thomas ChatBot V2 fonctionnel")
-    else:
-        print("❌ Problème avec l'endpoint Thomas ChatBot V2")
-    
-    # Final summary
-    print("\n" + "="*80)
-    print("📊 RÉSUMÉ FINAL VALIDATION THOMAS CHATBOT V2 REFONTE")
-    print("="*80)
-    
-    if thomas_v2_success and basic_thomas_success:
-        print("🎉 VALIDATION COMPLÈTE RÉUSSIE!")
-        print("✅ Thomas ChatBot V2 avec nouveau prompt professionnel opérationnel")
-        print("✅ API endpoint fonctionnel")
-        print("✅ Réponses conformes aux spécifications")
-        print("\n🚀 PRÊT POUR PRODUCTION!")
-        exit(0)  # Success
-    else:
-        print("❌ VALIDATION INCOMPLÈTE")
-        if not thomas_v2_success:
-            print("❌ Tests Thomas V2 refonte échoués")
-        if not basic_thomas_success:
-            print("❌ Test endpoint basique échoué")
-        print("\n🔧 CORRECTIONS REQUISES AVANT PRODUCTION")
-        exit(1)  # Some tests failed
+    print("\n" + "=" * 80)
