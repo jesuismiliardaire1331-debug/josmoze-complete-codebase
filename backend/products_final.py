@@ -11,7 +11,7 @@ FINAL_PRODUCTS = [
         "description": "Solution d'entrée de gamme parfaite pour petits foyers. Osmose inverse professionnelle avec membrane 100GPD. Production 200L/jour. Installation simple sous évier.",
         "price": 449.0,
         "original_price": 549.0,
-        "image": "https://www.josmoze.com/2570-large_default/fontaine-osmoseur-minibluesea.jpg",
+        "image": "https://images.unsplash.com/photo-1628239532623-c035054bff4e?w=800&h=800&fit=crop&q=80",
         "category": "osmoseur",
         "target_audience": "both",
         "product_tier": "essentiel",
