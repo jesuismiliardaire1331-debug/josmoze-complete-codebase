@@ -10181,10 +10181,22 @@ class BackendTester:
         return thomas_results
 
     def run_all_tests(self):
-        """Run all backend tests - FOCUS: SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE"""
-        print("🚀 TEST FINAL SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE")
+        """Run all backend tests - FOCUS: AGENT AI UPLOAD + SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE"""
+        print("🚀 TEST AGENT AI UPLOAD - VALIDATION FONCTIONNELLE")
         print(f"Backend URL: {BACKEND_URL}")
         print("="*80)
+        
+        # PRIORITÉ ABSOLUE - AGENT AI UPLOAD TESTS
+        print("\n🤖 PRIORITÉ ABSOLUE - AGENT AI UPLOAD")
+        print("="*50)
+        print("🎯 OBJECTIF: Confirmer que l'extraction d'images fonctionne (plus de 0 images trouvées)")
+        print("🔗 URL TEST: https://www.aliexpress.com/item/1005006854441059.html")
+        print("-" * 70)
+        
+        self.test_ai_product_scraper_endpoint_exists()
+        self.test_ai_product_scraper_supported_platforms()
+        self.test_ai_product_scraper_aliexpress_analysis()
+        self.test_ai_product_scraper_data_extraction()
         
         # MISSION POINTS 1 & 2 - TESTS PRIORITAIRES
         print("\n🎯 MISSION POINTS 1 & 2 - TESTS PRIORITAIRES")
