@@ -282,7 +282,7 @@ const getIntelligentResponseV2 = (message) => {
 };
 
 const ChatBotV2 = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
