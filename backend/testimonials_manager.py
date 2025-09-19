@@ -27,7 +27,7 @@ class CustomerTestimonial(BaseModel):
     """Modèle de témoignage client"""
     id: Optional[str] = None
     customer_name: str = Field(..., min_length=2, max_length=100)
-    customer_email: str = Field(..., regex=r'^[^@]+@[^@]+\.[^@]+$')
+    customer_email: str = Field(..., pattern=r'^[^@]+@[^@]+\.[^@]+$')
     customer_city: Optional[str] = Field(None, max_length=100)
     product_id: str = Field(..., min_length=1)
     product_name: Optional[str] = None
