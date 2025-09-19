@@ -10659,15 +10659,53 @@ class BackendTester:
 if __name__ == "__main__":
     tester = BackendTester()
     
-    # Run Thomas ChatBot tests specifically as requested
-    print("🎯 DÉMARRAGE TESTS THOMAS CHATBOT - CORRECTION RÉPÉTITION PHRASE")
+    # Run Thomas ChatBot V2 Refonte tests as requested
+    print("🤖 VALIDATION PHASE 5 - THOMAS CHATBOT V2 REFONTE")
     print("=" * 80)
     
-    thomas_success = tester.run_thomas_chatbot_tests()
+    # Test the new Thomas V2 refonte implementation
+    thomas_v2_success = tester.test_thomas_chatbot_v2_refonte_validation()
     
-    if thomas_success:
-        print("\n🎉 TOUS LES TESTS THOMAS RÉUSSIS!")
+    if thomas_v2_success:
+        print("\n🎉 THOMAS CHATBOT V2 REFONTE VALIDATION RÉUSSIE!")
+        print("✅ Nouveau prompt professionnel implémenté")
+        print("✅ Prix corrects (Essentiel 449€, Premium 549€, Prestige 899€)")
+        print("✅ Ton commercial bienveillant confirmé")
+        print("✅ Filtre douche 39.90€ intégré")
+        print("✅ Expertise technique accessible")
+    else:
+        print("\n❌ THOMAS CHATBOT V2 REFONTE VALIDATION ÉCHOUÉE!")
+        print("⚠️ Voir détails des tests ci-dessus")
+    
+    # Also run the basic Thomas endpoint test
+    print("\n" + "="*60)
+    print("🔧 TEST ENDPOINT THOMAS BASIQUE")
+    print("="*60)
+    
+    basic_thomas_success = tester.test_thomas_chatbot_v2_endpoint()
+    
+    if basic_thomas_success:
+        print("✅ Endpoint Thomas ChatBot V2 fonctionnel")
+    else:
+        print("❌ Problème avec l'endpoint Thomas ChatBot V2")
+    
+    # Final summary
+    print("\n" + "="*80)
+    print("📊 RÉSUMÉ FINAL VALIDATION THOMAS CHATBOT V2 REFONTE")
+    print("="*80)
+    
+    if thomas_v2_success and basic_thomas_success:
+        print("🎉 VALIDATION COMPLÈTE RÉUSSIE!")
+        print("✅ Thomas ChatBot V2 avec nouveau prompt professionnel opérationnel")
+        print("✅ API endpoint fonctionnel")
+        print("✅ Réponses conformes aux spécifications")
+        print("\n🚀 PRÊT POUR PRODUCTION!")
         exit(0)  # Success
     else:
-        print("\n❌ PROBLÈMES DÉTECTÉS AVEC THOMAS CHATBOT")
+        print("❌ VALIDATION INCOMPLÈTE")
+        if not thomas_v2_success:
+            print("❌ Tests Thomas V2 refonte échoués")
+        if not basic_thomas_success:
+            print("❌ Test endpoint basique échoué")
+        print("\n🔧 CORRECTIONS REQUISES AVANT PRODUCTION")
         exit(1)  # Some tests failed
