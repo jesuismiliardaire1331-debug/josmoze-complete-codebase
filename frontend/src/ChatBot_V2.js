@@ -370,53 +370,77 @@ const ChatBotV2 = () => {
     };
   }, [hasShownWelcome, isOpen, safeSetTimeout, isMounted]);
 
-  const sendMessage = async (message) => {
-    if (!message.trim()) return;
+  const sendMessage = async (userMessage, retryCount = 0) => {
+    if (!userMessage?.trim()) return;
 
-    const userMessage = {
-      type: 'user',
-      content: message,
+    const userMsg = { 
+      id: Date.now(), 
+      text: userMessage, 
+      sender: 'user',
       timestamp: new Date().toISOString()
     };
-
-    setMessages(prev => [...prev, userMessage]);
+    
+    setMessages(prev => [...prev, userMsg]);
+    setIsTyping(true);
     setInputMessage('');
-    setIsLoading(true);
 
     try {
-      // Appeler le nouveau Thomas Chatbot API
+      // Utiliser le nouveau prompt Thomas V2
       const response = await axios.post(`${API_BASE}/api/ai-agents/chat`, {
-        message: message,
-        session_id: 'chatbot_v2_session'
+        message: userMessage,
+        agent: 'thomas',
+        context: {
+          prompt: THOMAS_PROMPT_V2,
+          knowledge_base: KNOWLEDGE_BASE_V2,
+          conversation_history: messages.slice(-5).map(m => ({ text: m.text, sender: m.sender }))
+        },
+        language: i18n.language || 'fr'
+      }, {
+        timeout: 15000,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-      
-      const botMessage = {
-        type: 'bot',
-        content: response.data.response || "Désolé, je n'ai pas pu traiter votre message.",
-        timestamp: new Date().toISOString(),
-        suggestions: response.data.suggestions || [
-          "💰 Voir les prix",
-          "📞 Parler à un expert",
-          "💧 En savoir plus"
-        ]
-      };
 
-      setMessages(prev => [...prev, botMessage]);
-
+      if (response.data?.response) {
+        const assistantMsg = {
+          id: Date.now() + 1,
+          text: response.data.response,
+          sender: 'assistant',
+          timestamp: new Date().toISOString(),
+          agent: 'thomas'
+        };
+        
+        setTimeout(() => {
+          setMessages(prev => [...prev, assistantMsg]);
+          setIsTyping(false);
+        }, 800);
+      } else {
+        throw new Error('Réponse invalide du serveur');
+      }
     } catch (error) {
-      console.error('❌ Erreur Thomas chatbot:', error);
+      console.error('Erreur lors de l\'envoi du message:', error);
       
-      // Réponse de fallback bienveillante
-      const fallbackMessage = {
-        type: 'bot',
-        content: "Désolé, j'ai eu un petit problème technique ! 😅\n\nJe suis Thomas, expert osmoseurs chez Josmose.com. Je peux vous aider à choisir l'osmoseur parfait pour avoir une eau pure illimitée chez vous !\n\n💧 Comment puis-je vous aider ?",
-        timestamp: new Date().toISOString(),
-        suggestions: ['💧 Comment ça marche ?', '💰 Voir les prix', '📞 Expert au téléphone']
-      };
+      // Retry logic avec limite
+      if (retryCount < 2) {
+        console.log(`Tentative ${retryCount + 1}/3...`);
+        setTimeout(() => sendMessage(userMessage, retryCount + 1), 2000);
+        return;
+      }
 
-      setMessages(prev => [...prev, fallbackMessage]);
-    } finally {
-      setIsLoading(false);
+      // Message d'erreur en cas d'échec
+      const errorMsg = {
+        id: Date.now() + 1,
+        text: "Bonjour ! Je suis Thomas, votre conseiller Josmoze. Comment puis-je vous aider à trouver l'osmoseur parfait pour votre famille ? 😊",
+        sender: 'assistant',
+        timestamp: new Date().toISOString(),
+        agent: 'thomas'
+      };
+      
+      setTimeout(() => {
+        setMessages(prev => [...prev, errorMsg]);
+        setIsTyping(false);
+      }, 800);
     }
   };
 
