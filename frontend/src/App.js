@@ -2096,6 +2096,7 @@ function App() {
                     <Route path="/blog" element={<BlogPage />} />
                     <Route path="/blog/:slug" element={<BlogArticle />} />
                     <Route path="/temoignages" element={<TestimonialsPage />} />
+                    <Route path="/admin/login" element={<AdminLogin />} />
                   </Routes>
                 </main>
                 <Footer />
