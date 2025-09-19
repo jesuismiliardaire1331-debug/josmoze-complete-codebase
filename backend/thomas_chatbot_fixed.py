@@ -162,16 +162,21 @@ class ThomasChatbot:
                     "suggestions": ["🛒 Ajouter au panier", "❓ Plus d'infos", "📞 Parler à un expert"]
                 }
             
-            # OBJECTION BUDGET - TON BIENVEILLANT V2
-            if any(word in message_lower for word in ["cher", "chère", "budget", "trop", "moins cher", "économique"]):
+            # OBJECTION BUDGET - TON ULTRA BIENVEILLANT V2
+            if any(word in message_lower for word in ["cher", "chère", "budget", "trop", "moins cher", "économique", "argent", "coûteux"]):
                 return {
-                    "message": f"""{self.response_templates["budget_serre"]}
+                    "message": f"""😊 **{self.response_templates["budget_serre"]}**
 
-💡 **Pourquoi l'Essentiel à 449€** :
-• ✅ Eau pure illimitée pour toute la famille
-• 💰 Économies bouteilles = rentabilisé en 6 mois  
-• 🏠 Parfait pour débuter sans compromis qualité
-• 🔧 Installation professionnelle incluse
+💡 **Laissez-moi vous expliquer pourquoi c'est un excellent investissement** :
+
+🏠 **L'Essentiel à 449€** :
+✅ Eau pure illimitée pour toute la famille  
+✅ Fini les bouteilles plastique (économie 100€/mois)
+✅ Santé de votre famille protégée
+✅ Installation pro + garantie incluses
+✅ **Rentabilisé en 4-5 mois seulement !**
+
+💚 **Ma promesse** : Vous allez adorer avoir une eau pure directement au robinet, et votre portefeuille aussi !
 
 {self.response_templates["call_to_action"][1]}""",
                     "suggestions": ["📋 Questionnaire rapide", "🛒 Essentiel 449€", "💬 Autres questions"]
