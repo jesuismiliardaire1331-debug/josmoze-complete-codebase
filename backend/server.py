@@ -5770,3 +5770,126 @@ async def initialize_testimonials_content():
     except Exception as e:
         logging.error(f"❌ Erreur initialisation témoignages: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# ========== AGENT AI UPLOAD - RÉVOLUTIONNAIRE ==========
+
+@app.post("/api/ai-scraper/import", tags=["Agent AI"])
+async def import_product_from_url(url: str):
+    """
+    🤖 AGENT AI UPLOAD - Importer automatiquement depuis AliExpress/Temu/Amazon
+    
+    Args:
+        url: URL du produit à importer
+        
+    Returns:
+        Données du produit importé avec images et spécifications
+    """
+    try:
+        ai_scraper = await get_ai_scraper()
+        
+        # Validation URL
+        if not url.startswith(('http://', 'https://')):
+            raise HTTPException(400, "URL invalide")
+        
+        # Import automatique
+        result = await ai_scraper.scrape_product(url)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur Agent AI Import: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/ai-scraper/platforms", tags=["Agent AI"])
+async def get_supported_platforms():
+    """📋 Liste des plateformes supportées par l'Agent AI"""
+    return {
+        "success": True,
+        "platforms": {
+            "aliexpress": {
+                "name": "AliExpress",
+                "supported": True,
+                "example": "https://www.aliexpress.com/item/123456.html",
+                "features": ["Images HD", "Spécifications", "Prix", "Description"]
+            },
+            "temu": {
+                "name": "Temu",
+                "supported": True,
+                "example": "https://www.temu.com/product-123456.html",
+                "features": ["JSON-LD parsing", "Images", "Prix", "Description"]
+            },
+            "amazon": {
+                "name": "Amazon",
+                "supported": True,
+                "example": "https://www.amazon.fr/dp/B08ABC123",
+                "features": ["Extraction avancée", "Spécifications", "Images", "Reviews"]
+            },
+            "alibaba": {
+                "name": "Alibaba",
+                "supported": True,
+                "example": "https://www.alibaba.com/product-detail/123456.html",
+                "features": ["B2B specs", "Bulk pricing", "MOQ info"]
+            },
+            "dhgate": {
+                "name": "DHgate",
+                "supported": True,
+                "example": "https://www.dhgate.com/product-123456.html",
+                "features": ["Wholesale info", "Images", "Specs"]
+            },
+            "banggood": {
+                "name": "Banggood",
+                "supported": True,
+                "example": "https://www.banggood.com/product-123456.html",
+                "features": ["Tech specs", "Images", "Reviews"]
+            }
+        },
+        "total_platforms": 6,
+        "message": "Agent AI peut importer depuis toutes ces plateformes automatiquement"
+    }
+
+@app.get("/api/ai-scraper/imported", tags=["Agent AI"])
+async def get_imported_products(limit: int = 20):
+    """📦 Liste des produits importés par l'Agent AI"""
+    try:
+        # Récupérer de la base de données
+        cursor = db.products.find(
+            {"source.import_method": "AI_SCRAPER"}
+        ).sort("metadata.created_date", -1).limit(limit)
+        
+        imported_products = await cursor.to_list(length=None)
+        
+        return {
+            "success": True,
+            "products": imported_products,
+            "count": len(imported_products),
+            "message": f"{len(imported_products)} produits importés par l'Agent AI"
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération produits importés: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/ai-scraper/imported/{product_id}", tags=["Agent AI"])
+async def delete_imported_product(product_id: str):
+    """🗑️ Supprimer un produit importé par l'Agent AI"""
+    try:
+        result = await db.products.delete_one({
+            "id": product_id,
+            "source.import_method": "AI_SCRAPER"
+        })
+        
+        if result.deleted_count == 0:
+            raise HTTPException(404, "Produit importé non trouvé")
+            
+        return {
+            "success": True,
+            "message": "Produit importé supprimé avec succès"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur suppression produit importé: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
