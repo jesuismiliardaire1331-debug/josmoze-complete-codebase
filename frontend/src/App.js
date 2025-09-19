@@ -2099,6 +2099,7 @@ function App() {
                     <Route path="/blog/:slug" element={<BlogArticle />} />
                     <Route path="/temoignages" element={<TestimonialsPage />} />
                     <Route path="/admin/login" element={<AdminLogin />} />
+                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/admin/ai-upload" element={<AIUploadAgent />} />
                   </Routes>
                 </main>
