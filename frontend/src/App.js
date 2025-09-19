@@ -1058,6 +1058,11 @@ const CartSummary = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   
+  // 🛒 DEBUG PANIER - Console logs pour diagnostic
+  console.log('🛒 CartSummary - Panier actuel:', cart);
+  console.log('🛒 CartSummary - Longueur panier:', cart.length);
+  console.log('🛒 CartSummary - localStorage direct:', localStorage.getItem('josmoze_cart'));
+  
   if (cart.length === 0) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
