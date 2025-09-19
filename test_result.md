@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Implémentation complète du système d'agents IA avec stratégies de Schopenhauer - Socrate, Aristote, Cicéron, Démosthène et Platon pour la gestion automatisée des appels et SMS avec horaires de travail 9h-18h, personnalisation client et KPIs de performance"
+user_problem_statement: "PHASE 1 - CRM Agents IA Integration: Intégrer une section 'Agents IA' dans le CRM avec toggles ON/OFF pour Product Hunter, Content Creator, Email Marketer, SEO Master et lien vers AI Upload Agent. Interface avec cartes design spécifique selon mockup fourni."
 
 backend:
   - task: "AI Agents System - Core Foundation"
