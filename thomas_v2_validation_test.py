@@ -192,11 +192,11 @@ class ThomasV2Validator:
                     
                     if found_count >= 3:
                         self.log_test("TEST 3: Prix Premium → 549€ + caractéristiques", True, 
-                                    f"✅ Prix 549€ + caractéristiques détaillées mentionnés ({found_count}/5 éléments)")
+                                    f"✅ Prix 549€ + caractéristiques détaillées mentionnés ({found_count}/4 éléments)")
                         return True
                     else:
                         self.log_test("TEST 3: Prix Premium → 549€ + caractéristiques", False, 
-                                    f"❌ Prix 549€ ou caractéristiques manquants ({found_count}/5 éléments)", data['response'])
+                                    f"❌ Prix 549€ ou caractéristiques manquants ({found_count}/4 éléments)", data['response'])
                         return False
                 else:
                     self.log_test("TEST 3: Prix Premium → 549€ + caractéristiques", False, "Pas de réponse dans la structure", data)
