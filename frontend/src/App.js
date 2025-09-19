@@ -566,7 +566,20 @@ const ProductGrid = () => {
               )}
               
               <button
-                onClick={() => handleAddToCart(product)}
+                onClick={(event) => {
+                  if (product.stock_info?.in_stock) {
+                    addToCart(product, 1);
+                    // Feedback visuel
+                    const button = event.target;
+                    const originalText = button.textContent;
+                    button.textContent = '✅ Ajouté !';
+                    button.style.backgroundColor = '#10B981';
+                    setTimeout(() => {
+                      button.textContent = originalText;
+                      button.style.backgroundColor = '';
+                    }, 1500);
+                  }
+                }}
                 disabled={!product.stock_info?.in_stock}
                 className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
                   product.stock_info?.in_stock
