@@ -9951,6 +9951,51 @@ class BackendTester:
         
         return total_thomas_passed == total_thomas_tests
 
+    def run_thomas_v2_tests(self):
+        """Run Thomas V2 chatbot tests specifically"""
+        print("🤖 TESTS THOMAS V2 CHATBOT - VALIDATION CRITIQUE")
+        print("=" * 80)
+        print("🚨 OBJECTIF: Valider que Thomas répond maintenant après corrections urgentes")
+        print("🎯 TESTS CRITIQUES: 5 scénarios de validation fonctionnelle")
+        print()
+        
+        thomas_tests = [
+            self.test_thomas_v2_api_endpoint_functionality,
+            self.test_thomas_v2_welcome_message,
+            self.test_thomas_v2_greeting_response,
+            self.test_thomas_v2_family_recommendation,
+            self.test_thomas_v2_premium_price_inquiry,
+            self.test_thomas_v2_price_objection_handling
+        ]
+        
+        thomas_results = []
+        for test in thomas_tests:
+            try:
+                result = test()
+                thomas_results.append(result)
+                time.sleep(1)  # Pause entre les tests
+            except Exception as e:
+                print(f"❌ ERREUR TEST {test.__name__}: {str(e)}")
+                thomas_results.append(False)
+        
+        # Résumé Thomas V2
+        print("\n" + "=" * 80)
+        print("📊 RÉSUMÉ TESTS THOMAS V2")
+        print("=" * 80)
+        
+        passed = sum(thomas_results)
+        total = len(thomas_results)
+        success_rate = (passed / total) * 100 if total > 0 else 0
+        
+        print(f"✅ Tests réussis: {passed}/{total} ({success_rate:.1f}%)")
+        
+        if success_rate >= 80:
+            print("🎉 THOMAS V2 FONCTIONNEL - Objectif 80%+ atteint!")
+        else:
+            print("🚨 THOMAS V2 PROBLÉMATIQUE - Corrections supplémentaires requises")
+        
+        return thomas_results
+
     def run_all_tests(self):
         """Run all backend tests - FOCUS: SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE"""
         print("🚀 TEST FINAL SYSTÈME PROMOTIONS + NOUVEAUX PRODUITS JOSMOZE")
