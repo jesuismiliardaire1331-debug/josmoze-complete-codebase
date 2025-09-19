@@ -346,7 +346,20 @@ backend:
           comment: "❌ ANCIEN PRODUIT DÉTECTÉ: Le produit 'osmoseur-principal' est encore présent dans la base de données alors qu'il devrait être remplacé par la nouvelle gamme BlueMountain (Essentiel 449€, Premium 549€, Prestige 899€). Les nouveaux prix sont corrects mais l'ancien produit doit être supprimé pour éviter la confusion. Recommandation: Nettoyer la base de données pour supprimer les anciens produits (osmoseur-principal, osmoseur-standard, etc.) et ne garder que la nouvelle gamme."
 
 frontend:
-  - task: "CRM - Agents IA Tab Implementation"
+  - task: "PHASE 5 - Thomas Chatbot V2 Refonte"
+    implemented: true
+    working: false
+    file: "frontend/src/ChatBot_V2.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "THOMAS CHATBOT V2 REFONTE IMPLÉMENTÉE: Ajouté nouveau prompt professionnel THOMAS_PROMPT_V2 avec identité conseiller expert Josmoze, personnalité amicale/rassurante, mission recommandation osmoseurs, produits maîtrisés (Essentiel 449€, Premium 549€, Prestige 899€, Filtre Douche 39.90€). Réponses types définies pour accueil, budget serré, objections prix. Fonction sendMessage mise à jour pour utiliser nouveau prompt dans contexte API."
+        - working: false
+          agent: "testing"
+          comment: "❌ SYNCHRONISATION FRONTEND-BACKEND MANQUANTE: Tests révèlent que nouveau THOMAS_PROMPT_V2 du frontend n'est pas synchronisé avec backend thomas_chatbot_fixed.py. Réponses utilisent ancienne logique. ✅ Accueil professionnel OK ✅ Filtre douche 39.90€ OK ✅ Expertise accessible OK ❌ Prix corrects (449€/549€/899€) non mentionnés ❌ Ton commercial bienveillant insuffisant. Taux réussite: 60% (3/5 tests). CRITIQUE: Backend doit intégrer nouveau prompt V2."
     implemented: true
     working: true
     file: "frontend/src/AIAgentsManager.js"
