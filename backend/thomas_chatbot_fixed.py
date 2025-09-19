@@ -17,42 +17,78 @@ logger = logging.getLogger(__name__)
 
 class ThomasChatbot:
     def __init__(self):
-        """Thomas - Expert Osmoseurs Josmose.com"""
+        """Thomas - Conseiller Expert en Purification d'Eau chez Josmoze"""
         
-        # BASE DE CONNAISSANCES OSMOSEURS JOSMOSE.COM
+        # NOUVEAU PROMPT THOMAS V2 PROFESSIONNEL
+        self.thomas_identity = """
+        IDENTITÉ :
+        Tu es Thomas, conseiller expert en purification d'eau chez Josmoze. 
+        Tu accueilles chaleureusement les visiteurs avec professionnalisme et bienveillance.
+
+        PERSONNALITÉ :
+        - Amical et rassurant
+        - Expert technique mais accessible  
+        - Pointe d'humour légère et appropriée
+        - Toujours orienté solution
+
+        MISSION :
+        - Comprendre les besoins du prospect
+        - Recommander le bon osmoseur
+        - Accompagner vers l'achat
+        - Rassurer sur la qualité/service
+        """
+        
+        # BASE DE CONNAISSANCES OSMOSEURS JOSMOZE.COM V2
         self.osmoseurs_catalog = {
             "osmoseur-essentiel": {
-                "name": "Osmoseur Essentiel - BlueMountain Compact",
+                "name": "Osmoseur Essentiel",
                 "price": 449.0,
-                "description": "Osmoseur économique 5 étapes pour petits foyers. Élimine 99% des contaminants.",
-                "ideal_for": "1-2 personnes, appartements, budget serré",
-                "features": ["5 étapes de filtration", "Réservoir 12L", "Robinet inox", "Installation simple"],
-                "benefits": "Eau pure à petit prix, parfait pour débuter"
+                "description": "Familles 2-3 personnes, efficace",
+                "ideal_for": "Familles 2-3 personnes, solution efficace et économique",
+                "features": ["5 étapes de filtration", "Réservoir 12L", "Installation professionnelle"],
+                "benefits": "Parfait pour débuter, rapport qualité-prix excellent",
+                "thomas_pitch": "L'Essentiel à 449€ est parfait pour débuter ! Idéal pour les familles de 2-3 personnes."
             },
             "osmoseur-premium": {
-                "name": "Osmoseur Premium - BlueMountain Avancé", 
+                "name": "Osmoseur Premium", 
                 "price": 549.0,
-                "description": "Notre bestseller ! Osmoseur 6 étapes + reminéralisation pour familles.",
-                "ideal_for": "3-4 personnes, maisons, meilleur rapport qualité-prix",
+                "description": "Familles 4-5 personnes, technologie avancée",
+                "ideal_for": "Familles 4-5 personnes, technologie avancée",
                 "features": ["6 étapes + reminéralisation", "Réservoir 15L", "Robinet LED", "Auto-rinçage"],
-                "benefits": "Le plus populaire, eau parfaitement équilibrée"
+                "benefits": "Notre bestseller ! Eau parfaitement équilibrée",
+                "thomas_pitch": "Le Premium à 549€ est notre bestseller ! Parfait pour les familles de 4-5 personnes avec sa technologie avancée."
             },
             "osmoseur-prestige": {
-                "name": "Osmoseur Prestige - BlueMountain De Comptoir",
+                "name": "Osmoseur Prestige",
                 "price": 899.0,
-                "description": "Osmoseur haut de gamme 7 étapes + UV avec écran tactile.",
-                "ideal_for": "5+ personnes, technologie premium, budget confortable",
+                "description": "Solution professionnelle, écran tactile",
+                "ideal_for": "Solution professionnelle, grandes familles, écran tactile",
                 "features": ["7 étapes + UV", "Double réservoir 20L", "Écran tactile", "App mobile"],
-                "benefits": "Technologie de pointe, monitoring temps réel"
+                "benefits": "Technologie de pointe, monitoring temps réel",
+                "thomas_pitch": "Le Prestige à 899€ est notre solution professionnelle avec écran tactile. Pour ceux qui veulent le meilleur !"
             },
             "filtre-douche": {
-                "name": "Filtre Purificateur de Douche Anti-Calcaire",
+                "name": "Filtre Douche",
                 "price": 39.90,
-                "description": "Filtre révolutionnaire pour douche. Peau plus douce, cheveux plus brillants.",
-                "ideal_for": "Peaux sensibles et familles, installation universelle",
-                "features": ["Installation 2 minutes sans outils", "Cartouche 6-8 mois", "Réduit chlore et calcaire", "Compatible tous robinets"],
-                "benefits": "Peau plus douce, cheveux plus brillants, idéal peaux sensibles"
+                "description": "Complément bien-être peau/cheveux",
+                "ideal_for": "Complément bien-être pour peau et cheveux",
+                "features": ["Installation 2 minutes", "Cartouche 6-8 mois", "Anti-calcaire", "Universel"],
+                "benefits": "Peau plus douce, cheveux plus brillants",
+                "thomas_pitch": "Le Filtre Douche à 39.90€ est le complément parfait ! Peau plus douce et cheveux plus brillants."
             }
+        }
+        
+        # RÉPONSES TYPES THOMAS V2
+        self.response_templates = {
+            "accueil": "Bonjour ! Je suis Thomas, votre conseiller Josmoze. Comment puis-je vous aider à trouver l'osmoseur parfait pour votre famille ? 😊",
+            "budget_serre": "Je comprends, la qualité de l'eau n'a pas de prix mais le budget compte ! L'Essentiel à 449€ est parfait pour débuter.",
+            "hesitation": "Pas de souci pour réfléchir ! Puis-je vous poser 2-3 questions pour mieux vous conseiller ?",
+            "objection_prix": "C'est vrai que c'est un investissement, mais pensez aux économies sur l'eau en bouteille ! En 6 mois c'est rentabilisé.",
+            "call_to_action": [
+                "Voulez-vous que je vous aide à choisir ?",
+                "Puis-je vous montrer notre questionnaire rapide ?",
+                "Souhaitez-vous ajouter cet osmoseur à votre panier ?"
+            ]
         }
         
         # AVANTAGES OSMOSE INVERSE
