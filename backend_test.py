@@ -1,21 +1,34 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Josmose.com - TEST DEVISE EUR ET NOUVEAUX PRODUITS
-Tests prioritaires pour valider les corrections appliquées:
+🛒 TEST PANIER FONCTIONNEL - PRIORITÉ CRITIQUE
+Backend API Testing for Josmose.com - E-commerce Cart System Testing
 
-PRIORITÉ 1: Test de la devise EUR
-- Endpoint `/api/localization/detect` doit retourner currency.code="EUR" et currency.symbol="€"
-- Endpoint `/api/products/translated` doit utiliser la bonne devise
-- Vérifier qu'aucune trace de CAD n'apparaît
+TESTS REQUIS PAR ORDRE DE PRIORITÉ :
 
-PRIORITÉ 2: Test prix produits mis à jour
-- Vérifier que "Osmoseur Premium - BlueMountain Avancé" est bien à 549€
-- Tester l'endpoint `/api/products` pour la nouvelle gamme
-- Vérifier les 8 nouveaux produits en base (Essentiel 449€, Premium 549€, Prestige 899€)
+1. **API Backend Panier** :
+   - Endpoint produits : GET /api/products?customer_type=B2C
+   - Validation structure produits (id, name, price, stock_info)
+   - Vérifier tous les prix en EUR (pas CAD)
+   - S'assurer que stock_info.in_stock = true pour tous
 
-PRIORITÉ 3: Test de cohérence
-- Les endpoints de recommandations utilisent les nouveaux produits
-- Pas de référence aux anciens produits (osmoseur-principal, etc.)
+2. **Fonctionnalités E-commerce Critiques** :
+   - Ajout produit au panier (simulation)
+   - Structure de réponse correcte
+   - Gestion quantités
+   - Calcul totaux (sous-total + livraison)
+
+3. **Prix et Currency VALIDATION** :
+   - Osmoseur Essentiel : 449€ 
+   - Osmoseur Premium : 549€ (CRITIQUE - utilisateur insiste)
+   - Osmoseur Prestige : 899€
+   - Purificateur H2 : 79€
+   - Fontaine Animaux : 49€
+   - Filtre Douche : 39.90€
+
+4. **Endpoints Checkout** :
+   - POST /api/checkout/session (Stripe)
+   - Vérifier structure customer_info avec adresse
+   - Validation cart_items format
 """
 
 import requests
