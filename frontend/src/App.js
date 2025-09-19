@@ -30,6 +30,7 @@ import ProductDetail from "./ProductDetail";
 import AdminUpload from "./AdminUpload";
 import BlogPage from "./BlogPage";
 import BlogArticle from "./BlogArticle";
+import TestimonialsPage from "./TestimonialsPage";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
