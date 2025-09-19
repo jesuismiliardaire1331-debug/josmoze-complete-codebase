@@ -27,8 +27,14 @@ const AdminLogin = () => {
           user: response.data.user
         });
         
-        // Sauvegarder le token
+        // Sauvegarder le token et les données utilisateur
         localStorage.setItem('admin_token', response.data.access_token);
+        localStorage.setItem('admin_user', JSON.stringify(response.data.user));
+        
+        // Redirection vers le dashboard admin
+        setTimeout(() => {
+          window.location.href = '/admin/dashboard';
+        }, 1500);
       }
     } catch (error) {
       setResult({
