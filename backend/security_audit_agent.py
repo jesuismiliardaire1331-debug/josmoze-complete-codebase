@@ -153,6 +153,9 @@ class SecurityAuditAgent:
     async def start_24_7_monitoring(self):
         """🚀 Démarrage de la surveillance 24/7"""
         self.running = True
+        # Agent temporairement désactivé pour résoudre conflits asyncio
+        return
+        
         self.logger.critical("🚀 DÉMARRAGE SURVEILLANCE 24/7 - AGENT CYBERSÉCURITÉ ACTIF")
         
         # Programmer l'audit quotidien à minuit français
