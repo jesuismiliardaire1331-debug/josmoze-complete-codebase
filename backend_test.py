@@ -11276,56 +11276,71 @@ class BackendTester:
 if __name__ == "__main__":
     tester = BackendTester()
     
-    # Run Thomas V2 tests as specifically requested in the review
-    print("🚨 TEST CRITIQUE THOMAS V2 RÉPARATION - VALIDATION FONCTIONNELLE")
+    # Run AI Upload Agent tests as specifically requested in the review
+    print("🚀 TEST AGENT AI UPLOAD - VALIDATION FONCTIONNELLE")
     print("=" * 80)
-    print("🎯 OBJECTIF: 100% des tests réussis pour valider que Thomas répond maintenant")
-    print("⚠️ URGENCE: Si Thomas ne répond toujours pas, identifier précisément le problème")
+    print("🎯 OBJECTIF: Confirmer que l'extraction d'images fonctionne (plus de 0 images trouvées)")
+    print("🔗 URL TEST: https://www.aliexpress.com/item/1005006854441059.html")
+    print("⚠️ CRITIQUE: Si extraction images échoue encore, identifier le problème technique pour correction immédiate en Phase 2")
     print()
     
-    # Execute Thomas V2 specific tests
-    thomas_results = tester.run_thomas_v2_tests()
+    # Execute AI Upload Agent specific tests
+    ai_upload_results = []
+    
+    print("🤖 TESTS AGENT AI UPLOAD - VALIDATION CRITIQUE")
+    print("=" * 80)
+    print("🚨 OBJECTIF: Valider que l'Agent AI Upload fonctionne avec extraction d'images")
+    print("🎯 TESTS CRITIQUES: 4 scénarios de validation fonctionnelle")
+    print()
+    
+    # Run the AI Upload Agent tests
+    ai_upload_results.append(tester.test_ai_product_scraper_endpoint_exists())
+    ai_upload_results.append(tester.test_ai_product_scraper_supported_platforms())
+    ai_upload_results.append(tester.test_ai_product_scraper_aliexpress_analysis())
+    ai_upload_results.append(tester.test_ai_product_scraper_data_extraction())
     
     # Final assessment
-    passed = sum(thomas_results)
-    total = len(thomas_results)
+    passed = sum(ai_upload_results)
+    total = len(ai_upload_results)
     success_rate = (passed / total) * 100 if total > 0 else 0
     
+    print("\n" + "=" * 80)
+    print("📊 RÉSUMÉ TESTS AGENT AI UPLOAD")
+    print("=" * 80)
+    print(f"✅ Tests réussis: {passed}/{total} ({success_rate:.1f}%)")
+    
+    if success_rate >= 75:
+        print("🎉 AGENT AI UPLOAD FONCTIONNEL")
+    else:
+        print("🚨 AGENT AI UPLOAD PROBLÉMATIQUE - Corrections requises")
+    
     print("\n" + "🚨" * 40)
-    print("RÉSULTAT FINAL - THOMAS V2 RÉPARATION")
+    print("RÉSULTAT FINAL - AGENT AI UPLOAD")
     print("🚨" * 40)
     
     if success_rate == 100:
-        print("🎉 SUCCÈS COMPLET - THOMAS V2 100% FONCTIONNEL!")
-        print("✅ Thomas répond maintenant correctement")
-        print("✅ Message d'accueil automatique opérationnel")
-        print("✅ Recommandations produits précises")
-        print("✅ Gestion des objections bienveillante")
-        print("✅ Synchronisation frontend-backend réussie")
-    elif success_rate >= 80:
-        print("✅ SUCCÈS PARTIEL - THOMAS V2 LARGEMENT FONCTIONNEL")
-        print(f"📊 Taux de réussite: {success_rate:.1f}% (objectif 80%+ atteint)")
-        print("⚠️ Quelques améliorations mineures possibles")
+        print("🎉 SUCCÈS COMPLET - AGENT AI UPLOAD 100% FONCTIONNEL!")
+        print("✅ L'extraction d'images fonctionne correctement")
+        print("✅ Prêt pour Phase 2 du plan")
+    elif success_rate >= 75:
+        print("✅ SUCCÈS PARTIEL - AGENT AI UPLOAD MAJORITAIREMENT FONCTIONNEL")
+        print(f"📊 Taux de réussite: {success_rate:.1f}%")
+        print("⚠️ Quelques corrections mineures peuvent être nécessaires")
     else:
-        print("❌ ÉCHEC - THOMAS V2 TOUJOURS PROBLÉMATIQUE")
-        print(f"📊 Taux de réussite: {success_rate:.1f}% (en dessous de 80%)")
+        print("❌ ÉCHEC - AGENT AI UPLOAD TOUJOURS PROBLÉMATIQUE")
+        print(f"📊 Taux de réussite: {success_rate:.1f}% (en dessous de 75%)")
         print("🚨 CORRECTIONS URGENTES REQUISES")
         
-        # Identify specific failures
-        failed_tests = []
-        for i, result in enumerate(thomas_results):
-            if not result:
-                test_name = [
-                    "API Endpoint Fonctionnel",
-                    "Message d'Accueil",
-                    "Réponse Bienveillante",
-                    "Recommandation Famille 4 Personnes",
-                    "Prix Premium avec Caractéristiques",
-                    "Gestion Objection Prix"
-                ][i]
-                failed_tests.append(test_name)
+        # Show failed tests
+        failed_tests = [i for i, result in enumerate(ai_upload_results) if not result]
+        test_names = [
+            "Endpoint Exists",
+            "Supported Platforms", 
+            "AliExpress Analysis",
+            "Data Extraction"
+        ]
         
         if failed_tests:
-            print(f"🔍 Tests échoués: {', '.join(failed_tests)}")
+            print("🔍 Tests échoués:", ", ".join([test_names[i] for i in failed_tests]))
     
-    print("\n" + "=" * 80)
+    print("=" * 80)
