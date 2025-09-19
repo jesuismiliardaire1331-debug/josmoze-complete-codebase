@@ -5481,3 +5481,162 @@ async def update_product_image(
 
 # Servir les fichiers statiques uploadés
 app.mount("/static", StaticFiles(directory="/app/backend/static"), name="static")
+
+# ========== BLOG ENDPOINTS - CMS COMPLET ==========
+
+@app.post("/api/blog/articles", tags=["Blog"])
+async def create_blog_article(article: BlogArticle):
+    """📝 Créer un nouvel article de blog - ADMIN"""
+    try:
+        blog_manager = await get_blog_manager()
+        result = await blog_manager.create_article(article)
+        
+        return result
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur création article: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/blog/articles", tags=["Blog"])
+async def get_blog_articles(
+    published_only: bool = True,
+    category: Optional[str] = None,
+    limit: int = 10,
+    skip: int = 0
+):
+    """📚 Récupérer liste des articles de blog"""
+    try:
+        blog_manager = await get_blog_manager()
+        articles = await blog_manager.get_articles(
+            published_only=published_only,
+            category=category,
+            limit=limit,
+            skip=skip
+        )
+        
+        return {
+            "success": True,
+            "articles": articles,
+            "count": len(articles)
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération articles: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/blog/articles/{slug}", tags=["Blog"])
+async def get_blog_article_by_slug(slug: str, increment_views: bool = True):
+    """📖 Récupérer un article par son slug"""
+    try:
+        blog_manager = await get_blog_manager()
+        article = await blog_manager.get_article_by_slug(slug, increment_views)
+        
+        if not article:
+            raise HTTPException(404, "Article non trouvé")
+            
+        return {
+            "success": True,
+            "article": article
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération article: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.put("/api/blog/articles/{article_id}", tags=["Blog"])
+async def update_blog_article(article_id: str, update_data: dict):
+    """✏️ Mettre à jour un article - ADMIN"""
+    try:
+        blog_manager = await get_blog_manager()
+        result = await blog_manager.update_article(article_id, update_data)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur mise à jour article: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/blog/articles/{article_id}", tags=["Blog"])
+async def delete_blog_article(article_id: str):
+    """🗑️ Supprimer un article - ADMIN"""
+    try:
+        blog_manager = await get_blog_manager()
+        result = await blog_manager.delete_article(article_id)
+        
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur suppression article: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/blog/categories", tags=["Blog"])
+async def get_blog_categories():
+    """📂 Récupérer liste des catégories"""
+    try:
+        blog_manager = await get_blog_manager()
+        categories = await blog_manager.get_categories()
+        
+        return {
+            "success": True,
+            "categories": categories
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur récupération catégories: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/blog/search", tags=["Blog"])
+async def search_blog_articles(q: str, limit: int = 10):
+    """🔍 Recherche d'articles"""
+    try:
+        blog_manager = await get_blog_manager()
+        results = await blog_manager.search_articles(q, limit)
+        
+        return {
+            "success": True,
+            "query": q,
+            "results": results,
+            "count": len(results)
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur recherche articles: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/blog/articles/{slug}/related", tags=["Blog"])
+async def get_related_articles(slug: str, limit: int = 3):
+    """🔗 Articles liés"""
+    try:
+        blog_manager = await get_blog_manager()
+        related = await blog_manager.get_related_articles(slug, limit)
+        
+        return {
+            "success": True,
+            "related_articles": related,
+            "count": len(related)
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur articles liés: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/blog/initialize", tags=["Blog"])
+async def initialize_blog_content():
+    """🚀 Initialiser le contenu blog par défaut - ADMIN UNIQUEMENT"""
+    try:
+        await initialize_default_articles()
+        
+        return {
+            "success": True,
+            "message": "Articles par défaut initialisés avec succès"
+        }
+        
+    except Exception as e:
+        logging.error(f"❌ Erreur initialisation blog: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
