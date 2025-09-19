@@ -88,31 +88,49 @@ class AIProductScraper:
                 html = await response.text()
                 soup = BeautifulSoup(html, 'html.parser')
                 
-                # Extraction titre
+                # Debug: Log response status and content length
+                logging.info(f"🔍 AliExpress Response: Status {response.status}, Content length: {len(html)}")
+                
+                # Check if we got blocked or redirected
+                if response.status != 200:
+                    logging.warning(f"⚠️ AliExpress returned status {response.status}")
+                
+                if len(html) < 1000:
+                    logging.warning(f"⚠️ AliExpress returned very short content ({len(html)} chars), might be blocked")
+                
+                # Extraction titre avec plus de sélecteurs
                 title_selectors = [
                     'h1[data-pl="product-title"]',
                     '.product-title-text',
                     'h1.product-title',
-                    '.pdp-product-title'
+                    '.pdp-product-title',
+                    'h1',
+                    '.title',
+                    '[class*="title"]'
                 ]
                 title = self._extract_text(soup, title_selectors, "Produit AliExpress")
                 
-                # Extraction prix
+                # Extraction prix avec plus de sélecteurs
                 price_selectors = [
                     '.notranslate',
                     '.price-current',
                     '.price-now',
-                    '.uniform-banner-box-price'
+                    '.uniform-banner-box-price',
+                    '[class*="price"]',
+                    '[data-spm-anchor-id*="price"]'
                 ]
                 price_text = self._extract_text(soup, price_selectors, "0")
                 price = self._extract_price(price_text)
                 
-                # Extraction images
+                # Extraction images avec debug
                 images = self._extract_images(soup, [
                     'img[data-src*="alicdn"]',
                     '.image-view img',
                     '.product-image img'
                 ])
+                
+                # Log extraction results for debugging
+                logging.info(f"🔍 Extracted - Title: '{title[:50]}...', Price: {price}€, Images: {len(images)}")
                 
                 # Extraction description/specs
                 description = self._extract_description(soup, [
