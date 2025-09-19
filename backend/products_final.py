@@ -46,7 +46,7 @@ FINAL_PRODUCTS = [
         "description": "Système d'osmose inverse avancé BlueMountain. Production 300L/jour (12L/h). Membrane 100GPD encapsulée. Eau chaude, froide et tempérée. Installation professionnelle incluse.",
         "price": 549.0,
         "original_price": 649.0,
-        "image": "https://static.wixstatic.com/media/6af6bd_d5ec79a577694414b12e794e8a30e3bb~mv2.png/v1/fill/w_558,h_684,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/Hf8e72e690708417d8f7fae61845a5e804_png_720x720q50.png",
+        "image": "https://images.unsplash.com/photo-1669211659202-722981df44f8?w=800&h=800&fit=crop&q=80",
         "category": "osmoseur",
         "target_audience": "both",
         "product_tier": "premium",
