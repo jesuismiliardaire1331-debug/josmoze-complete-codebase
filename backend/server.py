@@ -577,8 +577,10 @@ async def get_product_detail(product_id: str):
         product["specifications"] = specifications.get(product_id, {})
         product["features"] = features.get(product_id, [])
         
-        # Ajouter une galerie d'images (pour l'instant une seule image)
-        product["images_gallery"] = [product.get("image")]
+        # Ajouter une galerie d'images avec l'image principale
+        product["images_gallery"] = [product.get("image")] if product.get("image") else [
+            "https://images.unsplash.com/photo-1563453392212-326f470e4b73?w=500&h=400&fit=crop"
+        ]
         
         # Convertir ObjectId en string si nécessaire
         if "_id" in product:
