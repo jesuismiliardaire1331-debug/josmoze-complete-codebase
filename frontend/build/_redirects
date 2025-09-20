@@ -1,0 +1,12 @@
+# Redirections pour Emergent/Netlify compatible
+# Routes API vers backend
+/api/* https://josmoze-ecom-fix.preview.emergentagent.com/api/:splat 200
+
+# 🚀 PHASE 4 - Routes uploads statiques vers backend
+/uploads/* https://josmoze-ecom-fix.preview.emergentagent.com/uploads/:splat 200
+
+# Routes publiques vers backend
+/unsubscribe https://josmoze-ecom-fix.preview.emergentagent.com/unsubscribe 200
+
+# Toutes les autres routes vers React Router (SPA fallback)
+/* /index.html 200

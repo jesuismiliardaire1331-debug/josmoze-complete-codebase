@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/static/css/main.cb5ea1b6.css",
+    "main.js": "/static/js/main.d2cff5e5.js",
+    "index.html": "/index.html",
+    "static/media/getFetch.cjs": "/static/media/getFetch.7a7a1c81840c96d5a3ea.cjs"
+  },
+  "entrypoints": [
+    "static/css/main.cb5ea1b6.css",
+    "static/js/main.d2cff5e5.js"
+  ]
+}
