@@ -427,12 +427,30 @@ const ChatBotV2 = () => {
           text: response.data.response,
           sender: 'assistant',
           timestamp: new Date().toISOString(),
-          agent: 'thomas'
+          agent: 'thomas',
+          // 🚀 PHASE 8 - Données panier et recommandations
+          cartData: response.data.cart_data,
+          productRecommended: response.data.product_recommended,
+          userAnalysis: response.data.user_analysis,
+          suggestions: response.data.suggestions
         };
         
         setTimeout(() => {
           setMessages(prev => [...prev, assistantMsg]);
           setIsTyping(false);
+          
+          // 🚀 PHASE 8 - Ajouter event listeners pour boutons CTA après rendu
+          setTimeout(() => {
+            const addToCartButtons = document.querySelectorAll('.thomas-add-to-cart');
+            addToCartButtons.forEach(button => {
+              button.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (assistantMsg.cartData) {
+                  handleAddToCart(assistantMsg.cartData);
+                }
+              });
+            });
+          }, 100);
         }, 800);
       } else {
         throw new Error('Réponse invalide du serveur');
