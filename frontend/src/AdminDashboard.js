@@ -325,6 +325,53 @@ const AdminDashboard = () => {
               </button>
             </div>
           </div>
+
+          {/* 🚀 PHASE 9 - Section Promotions & Parrainage */}
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              🎁 Marketing & Promotions
+            </h3>
+            
+            <div className="space-y-3">
+              <button
+                onClick={() => navigate('/admin/promotions')}
+                className="w-full text-left p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🎁</span>
+                  <div>
+                    <p className="font-medium text-orange-900">Codes Promo</p>
+                    <p className="text-sm text-orange-600">Créer et gérer les promotions</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => navigate('/admin/referral')}
+                className="w-full text-left p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">👥</span>
+                  <div>
+                    <p className="font-medium text-green-900">Programme Parrainage</p>
+                    <p className="text-sm text-green-600">Récompenses et commissions</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                className="w-full text-left p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">📊</span>
+                  <div>
+                    <p className="font-medium text-purple-900">Analytics Promo</p>
+                    <p className="text-sm text-purple-600">Performance des campagnes</p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Actions Rapides */}
