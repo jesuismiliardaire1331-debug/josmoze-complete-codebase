@@ -13,6 +13,10 @@ import AutoLanguageDetector from './AutoLanguageDetector';
 // Import CRM components
 import CRMDashboard from "./CRM";
 import AdminUploadImages from './AdminUploadImages';
+import PromotionsManager from './PromotionsManager';
+import EspaceClient from './EspaceClient';
+import CheckoutWithPromo from './CheckoutWithPromo';
+import { AuthProvider } from './UserAuth';
 import { AuthProvider } from "./CRMLogin";
 import CRMLogin from "./CRMLogin";
 import ProductExplanation from "./ProductExplanation";
@@ -21,7 +25,6 @@ import ProductRecommendations from "./ProductRecommendations";
 
 // Import ChatBot
 import ChatBotV2 from "./ChatBot_V2";
-import PromotionsManager from './PromotionsManager';
 
 // Import Translation Guardian  
 import TranslationGuardian from "./TranslationGuardian";
