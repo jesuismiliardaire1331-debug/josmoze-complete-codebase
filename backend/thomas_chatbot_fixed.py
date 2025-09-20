@@ -125,19 +125,89 @@ class ThomasChatbot:
             "5️⃣ Stockage : Réservoir eau pure toujours disponible"
         ]
     
-    def get_product_recommendation(self, budget: str = None, household_size: str = None, housing_type: str = None) -> Dict:
-        """Recommande l'osmoseur idéal selon les critères"""
+    def format_response_with_links_and_ctas(self, text: str, product_key: str = None, cta_actions: List[str] = None) -> str:
+        """🚀 THOMAS V2 - Formatter réponse avec liens cliquables et boutons CTA"""
         
-        # Logique de recommandation osmoseurs
-        if budget == "700+" or household_size == "5+":
-            return self.osmoseurs_catalog["osmoseur-prestige"]
-        elif budget == "400-700" or household_size == "3-4" or housing_type == "maison":
-            return self.osmoseurs_catalog["osmoseur-premium"]
-        elif budget == "200-400" or household_size == "1-2" or housing_type == "appartement":
-            return self.osmoseurs_catalog["osmoseur-essentiel"]
-        else:
-            # Par défaut Premium (le plus populaire)
-            return self.osmoseurs_catalog["osmoseur-premium"]
+        # Ajouter liens cliquables aux produits mentionnés
+        formatted_text = text
+        
+        # Remplacer mentions produits par liens cliquables
+        product_replacements = {
+            "Osmoseur Essentiel": f'<a href="{self.product_links["essentiel"]}" class="product-link">Osmoseur Essentiel (449€)</a>',
+            "Osmoseur Premium": f'<a href="{self.product_links["premium"]}" class="product-link">Osmoseur Premium (549€)</a>',
+            "Osmoseur Prestige": f'<a href="{self.product_links["prestige"]}" class="product-link">Osmoseur Prestige (899€)</a>',
+            "Filtre Douche": f'<a href="{self.product_links["filtre-douche"]}" class="product-link">Filtre Douche (39.90€)</a>',
+            "l'Essentiel": f'l\'<a href="{self.product_links["essentiel"]}" class="product-link">Essentiel (449€)</a>',
+            "le Premium": f'le <a href="{self.product_links["premium"]}" class="product-link">Premium (549€)</a>',
+            "le Prestige": f'le <a href="{self.product_links["prestige"]}" class="product-link">Prestige (899€)</a>'
+        }
+        
+        for mention, link in product_replacements.items():
+            formatted_text = formatted_text.replace(mention, link)
+        
+        # Ajouter boutons CTA si spécifié
+        if cta_actions:
+            cta_html = "\n\n<div class='thomas-cta-buttons'>\n"
+            for action in cta_actions:
+                if action in self.cta_buttons:
+                    if action == "add_to_cart" and product_key:
+                        cta_html += f'  <button class="cta-button add-to-cart" data-product="{product_key}">{self.cta_buttons[action]}</button>\n'
+                    elif action == "view_product" and product_key:
+                        cta_html += f'  <a href="{self.product_links.get(product_key, "#")}" class="cta-button view-product">{self.cta_buttons[action]}</a>\n'
+                    else:
+                        cta_html += f'  <button class="cta-button {action}">{self.cta_buttons[action]}</button>\n'
+            cta_html += "</div>"
+            formatted_text += cta_html
+        
+        return formatted_text
+
+    def get_user_context_analysis(self, message: str, conversation_history: List = None) -> Dict:
+        """🚀 THOMAS V2 - Analyser contexte utilisateur pour recommandations personnalisées"""
+        
+        analysis = {
+            "family_size": None,
+            "budget_range": None,
+            "concerns": [],
+            "previous_questions": [],
+            "intent": "information"
+        }
+        
+        message_lower = message.lower()
+        
+        # Analyser taille famille
+        if any(word in message_lower for word in ["2", "couple", "deux"]):
+            analysis["family_size"] = "2-3"
+        elif any(word in message_lower for word in ["4", "quatre", "famille"]):
+            analysis["family_size"] = "4-5"
+        elif any(word in message_lower for word in ["5", "6", "grand", "nombreux"]):
+            analysis["family_size"] = "5+"
+        
+        # Analyser budget
+        if any(word in message_lower for word in ["budget", "cher", "prix", "coût"]):
+            if any(word in message_lower for word in ["serré", "limité", "économique"]):
+                analysis["budget_range"] = "budget_serre"
+            elif any(word in message_lower for word in ["élevé", "premium", "haut"]):
+                analysis["budget_range"] = "premium"
+            else:
+                analysis["budget_range"] = "moyen"
+        
+        # Analyser préoccupations
+        if any(word in message_lower for word in ["santé", "enfant", "bébé"]):
+            analysis["concerns"].append("health")
+        if any(word in message_lower for word in ["goût", "odeur", "chlore"]):
+            analysis["concerns"].append("taste")
+        if any(word in message_lower for word in ["économie", "bouteille", "plastique"]):
+            analysis["concerns"].append("economy")
+        
+        # Analyser intention
+        if any(word in message_lower for word in ["acheter", "commander", "panier"]):
+            analysis["intent"] = "purchase"
+        elif any(word in message_lower for word in ["comparer", "différence"]):
+            analysis["intent"] = "comparison"
+        elif any(word in message_lower for word in ["hésite", "réfléchir"]):
+            analysis["intent"] = "hesitation"
+        
+        return analysis
     
     def generate_response(self, user_message: str, user_context: Dict = None) -> Dict:
         """
