@@ -198,7 +198,10 @@ Protégez votre famille avec nos solutions de purification d'eau :
         cursor = self.db.blog_articles.find(query).sort("published_date", -1).skip(skip).limit(limit)
         articles = await cursor.to_list(length=None)
         
-        return articles
+        # 🚀 PHASE 3 - Sérialiser ObjectId pour tous les articles
+        serialized_articles = [self.serialize_mongodb_doc(article) for article in articles]
+        
+        return serialized_articles
         
     async def get_article_by_slug(self, slug: str, increment_views: bool = False) -> Optional[dict]:
         """📖 Récupérer un article par son slug - PHASE 3 Fix ObjectId"""
