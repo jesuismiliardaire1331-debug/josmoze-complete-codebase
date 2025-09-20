@@ -1039,6 +1039,20 @@ class BackendTester:
                     )
                     return False, response_data
             else:
+                self.log_test(
+                    "Validation code parrainage (filleul@josmoze.com)",
+                    False,
+                    f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Validation code parrainage (filleul@josmoze.com)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
     
     def test_user_registration(self):
         """Test 5: Test inscription nouveau utilisateur"""
