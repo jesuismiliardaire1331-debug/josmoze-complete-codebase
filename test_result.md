@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "🚀 PHASE 2 - TEST INTERFACE RÉVOLUTIONNAIRE EXTRACTION IMAGES: Tester la nouvelle interface de sélection d'images avec fonctionnalités révolutionnaires - Extraction Améliorée (10-15 images), Interface Sélection (/api/ai-scraper/import-selected), Import Sélectif avec images choisies, Intégration Produit automatique. Validation complète des scénarios de test avec données spécifiques et persistance MongoDB."
+user_problem_statement: "🚀 PHASE 8 - THOMAS CHATBOT COMMERCIAL V2 FINALISATION: Implémenter la fonctionnalité 'Add to Cart' directement depuis les conversations Thomas et développer un système de recommandations avancées basé sur le profil utilisateur et l'historique des conversations. Objectif: Faire de Thomas un véritable commercial virtuel convertisseur avec intégration complète au système de panier existant."
 
 backend:
   - task: "Agent AI Upload - Validation Fonctionnelle"
