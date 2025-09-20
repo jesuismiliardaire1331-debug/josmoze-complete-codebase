@@ -149,15 +149,17 @@ class ThomasChatbot:
         
         # Ajouter boutons CTA si spécifié
         if cta_actions:
-            cta_html = "\n\n<div class='thomas-cta-buttons'>\n"
+            cta_html = "\n\n<div class='thomas-cta-buttons' style='margin-top: 15px;'>\n"
             for action in cta_actions:
                 if action in self.cta_buttons:
                     if action == "add_to_cart" and product_key:
-                        cta_html += f'  <button class="cta-button add-to-cart" data-product="{product_key}">{self.cta_buttons[action]}</button>\n'
+                        cta_html += f'  <button class="cta-button add-to-cart" data-product="{product_key}" style="margin: 5px; padding: 8px 15px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer;">{self.cta_buttons[action]}</button>\n'
                     elif action == "view_product" and product_key:
-                        cta_html += f'  <a href="{self.product_links.get(product_key, "#")}" class="cta-button view-product">{self.cta_buttons[action]}</a>\n'
+                        cta_html += f'  <a href="{self.product_links.get(product_key, "#")}" class="cta-button view-product" style="display: inline-block; margin: 5px; padding: 8px 15px; background: #059669; color: white; text-decoration: none; border-radius: 5px;">{self.cta_buttons[action]}</a>\n'
+                    elif action == "ask_question":
+                        cta_html += f'  <button class="cta-button ask-question" style="margin: 5px; padding: 8px 15px; background: #dc2626; color: white; border: none; border-radius: 5px; cursor: pointer;">{self.cta_buttons[action]}</button>\n'
                     else:
-                        cta_html += f'  <button class="cta-button {action}">{self.cta_buttons[action]}</button>\n'
+                        cta_html += f'  <button class="cta-button {action}" style="margin: 5px; padding: 8px 15px; background: #7c3aed; color: white; border: none; border-radius: 5px; cursor: pointer;">{self.cta_buttons[action]}</button>\n'
             cta_html += "</div>"
             formatted_text += cta_html
         
