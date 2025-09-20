@@ -414,7 +414,9 @@ const ChatBotV2 = () => {
       if (response.data?.response) {
         const assistantMsg = {
           id: Date.now() + 1,
-          text: response.data.response || "Désolé, je n'ai pas pu traiter votre demande. Pouvez-vous reformuler ?",
+          text: (typeof response.data.response === 'string' && response.data.response.trim()) 
+                ? response.data.response 
+                : "Désolé, je n'ai pas pu traiter votre demande. Pouvez-vous reformuler ?",
           sender: 'assistant',
           timestamp: new Date().toISOString(),
           agent: 'thomas',
