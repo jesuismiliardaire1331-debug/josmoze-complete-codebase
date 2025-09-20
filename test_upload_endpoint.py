@@ -28,7 +28,7 @@ def test_upload_endpoint():
     try:
         # Make the request
         response = requests.post(
-            'http://localhost:8000/api/admin/upload-product-image',
+            'http://localhost:8001/api/admin/upload-product-image',
             files=files,
             data=data,
             timeout=10
