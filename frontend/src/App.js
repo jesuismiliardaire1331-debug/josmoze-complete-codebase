@@ -2126,6 +2126,8 @@ function App() {
                     <Route path="/admin/ai-upload" element={<AIUploadAgent />} />
                     <Route path="/admin/upload-images" element={<AdminUploadImages />} />
                     <Route path="/admin/promotions" element={<PromotionsManager />} />
+                    <Route path="/espace-client" element={<EspaceClient />} />
+                    <Route path="/checkout-promo" element={<CheckoutWithPromo />} />
                   </Routes>
                 </main>
                 <Footer />
