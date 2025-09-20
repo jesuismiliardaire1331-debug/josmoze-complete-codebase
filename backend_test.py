@@ -305,50 +305,75 @@ class BackendTester:
             )
             return False, None
     
-    def test_image_url_accessible(self, image_url: str):
-        """Test 6: Vérifier que l'URL de l'image est accessible"""
+    def test_api_image_access_with_correct_mime_type(self, image_url: str):
+        """Test 6: Accès image via API avec MIME type correct (PHASE 4 CRITIQUE)"""
         if not image_url:
             self.log_test(
-                "URL image accessible",
+                "API Image Access + MIME Type",
                 False,
                 "Aucune URL fournie"
             )
             return False
             
         try:
-            # Construire l'URL complète
+            # Construire l'URL complète pour l'API
             full_url = f"https://josmoze-admin.preview.emergentagent.com{image_url}"
             
             response = self.session.get(full_url)
             
             if response.status_code == 200:
-                # Vérifier que c'est bien une image
-                content_type = response.headers.get('content-type', '')
+                # CRITIQUE: Vérifier le Content-Type
+                content_type = response.headers.get('content-type', '').lower()
+                
+                # Vérifier que c'est une image et PAS du HTML
                 if content_type.startswith('image/'):
-                    self.log_test(
-                        "URL image accessible",
-                        True,
-                        f"Image accessible à {full_url} (Content-Type: {content_type})"
-                    )
-                    return True
+                    # Vérifier spécifiquement que ce n'est pas text/html
+                    if 'text/html' not in content_type:
+                        # Bonus: Vérifier que l'image est valide avec PIL
+                        try:
+                            from PIL import Image
+                            import io
+                            img = Image.open(io.BytesIO(response.content))
+                            img.verify()  # Vérifier que l'image est valide
+                            
+                            self.log_test(
+                                "API Image Access + MIME Type",
+                                True,
+                                f"✅ Image accessible via API {full_url} | Content-Type: {content_type} | Taille: {len(response.content)} bytes | PIL: Valide"
+                            )
+                            return True
+                        except Exception as pil_error:
+                            self.log_test(
+                                "API Image Access + MIME Type",
+                                False,
+                                f"⚠️ Image accessible mais PIL échoue: {pil_error} | Content-Type: {content_type}"
+                            )
+                            return False
+                    else:
+                        self.log_test(
+                            "API Image Access + MIME Type",
+                            False,
+                            f"❌ PROBLÈME CRITIQUE: Content-Type contient text/html: {content_type}"
+                        )
+                        return False
                 else:
                     self.log_test(
-                        "URL image accessible",
+                        "API Image Access + MIME Type",
                         False,
-                        f"URL accessible mais pas une image (Content-Type: {content_type})"
+                        f"❌ PROBLÈME CRITIQUE: Content-Type n'est pas image/*: {content_type}"
                     )
                     return False
             else:
                 self.log_test(
-                    "URL image accessible",
+                    "API Image Access + MIME Type",
                     False,
-                    f"URL non accessible: {response.status_code}"
+                    f"❌ URL API non accessible: {response.status_code}"
                 )
                 return False
                 
         except Exception as e:
             self.log_test(
-                "URL image accessible",
+                "API Image Access + MIME Type",
                 False,
                 f"Erreur: {str(e)}"
             )
