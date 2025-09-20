@@ -521,6 +521,8 @@ class BackendTester:
                     return True, response_data
                 else:
                     failed_checks = [k for k, v in all_checks.items() if not v]
+                    # Debug: Print actual response for analysis
+                    print(f"   🔍 DEBUG - Réponse actuelle: {json.dumps(response_data, indent=2, ensure_ascii=False)}")
                     self.log_test(
                         "Test intention d'achat directe - Famille 4 personnes",
                         False,
