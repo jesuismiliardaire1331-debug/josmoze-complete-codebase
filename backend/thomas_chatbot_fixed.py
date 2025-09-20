@@ -143,7 +143,9 @@ class ThomasChatbot:
         }
         
         for mention, link in product_replacements.items():
-            formatted_text = formatted_text.replace(mention, link)
+            # Éviter double remplacement en vérifiant si déjà transformé
+            if mention in formatted_text and '<a href=' not in formatted_text.replace(mention, ''):
+                formatted_text = formatted_text.replace(mention, link, 1)  # Une seule occurrence
         
         # Ajouter boutons CTA si spécifié
         if cta_actions:
