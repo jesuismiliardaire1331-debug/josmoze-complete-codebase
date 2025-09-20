@@ -2142,9 +2142,10 @@ function App() {
                 {/* Questionnaire produits */}
                 <QuestionnaireWrapper />
               </BrowserRouter>
-            </div>
+              </div>
+            </AppProvider>
           </AuthProvider>
-        </AppProvider>
+        </TranslationGuardian>
       </NotificationProvider>
     </Suspense>
   );
