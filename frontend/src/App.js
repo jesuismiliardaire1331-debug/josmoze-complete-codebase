@@ -105,26 +105,29 @@ const AppProvider = ({ children }) => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Auto-popup questionnaire après 15 secondes - UNE SEULE FOIS PAR SESSION
+  // Auto-popup questionnaire après 15 secondes - UNE SEULE FOIS PAR SESSION (PHASE 8 - OPTIMISÉ)
   useEffect(() => {
     if (customerType === 'B2C') {
-      // Vérifier IMMÉDIATEMENT les flags pour éviter le timer inutile
+      // 🚀 PHASE 8 - Vérifications d'exemption pour tests
+      const isTestingPhase8 = window.location.search.includes('phase8') || sessionStorage.getItem('phase8_testing');
       const hasSeenThisSession = sessionStorage.getItem('josmoze_questionnaire_shown');
       const hasSeenPermanent = localStorage.getItem('josmoze_questionnaire_seen');
       
-      console.log('🎯 Vérification questionnaire:', { hasSeenThisSession, hasSeenPermanent });
+      console.log('🎯 Vérification questionnaire:', { hasSeenThisSession, hasSeenPermanent, isTestingPhase8 });
       
-      // Si déjà vu, ne pas démarrer le timer
-      if (hasSeenThisSession || hasSeenPermanent) {
-        console.log('🎯 Questionnaire déjà vu - aucun popup');
+      // Si déjà vu ou tests Phase 8, ne pas démarrer le timer
+      if (hasSeenThisSession || hasSeenPermanent || isTestingPhase8) {
+        console.log('🎯 Questionnaire désactivé - Phase 8 testing ou déjà vu');
         return;
       }
       
-      // Sinon démarrer le timer
-      console.log('🎯 Démarrage timer questionnaire (15s)');
+      // Sinon démarrer le timer avec délai augmenté pour permettre tests chatbot
+      console.log('🎯 Démarrage timer questionnaire (30s pour Phase 8)');
       const timer = setTimeout(() => {
-        // Double vérification avant affichage
-        const hasSeenNow = sessionStorage.getItem('josmoze_questionnaire_shown') || localStorage.getItem('josmoze_questionnaire_seen');
+        // Triple vérification avant affichage
+        const hasSeenNow = sessionStorage.getItem('josmoze_questionnaire_shown') || 
+                          localStorage.getItem('josmoze_questionnaire_seen') ||
+                          sessionStorage.getItem('phase8_testing');
         
         if (!hasSeenNow) {
           console.log('🎯 Déclenchement auto-popup questionnaire UNIQUE');
@@ -135,7 +138,7 @@ const AppProvider = ({ children }) => {
         } else {
           console.log('🎯 Questionnaire marqué vu pendant le timer - annulation');
         }
-      }, 15000); // 15 secondes
+      }, 30000); // 30 secondes pour permettre tests Phase 8
 
       return () => {
         console.log('🎯 Nettoyage timer questionnaire');
