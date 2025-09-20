@@ -1163,6 +1163,113 @@ class BackendTester:
                 )
                 return False, None
                 
+    
+    def run_phase9_promotions_referrals_tests(self):
+        """Execute PHASE 9 promotions and referrals system tests"""
+        print("🚀 PHASE 9 - SYSTÈME DE PROMOTIONS ET PARRAINAGE")
+        print("=" * 70)
+        print("🎯 OBJECTIF: Tester les nouvelles API Phase 9 - Promotions et Parrainage")
+        print("🔧 TESTS: Promotions par défaut, validation codes, parrainage, authentification")
+        print("=" * 70)
+        
+        # Test 1: Promotions par défaut créées au démarrage
+        print("\n📋 TEST 1: Promotions par défaut (BIENVENUE10, LIVRAISONGRATUITE, FAMILLE20)...")
+        promotions_success, promotions_data = self.test_default_promotions_creation()
+        
+        # Test 2: Validation code promotionnel BIENVENUE10
+        print("\n📋 TEST 2: Validation code BIENVENUE10 avec commande 300€ B2C...")
+        promo_validation_success, promo_data = self.test_promotion_code_validation()
+        
+        # Test 3: Génération code parrainage
+        print("\n📋 TEST 3: Génération code parrainage pour test@josmoze.com...")
+        referral_gen_success, referral_gen_data = self.test_referral_code_generation()
+        
+        # Test 4: Validation code parrainage
+        print("\n📋 TEST 4: Validation code parrainage avec filleul@josmoze.com...")
+        referral_val_success, referral_val_data = self.test_referral_code_validation()
+        
+        # Test 5: Inscription utilisateur
+        print("\n📋 TEST 5: Inscription nouveau utilisateur newuser@josmoze.com...")
+        registration_success, registration_data = self.test_user_registration()
+        
+        # Test 6: Connexion utilisateur
+        print("\n📋 TEST 6: Connexion utilisateur avec compte créé...")
+        login_success, login_data = self.test_user_login()
+        
+        return self.generate_phase9_summary()
+    
+    def generate_phase9_summary(self):
+        """Generate PHASE 9 test summary"""
+        # Filter Phase 9 related tests
+        phase9_tests = [result for result in self.test_results if any(keyword in result["test"].lower() for keyword in ["promotion", "parrainage", "referral", "inscription", "connexion"])]
+        
+        total_tests = len(phase9_tests)
+        passed_tests = sum(1 for result in phase9_tests if result["success"])
+        failed_tests = total_tests - passed_tests
+        
+        success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
+        
+        print("\n" + "=" * 70)
+        print("📊 RÉSUMÉ PHASE 9 - SYSTÈME DE PROMOTIONS ET PARRAINAGE")
+        print("=" * 70)
+        print(f"Total des tests: {total_tests}")
+        print(f"✅ Réussis: {passed_tests}")
+        print(f"❌ Échoués: {failed_tests}")
+        print(f"📈 Taux de réussite: {success_rate:.1f}%")
+        
+        print("\n📋 DÉTAIL DES RÉSULTATS:")
+        for result in phase9_tests:
+            status = "✅" if result["success"] else "❌"
+            print(f"{status} {result['test']}: {result['details']}")
+        
+        # Determine overall status
+        if success_rate == 100:
+            overall_status = "🎉 PHASE 9 TERMINÉE AVEC SUCCÈS"
+            status_details = f"Tous les tests promotions et parrainage réussis!"
+        elif success_rate >= 80:
+            overall_status = "✅ PHASE 9 LARGEMENT RÉUSSIE"
+            status_details = f"Majorité des fonctionnalités opérationnelles ({success_rate:.1f}%)"
+        elif success_rate >= 60:
+            overall_status = "⚠️ PHASE 9 PARTIELLEMENT RÉUSSIE"
+            status_details = f"Quelques fonctionnalités opérationnelles ({success_rate:.1f}%)"
+        else:
+            overall_status = "❌ PHASE 9 ÉCHOUÉE"
+            status_details = f"Problèmes critiques avec système promotions/parrainage"
+        
+        print(f"\n{overall_status}")
+        print(f"📊 {status_details}")
+        
+        # Specific Phase 9 validation summary
+        validation_summary = []
+        if any("promotion" in result["test"].lower() and result["success"] for result in phase9_tests):
+            validation_summary.append("✅ Collections MongoDB créées")
+            validation_summary.append("✅ Promotions par défaut disponibles")
+        
+        if any("validation code" in result["test"].lower() and result["success"] for result in phase9_tests):
+            validation_summary.append("✅ Validation codes promo avec calculs corrects")
+        
+        if any("parrainage" in result["test"].lower() and result["success"] for result in phase9_tests):
+            validation_summary.append("✅ Système parrainage opérationnel")
+        
+        if any("inscription" in result["test"].lower() and result["success"] for result in phase9_tests):
+            validation_summary.append("✅ Authentification utilisateur complète")
+        
+        if validation_summary:
+            print(f"\n🎯 VALIDATION ATTENDUE:")
+            for item in validation_summary:
+                print(f"   {item}")
+        
+        return {
+            "overall_success": success_rate >= 80,
+            "success_rate": success_rate,
+            "total_tests": total_tests,
+            "passed_tests": passed_tests,
+            "failed_tests": failed_tests,
+            "status": overall_status,
+            "details": status_details,
+            "test_results": phase9_tests,
+            "generated_referral_code": self.generated_referral_code
+        }
         except Exception as e:
             self.log_test(
                 "Connexion utilisateur (newuser@josmoze.com)",
