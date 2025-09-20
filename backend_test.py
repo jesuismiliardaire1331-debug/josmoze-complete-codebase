@@ -1307,10 +1307,6 @@ class BackendTester:
             "test_results": phase9_tests,
             "generated_referral_code": self.generated_referral_code
         }
-                False,
-                f"❌ Erreur: {str(e)}"
-            )
-            return False, None
         
     def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test results"""
