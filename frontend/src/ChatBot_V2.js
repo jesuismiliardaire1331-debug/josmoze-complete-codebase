@@ -502,6 +502,49 @@ const ChatBotV2 = () => {
     <div className="fixed bottom-6 right-6 z-50">
       {/* Chat Window */}
       <div className="bg-white rounded-lg shadow-2xl border border-gray-200 w-96 h-96 flex flex-col">
+        {/* 🚀 THOMAS V2 - CSS pour liens produits et boutons CTA */}
+        <style jsx>{`
+          .thomas-message .product-link {
+            color: #2563eb !important;
+            text-decoration: underline !important;
+            font-weight: 600 !important;
+            cursor: pointer;
+          }
+          .thomas-message .product-link:hover {
+            color: #1d4ed8 !important;
+            text-decoration: none !important;
+          }
+          .thomas-cta-buttons {
+            margin: 16px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          .thomas-cta-buttons .cta-button {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+          }
+          .thomas-cta-buttons .cta-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+          }
+          .thomas-cta-buttons .add-to-cart {
+            background: linear-gradient(135deg, #10b981, #059669);
+          }
+          .thomas-cta-buttons .view-product {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          }
+        `}</style>
+
         {/* Header avec Avatar Thomas */}
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
           <div className="flex items-center space-x-3">
