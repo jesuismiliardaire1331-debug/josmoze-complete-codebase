@@ -199,18 +199,22 @@ Protégez votre famille avec nos solutions de purification d'eau :
         return articles
         
     async def get_article_by_slug(self, slug: str, increment_views: bool = False) -> Optional[dict]:
-        """📖 Récupérer un article par son slug"""
+        """📖 Récupérer un article par son slug - PHASE 3 Fix ObjectId"""
         await self.initialize()
         
         article = await self.db.blog_articles.find_one({"slug": slug})
         
-        if article and increment_views:
-            # Incrémenter compteur de vues
-            await self.db.blog_articles.update_one(
-                {"slug": slug},
-                {"$inc": {"view_count": 1}}
-            )
-            article["view_count"] = article.get("view_count", 0) + 1
+        if article:
+            # 🚀 PHASE 3 - Sérialiser ObjectId avant traitement
+            article = self.serialize_mongodb_doc(article)
+            
+            if increment_views:
+                # Incrémenter compteur de vues
+                await self.db.blog_articles.update_one(
+                    {"slug": slug},
+                    {"$inc": {"view_count": 1}}
+                )
+                article["view_count"] = article.get("view_count", 0) + 1
             
         return article
         
