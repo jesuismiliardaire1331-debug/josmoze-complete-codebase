@@ -2226,6 +2226,12 @@ async def startup_db():
     logging.info("🛡️ Démarrage automatique de l'agent de surveillance marque...")
     start_monitoring_task()
     
+    # 🚀 PHASE 9 - Initialiser nouveaux systèmes
+    await init_promotions_system(db)
+    await init_user_auth_system(db)
+    
+    logging.info("✅ Tous les services initialisés avec succès (Phase 9 included)")
+    
     # 🚀 Démarrage automatique de l'agent de sécurité et d'audit 24/7
     logging.critical("🚀🛡️ Démarrage automatique de l'agent de sécurité et d'audit...")
     start_security_monitoring_task(db)
