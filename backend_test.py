@@ -413,6 +413,376 @@ class BackendTester:
             "test_results": self.test_results,
             "uploaded_images": self.uploaded_blog_images
         }
+    
+    # ========== PHASE 8 - THOMAS CHATBOT COMMERCIAL TESTS ==========
+    
+    def test_thomas_endpoint_exists(self):
+        """Test 1: Vérifier que l'endpoint /api/ai-agents/chat existe et fonctionne"""
+        try:
+            # Test avec un message simple pour vérifier l'existence de l'endpoint
+            test_data = {
+                "message": "Test endpoint",
+                "session_id": "test_session",
+                "agent": "thomas"
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/ai-agents/chat", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifier la structure de base de la réponse
+                required_fields = ['response', 'agent', 'timestamp']
+                missing_fields = [field for field in required_fields if field not in response_data]
+                
+                if not missing_fields:
+                    self.log_test(
+                        "Endpoint /api/ai-agents/chat existe et fonctionne",
+                        True,
+                        f"✅ Endpoint accessible, structure correcte. Agent: {response_data.get('agent')}"
+                    )
+                    return True
+                else:
+                    self.log_test(
+                        "Endpoint /api/ai-agents/chat existe et fonctionne",
+                        False,
+                        f"Structure réponse incomplète - Champs manquants: {missing_fields}"
+                    )
+                    return False
+            else:
+                self.log_test(
+                    "Endpoint /api/ai-agents/chat existe et fonctionne",
+                    False,
+                    f"Endpoint non accessible: {response.status_code}"
+                )
+                return False
+                
+        except Exception as e:
+            self.log_test(
+                "Endpoint /api/ai-agents/chat existe et fonctionne",
+                False,
+                f"Erreur de connexion: {str(e)}"
+            )
+            return False
+    
+    def test_direct_purchase_intent(self):
+        """Test 2: Test intention d'achat directe - "Je veux acheter un osmoseur pour ma famille de 4 personnes" """
+        try:
+            test_data = {
+                "message": "Je veux acheter un osmoseur pour ma famille de 4 personnes",
+                "session_id": "purchase_intent_test",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": []
+                }
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/ai-agents/chat", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications spécifiques Phase 8
+                checks = {
+                    "response_exists": bool(response_data.get('response')),
+                    "product_recommended": bool(response_data.get('product_recommended')),
+                    "cart_data_exists": bool(response_data.get('cart_data')),
+                    "type_purchase_intent": response_data.get('type') == 'purchase_intent',
+                    "premium_recommended": response_data.get('product_recommended') == 'osmoseur-premium'
+                }
+                
+                # Vérifier cart_data structure
+                cart_data = response_data.get('cart_data', {})
+                cart_checks = {
+                    "cart_id": bool(cart_data.get('id')),
+                    "cart_name": bool(cart_data.get('name')),
+                    "cart_price": bool(cart_data.get('price')),
+                    "cart_image": bool(cart_data.get('image'))
+                }
+                
+                # Vérifier HTML CTA buttons
+                response_text = response_data.get('response', '')
+                html_checks = {
+                    "add_to_cart_button": 'Add to Cart' in response_text or 'Ajouter au panier' in response_text,
+                    "cta_button_class": 'cta-button' in response_text,
+                    "product_links": 'class="product-link"' in response_text
+                }
+                
+                all_checks = {**checks, **cart_checks, **html_checks}
+                passed_checks = sum(all_checks.values())
+                total_checks = len(all_checks)
+                
+                if passed_checks >= total_checks * 0.8:  # 80% des vérifications passent
+                    self.log_test(
+                        "Test intention d'achat directe - Famille 4 personnes",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Produit recommandé: {response_data.get('product_recommended')}, Cart data: {bool(cart_data)}"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in all_checks.items() if not v]
+                    self.log_test(
+                        "Test intention d'achat directe - Famille 4 personnes",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Test intention d'achat directe - Famille 4 personnes",
+                    False,
+                    f"Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Test intention d'achat directe - Famille 4 personnes",
+                False,
+                f"Erreur: {str(e)}"
+            )
+            return False, None
+    
+    def test_smart_recommendation_with_history(self):
+        """Test 3: Test recommandation intelligente avec historique de conversation"""
+        try:
+            # Simuler un historique de conversation
+            conversation_history = [
+                {"sender": "user", "text": "Bonjour", "timestamp": "2025-01-01T10:00:00"},
+                {"sender": "thomas", "text": "Bonjour ! Comment puis-je vous aider ?", "timestamp": "2025-01-01T10:00:01"},
+                {"sender": "user", "text": "Je cherche un osmoseur", "timestamp": "2025-01-01T10:01:00"},
+                {"sender": "thomas", "text": "Parfait ! Combien de personnes dans votre foyer ?", "timestamp": "2025-01-01T10:01:01"},
+                {"sender": "user", "text": "Nous sommes 4 personnes", "timestamp": "2025-01-01T10:02:00"}
+            ]
+            
+            test_data = {
+                "message": "Bonjour Thomas",
+                "session_id": "smart_recommendation_test",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": conversation_history
+                }
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/ai-agents/chat", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications recommandation intelligente
+                checks = {
+                    "response_exists": bool(response_data.get('response')),
+                    "user_analysis": bool(response_data.get('user_analysis')),
+                    "personalized_greeting": 'Re-bonjour' in response_data.get('response', '') or 'vraiment intéressé' in response_data.get('response', ''),
+                    "product_recommended": bool(response_data.get('product_recommended')),
+                    "suggestions_provided": bool(response_data.get('suggestions'))
+                }
+                
+                # Vérifier analyse utilisateur
+                user_analysis = response_data.get('user_analysis', {})
+                analysis_checks = {
+                    "engagement_level": user_analysis.get('engagement_level') in ['medium', 'high'],
+                    "family_size_detected": bool(user_analysis.get('family_size')),
+                    "conversation_stage": bool(user_analysis.get('conversation_stage')),
+                    "purchase_readiness": isinstance(user_analysis.get('purchase_readiness'), (int, float))
+                }
+                
+                all_checks = {**checks, **analysis_checks}
+                passed_checks = sum(all_checks.values())
+                total_checks = len(all_checks)
+                
+                if passed_checks >= total_checks * 0.7:  # 70% des vérifications passent
+                    self.log_test(
+                        "Test recommandation intelligente avec historique",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Engagement: {user_analysis.get('engagement_level')}, Famille: {user_analysis.get('family_size')}"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in all_checks.items() if not v]
+                    self.log_test(
+                        "Test recommandation intelligente avec historique",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Test recommandation intelligente avec historique",
+                    False,
+                    f"Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Test recommandation intelligente avec historique",
+                False,
+                f"Erreur: {str(e)}"
+            )
+            return False, None
+    
+    def test_clickable_links_and_cart_data(self):
+        """Test 4: Test liens cliquables et données panier complètes"""
+        try:
+            test_data = {
+                "message": "Quel est le prix de l'osmoseur Premium ?",
+                "session_id": "links_cart_test",
+                "agent": "thomas"
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/ai-agents/chat", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                response_text = response_data.get('response', '')
+                
+                # Vérifications liens cliquables
+                link_checks = {
+                    "product_link_class": 'class="product-link"' in response_text,
+                    "href_attribute": 'href="/produit/' in response_text,
+                    "premium_link": 'osmoseur-premium' in response_text,
+                    "price_in_link": '549' in response_text
+                }
+                
+                # Vérifications boutons CTA
+                cta_checks = {
+                    "cta_button_class": 'class="cta-button"' in response_text,
+                    "add_to_cart_button": 'Ajouter au panier' in response_text or 'Add to Cart' in response_text,
+                    "button_styling": 'style=' in response_text and 'background:' in response_text
+                }
+                
+                # Vérifications données panier
+                cart_data = response_data.get('cart_data', {})
+                cart_checks = {
+                    "cart_data_exists": bool(cart_data),
+                    "product_id_correct": cart_data.get('id') == 'osmoseur-premium',
+                    "product_name": bool(cart_data.get('name')),
+                    "product_price": cart_data.get('price') == 549.0,
+                    "product_image": bool(cart_data.get('image'))
+                }
+                
+                all_checks = {**link_checks, **cta_checks, **cart_checks}
+                passed_checks = sum(all_checks.values())
+                total_checks = len(all_checks)
+                
+                if passed_checks >= total_checks * 0.75:  # 75% des vérifications passent
+                    self.log_test(
+                        "Test liens cliquables et données panier",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Cart ID: {cart_data.get('id')}, Prix: {cart_data.get('price')}€"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in all_checks.items() if not v]
+                    self.log_test(
+                        "Test liens cliquables et données panier",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Test liens cliquables et données panier",
+                    False,
+                    f"Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Test liens cliquables et données panier",
+                False,
+                f"Erreur: {str(e)}"
+            )
+            return False, None
+    
+    def test_phase8_response_structure_validation(self):
+        """Test 5: Validation structure réponse Phase 8 - Tous les nouveaux champs"""
+        try:
+            test_data = {
+                "message": "Je veux acheter un osmoseur, que me conseillez-vous ?",
+                "session_id": "structure_validation_test",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [
+                        {"sender": "user", "text": "Bonjour", "timestamp": "2025-01-01T10:00:00"},
+                        {"sender": "user", "text": "Nous sommes une famille de 4", "timestamp": "2025-01-01T10:01:00"}
+                    ]
+                }
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/ai-agents/chat", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications structure Phase 8 complète
+                structure_checks = {
+                    "response": bool(response_data.get('response')),
+                    "suggestions": isinstance(response_data.get('suggestions'), list),
+                    "cart_data": isinstance(response_data.get('cart_data'), dict),
+                    "product_recommended": bool(response_data.get('product_recommended')),
+                    "type": bool(response_data.get('type')),
+                    "user_analysis": isinstance(response_data.get('user_analysis'), dict),
+                    "agent": response_data.get('agent') == 'thomas',
+                    "timestamp": bool(response_data.get('timestamp'))
+                }
+                
+                # Vérifications cart_data détaillées
+                cart_data = response_data.get('cart_data', {})
+                cart_structure_checks = {
+                    "cart_id": bool(cart_data.get('id')),
+                    "cart_name": bool(cart_data.get('name')),
+                    "cart_price": isinstance(cart_data.get('price'), (int, float)),
+                    "cart_image": bool(cart_data.get('image')),
+                    "cart_quantity": cart_data.get('quantity') == 1
+                }
+                
+                # Vérifications user_analysis détaillées
+                user_analysis = response_data.get('user_analysis', {})
+                analysis_structure_checks = {
+                    "family_size": user_analysis.get('family_size') is not None,
+                    "intent": bool(user_analysis.get('intent')),
+                    "engagement_level": bool(user_analysis.get('engagement_level')),
+                    "purchase_readiness": isinstance(user_analysis.get('purchase_readiness'), (int, float)),
+                    "conversation_stage": bool(user_analysis.get('conversation_stage'))
+                }
+                
+                all_checks = {**structure_checks, **cart_structure_checks, **analysis_structure_checks}
+                passed_checks = sum(all_checks.values())
+                total_checks = len(all_checks)
+                
+                if passed_checks >= total_checks * 0.8:  # 80% des vérifications passent
+                    self.log_test(
+                        "Validation structure réponse Phase 8",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} champs Phase 8 validés. Structure complète conforme."
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in all_checks.items() if not v]
+                    self.log_test(
+                        "Validation structure réponse Phase 8",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} champs validés. Champs manquants: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Validation structure réponse Phase 8",
+                    False,
+                    f"Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Validation structure réponse Phase 8",
+                False,
+                f"Erreur: {str(e)}"
+            )
+            return False, None
         
     def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test results"""
