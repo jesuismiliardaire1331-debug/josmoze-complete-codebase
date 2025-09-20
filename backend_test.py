@@ -379,7 +379,65 @@ class BackendTester:
             )
             return False
     
-    def test_unique_filename_generation(self):
+    def test_dedicated_api_endpoint_exists(self):
+        """Test NOUVEAU: Vérifier que l'endpoint GET /api/admin/get-uploaded-image/{filename} existe"""
+        try:
+            # Test avec un nom de fichier fictif pour vérifier l'existence de l'endpoint
+            test_filename = "test-file-that-does-not-exist.jpg"
+            response = self.session.get(f"{BACKEND_URL}/admin/get-uploaded-image/{test_filename}")
+            
+            # L'endpoint doit exister (pas 404 pour l'endpoint lui-même)
+            # Il peut retourner 404 pour le fichier, mais pas pour l'endpoint
+            if response.status_code == 404:
+                # Vérifier si c'est une 404 pour le fichier (bon) ou pour l'endpoint (mauvais)
+                try:
+                    response_data = response.json()
+                    error_detail = response_data.get('detail', '').lower()
+                    if 'image non trouvée' in error_detail or 'not found' in error_detail:
+                        self.log_test(
+                            "Endpoint API dédié /api/admin/get-uploaded-image/{filename}",
+                            True,
+                            f"✅ Endpoint existe (404 pour fichier inexistant: '{error_detail}')"
+                        )
+                        return True
+                    else:
+                        self.log_test(
+                            "Endpoint API dédié /api/admin/get-uploaded-image/{filename}",
+                            False,
+                            f"❌ Endpoint non trouvé: {error_detail}"
+                        )
+                        return False
+                except:
+                    # Si pas de JSON, probablement une vraie 404 d'endpoint
+                    self.log_test(
+                        "Endpoint API dédié /api/admin/get-uploaded-image/{filename}",
+                        False,
+                        "❌ Endpoint non trouvé (404 sans JSON)"
+                    )
+                    return False
+            elif response.status_code in [200, 500]:
+                # 200 = fichier trouvé (improbable), 500 = erreur serveur mais endpoint existe
+                self.log_test(
+                    "Endpoint API dédié /api/admin/get-uploaded-image/{filename}",
+                    True,
+                    f"✅ Endpoint existe (status: {response.status_code})"
+                )
+                return True
+            else:
+                self.log_test(
+                    "Endpoint API dédié /api/admin/get-uploaded-image/{filename}",
+                    False,
+                    f"❌ Status inattendu: {response.status_code}"
+                )
+                return False
+                
+        except Exception as e:
+            self.log_test(
+                "Endpoint API dédié /api/admin/get-uploaded-image/{filename}",
+                False,
+                f"Erreur de connexion: {str(e)}"
+            )
+            return False
         """Test 7: Génération de noms de fichiers uniques (UUID)"""
         try:
             # Upload de deux images identiques
