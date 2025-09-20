@@ -925,8 +925,8 @@ async def chatbot_response(
         # Obtenir la réponse de Thomas V2 avec contexte complet
         response_data = get_thomas_response(message, enhanced_context)
         
-        # Structure de réponse standardisée V2
-        return {
+        # Structure de réponse standardisée V2 - PHASE 8 COMPLÈTE
+        response_structure = {
             "response": response_data.get("message", ""),
             "suggestions": response_data.get("suggestions", []),
             "type": response_data.get("type", "general"),
@@ -934,6 +934,18 @@ async def chatbot_response(
             "timestamp": datetime.utcnow().isoformat(),
             "session_id": session_id
         }
+        
+        # 🚀 PHASE 8 - Ajouter les nouveaux champs commerciaux
+        if "cart_data" in response_data:
+            response_structure["cart_data"] = response_data["cart_data"]
+        
+        if "product_recommended" in response_data:
+            response_structure["product_recommended"] = response_data["product_recommended"]
+            
+        if "user_analysis" in response_data:
+            response_structure["user_analysis"] = response_data["user_analysis"]
+        
+        return response_structure
         
     except Exception as e:
         logging.error(f"Erreur Thomas chatbot: {str(e)}")
