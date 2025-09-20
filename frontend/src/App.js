@@ -338,13 +338,19 @@ const Header = () => {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-            <h1 className="text-2xl font-bold text-blue-600">
-              {displayDomain}
-            </h1>
-            <span className="ml-3 text-sm text-gray-600">
-              💧 {t('hero.subtitle', 'Filtration professionnelle')}
-            </span>
+          <div className="flex flex-col cursor-pointer" onClick={() => navigate('/')}>
+            <div className="header-brand">
+              <div className="site-name">
+                <h1 className="text-2xl font-bold text-blue-600">
+                  {displayDomain}
+                </h1>
+              </div>
+              <div className="tagline">
+                <span className="text-sm text-gray-600">
+                  💧 {t('hero.subtitle', 'Filtration professionnelle')}
+                </span>
+              </div>
+            </div>
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
