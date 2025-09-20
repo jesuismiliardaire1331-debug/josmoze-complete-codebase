@@ -494,7 +494,35 @@ test_plan:
   test_all: false
   test_priority: "phase2_revolutionary_first"
 
-  - task: "Email Sequencer Osmoseur - Backend Implementation"
+  - task: "THOMAS V2 - Fonctionnalités Commerciales"
+    implemented: true
+    working: false
+    file: "backend/thomas_chatbot_fixed.py"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "THOMAS V2 IMPLÉMENTÉ: Nouvelles fonctionnalités commerciales avec liens cliquables HTML (Osmoseur Premium 549€), boutons CTA (🛒 Ajouter au panier, 👀 Voir le produit, ❓ Poser une question), recommandations personnalisées selon contexte utilisateur, format HTML optimisé pour dangerouslySetInnerHTML frontend."
+        - working: false
+          agent: "testing"
+          comment: "❌ THOMAS V2 PARTIELLEMENT FONCTIONNEL (50% success): ✅ Liens cliquables working (Premium 549€ links detected with CSS classes), ✅ Recommandations personnalisées working (Premium for 4-person family), ❌ Boutons CTA insuffisants (3/7 elements found: class='cta-button', ❓, 'Poser une question'), ❌ Format HTML needs improvement (1/8 elements found). Core functionality working but CTA buttons and HTML formatting need enhancement."
+
+  - task: "PHASE 3 - Liens Produits Blog"
+    implemented: true
+    working: false
+    file: "backend/blog_manager.py, backend/server.py"
+    stuck_count: 1
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "PHASE 3 IMPLÉMENTÉE: Enrichissement automatique blog avec liens produits cliquables, GET /api/blog/articles/{slug} enrichit le contenu automatiquement, transformation 'osmoseur' en liens cliquables vers produits, section CTA automatique ajoutée, performance optimisée."
+        - working: false
+          agent: "testing"
+          comment: "❌ PHASE 3 COMPLÈTEMENT BLOQUÉE (0% success): 🚨 CRITICAL BUG - MongoDB ObjectId serialization error in blog_manager.py causing 500 Internal Server Error on all blog endpoints. Error: 'ObjectId object is not iterable' preventing article retrieval. Blog initialization works (200 OK) but article access fails. ✅ Performance test working (0.01s response time). URGENT FIX NEEDED: FastAPI JSON serialization of MongoDB ObjectId fields."
     implemented: true
     working: true
     file: "backend/email_sequencer_manager.py"
