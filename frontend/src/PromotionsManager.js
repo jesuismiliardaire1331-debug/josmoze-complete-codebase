@@ -4,340 +4,381 @@ import axios from 'axios';
 const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
 const PromotionsManager = () => {
-  const [referralCode, setReferralCode] = useState('');
-  const [testCode, setTestCode] = useState('');
-  const [validation, setValidation] = useState(null);
-  const [userId, setUserId] = useState('user123');
-  const [stats, setStats] = useState(null);
-  const [promotionRules, setPromotionRules] = useState(null);
+  const [promotions, setPromotions] = useState([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [newPromotion, setNewPromotion] = useState({
+    code: '',
+    name: '',
+    description: '',
+    type: 'percentage',
+    value: '',
+    min_order_amount: '0',
+    max_discount_amount: '',
+    usage_limit: '',
+    usage_limit_per_customer: '1',
+    expires_at: '',
+    target_customer_type: 'both'
+  });
 
-  // Charger les règles de promotion au montage
   useEffect(() => {
-    loadPromotionRules();
+    fetchPromotions();
   }, []);
 
-  const loadPromotionRules = async () => {
+  const fetchPromotions = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/api/promotions/rules`);
+      setLoading(true);
+      const response = await axios.get(`${API_BASE}/api/admin/promotions`);
       if (response.data.success) {
-        setPromotionRules(response.data.rules);
+        setPromotions(response.data.promotions);
       }
     } catch (error) {
-      console.error('Erreur chargement règles:', error);
+      console.error('Error fetching promotions:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const generateReferralCode = async () => {
-    setLoading(true);
+  const handleCreatePromotion = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post(`${API_BASE}/api/promotions/referral/generate`, {
-        user_id: userId
-      });
+      setLoading(true);
       
-      if (response.data.success) {
-        setReferralCode(response.data.referral_code);
-        setMessage(`✅ Code généré: ${response.data.referral_code}`);
-      }
-    } catch (error) {
-      setMessage(`❌ Erreur: ${error.response?.data?.detail || error.message}`);
-    }
-    setLoading(false);
-  };
+      // Préparer les données
+      const promotionData = {
+        ...newPromotion,
+        value: parseFloat(newPromotion.value),
+        min_order_amount: parseFloat(newPromotion.min_order_amount) || 0,
+        max_discount_amount: newPromotion.max_discount_amount ? parseFloat(newPromotion.max_discount_amount) : null,
+        usage_limit: newPromotion.usage_limit ? parseInt(newPromotion.usage_limit) : null,
+        usage_limit_per_customer: parseInt(newPromotion.usage_limit_per_customer),
+        expires_at: newPromotion.expires_at ? new Date(newPromotion.expires_at).toISOString() : null
+      };
 
-  const validateCode = async () => {
-    if (!testCode) return;
-    
-    setLoading(true);
-    try {
-      const response = await axios.post(`${API_BASE}/api/promotions/referral/validate`, {
-        code: testCode
-      });
-      
-      setValidation(response.data);
-      if (response.data.valid) {
-        setMessage(`✅ Code valide! Réduction: ${response.data.discount_percentage}%`);
-      } else {
-        setMessage('❌ Code invalide ou expiré');
-      }
-    } catch (error) {
-      setMessage(`❌ Erreur: ${error.response?.data?.detail || error.message}`);
-    }
-    setLoading(false);
-  };
-
-  const loadStats = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${API_BASE}/api/promotions/referral/stats/${userId}`);
+      const response = await axios.post(`${API_BASE}/api/admin/promotions/create`, promotionData);
       
       if (response.data.success) {
-        setStats(response.data.stats);
-        setMessage('✅ Statistiques chargées');
-      }
-    } catch (error) {
-      setMessage(`❌ Erreur: ${error.response?.data?.detail || error.message}`);
-    }
-    setLoading(false);
-  };
-
-  const testLaunchOffer = async () => {
-    setLoading(true);
-    try {
-      // Test avec un panier éligible
-      const testCart = [
-        {
-          product_id: 'osmoseur-premium',
-          quantity: 1,
-          price: 549
-        }
-      ];
-
-      const response = await axios.post(`${API_BASE}/api/promotions/launch-offer/check`, {
-        items: testCart
-      });
-      
-      if (response.data.success && response.data.eligibility.eligible) {
-        setMessage('🎁 Panier éligible à l\'offre de lancement!');
-        
-        // Test d'application de l'offre
-        const applyResponse = await axios.post(`${API_BASE}/api/promotions/launch-offer/apply`, {
-          cart_items: testCart,
-          selected_gift_id: 'fontaine-eau-animaux',
-          customer_email: 'test@josmoze.com'
+        await fetchPromotions();
+        setShowCreateForm(false);
+        setNewPromotion({
+          code: '',
+          name: '',
+          description: '',
+          type: 'percentage',
+          value: '',
+          min_order_amount: '0',
+          max_discount_amount: '',
+          usage_limit: '',
+          usage_limit_per_customer: '1',
+          expires_at: '',
+          target_customer_type: 'both'
         });
-        
-        if (applyResponse.data.success) {
-          setMessage('🎉 Offre de lancement appliquée avec succès!');
-        }
-      } else {
-        setMessage('ℹ️ Panier non éligible à l\'offre de lancement');
+        alert('Promotion créée avec succès !');
       }
     } catch (error) {
-      setMessage(`❌ Erreur: ${error.response?.data?.detail || error.message}`);
+      console.error('Error creating promotion:', error);
+      alert('Erreur lors de la création de la promotion');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const togglePromotionStatus = async (promotionId) => {
+    try {
+      const response = await axios.post(`${API_BASE}/api/admin/promotions/${promotionId}/toggle`);
+      if (response.data.success) {
+        await fetchPromotions();
+      }
+    } catch (error) {
+      console.error('Error toggling promotion:', error);
+      alert('Erreur lors de la modification');
+    }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Pas de limite';
+    return new Date(dateString).toLocaleDateString('fr-FR');
+  };
+
+  const getTypeLabel = (type) => {
+    switch (type) {
+      case 'percentage': return 'Pourcentage';
+      case 'fixed_amount': return 'Montant fixe';
+      case 'free_shipping': return 'Livraison gratuite';
+      default: return type;
+    }
+  };
+
+  const getValueDisplay = (promotion) => {
+    switch (promotion.type) {
+      case 'percentage': return `${promotion.value}%`;
+      case 'fixed_amount': return `${promotion.value}€`;
+      case 'free_shipping': return 'Livraison offerte';
+      default: return promotion.value;
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        🎁 Gestionnaire de Promotions Josmoze
-      </h1>
+    <div className="promotions-manager p-6 bg-white rounded-lg shadow-lg">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">🎁 Gestion des Promotions</h2>
+          <p className="text-gray-600">Créer et gérer les codes promotionnels</p>
+        </div>
+        <button
+          onClick={() => setShowCreateForm(!showCreateForm)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+        >
+          {showCreateForm ? '✕ Annuler' : '+ Nouvelle Promotion'}
+        </button>
+      </div>
 
-      {/* Messages */}
-      {message && (
-        <div className={`p-4 rounded-lg mb-6 ${
-          message.includes('✅') || message.includes('🎉') ? 'bg-green-100 text-green-800' :
-          message.includes('❌') ? 'bg-red-100 text-red-800' :
-          'bg-blue-100 text-blue-800'
-        }`}>
-          {message}
+      {/* Formulaire de création */}
+      {showCreateForm && (
+        <div className="bg-gray-50 p-6 rounded-lg mb-6">
+          <h3 className="text-lg font-semibold mb-4">Créer une nouvelle promotion</h3>
+          <form onSubmit={handleCreatePromotion} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Code promotionnel *</label>
+              <input
+                type="text"
+                value={newPromotion.code}
+                onChange={(e) => setNewPromotion({...newPromotion, code: e.target.value.toUpperCase()})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Ex: BIENVENUE10"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nom de la promotion *</label>
+              <input
+                type="text"
+                value={newPromotion.name}
+                onChange={(e) => setNewPromotion({...newPromotion, name: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Ex: Réduction de bienvenue"
+                required
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <textarea
+                value={newPromotion.description}
+                onChange={(e) => setNewPromotion({...newPromotion, description: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                rows="2"
+                placeholder="Description visible par les clients"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type de réduction</label>
+              <select
+                value={newPromotion.type}
+                onChange={(e) => setNewPromotion({...newPromotion, type: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="percentage">Pourcentage</option>
+                <option value="fixed_amount">Montant fixe</option>
+                <option value="free_shipping">Livraison gratuite</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Valeur {newPromotion.type === 'percentage' ? '(%)' : newPromotion.type === 'fixed_amount' ? '(€)' : ''}
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={newPromotion.value}
+                onChange={(e) => setNewPromotion({...newPromotion, value: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder={newPromotion.type === 'percentage' ? '10' : '20'}
+                required={newPromotion.type !== 'free_shipping'}
+                disabled={newPromotion.type === 'free_shipping'}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Commande minimum (€)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={newPromotion.min_order_amount}
+                onChange={(e) => setNewPromotion({...newPromotion, min_order_amount: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="0"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Réduction maximum (€)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={newPromotion.max_discount_amount}
+                onChange={(e) => setNewPromotion({...newPromotion, max_discount_amount: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Pas de limite"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Limite d'utilisation totale</label>
+              <input
+                type="number"
+                value={newPromotion.usage_limit}
+                onChange={(e) => setNewPromotion({...newPromotion, usage_limit: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Illimité"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Limite par client</label>
+              <input
+                type="number"
+                value={newPromotion.usage_limit_per_customer}
+                onChange={(e) => setNewPromotion({...newPromotion, usage_limit_per_customer: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Date d'expiration</label>
+              <input
+                type="datetime-local"
+                value={newPromotion.expires_at}
+                onChange={(e) => setNewPromotion({...newPromotion, expires_at: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Type de client</label>
+              <select
+                value={newPromotion.target_customer_type}
+                onChange={(e) => setNewPromotion({...newPromotion, target_customer_type: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="both">Tous les clients</option>
+                <option value="B2C">Particuliers (B2C)</option>
+                <option value="B2B">Professionnels (B2B)</option>
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Création...' : 'Créer la promotion'}
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
-        {/* Section Codes de Parrainage */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            👥 Système de Parrainage
-          </h2>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                User ID:
-              </label>
-              <input
-                type="text"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="user123"
-              />
-            </div>
-
-            <button
-              onClick={generateReferralCode}
-              disabled={loading}
-              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-md transition-colors"
-            >
-              {loading ? 'Génération...' : 'Générer Code de Parrainage'}
-            </button>
-
-            {referralCode && (
-              <div className="p-3 bg-green-50 border border-green-200 rounded-md">
-                <p className="text-sm text-gray-600">Code généré:</p>
-                <p className="font-mono text-lg font-bold text-green-700">{referralCode}</p>
-              </div>
+      {/* Liste des promotions */}
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-gray-50">
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Code</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Nom</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Type</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Valeur</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Utilisations</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Expiration</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Statut</th>
+              <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan="8" className="px-4 py-8 text-center text-gray-500">
+                  Chargement des promotions...
+                </td>
+              </tr>
+            ) : promotions.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="px-4 py-8 text-center text-gray-500">
+                  Aucune promotion trouvée
+                </td>
+              </tr>
+            ) : (
+              promotions.map((promotion) => (
+                <tr key={promotion.id} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-3 font-mono font-medium">{promotion.code}</td>
+                  <td className="px-4 py-3">{promotion.name}</td>
+                  <td className="px-4 py-3">{getTypeLabel(promotion.type)}</td>
+                  <td className="px-4 py-3 font-medium">{getValueDisplay(promotion)}</td>
+                  <td className="px-4 py-3">
+                    {promotion.used_count}{promotion.usage_limit ? `/${promotion.usage_limit}` : ''}
+                  </td>
+                  <td className="px-4 py-3">{formatDate(promotion.expires_at)}</td>
+                  <td className="px-4 py-3">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      promotion.active 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {promotion.active ? 'Actif' : 'Inactif'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => togglePromotionStatus(promotion.id)}
+                      className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
+                        promotion.active
+                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                          : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      }`}
+                    >
+                      {promotion.active ? 'Désactiver' : 'Activer'}
+                    </button>
+                  </td>
+                </tr>
+              ))
             )}
-          </div>
-        </div>
-
-        {/* Section Validation */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            ✅ Validation de Code
-          </h2>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                Code à tester:
-              </label>
-              <input
-                type="text"
-                value={testCode}
-                onChange={(e) => setTestCode(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="JOSM1234"
-              />
-            </div>
-
-            <button
-              onClick={validateCode}
-              disabled={loading || !testCode}
-              className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-md transition-colors"
-            >
-              {loading ? 'Validation...' : 'Valider Code'}
-            </button>
-
-            {validation && (
-              <div className={`p-3 rounded-md border ${
-                validation.valid 
-                  ? 'bg-green-50 border-green-200 text-green-700'
-                  : 'bg-red-50 border-red-200 text-red-700'
-              }`}>
-                {validation.valid ? (
-                  <div>
-                    <p>✅ Code valide</p>
-                    <p>Réduction: {validation.discount_percentage}%</p>
-                    <p className="text-sm">{validation.description}</p>
-                  </div>
-                ) : (
-                  <p>❌ {validation.message}</p>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Section Statistiques */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            📊 Statistiques de Parrainage
-          </h2>
-          
-          <button
-            onClick={loadStats}
-            disabled={loading}
-            className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-md transition-colors mb-4"
-          >
-            {loading ? 'Chargement...' : 'Charger Statistiques'}
-          </button>
-
-          {stats && (
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Code personnel:</span>
-                <span className="font-mono font-bold">{stats.referral_code || 'Aucun'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Total parrainages:</span>
-                <span className="font-bold">{stats.total_referrals || 0}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Bonus gagnés:</span>
-                <span className="font-bold text-green-600">{stats.total_bonus_earned || 0}€</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Bons disponibles:</span>
-                <span className="font-bold text-blue-600">{stats.available_vouchers_amount || 0}€</span>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Section Offre de Lancement */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">
-            🚀 Offre de Lancement
-          </h2>
-          
-          <button
-            onClick={testLaunchOffer}
-            disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-md transition-colors mb-4"
-          >
-            {loading ? 'Test...' : 'Tester Offre de Lancement'}
-          </button>
-
-          {promotionRules && (
-            <div className="text-sm space-y-2">
-              <h3 className="font-semibold text-gray-700">Règles actuelles:</h3>
-              {promotionRules.launch_offer && (
-                <div className="bg-white p-3 rounded border">
-                  <p className="text-gray-600 text-xs">
-                    {promotionRules.launch_offer.description}
-                  </p>
-                  <p className="mt-2 text-xs">
-                    <strong>Produits éligibles:</strong> {promotionRules.launch_offer.eligible_products?.join(', ')}
-                  </p>
-                  <p className="text-xs">
-                    <strong>Cadeaux:</strong> {promotionRules.launch_offer.gift_options?.join(', ')}
-                  </p>
-                </div>
-              )}
-              {promotionRules.referral_system && (
-                <div className="bg-white p-3 rounded border">
-                  <p className="text-gray-600 text-xs">
-                    {promotionRules.referral_system.description}
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+          </tbody>
+        </table>
       </div>
 
-      {/* Section Test Global */}
-      <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">
-          🧪 Tests des Nouvelles Fonctionnalités
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="font-semibold text-green-600 mb-2">✅ Nouveaux Produits</h3>
-            <ul className="text-xs space-y-1">
-              <li>• Osmoseur Essentiel - 449€</li>
-              <li>• Osmoseur Premium - 549€</li>
-              <li>• Osmoseur Prestige - 899€</li>
-              <li>• Purificateur H2 - 79€</li>
-              <li>• Fontaine Animaux - 49€</li>
-            </ul>
+      {/* Statistiques */}
+      {promotions.length > 0 && (
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="text-2xl font-bold text-blue-600">{promotions.length}</div>
+            <div className="text-sm text-blue-700">Promotions totales</div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="font-semibold text-blue-600 mb-2">🎁 Promotions</h3>
-            <ul className="text-xs space-y-1">
-              <li>• Offre lancement active</li>
-              <li>• Système parrainage 10%/50€</li>
-              <li>• Codes uniques générés</li>
-              <li>• Validation temps réel</li>
-            </ul>
+          <div className="bg-green-50 p-4 rounded-lg">
+            <div className="text-2xl font-bold text-green-600">
+              {promotions.filter(p => p.active).length}
+            </div>
+            <div className="text-sm text-green-700">Actives</div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="font-semibold text-purple-600 mb-2">🔧 API Ready</h3>
-            <ul className="text-xs space-y-1">
-              <li>• 7 endpoints promotions</li>
-              <li>• Base données optimisée</li>
-              <li>• Thomas ChatBot V2</li>
-              <li>• Email Sequencer V2</li>
-            </ul>
+          <div className="bg-orange-50 p-4 rounded-lg">
+            <div className="text-2xl font-bold text-orange-600">
+              {promotions.reduce((sum, p) => sum + p.used_count, 0)}
+            </div>
+            <div className="text-sm text-orange-700">Utilisations totales</div>
+          </div>
+          <div className="bg-purple-50 p-4 rounded-lg">
+            <div className="text-2xl font-bold text-purple-600">
+              {promotions.filter(p => p.expires_at && new Date(p.expires_at) < new Date()).length}
+            </div>
+            <div className="text-sm text-purple-700">Expirées</div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
