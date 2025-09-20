@@ -10388,16 +10388,31 @@ class BackendTester:
         print(f"Backend URL: {BACKEND_URL}")
         print("="*80)
         
-        # PRIORITÉ ABSOLUE - AGENT AI UPLOAD TESTS
-        print("\n🤖 PRIORITÉ ABSOLUE - AGENT AI UPLOAD")
-        print("="*50)
-        print("🎯 OBJECTIF: Confirmer que l'extraction d'images fonctionne (plus de 0 images trouvées)")
+        # 🚀 PRIORITÉ CRITIQUE - PHASE 2 INTERFACE RÉVOLUTIONNAIRE
+        print("\n🚀 PRIORITÉ CRITIQUE - PHASE 2 INTERFACE RÉVOLUTIONNAIRE")
+        print("="*70)
+        print("🎯 OBJECTIF: Tester la nouvelle interface de sélection d'images avec fonctionnalités révolutionnaires")
+        print("✅ NOUVEAUTÉS PHASE 2:")
+        print("   1. Extraction Améliorée: 10-15 images (vs 3 avant)")
+        print("   2. Interface Sélection: Endpoint /api/ai-scraper/import-selected")
+        print("   3. Import Sélectif: Validation avec images choisies")
+        print("   4. Intégration Produit: Ajout automatique aux fiches")
         print("🔗 URL TEST: https://www.aliexpress.com/item/1005006854441059.html")
         print("-" * 70)
         
-        self.test_ai_product_scraper_endpoint_exists()
-        self.test_ai_product_scraper_supported_platforms()
+        self.test_ai_product_scraper_enhanced_extraction()
+        self.test_ai_scraper_import_selected_interface()
+        self.test_mongodb_imported_products_persistence()
+        self.test_product_integration_validation()
+        
+        # LEGACY AGENT AI UPLOAD TESTS (for comparison)
+        print("\n🤖 LEGACY - AGENT AI UPLOAD (Comparaison)")
+        print("="*50)
+        print("🎯 OBJECTIF: Confirmer que l'extraction d'images fonctionne (plus de 0 images trouvées)")
+        print("-" * 70)
+        
         self.test_ai_product_scraper_aliexpress_analysis()
+        self.test_ai_product_scraper_supported_platforms()
         self.test_ai_product_scraper_data_extraction()
         
         # MISSION POINTS 1 & 2 - TESTS PRIORITAIRES
