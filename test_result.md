@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "🚀 PHASE 8 - THOMAS CHATBOT COMMERCIAL V2 FINALISATION: Implémenter la fonctionnalité 'Add to Cart' directement depuis les conversations Thomas et développer un système de recommandations avancées basé sur le profil utilisateur et l'historique des conversations. Objectif: Faire de Thomas un véritable commercial virtuel convertisseur avec intégration complète au système de panier existant."
+user_problem_statement: "🚀 PHASE 9 - SYSTÈME DE PROMOTIONS ET PARRAINAGE: Implémenter un système complet de codes promotionnels avec interface d'administration, et un système de parrainage où les parrains génèrent des codes uniques pour offrir 15% de réduction aux filleuls et recevoir 20€ de bon d'achat après validation de commande. Inclure un système d'authentification utilisateur complet avec espace client."
 
 backend:
   - task: "Agent AI Upload - Validation Fonctionnelle"
