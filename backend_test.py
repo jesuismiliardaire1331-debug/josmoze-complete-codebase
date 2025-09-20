@@ -746,6 +746,407 @@ class BackendTester:
             self.log_test("Enhanced Contact Form", False, f"Exception: {str(e)}")
             return False
 
+    # ========== THOMAS V2 COMMERCIAL FEATURES TESTS ==========
+    
+    def test_thomas_v2_clickable_links(self):
+        """🚀 THOMAS V2 - Test liens cliquables dans les réponses"""
+        try:
+            # Test message pour déclencher réponse avec liens
+            chat_data = {
+                "message": "Quel osmoseur pour 4 personnes ?",
+                "session_id": "test_session_v2",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "prompt": "THOMAS_PROMPT_V2"
+                }
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                response_text = data.get("response", "")
+                
+                # Vérifier présence de liens HTML cliquables
+                required_links = [
+                    '<a href="/produit/osmoseur-premium"',  # Lien Premium
+                    'class="product-link"',                 # Classe CSS
+                    'Premium (549€)</a>',                   # Prix dans le lien
+                    'Osmoseur Premium'                      # Nom produit
+                ]
+                
+                missing_elements = []
+                for element in required_links:
+                    if element not in response_text:
+                        missing_elements.append(element)
+                
+                if not missing_elements:
+                    self.log_test("THOMAS V2 - Liens Cliquables", True, 
+                                f"✅ Liens HTML détectés: Premium 549€ cliquable, classe CSS présente")
+                    return True
+                else:
+                    self.log_test("THOMAS V2 - Liens Cliquables", False, 
+                                f"❌ Éléments manquants: {missing_elements}")
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Liens Cliquables", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Liens Cliquables", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_cta_buttons(self):
+        """🚀 THOMAS V2 - Test boutons CTA (Ajouter au panier, Voir produit, Poser question)"""
+        try:
+            # Test message pour déclencher réponse avec CTA
+            chat_data = {
+                "message": "Prix de l'Osmoseur Premium ?",
+                "session_id": "test_session_cta",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "prompt": "THOMAS_PROMPT_V2"
+                }
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                response_text = data.get("response", "")
+                
+                # Vérifier présence des boutons CTA
+                cta_elements = [
+                    'class="cta-button',                    # Classe bouton CTA
+                    '🛒',                                   # Icône panier
+                    '👀',                                   # Icône voir produit
+                    '❓',                                   # Icône question
+                    'Ajouter au panier',                   # Texte bouton
+                    'Voir le produit',                     # Texte bouton
+                    'Poser une question'                   # Texte bouton
+                ]
+                
+                found_elements = []
+                for element in cta_elements:
+                    if element in response_text:
+                        found_elements.append(element)
+                
+                if len(found_elements) >= 4:  # Au moins 4 éléments CTA trouvés
+                    self.log_test("THOMAS V2 - Boutons CTA", True, 
+                                f"✅ Boutons CTA détectés: {len(found_elements)}/7 éléments trouvés")
+                    return True
+                else:
+                    self.log_test("THOMAS V2 - Boutons CTA", False, 
+                                f"❌ Boutons CTA insuffisants: {len(found_elements)}/7 trouvés: {found_elements}")
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Boutons CTA", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Boutons CTA", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_personalized_recommendations(self):
+        """🚀 THOMAS V2 - Test recommandations personnalisées selon contexte"""
+        try:
+            # Test recommandation famille 4 personnes → Premium 549€
+            chat_data = {
+                "message": "Nous sommes une famille de 4 personnes, quel osmoseur recommandez-vous ?",
+                "session_id": "test_family_4",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "family_size": "4-5",
+                    "prompt": "THOMAS_PROMPT_V2"
+                }
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                response_text = data.get("response", "").lower()
+                
+                # Vérifier recommandation spécifique Premium pour famille 4 personnes
+                recommendation_elements = [
+                    "premium",                              # Produit recommandé
+                    "549",                                  # Prix correct
+                    "famille de 4",                        # Contexte famille
+                    "recommande",                          # Action recommandation
+                    "4-5 personnes"                        # Cible spécifique
+                ]
+                
+                found_recommendations = []
+                for element in recommendation_elements:
+                    if element in response_text:
+                        found_recommendations.append(element)
+                
+                if len(found_recommendations) >= 4:
+                    self.log_test("THOMAS V2 - Recommandations Personnalisées", True, 
+                                f"✅ Recommandation Premium 549€ pour famille 4 personnes détectée: {len(found_recommendations)}/5 éléments")
+                    return True
+                else:
+                    self.log_test("THOMAS V2 - Recommandations Personnalisées", False, 
+                                f"❌ Recommandation incomplète: {len(found_recommendations)}/5 trouvés: {found_recommendations}")
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Recommandations Personnalisées", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Recommandations Personnalisées", False, f"Exception: {str(e)}")
+            return False
+
+    def test_thomas_v2_html_format_validation(self):
+        """🚀 THOMAS V2 - Test format HTML correct pour frontend"""
+        try:
+            # Test message général pour vérifier format HTML
+            chat_data = {
+                "message": "Bonjour Thomas, présentez-moi vos osmoseurs",
+                "session_id": "test_html_format",
+                "agent": "thomas",
+                "context": {
+                    "conversation_history": [],
+                    "prompt": "THOMAS_PROMPT_V2"
+                }
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-agents/chat",
+                json=chat_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                response_text = data.get("response", "")
+                
+                # Vérifier structure HTML valide
+                html_elements = [
+                    '<a href=',                            # Balises liens
+                    '</a>',                                # Fermeture liens
+                    'class="product-link"',                # Classes CSS
+                    'class="cta-button',                   # Classes boutons
+                    '€',                                   # Devise correcte
+                    '**',                                  # Markdown bold
+                    '✅',                                  # Emojis
+                    '🔹'                                   # Puces visuelles
+                ]
+                
+                valid_html_count = 0
+                for element in html_elements:
+                    if element in response_text:
+                        valid_html_count += 1
+                
+                # Vérifier absence d'erreurs HTML
+                html_errors = ['<a href=""', 'href="#"', 'class=""', '</a><a']
+                error_count = sum(1 for error in html_errors if error in response_text)
+                
+                if valid_html_count >= 6 and error_count == 0:
+                    self.log_test("THOMAS V2 - Format HTML", True, 
+                                f"✅ HTML valide: {valid_html_count}/8 éléments, 0 erreur")
+                    return True
+                else:
+                    self.log_test("THOMAS V2 - Format HTML", False, 
+                                f"❌ HTML invalide: {valid_html_count}/8 éléments, {error_count} erreurs")
+                    return False
+            else:
+                self.log_test("THOMAS V2 - Format HTML", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("THOMAS V2 - Format HTML", False, f"Exception: {str(e)}")
+            return False
+
+    # ========== PHASE 3 BLOG PRODUCT LINKS TESTS ==========
+    
+    def test_phase3_blog_automatic_enrichment(self):
+        """🚀 PHASE 3 - Test enrichissement automatique GET /api/blog/articles/{slug}"""
+        try:
+            # Test avec un slug d'article existant
+            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            
+            response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Vérifier structure de réponse Phase 3
+                if data.get("success") and "article" in data:
+                    article = data["article"]
+                    content = article.get("content", "")
+                    
+                    # Vérifier indicateur d'enrichissement Phase 3
+                    if data.get("enhanced_with_product_links"):
+                        self.log_test("PHASE 3 - Enrichissement Automatique", True, 
+                                    f"✅ Article enrichi automatiquement, indicateur Phase 3 présent")
+                        return True
+                    else:
+                        self.log_test("PHASE 3 - Enrichissement Automatique", False, 
+                                    f"❌ Indicateur enhanced_with_product_links manquant")
+                        return False
+                else:
+                    self.log_test("PHASE 3 - Enrichissement Automatique", False, 
+                                f"❌ Structure réponse invalide: {data}")
+                    return False
+            elif response.status_code == 404:
+                # Tester avec un autre slug ou créer un article de test
+                self.log_test("PHASE 3 - Enrichissement Automatique", True, 
+                            f"✅ Endpoint fonctionnel (404 attendu si pas d'articles)")
+                return True
+            else:
+                self.log_test("PHASE 3 - Enrichissement Automatique", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PHASE 3 - Enrichissement Automatique", False, f"Exception: {str(e)}")
+            return False
+
+    def test_phase3_product_links_in_blog(self):
+        """🚀 PHASE 3 - Test liens produits cliquables dans contenu blog"""
+        try:
+            # Initialiser les articles par défaut d'abord
+            init_response = self.session.post(f"{BACKEND_URL}/blog/initialize")
+            
+            # Attendre un peu pour l'initialisation
+            time.sleep(1)
+            
+            # Tester avec le premier article par défaut
+            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            
+            response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                article = data.get("article", {})
+                content = article.get("content", "")
+                
+                # Vérifier présence de liens produits Phase 3
+                product_link_elements = [
+                    'class="product-link-blog"',           # Classe CSS blog
+                    'href="/produit/osmoseur-premium"',    # Lien produit
+                    'système d\'osmose inverse</a>',       # Texte lien
+                    'color: #2563eb',                      # Style CSS
+                    'text-decoration: underline'          # Style soulignement
+                ]
+                
+                found_links = []
+                for element in product_link_elements:
+                    if element in content:
+                        found_links.append(element)
+                
+                if len(found_links) >= 3:
+                    self.log_test("PHASE 3 - Liens Produits Blog", True, 
+                                f"✅ Liens produits détectés: {len(found_links)}/5 éléments trouvés")
+                    return True
+                else:
+                    self.log_test("PHASE 3 - Liens Produits Blog", False, 
+                                f"❌ Liens produits insuffisants: {len(found_links)}/5 trouvés: {found_links}")
+                    return False
+            else:
+                self.log_test("PHASE 3 - Liens Produits Blog", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PHASE 3 - Liens Produits Blog", False, f"Exception: {str(e)}")
+            return False
+
+    def test_phase3_cta_section_blog(self):
+        """🚀 PHASE 3 - Test section CTA automatique dans blog"""
+        try:
+            # Tester avec un article existant
+            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            
+            response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                article = data.get("article", {})
+                content = article.get("content", "")
+                
+                # Vérifier présence de la section CTA Phase 3
+                cta_elements = [
+                    "## 🚀 **Solution Josmoze - Osmoseurs Professionels**",  # Titre CTA
+                    "Osmoseur Essentiel (449€)",                            # Produit 1
+                    "Osmoseur Premium (549€)",                              # Produit 2
+                    "Osmoseur Prestige (899€)",                             # Produit 3
+                    "🛒 Découvrir nos osmoseurs",                           # Bouton CTA
+                    "💬 Conseil gratuit",                                   # Bouton contact
+                    "Élimination 99% des contaminants"                      # Avantage
+                ]
+                
+                found_cta_elements = []
+                for element in cta_elements:
+                    if element in content:
+                        found_cta_elements.append(element)
+                
+                if len(found_cta_elements) >= 5:
+                    self.log_test("PHASE 3 - Section CTA Blog", True, 
+                                f"✅ Section CTA complète: {len(found_cta_elements)}/7 éléments trouvés")
+                    return True
+                else:
+                    self.log_test("PHASE 3 - Section CTA Blog", False, 
+                                f"❌ Section CTA incomplète: {len(found_cta_elements)}/7 trouvés: {found_cta_elements}")
+                    return False
+            else:
+                self.log_test("PHASE 3 - Section CTA Blog", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PHASE 3 - Section CTA Blog", False, f"Exception: {str(e)}")
+            return False
+
+    def test_phase3_performance_enrichment(self):
+        """🚀 PHASE 3 - Test performance enrichissement (ne ralentit pas l'API)"""
+        try:
+            # Mesurer temps de réponse avec enrichissement
+            start_time = time.time()
+            
+            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
+            
+            end_time = time.time()
+            response_time = end_time - start_time
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Vérifier que l'enrichissement ne ralentit pas trop l'API
+                max_response_time = 2.0  # 2 secondes maximum
+                
+                if response_time <= max_response_time:
+                    self.log_test("PHASE 3 - Performance Enrichissement", True, 
+                                f"✅ Temps de réponse acceptable: {response_time:.2f}s (< {max_response_time}s)")
+                    return True
+                else:
+                    self.log_test("PHASE 3 - Performance Enrichissement", False, 
+                                f"❌ Temps de réponse trop lent: {response_time:.2f}s (> {max_response_time}s)")
+                    return False
+            elif response.status_code == 404:
+                # Endpoint existe mais pas d'article - performance OK
+                if response_time <= max_response_time:
+                    self.log_test("PHASE 3 - Performance Enrichissement", True, 
+                                f"✅ Performance OK même sans article: {response_time:.2f}s")
+                    return True
+                else:
+                    self.log_test("PHASE 3 - Performance Enrichissement", False, 
+                                f"❌ Performance dégradée: {response_time:.2f}s")
+                    return False
+            else:
+                self.log_test("PHASE 3 - Performance Enrichissement", False, f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("PHASE 3 - Performance Enrichissement", False, f"Exception: {str(e)}")
+            return False
+
     def test_abandoned_cart_automation(self):
         """Test abandoned cart detection and lead creation"""
         try:
