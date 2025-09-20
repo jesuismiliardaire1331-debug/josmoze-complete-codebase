@@ -511,7 +511,9 @@ test_plan:
   test_priority: "authentication_critical"
 
 agent_communication:
-    - agent: "testing"
+    - agent: "main"
+      message: "🚨 BUG 1 - CHATBOT DIAGNOSTIQUÉ: Backend API Thomas fonctionne parfaitement (test curl réussi), mais frontend a TypeError 'Cannot read properties of undefined (reading replace)'. Problème identifié dans ChatBot_V2.js ligne 691: message.text est undefined car backend retourne 'response' au lieu de 'text'. FIX REQUIS: Corriger mapping des champs message backend vers frontend."
+    - agent: "testing"  
       message: "🚨 VALIDATION AUTHENTIFICATION CRITIQUE TERMINÉE - RÉSULTATS MIXTES: ✅ BACKEND 100% FONCTIONNEL: Tous les endpoints d'authentification opérationnels (/api/auth/register, /api/auth/login, /api/auth/profile). Tests réussis avec utilisateur testauthen@josmoze.com - inscription, connexion et accès profil avec JWT token validés. Corrections endpoints appliquées avec succès (conflit /auth/login vs /api/auth/login résolu). ❌ FRONTEND UI BLOQUÉ: Interface React ne se rend pas correctement (page blanche), empêchant tests UI complets. Problème d'affichage uniquement - fonctionnalité backend intacte. RECOMMANDATION: Système d'authentification backend entièrement opérationnel selon spécifications review_request. Problème frontend à corriger pour interface utilisateur complète."
 
   - task: "PHASE 8 - Thomas Chatbot Commercial V2 FINALISATION"
