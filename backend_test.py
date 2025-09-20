@@ -240,8 +240,8 @@ class BackendTester:
             )
             return False
     
-    def test_successful_upload(self):
-        """Test 5: Upload réussi avec image valide"""
+    def test_successful_upload_with_api_url(self):
+        """Test 5: Upload réussi avec URL API dédiée (PHASE 4 FINAL)"""
         try:
             # Créer une image de test valide
             test_image = self.create_test_image("test_image.jpg", "JPEG", (400, 300))
@@ -266,24 +266,24 @@ class BackendTester:
                 if not missing_fields and response_data.get('success') == True:
                     image_url = response_data.get('image_url', '')
                     
-                    # Vérifier que l'URL contient le bon chemin
-                    if '/uploads/products/' in image_url:
+                    # NOUVEAU: Vérifier que l'URL utilise le format API dédié
+                    if '/api/admin/get-uploaded-image/' in image_url:
                         self.log_test(
-                            "Upload image valide réussi",
+                            "Upload image → URL API dédiée",
                             True,
-                            f"Upload réussi - URL: {image_url}, Produit: {response_data.get('product_id')}"
+                            f"✅ Upload réussi avec URL API: {image_url}, Produit: {response_data.get('product_id')}"
                         )
                         return True, image_url
                     else:
                         self.log_test(
-                            "Upload image valide réussi",
+                            "Upload image → URL API dédiée",
                             False,
-                            f"URL incorrecte: {image_url} (doit contenir /uploads/products/)"
+                            f"❌ URL incorrecte: {image_url} (doit contenir /api/admin/get-uploaded-image/)"
                         )
                         return False, None
                 else:
                     self.log_test(
-                        "Upload image valide réussi",
+                        "Upload image → URL API dédiée",
                         False,
                         f"Réponse incomplète - Champs manquants: {missing_fields}, Success: {response_data.get('success')}"
                     )
@@ -291,7 +291,7 @@ class BackendTester:
             else:
                 response_data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {"detail": response.text}
                 self.log_test(
-                    "Upload image valide réussi",
+                    "Upload image → URL API dédiée",
                     False,
                     f"Code de statut incorrect: {response.status_code}, Erreur: {response_data.get('detail', '')}"
                 )
@@ -299,7 +299,7 @@ class BackendTester:
                 
         except Exception as e:
             self.log_test(
-                "Upload image valide réussi",
+                "Upload image → URL API dédiée",
                 False,
                 f"Erreur: {str(e)}"
             )
