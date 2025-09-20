@@ -487,12 +487,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "THOMAS V2 - Fonctionnalités Commerciales"
-    - "PHASE 3 - Liens Produits Blog"
-  stuck_tasks:
-    - "PHASE 3 - Liens Produits Blog"
+    - "Backend API Health & System Stability"
+  stuck_tasks: []
   test_all: false
-  test_priority: "thomas_v2_phase3_critical"
+  test_priority: "validation_complete"
 
   - task: "THOMAS V2 - Fonctionnalités Commerciales"
     implemented: true
