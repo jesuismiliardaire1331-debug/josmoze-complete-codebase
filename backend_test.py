@@ -37,7 +37,8 @@ from PIL import Image
 from urllib.parse import urlparse
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-ecom-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://josmoze-ecom-fix.preview.emergentagent.com/api/v1"
+BACKEND_URL_DIRECT = "https://josmoze-ecom-fix.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
