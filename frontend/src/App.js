@@ -173,6 +173,14 @@ const AppProvider = ({ children }) => {
     };
 
     detectLocation();
+    
+    // 🚀 PHASE 8 - Auto-detect testing mode
+    if (window.location.search.includes('phase8') || window.location.search.includes('testing')) {
+      sessionStorage.setItem('phase8_testing', 'true');
+      sessionStorage.setItem('josmoze_questionnaire_shown', 'true');
+      localStorage.setItem('josmoze_questionnaire_seen', 'true');
+      console.log('🚀 PHASE 8 Testing mode activated - Questionnaire disabled');
+    }
   }, []);
 
   const addToCart = (product, quantity = 1) => {
