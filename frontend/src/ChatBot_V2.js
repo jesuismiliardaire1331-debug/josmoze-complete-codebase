@@ -688,7 +688,7 @@ const ChatBotV2 = () => {
                 <div 
                   className="text-sm whitespace-pre-line thomas-message"
                   dangerouslySetInnerHTML={{
-                    __html: (message.text || 'Message vide').replace(/\n/g, '<br/>')
+                    __html: ((message.text && typeof message.text === 'string') ? message.text : 'Message vide').replace(/\n/g, '<br/>')
                   }}
                 />
                 
