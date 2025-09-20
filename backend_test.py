@@ -793,6 +793,12 @@ class BackendTester:
                 return False, None
                 
         except Exception as e:
+            self.log_test(
+                "Validation structure réponse Phase 8",
+                False,
+                f"Erreur: {str(e)}"
+            )
+            return False, None
     
     # ========== PHASE 9 - PROMOTIONS & PARRAINAGE TESTS ==========
     
