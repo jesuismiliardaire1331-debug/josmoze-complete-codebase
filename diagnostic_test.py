@@ -17,7 +17,7 @@ from datetime import datetime
 from typing import Dict, List, Any
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-admin.preview.emergentagent.com/api"
+BACKEND_URL = "https://water-ecom-admin.preview.emergentagent.com/api"
 
 class DiagnosticTester:
     def __init__(self):
@@ -384,7 +384,7 @@ class DiagnosticTester:
         try:
             # Test avec différents origins
             test_origins = [
-                "https://josmoze-admin.preview.emergentagent.com",
+                "https://water-ecom-admin.preview.emergentagent.com",
                 "https://josmoze.com",
                 "https://www.josmoze.com"
             ]

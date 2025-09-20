@@ -5078,7 +5078,7 @@ async def crm_direct_access():
                 </div>
                 
                 <script>
-                    const API_BASE = 'https://josmoze-admin.preview.emergentagent.com/api';
+                    const API_BASE = 'https://water-ecom-admin.preview.emergentagent.com/api';
                     let authToken = '';
                     
                     async function loginToCRM() {

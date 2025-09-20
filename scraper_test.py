@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-admin.preview.emergentagent.com/api"
+BACKEND_URL = "https://water-ecom-admin.preview.emergentagent.com/api"
 
 class ScraperTester:
     def __init__(self):

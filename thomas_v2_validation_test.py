@@ -21,7 +21,7 @@ from datetime import datetime
 from typing import Dict, List, Any
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-admin.preview.emergentagent.com/api"
+BACKEND_URL = "https://water-ecom-admin.preview.emergentagent.com/api"
 
 class ThomasV2Validator:
     def __init__(self):
