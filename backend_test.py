@@ -1,32 +1,27 @@
 #!/usr/bin/env python3
 """
-🚀 PHASE 9 - SYSTÈME DE PROMOTIONS ET PARRAINAGE
-Backend API Testing for Josmose.com - Promotions & Referral System Testing
+🚨 URGENT BACKEND VALIDATION - BUG 1 & 2 DEPENDENCIES
+Backend API Testing for Josmose.com - Critical Backend Services Validation
 
-TESTS PHASE 9 - SYSTÈME DE PROMOTIONS ET PARRAINAGE :
-1. **Test création promotion par défaut** : GET /api/admin/promotions
-2. **Test validation code promotionnel** : POST /api/promotions/validate
-3. **Test génération code parrainage** : POST /api/referrals/generate
-4. **Test validation code parrainage** : POST /api/referrals/validate
-5. **Test inscription utilisateur** : POST /api/auth/register
-6. **Test connexion utilisateur** : POST /api/auth/login
+TESTS CRITIQUES SELON REVIEW REQUEST :
+1. **Thomas Chatbot API** : /api/ai-agents/chat - Test avec "Bonjour Thomas"
+2. **User Authentication System** : /api/auth/login, /api/auth/register
+3. **Core Application APIs** : /api/products, /api/detect-location
+4. **General Health Check** : Vérifier services et logs
 
-✅ TESTS CRITIQUES PHASE 9 :
-1. **Collections MongoDB** : promotions, referrals, users
-2. **Promotions par défaut** : BIENVENUE10, LIVRAISONGRATUITE, FAMILLE20
-3. **Validation codes promo** : Calculs corrects avec réductions
-4. **Système parrainage** : Génération + validation codes
-5. **Authentification utilisateur** : Inscription + connexion complète
-6. **Gestion erreurs** : Cas limites et validation
+✅ OBJECTIFS VALIDATION :
+- Éliminer backend comme cause potentielle des problèmes frontend
+- Confirmer que tous les APIs critiques sont opérationnels
+- Valider que Phase 8 cart functionality fonctionne
+- Vérifier JWT token generation et user authentication
+- Tester product listing et location detection
 
-✅ OBJECTIFS PHASE 9 :
-- Promotions par défaut créées au démarrage
-- Validation codes promo avec calculs corrects (pourcentage, montant fixe, livraison gratuite)
-- Système parrainage complet (15% filleul, 20€ parrain)
-- Authentification utilisateur sécurisée
-- Collections MongoDB opérationnelles
+🎯 CONTEXTE : 
+- Frontend compile mais React root reste vide
+- Besoin de confirmer backend avant investigation frontend JS runtime errors
+- Bloque BUG 1 (chatbot) et BUG 2 (authentication) fixes
 
-🎯 RÉSULTAT ATTENDU : Système promotions et parrainage 100% fonctionnel avec intégration MongoDB
+🚀 RÉSULTAT ATTENDU : Backend 100% opérationnel pour débloquer frontend fixes
 """
 
 import requests
