@@ -5566,6 +5566,7 @@ async def upload_product_image(request: Request):
 
 # Servir les fichiers statiques uploadés
 app.mount("/static", StaticFiles(directory="/app/backend/static"), name="static")
+app.mount("/uploads", StaticFiles(directory="/app/uploads"), name="uploads")
 
 # ========== BLOG ENDPOINTS - CMS COMPLET ==========
 
