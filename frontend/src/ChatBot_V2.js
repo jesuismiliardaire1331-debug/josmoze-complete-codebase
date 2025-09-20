@@ -344,11 +344,11 @@ const ChatBotV2 = () => {
       setMessages([
         {
           id: Date.now(),
-          text: welcome.initial,
+          text: welcome?.initial || "Bonjour ! Je suis Thomas, votre conseiller Josmoze. Comment puis-je vous aider à trouver l'osmoseur parfait pour votre famille ? 😊",
           sender: 'assistant',
           agent: 'thomas',
           timestamp: new Date().toISOString(),
-          suggestions: welcome.suggestions
+          suggestions: welcome?.suggestions || ["💰 Voir les prix", "🏠 Recommandation famille", "💧 Comment ça marche ?"]
         }
       ]);
       setHasShownWelcome(true);
