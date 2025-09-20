@@ -1175,8 +1175,10 @@ class BackendTester:
 
 if __name__ == "__main__":
     tester = BackendTester()
-    summary = tester.run_phase4_final_tests()
     
-    # Exit code basé sur le succès
+    # Run PHASE 7 tests for blog images acquisition and upload
+    summary = tester.run_phase7_blog_images_tests()
+    
+    # Exit code based on success
     exit_code = 0 if summary["overall_success"] else 1
     exit(exit_code)
