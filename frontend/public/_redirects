@@ -1,12 +1,12 @@
 # Redirections pour Emergent/Netlify compatible
 # Routes API vers backend
-/api/* http://localhost:8001/api/:splat 200
+/api/* https://josmoze-admin.preview.emergentagent.com/api/:splat 200
 
 # 🚀 PHASE 4 - Routes uploads statiques vers backend
-/uploads/* http://localhost:8001/uploads/:splat 200
+/uploads/* https://josmoze-admin.preview.emergentagent.com/uploads/:splat 200
 
 # Routes publiques vers backend
-/unsubscribe http://localhost:8001/unsubscribe 200
+/unsubscribe https://josmoze-admin.preview.emergentagent.com/unsubscribe 200
 
 # Toutes les autres routes vers React Router (SPA fallback)
 /* /index.html 200
