@@ -148,13 +148,16 @@ const AppProvider = ({ children }) => {
       customerType,
       showQuestionnaire,
       recommendations,
+      loading,
       addToCart,
       removeFromCart,
       updateQuantity,
+      updateCartQuantity,
       clearCart,
       getCartTotal,
       formatPrice,
       setCustomerType,
+      openQuestionnaire,
       handleQuestionnaireClose,
       handleQuestionnaireRecommendation
     }}>
