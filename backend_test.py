@@ -1284,54 +1284,54 @@ class BackendTester:
             if response.status_code == 200:
                 response_data = response.json()
                 
-                # Vérifications critiques
-                checks = {
-                    "success": response_data.get('success') == True,
-                    "user_id": bool(response_data.get('user_id')),
-                    "email_correct": response_data.get('email') == 'testauthen@josmoze.com',
-                    "customer_type": response_data.get('customer_type') == 'B2C',
-                    "password_not_returned": 'password' not in response_data
-                }
-                
-                passed_checks = sum(checks.values())
-                total_checks = len(checks)
-                
-                if passed_checks >= total_checks * 0.8:
-                    self.log_test(
-                        "User Registration API - testauthen@josmoze.com",
-                        True,
-                        f"✅ {passed_checks}/{total_checks} vérifications réussies. User ID: {response_data.get('user_id')}"
-                    )
-                    return True, response_data
-                else:
-                    failed_checks = [k for k, v in checks.items() if not v]
-                    self.log_test(
-                        "User Registration API - testauthen@josmoze.com",
-                        False,
-                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
-                    )
-                    return False, response_data
-            elif response.status_code == 400:
-                # Vérifier si c'est "utilisateur existe déjà" (acceptable)
-                try:
-                    error_data = response.json()
-                    error_detail = error_data.get('detail', '').lower()
-                    if 'existe' in error_detail or 'already' in error_detail:
+                # Handle both success and "already exists" cases
+                if response_data.get('success') == True:
+                    # Successful registration
+                    checks = {
+                        "success": True,
+                        "user_id": bool(response_data.get('user_id')),
+                        "email_correct": response_data.get('email') == 'testauthen@josmoze.com',
+                        "customer_type": response_data.get('customer_type') == 'B2C',
+                        "password_not_returned": 'password' not in response_data
+                    }
+                    
+                    passed_checks = sum(checks.values())
+                    total_checks = len(checks)
+                    
+                    if passed_checks >= total_checks * 0.8:
                         self.log_test(
                             "User Registration API - testauthen@josmoze.com",
                             True,
-                            f"✅ Utilisateur existe déjà (comportement attendu): {error_detail}"
+                            f"✅ {passed_checks}/{total_checks} vérifications réussies. User ID: {response_data.get('user_id')}"
                         )
-                        return True, error_data
-                except:
-                    pass
-                
-                self.log_test(
-                    "User Registration API - testauthen@josmoze.com",
-                    False,
-                    f"❌ Erreur 400: {response.text}"
-                )
-                return False, None
+                        return True, response_data
+                    else:
+                        failed_checks = [k for k, v in checks.items() if not v]
+                        self.log_test(
+                            "User Registration API - testauthen@josmoze.com",
+                            False,
+                            f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                        )
+                        return False, response_data
+                        
+                elif response_data.get('success') == False:
+                    # Check if it's "email already exists" error (acceptable)
+                    error_msg = response_data.get('error', '').lower()
+                    if 'déjà utilisé' in error_msg or 'already' in error_msg or 'existe' in error_msg:
+                        self.log_test(
+                            "User Registration API - testauthen@josmoze.com",
+                            True,
+                            f"✅ Endpoint fonctionnel - Email déjà utilisé (comportement attendu): {response_data.get('error')}"
+                        )
+                        return True, response_data
+                    else:
+                        self.log_test(
+                            "User Registration API - testauthen@josmoze.com",
+                            False,
+                            f"❌ Erreur inattendue: {response_data.get('error')}"
+                        )
+                        return False, response_data
+                        
             else:
                 self.log_test(
                     "User Registration API - testauthen@josmoze.com",
