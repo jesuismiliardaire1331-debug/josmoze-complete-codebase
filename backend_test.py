@@ -1,28 +1,28 @@
 #!/usr/bin/env python3
 """
-🚀 PHASE 7 - ACQUISITION ET UPLOAD DES 20 IMAGES BLOG
-Backend API Testing for Josmose.com - Blog Images Upload System
+🚀 PHASE 8 - THOMAS CHATBOT COMMERCIAL V2 FINALISATION
+Backend API Testing for Josmose.com - Thomas Commercial Features Testing
 
-PROCESSUS D'ACQUISITION PHASE 7 :
-1. **Télécharger 20 images** depuis URLs Unsplash du mapping-images-blog.md
-2. **Upload via API** : POST `/api/admin/upload-product-image` avec product_id="blog-images"
-3. **Stocker URLs API** : Format `/api/admin/get-uploaded-image/{filename}` retournées
-4. **Validation** : Vérifier que chaque image est accessible via URL API
+TESTS PHASE 8 - FONCTIONNALITÉS COMMERCIALES THOMAS :
+1. **Test intention d'achat directe** : Message "Je veux acheter un osmoseur pour ma famille de 4 personnes"
+2. **Test recommandation intelligente** : Message "Bonjour Thomas" avec conversation_history
+3. **Test liens cliquables et données panier** : Vérifier product-link class et cart_data
+4. **Validation structure réponse** : Vérifier tous les nouveaux champs Phase 8
 
-✅ TESTS CRITIQUES PHASE 7 :
-1. **Extraction URLs** : Lire mapping-images-blog.md et extraire 20 URLs Unsplash
-2. **Téléchargement Images** : Download chaque image depuis Unsplash
-3. **Upload Batch** : Upload toutes les images avec product_id="blog-images"
-4. **URLs API Stockées** : Récupérer et stocker les 20 URLs API retournées
-5. **Validation Accès** : Tester l'accès à quelques images pour validation
+✅ TESTS CRITIQUES PHASE 8 :
+1. **Endpoint /api/ai-agents/chat** : Vérifier existence et fonctionnement
+2. **Purchase Intent Detection** : Réponse contient produit recommandé + cart_data + CTA
+3. **Smart Recommendations** : Recommandations personnalisées selon profil utilisateur
+4. **HTML Links & CTA Buttons** : Liens cliquables avec class="product-link" fonctionnels
+5. **Response Structure** : cart_data, product_recommended, user_analysis, suggestions
 
-✅ OBJECTIFS PHASE 7 :
-- 20 images téléchargées et uploadées avec succès
-- 20 URLs API fonctionnelles récupérées  
-- Stockage organisé pour intégration dans articles
-- Test accès de quelques images pour validation
+✅ OBJECTIFS PHASE 8 :
+- Thomas détecte intentions d'achat et recommande produits spécifiques
+- Système "Add to Cart" direct depuis conversations Thomas
+- Recommandations avancées basées sur profil utilisateur et historique
+- Liens produits cliquables avec données panier complètes
 
-🎯 RÉSULTAT ATTENDU : Liste des 20 URLs API opérationnelles pour intégration finale
+🎯 RÉSULTAT ATTENDU : Thomas commercial convertisseur 100% fonctionnel avec intégration panier
 """
 
 import requests
