@@ -5623,6 +5623,290 @@ async def upload_product_image(request: Request):
 app.mount("/static", StaticFiles(directory="/app/backend/static"), name="static")
 app.mount("/uploads", StaticFiles(directory="/app/uploads"), name="uploads")
 
+# ========== PHASE 9 - PROMOTIONS & PARRAINAGE ENDPOINTS ==========
+
+# ========== ADMIN PROMOTIONS ==========
+
+@app.post("/api/admin/promotions/create", tags=["Phase 9"])
+async def create_promotion(promotion_data: dict, admin_email: str = "admin@josmoze.com"):
+    """Créer nouveau code promotionnel (Admin)"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.create_promotion(promotion_data, admin_email)
+        return {"success": True, "promotion": result.dict()}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error creating promotion: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la création")
+
+@app.get("/api/admin/promotions", tags=["Phase 9"])
+async def get_all_promotions(active_only: bool = False):
+    """Récupérer toutes les promotions (Admin)"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        promotions = await promotions_sys.get_promotions(active_only)
+        return {"success": True, "promotions": promotions}
+    except Exception as e:
+        logger.error(f"Error getting promotions: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération")
+
+@app.post("/api/admin/promotions/{promotion_id}/toggle", tags=["Phase 9"])
+async def toggle_promotion_status(promotion_id: str):
+    """Activer/désactiver promotion (Admin)"""
+    try:
+        result = await db.promotions.update_one(
+            {"id": promotion_id},
+            [{"$set": {"active": {"$not": "$active"}}}]
+        )
+        return {"success": result.modified_count > 0}
+    except Exception as e:
+        logger.error(f"Error toggling promotion: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la modification")
+
+# ========== VALIDATION CODES PROMO ==========
+
+@app.post("/api/promotions/validate", tags=["Phase 9"])
+async def validate_promotion_code(data: dict):
+    """Valider code promotionnel"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.validate_promotion_code(
+            code=data["code"],
+            user_email=data["user_email"], 
+            order_amount=data["order_amount"],
+            customer_type=data.get("customer_type", "B2C")
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error validating promotion: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la validation")
+
+@app.post("/api/promotions/apply", tags=["Phase 9"])
+async def apply_promotion_code(data: dict):
+    """Appliquer code promotionnel"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.apply_promotion(
+            code=data["code"],
+            user_email=data["user_email"],
+            order_amount=data["order_amount"],
+            order_id=data.get("order_id"),
+            ip_address=data.get("ip_address")
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error applying promotion: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'application")
+
+# ========== SYSTÈME PARRAINAGE ==========
+
+@app.post("/api/referrals/generate", tags=["Phase 9"])
+async def generate_referral_code(data: dict):
+    """Générer code parrainage utilisateur"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.generate_referral_code(data["user_email"])
+        return result
+    except Exception as e:
+        logger.error(f"Error generating referral code: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la génération")
+
+@app.post("/api/referrals/validate", tags=["Phase 9"])
+async def validate_referral_code(data: dict):
+    """Valider code parrainage"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.validate_referral_code(
+            code=data["code"],
+            referee_email=data["referee_email"]
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error validating referral: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la validation")
+
+@app.post("/api/referrals/apply", tags=["Phase 9"])
+async def apply_referral_discount(data: dict):
+    """Appliquer réduction parrainage"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.apply_referral_discount(
+            code=data["code"],
+            referee_email=data["referee_email"],
+            order_amount=data["order_amount"],
+            order_id=data["order_id"]
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error applying referral: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'application")
+
+@app.post("/api/referrals/complete/{order_id}", tags=["Phase 9"])
+async def complete_referral_reward(order_id: str):
+    """Finaliser récompense parrainage"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.complete_referral_reward(order_id)
+        return result
+    except Exception as e:
+        logger.error(f"Error completing referral: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la finalisation")
+
+@app.get("/api/referrals/stats/{user_email}", tags=["Phase 9"])
+async def get_user_referral_stats(user_email: str):
+    """Statistiques parrainage utilisateur"""
+    try:
+        promotions_sys = await get_promotions_system(db)
+        result = await promotions_sys.get_user_referral_stats(user_email)
+        return result
+    except Exception as e:
+        logger.error(f"Error getting referral stats: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération")
+
+# ========== AUTHENTIFICATION UTILISATEUR ==========
+
+@app.post("/api/auth/register", tags=["Phase 9"])
+async def register_user(registration_data: UserRegistration):
+    """Inscription nouvel utilisateur"""
+    try:
+        auth_sys = await get_user_auth_system(db)
+        result = await auth_sys.register_user(registration_data)
+        return result
+    except Exception as e:
+        logger.error(f"Error registering user: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de l'inscription")
+
+@app.post("/api/auth/login", tags=["Phase 9"])
+async def login_user(login_data: UserLogin):
+    """Connexion utilisateur"""
+    try:
+        auth_sys = await get_user_auth_system(db)
+        result = await auth_sys.login_user(login_data)
+        return result
+    except Exception as e:
+        logger.error(f"Error logging in user: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la connexion")
+
+@app.get("/api/auth/profile", tags=["Phase 9"])
+async def get_user_profile(authorization: str = Header(None)):
+    """Récupérer profil utilisateur authentifié"""
+    try:
+        if not authorization or not authorization.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Token d'autorisation requis")
+        
+        token = authorization.split(" ")[1]
+        auth_sys = await get_user_auth_system(db)
+        user = await auth_sys.verify_token(token)
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="Token invalide")
+        
+        profile = await auth_sys.get_user_profile(user["email"])
+        return {"success": True, "user": profile.dict() if profile else None}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting user profile: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération")
+
+@app.put("/api/auth/profile", tags=["Phase 9"])
+async def update_user_profile(profile_data: dict, authorization: str = Header(None)):
+    """Mettre à jour profil utilisateur"""
+    try:
+        if not authorization or not authorization.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Token d'autorisation requis")
+        
+        token = authorization.split(" ")[1]
+        auth_sys = await get_user_auth_system(db)
+        user = await auth_sys.verify_token(token)
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="Token invalide")
+        
+        result = await auth_sys.update_user_profile(user["email"], profile_data)
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating user profile: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la mise à jour")
+
+# ========== GESTION COMMANDES ==========
+
+@app.post("/api/orders/create", tags=["Phase 9"])
+async def create_order(order_data: dict, authorization: str = Header(None)):
+    """Créer nouvelle commande"""
+    try:
+        if not authorization or not authorization.startswith("Bearer "):
+            # Permettre commande sans compte pour invités
+            user_email = order_data.get("user_email", f"guest_{int(datetime.utcnow().timestamp())}@josmoze.com")
+        else:
+            token = authorization.split(" ")[1]
+            auth_sys = await get_user_auth_system(db)
+            user = await auth_sys.verify_token(token)
+            if not user:
+                raise HTTPException(status_code=401, detail="Token invalide")
+            user_email = user["email"]
+        
+        order_data["user_email"] = user_email
+        auth_sys = await get_user_auth_system(db)
+        order_id = await auth_sys.create_order(order_data)
+        
+        return {"success": True, "order_id": order_id}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating order: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la création")
+
+@app.get("/api/orders/history", tags=["Phase 9"])
+async def get_user_orders(authorization: str = Header(None)):
+    """Historique commandes utilisateur"""
+    try:
+        if not authorization or not authorization.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Token d'autorisation requis")
+        
+        token = authorization.split(" ")[1]
+        auth_sys = await get_user_auth_system(db)
+        user = await auth_sys.verify_token(token)
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="Token invalide")
+        
+        orders = await auth_sys.get_user_orders(user["email"])
+        return {"success": True, "orders": orders}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting user orders: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération")
+
+@app.get("/api/orders/{order_id}", tags=["Phase 9"])
+async def get_order_details(order_id: str, authorization: str = Header(None)):
+    """Détails commande"""
+    try:
+        auth_sys = await get_user_auth_system(db)
+        
+        # Vérifier propriétaire si token fourni
+        user_email = None
+        if authorization and authorization.startswith("Bearer "):
+            token = authorization.split(" ")[1]
+            user = await auth_sys.verify_token(token)
+            if user:
+                user_email = user["email"]
+        
+        order = await auth_sys.get_order_by_id(order_id, user_email)
+        return {"success": True, "order": order}
+        
+    except Exception as e:
+        logger.error(f"Error getting order details: {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération")
+
 # ========== BLOG ENDPOINTS - CMS COMPLET ==========
 
 @app.post("/api/blog/articles", tags=["Blog"])
