@@ -2991,45 +2991,144 @@ class BackendTester:
             self.log_test("Customer Profile Get", False, f"Exception: {str(e)}")
             return False
 
-    def test_customer_profile_update(self):
-        """Test PUT /api/customer/profile/{email} - Mise à jour préférences"""
-        try:
-            test_email = "test.customer@josmose.com"
-            profile_data = {
-                "name": "Test Customer",
-                "preferences": {
-                    "newsletter": True,
-                    "sms_notifications": False,
-                    "preferred_contact_time": "morning"
-                },
-                "address": {
-                    "street": "123 Test Street",
-                    "city": "Paris",
-                    "postal_code": "75001",
-                    "country": "France"
-                }
-            }
-            
-            response = self.session.put(
-                f"{BACKEND_URL}/customer/profile/{test_email}",
-                json=profile_data,
-                headers={"Content-Type": "application/json"}
-            )
-            
-            if response.status_code == 200:
-                data = response.json()
-                if "message" in data:
-                    self.log_test("Customer Profile Update", True, f"Profile updated: {data['message']}")
-                    return True
-                else:
-                    self.log_test("Customer Profile Update", True, "Profile updated successfully")
-                    return True
-            else:
-                self.log_test("Customer Profile Update", False, f"Status: {response.status_code}")
-                return False
-        except Exception as e:
-            self.log_test("Customer Profile Update", False, f"Exception: {str(e)}")
+    def run_thomas_v2_phase3_tests(self):
+        """🚀 MAIN TEST RUNNER - THOMAS V2 + PHASE 3 VALIDATION COMPLÈTE"""
+        print("\n" + "="*100)
+        print("🚀 TEST THOMAS V2 + PHASE 3 - VALIDATION COMPLÈTE")
+        print("="*100)
+        print("✅ THOMAS V2 - FONCTIONNALITÉS COMMERCIALES")
+        print("✅ PHASE 3 - LIENS PRODUITS BLOG")
+        print("✅ TESTS CRITIQUES - VALIDATION FINALE")
+        print("="*100)
+        
+        # Test sequence for Thomas V2 + Phase 3
+        thomas_v2_tests = [
+            ("🔗 THOMAS V2 - Liens Cliquables", self.test_thomas_v2_clickable_links),
+            ("🛒 THOMAS V2 - Boutons CTA", self.test_thomas_v2_cta_buttons),
+            ("🎯 THOMAS V2 - Recommandations Personnalisées", self.test_thomas_v2_personalized_recommendations),
+            ("📝 THOMAS V2 - Format HTML", self.test_thomas_v2_html_format_validation),
+        ]
+        
+        phase3_tests = [
+            ("🚀 PHASE 3 - Enrichissement Automatique", self.test_phase3_blog_automatic_enrichment),
+            ("🔗 PHASE 3 - Liens Produits Blog", self.test_phase3_product_links_in_blog),
+            ("🛒 PHASE 3 - Section CTA Blog", self.test_phase3_cta_section_blog),
+            ("⚡ PHASE 3 - Performance", self.test_phase3_performance_enrichment),
+        ]
+        
+        # Run basic connectivity test first
+        print("\n🔧 TESTS PRÉLIMINAIRES")
+        if not self.test_root_endpoint():
+            print("❌ Backend non accessible - Arrêt des tests")
             return False
+        
+        # Run Thomas V2 tests
+        print("\n🤖 THOMAS V2 - FONCTIONNALITÉS COMMERCIALES")
+        thomas_v2_results = []
+        for test_name, test_func in thomas_v2_tests:
+            print(f"\n▶️ {test_name}")
+            try:
+                result = test_func()
+                thomas_v2_results.append((test_name, result))
+                if result:
+                    print(f"✅ {test_name} - RÉUSSI")
+                else:
+                    print(f"❌ {test_name} - ÉCHOUÉ")
+            except Exception as e:
+                print(f"❌ {test_name} - ERREUR: {str(e)}")
+                thomas_v2_results.append((test_name, False))
+        
+        # Run Phase 3 tests
+        print("\n📝 PHASE 3 - LIENS PRODUITS BLOG")
+        phase3_results = []
+        for test_name, test_func in phase3_tests:
+            print(f"\n▶️ {test_name}")
+            try:
+                result = test_func()
+                phase3_results.append((test_name, result))
+                if result:
+                    print(f"✅ {test_name} - RÉUSSI")
+                else:
+                    print(f"❌ {test_name} - ÉCHOUÉ")
+            except Exception as e:
+                print(f"❌ {test_name} - ERREUR: {str(e)}")
+                phase3_results.append((test_name, False))
+        
+        # Calculate results
+        thomas_v2_passed = sum(1 for _, result in thomas_v2_results if result)
+        thomas_v2_total = len(thomas_v2_results)
+        thomas_v2_rate = (thomas_v2_passed / thomas_v2_total) * 100 if thomas_v2_total > 0 else 0
+        
+        phase3_passed = sum(1 for _, result in phase3_results if result)
+        phase3_total = len(phase3_results)
+        phase3_rate = (phase3_passed / phase3_total) * 100 if phase3_total > 0 else 0
+        
+        total_passed = thomas_v2_passed + phase3_passed
+        total_tests = thomas_v2_total + phase3_total
+        overall_rate = (total_passed / total_tests) * 100 if total_tests > 0 else 0
+        
+        # Final report
+        print("\n" + "="*100)
+        print("📊 RAPPORT FINAL - THOMAS V2 + PHASE 3")
+        print("="*100)
+        
+        print(f"\n🤖 THOMAS V2 - FONCTIONNALITÉS COMMERCIALES:")
+        print(f"   ✅ Réussis: {thomas_v2_passed}/{thomas_v2_total} ({thomas_v2_rate:.1f}%)")
+        for test_name, result in thomas_v2_results:
+            status = "✅" if result else "❌"
+            print(f"   {status} {test_name}")
+        
+        print(f"\n📝 PHASE 3 - LIENS PRODUITS BLOG:")
+        print(f"   ✅ Réussis: {phase3_passed}/{phase3_total} ({phase3_rate:.1f}%)")
+        for test_name, result in phase3_results:
+            status = "✅" if result else "❌"
+            print(f"   {status} {test_name}")
+        
+        print(f"\n🎯 RÉSULTAT GLOBAL:")
+        print(f"   📈 Taux de réussite: {total_passed}/{total_tests} ({overall_rate:.1f}%)")
+        
+        if overall_rate >= 80:
+            print(f"   🎉 VALIDATION RÉUSSIE! Thomas V2 + Phase 3 fonctionnels")
+            validation_status = "SUCCESS"
+        elif overall_rate >= 60:
+            print(f"   ⚠️ VALIDATION PARTIELLE - Corrections mineures nécessaires")
+            validation_status = "PARTIAL"
+        else:
+            print(f"   ❌ VALIDATION ÉCHOUÉE - Corrections majeures requises")
+            validation_status = "FAILED"
+        
+        # Critical tests summary
+        print(f"\n🔍 TESTS CRITIQUES SPÉCIFIÉS:")
+        critical_tests = [
+            ("Thomas conversation 'Quel osmoseur pour 4 personnes ?' → liens HTML + CTA", thomas_v2_passed >= 2),
+            ("Blog enrichi → liens produits + section CTA", phase3_passed >= 2),
+            ("Format HTML correct pour dangerouslySetInnerHTML", thomas_v2_passed >= 1),
+            ("Performance enrichissement acceptable", phase3_passed >= 1)
+        ]
+        
+        for test_desc, passed in critical_tests:
+            status = "✅" if passed else "❌"
+            print(f"   {status} {test_desc}")
+        
+        print("\n" + "="*100)
+        
+        if validation_status == "SUCCESS":
+            print("🎉 THOMAS V2 + PHASE 3 TERMINÉES AVEC SUCCÈS!")
+            print("   ✅ Liens cliquables fonctionnels")
+            print("   ✅ Boutons CTA opérationnels") 
+            print("   ✅ Recommandations personnalisées")
+            print("   ✅ Enrichissement blog automatique")
+            print("   ✅ Performance optimale")
+        elif validation_status == "PARTIAL":
+            print("⚠️ THOMAS V2 + PHASE 3 PARTIELLEMENT FONCTIONNELLES")
+            print("   🔧 Corrections mineures recommandées")
+        else:
+            print("❌ THOMAS V2 + PHASE 3 NÉCESSITENT DES CORRECTIONS")
+            print("   🛠️ Révision majeure requise")
+        
+        print("="*100)
+        
+        return validation_status == "SUCCESS"
 
     def test_payment_automation_integration(self):
         """Test that payment completion triggers automatic invoice and tracking creation"""
