@@ -1,34 +1,27 @@
 #!/usr/bin/env python3
 """
-🛒 TEST PANIER FONCTIONNEL - PRIORITÉ CRITIQUE
-Backend API Testing for Josmose.com - E-commerce Cart System Testing
+🚀 TEST THOMAS V2 + PHASE 3 - VALIDATION COMPLÈTE
+Backend API Testing for Josmose.com - Thomas V2 Commercial Features + Phase 3 Blog Product Links
 
 TESTS REQUIS PAR ORDRE DE PRIORITÉ :
 
-1. **API Backend Panier** :
-   - Endpoint produits : GET /api/products?customer_type=B2C
-   - Validation structure produits (id, name, price, stock_info)
-   - Vérifier tous les prix en EUR (pas CAD)
-   - S'assurer que stock_info.in_stock = true pour tous
+✅ THOMAS V2 - FONCTIONNALITÉS COMMERCIALES :
+1. **Liens Cliquables** : Vérifier que "Osmoseur Premium 549€" devient un lien HTML cliquable
+2. **Boutons CTA** : Tester boutons "🛒 Ajouter au panier", "👀 Voir le produit", "❓ Poser une question"
+3. **Recommandations Personnalisées** : Vérifier logique selon contexte utilisateur
+4. **Format HTML** : Confirmer que le frontend affiche correctement les liens et boutons
 
-2. **Fonctionnalités E-commerce Critiques** :
-   - Ajout produit au panier (simulation)
-   - Structure de réponse correcte
-   - Gestion quantités
-   - Calcul totaux (sous-total + livraison)
+✅ PHASE 3 - LIENS PRODUITS BLOG :
+1. **Enrichissement Automatique** : Vérifier que GET `/api/blog/articles/{slug}` enrichit le contenu
+2. **Liens Produits** : Confirmer que "osmoseur" devient lien cliquable vers produits
+3. **Section CTA** : Vérifier ajout automatique de la section promotionnelle
+4. **Performance** : S'assurer que l'enrichissement ne ralentit pas l'API
 
-3. **Prix et Currency VALIDATION** :
-   - Osmoseur Essentiel : 449€ 
-   - Osmoseur Premium : 549€ (CRITIQUE - utilisateur insiste)
-   - Osmoseur Prestige : 899€
-   - Purificateur H2 : 79€
-   - Fontaine Animaux : 49€
-   - Filtre Douche : 39.90€
-
-4. **Endpoints Checkout** :
-   - POST /api/checkout/session (Stripe)
-   - Vérifier structure customer_info avec adresse
-   - Validation cart_items format
+✅ TESTS CRITIQUES :
+1. **Thomas conversation** : "Quel osmoseur pour 4 personnes ?" → Doit retourner liens HTML + boutons CTA
+2. **Blog enrichi** : Récupérer article → Doit contenir liens produits + section CTA
+3. **Frontend HTML** : Vérifier que dangerouslySetInnerHTML affiche correctement les liens
+4. **Navigation** : Tester que les liens mènent aux bonnes pages produits
 """
 
 import requests
