@@ -2091,10 +2091,11 @@ function App() {
         <p className="mt-4 text-gray-600">Chargement de la traduction...</p>
       </div>
     </div>}>
-      <NotificationProvider>
-        <AppProvider>
+      <NotificationProvider>  
+        <TranslationGuardian>
           <AuthProvider>
-            <div className="App min-h-screen bg-gray-50">
+            <AppProvider>
+              <div className="App min-h-screen flex flex-col">
               <BrowserRouter>
                 <AutoLanguageDetector />
                 <CustomerTypeHandler />
