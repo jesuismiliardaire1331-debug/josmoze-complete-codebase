@@ -157,7 +157,15 @@ class ThomasChatbot:
                 "osmoseur-essentiel": "osmoseur-essentiel",
                 "osmoseur-premium": "osmoseur-premium", 
                 "osmoseur-prestige": "osmoseur-prestige",
-                "filtre-douche": "purificateur-portable-hydrogene"  # Ajustement selon la base de données
+                "filtre-douche": "purificateur-portable-hydrogene"  # Note: À ajuster selon la vraie structure
+            }
+            
+            # Images spécifiques par produit
+            product_images = {
+                "osmoseur-essentiel": "https://images.unsplash.com/photo-1628239532623-c035054bff4e?w=400&h=400&fit=crop&q=80",
+                "osmoseur-premium": "https://images.unsplash.com/photo-1669211659202-722981df44f8?w=400&h=400&fit=crop&q=80",
+                "osmoseur-prestige": "https://images.unsplash.com/photo-1669211659110-3f3db4119b65?w=400&h=400&fit=crop&q=80",
+                "purificateur-portable-hydrogene": "https://images.unsplash.com/photo-1570615541379-e6b7ab6d4eb9?w=400&h=400&fit=crop&q=80"
             }
             
             cart_data = {
