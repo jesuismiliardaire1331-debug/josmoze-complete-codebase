@@ -1,0 +1,54 @@
+{
+  "overall_success": false,
+  "success_rate": 16.666666666666664,
+  "total_tests": 6,
+  "passed_tests": 1,
+  "failed_tests": 5,
+  "status": "❌ BACKEND DÉFAILLANT",
+  "details": "Problèmes critiques avec services backend",
+  "test_results": [
+    {
+      "test": "Thomas Chatbot API - 'Bonjour Thomas'",
+      "success": true,
+      "details": "✅ 7/7 vérifications réussies. Réponse: Bonjour ! Je suis Thomas, votre conseiller Josmoze. Comment puis-je vous aider à trouver l'osmoseur ...",
+      "timestamp": "2025-09-20T22:58:35.481167",
+      "response_data": null
+    },
+    {
+      "test": "User Registration API - testauthen@josmoze.com",
+      "success": false,
+      "details": "❌ 1/5 vérifications réussies. Échecs: ['success', 'user_id', 'email_correct', 'customer_type']",
+      "timestamp": "2025-09-20T22:58:35.513736",
+      "response_data": null
+    },
+    {
+      "test": "User Login API - JWT Token Generation",
+      "success": false,
+      "details": "❌ 0/6 vérifications réussies. Échecs: ['success', 'access_token', 'token_type', 'user_info', 'email_correct', 'jwt_format']",
+      "timestamp": "2025-09-20T22:58:35.798013",
+      "response_data": null
+    },
+    {
+      "test": "Product Listing API - /api/products",
+      "success": false,
+      "details": "❌ Erreur API: 404 - {\"detail\":\"Not Found\"}",
+      "timestamp": "2025-09-20T22:58:35.848253",
+      "response_data": null
+    },
+    {
+      "test": "Location Detection API - /api/detect-location",
+      "success": false,
+      "details": "❌ Erreur API: 404 - {\"detail\":\"Not Found\"}",
+      "timestamp": "2025-09-20T22:58:35.861535",
+      "response_data": null
+    },
+    {
+      "test": "Backend Health Check - /api/",
+      "success": false,
+      "details": "❌ Erreur API: 404 - {\"detail\":\"Not Found\"}",
+      "timestamp": "2025-09-20T22:58:35.870258",
+      "response_data": null
+    }
+  ],
+  "backend_cleared": false
+}
