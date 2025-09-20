@@ -47,6 +47,7 @@ class BackendTester:
         self.session_id = None
         self.auth_token = None
         self.uploaded_blog_images = []  # Store uploaded blog image URLs
+        self.thomas_test_results = []  # Store Thomas Phase 8 test results
         
     def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test results"""
