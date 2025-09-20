@@ -560,7 +560,7 @@ const ChatBotV2 = () => {
     <div className="fixed bottom-6 right-6 z-50">
       {/* Chat Window */}
       <div className="bg-white rounded-lg shadow-2xl border border-gray-200 w-96 h-96 flex flex-col">
-        {/* 🚀 THOMAS V2 - CSS pour liens produits et boutons CTA */}
+        {/* 🚀 THOMAS V2 COMMERCIAL - CSS pour liens produits et boutons CTA fonctionnels */}
         <style jsx>{`
           .thomas-message .product-link {
             color: #2563eb !important;
@@ -589,17 +589,58 @@ const ChatBotV2 = () => {
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
           }
           .thomas-cta-buttons .cta-button:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
           }
-          .thomas-cta-buttons .add-to-cart {
+          .thomas-cta-buttons .cta-button:active {
+            transform: translateY(0);
+          }
+          .thomas-cta-buttons .add-to-cart, 
+          .thomas-cta-buttons .thomas-add-to-cart {
             background: linear-gradient(135deg, #10b981, #059669);
+            font-weight: 700;
+            animation: pulse-green 2s infinite;
           }
           .thomas-cta-buttons .view-product {
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          }
+          .thomas-cta-buttons .get-quote {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+          }
+          .thomas-cta-buttons .ask-question {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+          }
+          
+          @keyframes pulse-green {
+            0%, 100% { 
+              box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            50% { 
+              box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+          }
+          
+          /* Effet de ripple au clic */
+          .thomas-cta-buttons .cta-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+          }
+          .thomas-cta-buttons .cta-button:active::after {
+            width: 200px;
+            height: 200px;
           }
         `}</style>
 
