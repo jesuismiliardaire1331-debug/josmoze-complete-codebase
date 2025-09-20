@@ -676,9 +676,9 @@ test_plan:
 
   - task: "PHASE 4 - Interface Admin Upload Images PDF"
     implemented: true
-    working: true
+    working: false
     file: "backend/server.py, frontend/src/AdminUploadImages.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "critical"
     needs_retesting: false
     status_history:
@@ -688,6 +688,9 @@ test_plan:
         - working: true
           agent: "testing"
           comment: "🎉 PHASE 4 VALIDATION RÉUSSIE - 87.5% SUCCESS! Tests complets effectués selon review_request: ✅ Endpoint /api/admin/upload-product-image existe et fonctionne ✅ Validation champs requis (image + product_id) opérationnelle ✅ Validation types fichiers (rejet TXT) fonctionnelle ✅ Validation taille max 5MB active ✅ Upload image valide réussi avec URL /uploads/products/{filename} ✅ Génération noms uniques UUID opérationnelle ✅ Mise à jour DB avec replace_current=true confirmée ⚠️ PROBLÈME MINEUR: Static file serving retourne HTML au lieu d'image (problème routing frontend), mais backend 100% fonctionnel. RÉSULTAT: Interface admin upload images PDF entièrement opérationnelle selon spécifications, prête pour validation finale utilisateur!"
+        - working: false
+          agent: "testing"
+          comment: "❌ PHASE 4 CORRECTION ROUTAGE ÉCHOUÉE - PROBLÈME CRITIQUE CONFIRMÉ: Tests validation finale selon review_request (5 tests, 60% réussite): ✅ Upload image test réussi → product_id='osmoseur-premium' ✅ Image_url récupérée: /uploads/products/{filename} ✅ Product association fonctionnelle ✅ Corrections appliquées: _redirects et .htaccess configurés, dossier uploads créé, backend StaticFiles configuré ❌ CRITIQUE: GET sur image_url retourne Content-Type text/html au lieu d'image/* ❌ Routes /uploads/* interceptées par React Router malgré corrections. DIAGNOSTIC: Problème infrastructure Kubernetes - routing files (_redirects/.htaccess) inefficaces dans environnement conteneurisé. SOLUTION REQUISE: Configuration Kubernetes Ingress pour router /uploads/* vers backend AVANT React Router."
 
 agent_communication:
     - agent: "testing"
