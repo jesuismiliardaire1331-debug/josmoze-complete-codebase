@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, useNavigate, useSearchParams, Link } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +9,9 @@ import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 import useTranslationService from './useTranslationService';
 import AutoLanguageDetector from './AutoLanguageDetector';
+
+// Import context
+import { AppProvider, useApp } from './context/AppContext';
 
 // Import CRM components
 import CRMDashboard from "./CRM";
