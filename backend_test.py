@@ -52,6 +52,8 @@ class BackendTester:
         self.auth_token = None
         self.uploaded_blog_images = []  # Store uploaded blog image URLs
         self.thomas_test_results = []  # Store Thomas Phase 8 test results
+        self.phase9_test_results = []  # Store Phase 9 test results
+        self.generated_referral_code = None  # Store generated referral code for testing
         
     def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test results"""
