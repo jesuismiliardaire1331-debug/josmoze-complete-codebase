@@ -168,11 +168,12 @@ class ThomasChatbot:
                 "purificateur-portable-hydrogene": "https://images.unsplash.com/photo-1570615541379-e6b7ab6d4eb9?w=400&h=400&fit=crop&q=80"
             }
             
+            final_product_id = product_id_mapping.get(product_key, product_key)
             cart_data = {
-                "id": product_id_mapping.get(product_key, product_key),
+                "id": final_product_id,
                 "name": product_info["name"],
                 "price": product_info["price"],
-                "image": "https://images.unsplash.com/photo-1628239532623-c035054bff4e?w=400&h=400&fit=crop&q=80",  # Image par défaut
+                "image": product_images.get(final_product_id, product_images["osmoseur-essentiel"]),
                 "quantity": 1
             }
         
