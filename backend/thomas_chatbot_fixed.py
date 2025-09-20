@@ -285,12 +285,15 @@ class ThomasChatbot:
                 
                 formatted_response = self.format_response_with_links_and_ctas(
                     prix_message,
-                    cta_actions=["get_quote", "ask_question"]
+                    product_key="premium",  # Recommandation par défaut
+                    cta_actions=["add_to_cart", "get_quote", "ask_question"]
                 )
                 
                 return {
-                    "message": formatted_response,
-                    "suggestions": ["🛒 Ajouter au panier", "❓ Plus d'infos", "📞 Parler à un expert"]
+                    "message": formatted_response["formatted_text"],
+                    "suggestions": ["🛒 Ajouter Premium au panier", "❓ Plus d'infos", "📞 Parler à un expert"],
+                    "cart_data": formatted_response.get("cart_data"),
+                    "type": "pricing"
                 }
             
             # OBJECTION BUDGET - TON ULTRA BIENVEILLANT V2
