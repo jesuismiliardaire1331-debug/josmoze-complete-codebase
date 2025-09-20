@@ -359,8 +359,11 @@ Je trouve l'osmoseur parfait selon vos besoins ! 😊""",
                     )
                     
                     return {
-                        "message": formatted_response,
-                        "suggestions": ["🛒 Ajouter Premium 549€", "📋 Comparer modèles", "❓ Plus d'infos"]
+                        "message": formatted_response["formatted_text"],
+                        "suggestions": ["🛒 Ajouter Premium 549€", "📋 Comparer modèles", "❓ Plus d'infos"],
+                        "cart_data": formatted_response.get("cart_data"),
+                        "product_recommended": product_key,
+                        "type": "family_recommendation"
                     }
                 
                 elif context_analysis["family_size"] == "2-3" or any(word in message_lower for word in ["2", "3", "deux", "trois", "couple", "petit"]):
