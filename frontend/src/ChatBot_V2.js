@@ -649,18 +649,25 @@ const ChatBotV2 = () => {
                   }}
                 />
                 
-                {/* Suggestions */}
+                {/* 🚀 PHASE 8 - Suggestions dynamiques du backend */}
                 {message.suggestions && message.suggestions.length > 0 && (
                   <div className="mt-2 space-y-1">
                     {message.suggestions.map((suggestion, idx) => (
                       <button
                         key={idx}
                         onClick={() => handleSuggestionClick(suggestion)}
-                        className="block w-full text-left text-xs bg-white bg-opacity-20 hover:bg-opacity-30 rounded px-2 py-1 transition-colors"
+                        className="block w-full text-left text-xs bg-white bg-opacity-20 hover:bg-opacity-30 rounded px-2 py-1 transition-colors font-medium"
                       >
                         {suggestion}
                       </button>
                     ))}
+                  </div>
+                )}
+                
+                {/* 🚀 PHASE 8 - Indicateur produit recommandé */}
+                {message.productRecommended && message.cartData && (
+                  <div className="mt-2 text-xs text-gray-500 italic">
+                    💡 Recommandation personnalisée: {message.cartData.name}
                   </div>
                 )}
               </div>
