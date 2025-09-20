@@ -11,7 +11,7 @@ import useTranslationService from './useTranslationService';
 import AutoLanguageDetector from './AutoLanguageDetector';
 
 // Import CRM components
-import CRMDashboard from "./CRM";
+import AdminUploadImages from './AdminUploadImages';
 import { AuthProvider } from "./CRMLogin";
 import CRMLogin from "./CRMLogin";
 import ProductExplanation from "./ProductExplanation";
