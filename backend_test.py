@@ -1307,12 +1307,6 @@ class BackendTester:
             "test_results": phase9_tests,
             "generated_referral_code": self.generated_referral_code
         }
-                )
-                return False, None
-                
-        except Exception as e:
-            self.log_test(
-                "Validation code parrainage (filleul@josmoze.com)",
                 False,
                 f"❌ Erreur: {str(e)}"
             )
