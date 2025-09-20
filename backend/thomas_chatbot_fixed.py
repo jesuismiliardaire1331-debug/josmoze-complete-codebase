@@ -91,6 +91,22 @@ class ThomasChatbot:
             ]
         }
         
+        # AMÉLIORATION THOMAS V2 : Liens cliquables et boutons CTA
+        self.product_links = {
+            "essentiel": "/produit/osmoseur-essentiel",
+            "premium": "/produit/osmoseur-premium", 
+            "prestige": "/produit/osmoseur-prestige",
+            "filtre-douche": "/produit/filtre-douche"
+        }
+        
+        self.cta_buttons = {
+            "add_to_cart": "🛒 Ajouter au panier",
+            "view_product": "👀 Voir le produit",
+            "ask_question": "❓ Poser une question",
+            "get_quote": "💰 Devis gratuit",
+            "schedule_call": "📞 Rappel gratuit"
+        }
+        
         # AVANTAGES OSMOSE INVERSE
         self.osmosis_benefits = {
             "pureté": "Élimine 99% des contaminants : chlore, nitrates, pesticides, métaux lourds, bactéries",
