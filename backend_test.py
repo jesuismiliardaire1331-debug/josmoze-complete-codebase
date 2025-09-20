@@ -1193,6 +1193,13 @@ class BackendTester:
                 )
                 return False, None
                 
+        except Exception as e:
+            self.log_test(
+                "Connexion utilisateur (newuser@josmoze.com)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
     
     def run_phase9_promotions_referrals_tests(self):
         """Execute PHASE 9 promotions and referrals system tests"""
