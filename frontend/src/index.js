@@ -1,18 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import { AppProvider } from './context/AppContext';
 
-// Minimal App component to test step by step
-const MinimalApp = () => {
-  console.log("🧪 MinimalApp rendering");
+// Test with AppProvider
+const TestWithContext = () => {
+  console.log("🧪 TestWithContext rendering");
   return (
-    <div style={{padding: '20px'}}>
-      <h1>🧪 MINIMAL APP TEST</h1>
-      <p>Testing basic app structure...</p>
-    </div>
+    <AppProvider>
+      <div style={{padding: '20px'}}>
+        <h1>🧪 CONTEXT TEST</h1>
+        <p>Testing with AppProvider...</p>
+      </div>
+    </AppProvider>
   );
 };
 
-console.log("🧪 Mounting MinimalApp");
+console.log("🧪 Mounting TestWithContext");
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<MinimalApp />);
+root.render(<TestWithContext />);
