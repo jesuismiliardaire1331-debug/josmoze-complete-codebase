@@ -1891,8 +1891,6 @@ function App() {
                   </Routes>
                 </main>
                 <Footer />
-                {/* Translation Guardian - surveille les traductions */}
-                <TranslationGuardian />
                 {/* ChatBot pour prospects */}
                 <ChatBotV2 />
                 {/* Questionnaire produits */}
