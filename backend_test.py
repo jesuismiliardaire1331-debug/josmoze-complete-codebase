@@ -2648,9 +2648,39 @@ class BackendTester:
 if __name__ == "__main__":
     tester = BackendTester()
     
-    # Run PHASE 9 tests for Promotions and Referrals System
-    summary = tester.run_phase9_promotions_referrals_tests()
+    print("🚨 URGENT BACKEND VALIDATION - BUG 1 & 2 DEPENDENCIES")
+    print("🎯 Tests Backend API critiques pour Josmose.com")
+    print("=" * 70)
+    
+    # Execute URGENT BACKEND VALIDATION tests
+    validation_results = tester.run_urgent_backend_validation_tests()
+    
+    print("\n" + "=" * 70)
+    print("🎉 VALIDATION BACKEND TERMINÉE")
+    print("=" * 70)
+    
+    if validation_results["overall_success"]:
+        print("✅ BACKEND SERVICES VALIDÉS - FRONTEND INVESTIGATION POSSIBLE!")
+        print(f"📊 Taux de réussite: {validation_results['success_rate']:.1f}%")
+        print(f"🎯 {validation_results['passed_tests']}/{validation_results['total_tests']} tests réussis")
+        
+        if validation_results["backend_cleared"]:
+            print("🔍 BACKEND ÉLIMINÉ COMME CAUSE - PROCÉDER À L'INVESTIGATION FRONTEND")
+    else:
+        print("❌ PROBLÈMES BACKEND DÉTECTÉS - CORRECTION REQUISE")
+        print(f"📊 Taux de réussite: {validation_results['success_rate']:.1f}%")
+        print(f"🔧 {validation_results['failed_tests']} tests à corriger")
+    
+    print(f"\n📋 Statut final: {validation_results['status']}")
+    print(f"📊 {validation_results['details']}")
+    
+    # Save results to file
+    import json
+    with open('/app/urgent_backend_validation_results.json', 'w', encoding='utf-8') as f:
+        json.dump(validation_results, f, indent=2, ensure_ascii=False, default=str)
+    
+    print(f"\n💾 Résultats sauvegardés dans /app/urgent_backend_validation_results.json")
     
     # Exit code based on success
-    exit_code = 0 if summary["overall_success"] else 1
+    exit_code = 0 if validation_results["overall_success"] else 1
     exit(exit_code)
