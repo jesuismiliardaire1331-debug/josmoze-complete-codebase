@@ -128,12 +128,8 @@ class UserAuthSystem:
         try:
             # Index pour performance et sécurité
             await self.users_collection.create_index("email", unique=True)
-            # Index pour referral_code avec partial filter pour éviter les conflits null
-            await self.users_collection.create_index(
-                "referral_code", 
-                unique=True, 
-                partialFilterExpression={"referral_code": {"$exists": True, "$ne": None}}
-            )
+            # Index pour referral_code (skip l'index pour éviter le problème null)
+            # await self.users_collection.create_index("referral_code", unique=True, sparse=True)
             await self.users_collection.create_index("is_active")
             
             await self.orders_collection.create_index("user_email")
