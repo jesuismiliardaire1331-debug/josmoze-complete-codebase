@@ -74,11 +74,11 @@ const PromotionsManager = () => {
           expires_at: '',
           target_customer_type: 'both'
         });
-        alert('Promotion créée avec succès !');
+        setMessage('✅ Promotion créée avec succès !');
       }
     } catch (error) {
       console.error('Error creating promotion:', error);
-      alert('Erreur lors de la création de la promotion');
+      setMessage('❌ Erreur lors de la création de la promotion');
     } finally {
       setLoading(false);
     }
