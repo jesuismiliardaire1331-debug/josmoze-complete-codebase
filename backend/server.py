@@ -63,6 +63,9 @@ from inventory_manager import get_inventory_manager, StockItem, CustomerProfile,
 from social_media_automation import get_social_media_automation, SocialMediaAutomation, Campaign, AdCreative
 from payment_manager import get_payment_manager
 from promotions_manager import PromotionsManager, init_promotions_manager, get_promotions_manager
+# 🚀 PHASE 9 - Nouveaux imports
+from promotions_system import get_promotions_system, init_promotions_system, PromotionsSystem
+from user_auth_system import get_user_auth_system, init_user_auth_system, UserAuthSystem, UserRegistration, UserLogin
 
 
 ROOT_DIR = Path(__file__).parent
