@@ -463,7 +463,8 @@ const ChatBotV2 = () => {
         text: "Bonjour ! Je suis Thomas, votre conseiller Josmoze. Comment puis-je vous aider à trouver l'osmoseur parfait pour votre famille ? 😊",
         sender: 'assistant',
         timestamp: new Date().toISOString(),
-        agent: 'thomas'
+        agent: 'thomas',
+        suggestions: ["💰 Voir les prix", "🏠 Recommandation famille", "💧 Comment ça marche ?"]
       };
       
       setTimeout(() => {
