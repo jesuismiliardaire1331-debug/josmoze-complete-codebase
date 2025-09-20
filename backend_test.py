@@ -1279,7 +1279,7 @@ class BackendTester:
                 "accept_terms": True
             }
             
-            response = self.session.post(f"{BACKEND_URL}/auth/register", json=test_data)
+            response = self.session.post(f"{BACKEND_URL_DIRECT}/auth/register", json=test_data)
             
             if response.status_code == 200:
                 response_data = response.json()
