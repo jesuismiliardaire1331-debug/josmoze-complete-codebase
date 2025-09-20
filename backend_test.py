@@ -31,9 +31,11 @@ import time
 import logging
 import os
 import io
+import re
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Tuple
 from PIL import Image
+from urllib.parse import urlparse
 
 # Backend URL from environment
 BACKEND_URL = "https://josmoze-admin.preview.emergentagent.com/api"
