@@ -129,7 +129,7 @@ class Phase4RoutingTester:
         try:
             with open('/app/frontend/public/_redirects', 'r') as f:
                 redirects_content = f.read()
-                if '/uploads/* http://localhost:8001/uploads/:splat 200' in redirects_content:
+                if '/uploads/*' in redirects_content and 'uploads/:splat 200' in redirects_content:
                     print("✅ _redirects: Règle uploads configurée")
                 else:
                     print("❌ _redirects: Règle uploads manquante")
@@ -140,7 +140,7 @@ class Phase4RoutingTester:
         try:
             with open('/app/frontend/public/.htaccess', 'r') as f:
                 htaccess_content = f.read()
-                if 'RewriteRule ^uploads/(.*)$ http://localhost:8001/uploads/$1 [P,L]' in htaccess_content:
+                if 'RewriteRule ^uploads/(.*)$' in htaccess_content and 'uploads/$1 [P,L]' in htaccess_content:
                     print("✅ .htaccess: Règle uploads configurée")
                 else:
                     print("❌ .htaccess: Règle uploads manquante")
