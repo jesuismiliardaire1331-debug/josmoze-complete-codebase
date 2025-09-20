@@ -561,7 +561,7 @@ const ChatBotV2 = () => {
       {/* Chat Window */}
       <div className="bg-white rounded-lg shadow-2xl border border-gray-200 w-96 h-96 flex flex-col">
         {/* 🚀 THOMAS V2 COMMERCIAL - CSS pour liens produits et boutons CTA fonctionnels */}
-        <style jsx>{`
+        <style>{`
           .thomas-message .product-link {
             color: #2563eb !important;
             text-decoration: underline !important;
