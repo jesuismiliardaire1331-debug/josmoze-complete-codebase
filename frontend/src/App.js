@@ -2108,6 +2108,7 @@ function App() {
                     <Route path="/admin/login" element={<AdminLogin />} />
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/admin/ai-upload" element={<AIUploadAgent />} />
+                    <Route path="/admin/upload-images" element={<AdminUploadImages />} />
                   </Routes>
                 </main>
                 <Footer />
