@@ -46,6 +46,372 @@ class BackendTester:
         self.test_results = []
         self.session_id = None
         self.auth_token = None
+        self.uploaded_blog_images = []  # Store uploaded blog image URLs
+        
+    def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
+        """Log test results"""
+        result = {
+            "test": test_name,
+            "success": success,
+            "details": details,
+            "timestamp": datetime.now().isoformat(),
+            "response_data": response_data
+        }
+        self.test_results.append(result)
+        
+        status = "✅ PASS" if success else "❌ FAIL"
+        print(f"{status} {test_name}: {details}")
+        
+        if response_data and not success:
+            print(f"   Response: {json.dumps(response_data, indent=2)}")
+    
+    def extract_unsplash_urls_from_mapping(self) -> List[Tuple[str, str]]:
+        """Extract Unsplash URLs from mapping-images-blog.md file"""
+        try:
+            mapping_file = "/app/mapping-images-blog.md"
+            if not os.path.exists(mapping_file):
+                self.log_test(
+                    "Extract Unsplash URLs from mapping",
+                    False,
+                    f"Mapping file not found: {mapping_file}"
+                )
+                return []
+            
+            with open(mapping_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Extract URLs using regex pattern
+            url_pattern = r'URL:\s*`(https://images\.unsplash\.com/[^`]+)`'
+            description_pattern = r'\*\*Description\s*:\*\*\s*([^\n]+)'
+            
+            urls = re.findall(url_pattern, content)
+            descriptions = re.findall(description_pattern, content)
+            
+            # Combine URLs with descriptions
+            url_desc_pairs = []
+            for i, url in enumerate(urls):
+                desc = descriptions[i] if i < len(descriptions) else f"Blog image {i+1}"
+                url_desc_pairs.append((url, desc))
+            
+            self.log_test(
+                "Extract Unsplash URLs from mapping",
+                True,
+                f"Extracted {len(url_desc_pairs)} URLs from mapping file"
+            )
+            
+            return url_desc_pairs
+            
+        except Exception as e:
+            self.log_test(
+                "Extract Unsplash URLs from mapping",
+                False,
+                f"Error reading mapping file: {str(e)}"
+            )
+            return []
+    
+    def download_image_from_url(self, url: str, description: str) -> Tuple[bool, bytes, str]:
+        """Download image from Unsplash URL"""
+        try:
+            # Add headers to mimic browser request
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            
+            response = requests.get(url, headers=headers, timeout=30)
+            
+            if response.status_code == 200:
+                # Verify it's actually an image
+                content_type = response.headers.get('content-type', '').lower()
+                if content_type.startswith('image/'):
+                    # Generate filename from description
+                    safe_desc = re.sub(r'[^\w\s-]', '', description).strip()
+                    safe_desc = re.sub(r'[-\s]+', '-', safe_desc)
+                    filename = f"blog-{safe_desc[:30]}.jpg"
+                    
+                    return True, response.content, filename
+                else:
+                    return False, b'', f"Invalid content type: {content_type}"
+            else:
+                return False, b'', f"HTTP {response.status_code}"
+                
+        except Exception as e:
+            return False, b'', f"Download error: {str(e)}"
+    
+    def upload_blog_image_to_api(self, image_data: bytes, filename: str, description: str) -> Tuple[bool, str]:
+        """Upload blog image via API with product_id='blog-images'"""
+        try:
+            files = {
+                'image': (filename, image_data, 'image/jpeg')
+            }
+            data = {
+                'product_id': 'blog-images',
+                'replace_current': 'false'  # Don't replace, add new images
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/admin/upload-product-image", files=files, data=data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                if response_data.get('success') == True:
+                    image_url = response_data.get('image_url', '')
+                    if '/api/admin/get-uploaded-image/' in image_url:
+                        return True, image_url
+                    else:
+                        return False, f"Invalid URL format: {image_url}"
+                else:
+                    return False, f"Upload failed: {response_data.get('message', 'Unknown error')}"
+            else:
+                return False, f"HTTP {response.status_code}: {response.text}"
+                
+        except Exception as e:
+            return False, f"Upload error: {str(e)}"
+    
+    def test_phase7_image_acquisition_and_upload(self):
+        """PHASE 7: Complete image acquisition and upload process"""
+        print("🚀 PHASE 7 - ACQUISITION ET UPLOAD DES 20 IMAGES BLOG")
+        print("=" * 70)
+        
+        # Step 1: Extract URLs from mapping
+        print("\n📋 ÉTAPE 1: Extraction des URLs Unsplash...")
+        url_desc_pairs = self.extract_unsplash_urls_from_mapping()
+        
+        if not url_desc_pairs:
+            self.log_test(
+                "PHASE 7 - Image Acquisition Complete",
+                False,
+                "No URLs found in mapping file"
+            )
+            return False
+        
+        print(f"   ✅ {len(url_desc_pairs)} URLs extraites du mapping")
+        
+        # Step 2: Download and upload images
+        print(f"\n📋 ÉTAPE 2: Téléchargement et upload de {len(url_desc_pairs)} images...")
+        
+        successful_uploads = 0
+        failed_downloads = 0
+        failed_uploads = 0
+        
+        for i, (url, description) in enumerate(url_desc_pairs, 1):
+            print(f"   🔄 Image {i}/{len(url_desc_pairs)}: {description[:50]}...")
+            
+            # Download image
+            success, image_data, filename_or_error = self.download_image_from_url(url, description)
+            
+            if success:
+                # Upload to API
+                upload_success, api_url_or_error = self.upload_blog_image_to_api(
+                    image_data, filename_or_error, description
+                )
+                
+                if upload_success:
+                    self.uploaded_blog_images.append({
+                        'description': description,
+                        'original_url': url,
+                        'api_url': api_url_or_error,
+                        'filename': filename_or_error
+                    })
+                    successful_uploads += 1
+                    print(f"      ✅ Upload réussi: {api_url_or_error}")
+                else:
+                    failed_uploads += 1
+                    print(f"      ❌ Upload échoué: {api_url_or_error}")
+            else:
+                failed_downloads += 1
+                print(f"      ❌ Téléchargement échoué: {filename_or_error}")
+        
+        # Step 3: Summary
+        total_images = len(url_desc_pairs)
+        success_rate = (successful_uploads / total_images * 100) if total_images > 0 else 0
+        
+        print(f"\n📊 RÉSUMÉ PHASE 7:")
+        print(f"   Total images: {total_images}")
+        print(f"   ✅ Uploads réussis: {successful_uploads}")
+        print(f"   ❌ Téléchargements échoués: {failed_downloads}")
+        print(f"   ❌ Uploads échoués: {failed_uploads}")
+        print(f"   📈 Taux de réussite: {success_rate:.1f}%")
+        
+        # Log overall result
+        if success_rate >= 80:
+            self.log_test(
+                "PHASE 7 - Image Acquisition Complete",
+                True,
+                f"✅ {successful_uploads}/{total_images} images uploadées avec succès ({success_rate:.1f}% réussite)"
+            )
+            return True
+        else:
+            self.log_test(
+                "PHASE 7 - Image Acquisition Complete",
+                False,
+                f"❌ Seulement {successful_uploads}/{total_images} images uploadées ({success_rate:.1f}% réussite)"
+            )
+            return False
+    
+    def test_validate_uploaded_blog_images(self):
+        """Validate that uploaded blog images are accessible via API"""
+        if not self.uploaded_blog_images:
+            self.log_test(
+                "Validate Blog Images Access",
+                False,
+                "No uploaded blog images to validate"
+            )
+            return False
+        
+        print(f"\n📋 VALIDATION: Test d'accès à {len(self.uploaded_blog_images)} images uploadées...")
+        
+        # Test access to first 5 images (sample validation)
+        test_images = self.uploaded_blog_images[:5]
+        successful_access = 0
+        
+        for i, image_info in enumerate(test_images, 1):
+            api_url = image_info['api_url']
+            description = image_info['description']
+            
+            try:
+                full_url = f"https://josmoze-admin.preview.emergentagent.com{api_url}"
+                response = self.session.get(full_url, timeout=10)
+                
+                if response.status_code == 200:
+                    content_type = response.headers.get('content-type', '').lower()
+                    
+                    if content_type.startswith('image/'):
+                        # Verify image is valid with PIL
+                        try:
+                            img = Image.open(io.BytesIO(response.content))
+                            img.verify()
+                            successful_access += 1
+                            print(f"   ✅ Image {i}: {description[:40]}... - Accessible")
+                        except Exception as pil_error:
+                            print(f"   ❌ Image {i}: PIL validation failed - {pil_error}")
+                    else:
+                        print(f"   ❌ Image {i}: Invalid content-type - {content_type}")
+                else:
+                    print(f"   ❌ Image {i}: HTTP {response.status_code}")
+                    
+            except Exception as e:
+                print(f"   ❌ Image {i}: Access error - {str(e)}")
+        
+        validation_rate = (successful_access / len(test_images) * 100) if test_images else 0
+        
+        if validation_rate >= 80:
+            self.log_test(
+                "Validate Blog Images Access",
+                True,
+                f"✅ {successful_access}/{len(test_images)} images testées sont accessibles ({validation_rate:.1f}%)"
+            )
+            return True
+        else:
+            self.log_test(
+                "Validate Blog Images Access",
+                False,
+                f"❌ Seulement {successful_access}/{len(test_images)} images accessibles ({validation_rate:.1f}%)"
+            )
+            return False
+    
+    def generate_blog_images_urls_list(self):
+        """Generate final list of blog image URLs for integration"""
+        if not self.uploaded_blog_images:
+            print("\n❌ Aucune image uploadée pour générer la liste")
+            return
+        
+        print(f"\n📋 LISTE FINALE DES {len(self.uploaded_blog_images)} URLs API POUR INTÉGRATION:")
+        print("=" * 70)
+        
+        for i, image_info in enumerate(self.uploaded_blog_images, 1):
+            print(f"{i:2d}. {image_info['description']}")
+            print(f"    URL API: {image_info['api_url']}")
+            print(f"    Filename: {image_info['filename']}")
+            print()
+        
+        # Save to file for easy access
+        try:
+            with open('/app/blog_images_urls.json', 'w', encoding='utf-8') as f:
+                json.dump(self.uploaded_blog_images, f, indent=2, ensure_ascii=False)
+            print("✅ URLs sauvegardées dans /app/blog_images_urls.json")
+        except Exception as e:
+            print(f"❌ Erreur sauvegarde: {str(e)}")
+    
+    def run_phase7_blog_images_tests(self):
+        """Execute PHASE 7 blog images acquisition and upload tests"""
+        print("🚀 PHASE 7 - ACQUISITION ET UPLOAD DES 20 IMAGES BLOG")
+        print("=" * 70)
+        print("🎯 OBJECTIF: Télécharger et uploader les 20 images Unsplash du mapping")
+        print("🔧 PROCESSUS: Download → Upload API → Validation accès")
+        print("=" * 70)
+        
+        # Test 1: Complete image acquisition and upload
+        acquisition_success = self.test_phase7_image_acquisition_and_upload()
+        
+        # Test 2: Validate uploaded images are accessible
+        if acquisition_success:
+            validation_success = self.test_validate_uploaded_blog_images()
+            
+            # Generate final URLs list
+            self.generate_blog_images_urls_list()
+        else:
+            self.log_test(
+                "Validate Blog Images Access",
+                False,
+                "❌ Impossible de valider - Acquisition précédente échouée"
+            )
+        
+        return self.generate_phase7_summary()
+    
+    def generate_phase7_summary(self):
+        """Generate PHASE 7 test summary"""
+        total_tests = len(self.test_results)
+        passed_tests = sum(1 for result in self.test_results if result["success"])
+        failed_tests = total_tests - passed_tests
+        
+        success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
+        
+        print("\n" + "=" * 70)
+        print("📊 RÉSUMÉ PHASE 7 - ACQUISITION ET UPLOAD IMAGES BLOG")
+        print("=" * 70)
+        print(f"Total des tests: {total_tests}")
+        print(f"✅ Réussis: {passed_tests}")
+        print(f"❌ Échoués: {failed_tests}")
+        print(f"📈 Taux de réussite: {success_rate:.1f}%")
+        print(f"🖼️ Images uploadées: {len(self.uploaded_blog_images)}")
+        
+        print("\n📋 DÉTAIL DES RÉSULTATS:")
+        for result in self.test_results:
+            status = "✅" if result["success"] else "❌"
+            print(f"{status} {result['test']}: {result['details']}")
+        
+        # Determine overall status
+        if success_rate == 100 and len(self.uploaded_blog_images) >= 15:
+            overall_status = "🎉 PHASE 7 TERMINÉE AVEC SUCCÈS"
+            status_details = f"Toutes les images blog uploadées et accessibles!"
+        elif success_rate >= 80 and len(self.uploaded_blog_images) >= 10:
+            overall_status = "✅ PHASE 7 LARGEMENT RÉUSSIE"
+            status_details = f"Majorité des images blog opérationnelles ({len(self.uploaded_blog_images)} images)"
+        elif success_rate >= 60:
+            overall_status = "⚠️ PHASE 7 PARTIELLEMENT RÉUSSIE"
+            status_details = f"Quelques images uploadées ({len(self.uploaded_blog_images)} images)"
+        else:
+            overall_status = "❌ PHASE 7 ÉCHOUÉE"
+            status_details = f"Problèmes critiques avec acquisition images"
+        
+        print(f"\n{overall_status}")
+        print(f"📊 {status_details}")
+        
+        if len(self.uploaded_blog_images) > 0:
+            print(f"\n🎯 RÉSULTAT FINAL: {len(self.uploaded_blog_images)} URLs API opérationnelles pour intégration")
+            print("📁 Liste complète sauvegardée dans blog_images_urls.json")
+        
+        return {
+            "overall_success": success_rate >= 80 and len(self.uploaded_blog_images) >= 10,
+            "success_rate": success_rate,
+            "total_tests": total_tests,
+            "passed_tests": passed_tests,
+            "failed_tests": failed_tests,
+            "uploaded_images_count": len(self.uploaded_blog_images),
+            "status": overall_status,
+            "details": status_details,
+            "test_results": self.test_results,
+            "uploaded_images": self.uploaded_blog_images
+        }
         
     def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test results"""
