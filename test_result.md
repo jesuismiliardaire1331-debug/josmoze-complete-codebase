@@ -487,10 +487,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Backend API Health & System Stability"
+    - "PHASE 4 - Interface Admin Upload Images PDF"
   stuck_tasks: []
   test_all: false
-  test_priority: "validation_complete"
+  test_priority: "phase4_complete"
 
   - task: "THOMAS V2 - Fonctionnalités Commerciales"
     implemented: true
