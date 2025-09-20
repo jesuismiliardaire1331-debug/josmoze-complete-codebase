@@ -34,8 +34,11 @@ import requests
 import json
 import time
 import logging
+import os
+import io
 from datetime import datetime
 from typing import Dict, List, Any
+from PIL import Image
 
 # Backend URL from environment
 BACKEND_URL = "https://josmoze-admin.preview.emergentagent.com/api"
