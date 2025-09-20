@@ -487,12 +487,12 @@ metadata:
 
 test_plan:
   current_focus:
-    - "PHASE 2 - Interface Révolutionnaire Extraction Images"
-    - "Agent AI Upload - Validation Fonctionnelle"
-    - "Panier E-commerce Fonctionnel - Tests Critiques"
-  stuck_tasks: []
+    - "THOMAS V2 - Fonctionnalités Commerciales"
+    - "PHASE 3 - Liens Produits Blog"
+  stuck_tasks:
+    - "PHASE 3 - Liens Produits Blog"
   test_all: false
-  test_priority: "phase2_revolutionary_first"
+  test_priority: "thomas_v2_phase3_critical"
 
   - task: "THOMAS V2 - Fonctionnalités Commerciales"
     implemented: true
