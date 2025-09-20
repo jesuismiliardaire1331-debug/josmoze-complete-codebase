@@ -389,8 +389,11 @@ Je trouve l'osmoseur parfait selon vos besoins ! 😊""",
                     )
                     
                     return {
-                        "message": formatted_response,
-                        "suggestions": ["🛒 Essentiel 449€", "⬆️ Voir Premium", "❓ Questions"]
+                        "message": formatted_response["formatted_text"],
+                        "suggestions": ["🛒 Essentiel 449€", "⬆️ Voir Premium", "❓ Questions"],
+                        "cart_data": formatted_response.get("cart_data"),
+                        "product_recommended": product_key,
+                        "type": "family_recommendation"
                     }
                 else:
                     # Réponse générale pour recommandation
