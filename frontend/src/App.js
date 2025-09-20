@@ -1827,12 +1827,12 @@ const Consultation = () => {
 };
 
 const QuestionnaireWrapper = () => {
-  const { showQuestionnaire, closeQuestionnaire, handleQuestionnaireRecommendation, formatPrice } = useApp();
+  const { showQuestionnaire, handleQuestionnaireClose, handleQuestionnaireRecommendation, formatPrice } = useApp();
   
   return (
     <ProductQuestionnaire
       isOpen={showQuestionnaire}
-      onClose={closeQuestionnaire}
+      onClose={handleQuestionnaireClose}
       onRecommendation={handleQuestionnaireRecommendation}
       formatPrice={formatPrice}
     />
