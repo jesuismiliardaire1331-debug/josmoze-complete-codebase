@@ -74,6 +74,8 @@ class BlogManager:
                 serialized[key] = [str(item) if isinstance(item, ObjectId) else item for item in value]
         
         return serialized
+    
+    async def initialize(self):
         """Initialiser la connexion MongoDB"""
         if not self.client:
             self.client = AsyncIOMotorClient(MONGO_URL)
