@@ -5567,8 +5567,8 @@ async def upload_product_image(request: Request):
         with open(file_path, "wb") as f:
             f.write(image_content)
         
-        # URL de l'image (servie statiquement)
-        image_url = f"/uploads/products/{unique_filename}"
+        # URL de l'image via endpoint API (contournement routage frontend)
+        image_url = f"/api/admin/get-uploaded-image/{unique_filename}"
         
         # Si remplacement demandé, mettre à jour la base de données produits
         if replace_current:
