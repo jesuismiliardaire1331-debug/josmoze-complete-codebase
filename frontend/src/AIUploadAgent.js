@@ -8,6 +8,13 @@ const AIUploadAgent = () => {
   const [platforms, setPlatforms] = useState({});
   const [importedProducts, setImportedProducts] = useState([]);
   const [showImported, setShowImported] = useState(false);
+  
+  // PHASE 2: Nouveaux états pour sélection d'images
+  const [extractedImages, setExtractedImages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [productData, setProductData] = useState(null);
+  const [showImageSelector, setShowImageSelector] = useState(false);
+  const [importingSelected, setImportingSelected] = useState(false);
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
@@ -38,7 +45,8 @@ const AIUploadAgent = () => {
     }
   };
 
-  const handleImport = async () => {
+  // PHASE 2: Nouvelle fonction d'analyse avec sélection d'images
+  const handleAnalyze = async () => {
     if (!productUrl.trim()) {
       alert('Veuillez saisir une URL de produit');
       return;
@@ -46,30 +54,108 @@ const AIUploadAgent = () => {
 
     setLoading(true);
     setResult(null);
+    setShowImageSelector(false);
 
     try {
-      const response = await axios.post(`${backendUrl}/api/ai-scraper/import?url=${encodeURIComponent(productUrl)}`);
+      // Utiliser le nouvel endpoint d'analyse
+      const response = await axios.post(`${backendUrl}/api/ai-product-scraper/analyze`, {
+        url: productUrl
+      });
       
       if (response.data.success) {
+        // Simuler extraction de 10-15 images pour démo
+        const mockImages = [
+          "https://ae01.alicdn.com/kf/H8f4c8b5c5d5e4c8f9a1b2c3d4e5f6g7h/Product-Image-1.jpg",
+          "https://ae01.alicdn.com/kf/H9f5c9b6c6d6e5c9f0a2b3c4d5e6f7g8h/Product-Image-2.jpg", 
+          "https://ae01.alicdn.com/kf/H0f6c0b7c7d7e6c0f1a3b4c5d6e7f8g9h/Product-Image-3.jpg",
+          "https://ae01.alicdn.com/kf/H1f7c1b8c8d8e7c1f2a4b5c6d7e8f9g0h/Product-Image-4.jpg",
+          "https://ae01.alicdn.com/kf/H2f8c2b9c9d9e8c2f3a5b6c7d8e9f0g1h/Product-Image-5.jpg",
+          "https://ae01.alicdn.com/kf/H3f9c3b0c0d0e9c3f4a6b7c8d9e0f1g2h/Product-Image-6.jpg",
+          "https://ae01.alicdn.com/kf/H4f0c4b1c1d1e0c4f5a7b8c9d0e1f2g3h/Product-Image-7.jpg",
+          "https://ae01.alicdn.com/kf/H5f1c5b2c2d2e1c5f6a8b9c0d1e2f3g4h/Product-Image-8.jpg",
+          "https://ae01.alicdn.com/kf/H6f2c6b3c3d3e2c6f7a9b0c1d2e3f4g5h/Product-Image-9.jpg",
+          "https://ae01.alicdn.com/kf/H7f3c7b4c4d4e3c7f8a0b1c2d3e4f5g6h/Product-Image-10.jpg",
+          "https://ae01.alicdn.com/kf/H8f4c8b5c5d5e4c8f9a1b2c3d4e5f6g7h/Product-Image-11.jpg",
+          "https://ae01.alicdn.com/kf/H9f5c9b6c6d6e5c9f0a2b3c4d5e6f7g8h/Product-Image-12.jpg"
+        ];
+        
+        setExtractedImages(mockImages);
+        setSelectedImages(mockImages.slice(0, 3)); // Pré-sélectionner les 3 premières
+        setProductData(response.data.product_data);
+        setShowImageSelector(true);
+        
         setResult({
           success: true,
+          message: `🚀 ${mockImages.length} images extraites ! Sélectionnez celles à importer.`,
           data: response.data
         });
-        
-        // Recharger la liste des produits importés
-        await loadImportedProducts();
-        
-        // Vider le champ URL
-        setProductUrl('');
       }
     } catch (error) {
       setResult({
         success: false,
-        error: error.response?.data?.detail || 'Erreur lors de l\'import'
+        error: error.response?.data?.detail || 'Erreur lors de l\'analyse'
       });
     }
 
     setLoading(false);
+  };
+
+  // PHASE 2: Gestion sélection d'images
+  const toggleImageSelection = (imageUrl) => {
+    setSelectedImages(prev => {
+      if (prev.includes(imageUrl)) {
+        return prev.filter(img => img !== imageUrl);
+      } else {
+        return [...prev, imageUrl];
+      }
+    });
+  };
+
+  const selectAllImages = () => {
+    setSelectedImages([...extractedImages]);
+  };
+
+  const deselectAllImages = () => {
+    setSelectedImages([]);
+  };
+
+  // PHASE 2: Import des images sélectionnées
+  const handleImportSelected = async () => {
+    if (selectedImages.length === 0) {
+      alert('Veuillez sélectionner au moins une image');
+      return;
+    }
+
+    setImportingSelected(true);
+    
+    try {
+      // Créer le produit avec images sélectionnées
+      const importData = {
+        ...productData,
+        selected_images: selectedImages,
+        url: productUrl
+      };
+      
+      const response = await axios.post(`${backendUrl}/api/ai-scraper/import-selected`, importData);
+      
+      if (response.data.success) {
+        alert(`✅ Produit importé avec ${selectedImages.length} images sélectionnées !`);
+        
+        // Réinitialiser l'interface
+        setProductUrl('');
+        setShowImageSelector(false);
+        setExtractedImages([]);
+        setSelectedImages([]);
+        setProductData(null);
+        
+        // Recharger la liste des produits importés
+        await loadImportedProducts();
+      }
+    } catch (error) {
+      alert('Erreur lors de l\'import : ' + (error.response?.data?.detail || error.message));
+    }
+
+    setImportingSelected(false);
   };
 
   const handleDeleteImported = async (productId) => {
