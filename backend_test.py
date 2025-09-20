@@ -1,28 +1,32 @@
 #!/usr/bin/env python3
 """
-🚀 PHASE 8 - THOMAS CHATBOT COMMERCIAL V2 FINALISATION
-Backend API Testing for Josmose.com - Thomas Commercial Features Testing
+🚀 PHASE 9 - SYSTÈME DE PROMOTIONS ET PARRAINAGE
+Backend API Testing for Josmose.com - Promotions & Referral System Testing
 
-TESTS PHASE 8 - FONCTIONNALITÉS COMMERCIALES THOMAS :
-1. **Test intention d'achat directe** : Message "Je veux acheter un osmoseur pour ma famille de 4 personnes"
-2. **Test recommandation intelligente** : Message "Bonjour Thomas" avec conversation_history
-3. **Test liens cliquables et données panier** : Vérifier product-link class et cart_data
-4. **Validation structure réponse** : Vérifier tous les nouveaux champs Phase 8
+TESTS PHASE 9 - SYSTÈME DE PROMOTIONS ET PARRAINAGE :
+1. **Test création promotion par défaut** : GET /api/admin/promotions
+2. **Test validation code promotionnel** : POST /api/promotions/validate
+3. **Test génération code parrainage** : POST /api/referrals/generate
+4. **Test validation code parrainage** : POST /api/referrals/validate
+5. **Test inscription utilisateur** : POST /api/auth/register
+6. **Test connexion utilisateur** : POST /api/auth/login
 
-✅ TESTS CRITIQUES PHASE 8 :
-1. **Endpoint /api/ai-agents/chat** : Vérifier existence et fonctionnement
-2. **Purchase Intent Detection** : Réponse contient produit recommandé + cart_data + CTA
-3. **Smart Recommendations** : Recommandations personnalisées selon profil utilisateur
-4. **HTML Links & CTA Buttons** : Liens cliquables avec class="product-link" fonctionnels
-5. **Response Structure** : cart_data, product_recommended, user_analysis, suggestions
+✅ TESTS CRITIQUES PHASE 9 :
+1. **Collections MongoDB** : promotions, referrals, users
+2. **Promotions par défaut** : BIENVENUE10, LIVRAISONGRATUITE, FAMILLE20
+3. **Validation codes promo** : Calculs corrects avec réductions
+4. **Système parrainage** : Génération + validation codes
+5. **Authentification utilisateur** : Inscription + connexion complète
+6. **Gestion erreurs** : Cas limites et validation
 
-✅ OBJECTIFS PHASE 8 :
-- Thomas détecte intentions d'achat et recommande produits spécifiques
-- Système "Add to Cart" direct depuis conversations Thomas
-- Recommandations avancées basées sur profil utilisateur et historique
-- Liens produits cliquables avec données panier complètes
+✅ OBJECTIFS PHASE 9 :
+- Promotions par défaut créées au démarrage
+- Validation codes promo avec calculs corrects (pourcentage, montant fixe, livraison gratuite)
+- Système parrainage complet (15% filleul, 20€ parrain)
+- Authentification utilisateur sécurisée
+- Collections MongoDB opérationnelles
 
-🎯 RÉSULTAT ATTENDU : Thomas commercial convertisseur 100% fonctionnel avec intégration panier
+🎯 RÉSULTAT ATTENDU : Système promotions et parrainage 100% fonctionnel avec intégration MongoDB
 """
 
 import requests
