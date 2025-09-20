@@ -1116,11 +1116,11 @@ class BackendTester:
             end_time = time.time()
             response_time = end_time - start_time
             
+            # Vérifier que l'enrichissement ne ralentit pas trop l'API
+            max_response_time = 2.0  # 2 secondes maximum
+            
             if response.status_code == 200:
                 data = response.json()
-                
-                # Vérifier que l'enrichissement ne ralentit pas trop l'API
-                max_response_time = 2.0  # 2 secondes maximum
                 
                 if response_time <= max_response_time:
                     self.log_test("PHASE 3 - Performance Enrichissement", True, 
