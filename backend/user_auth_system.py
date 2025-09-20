@@ -132,7 +132,7 @@ class UserAuthSystem:
             await self.users_collection.create_index(
                 "referral_code", 
                 unique=True, 
-                partialFilterExpression={"referral_code": {"$ne": None}}
+                partialFilterExpression={"referral_code": {"$exists": True, "$ne": None}}
             )
             await self.users_collection.create_index("is_active")
             
