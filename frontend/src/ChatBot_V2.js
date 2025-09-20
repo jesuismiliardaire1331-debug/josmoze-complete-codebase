@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useSafeCleanup } from './hooks/useSafeCleanup';
+import { useApp } from './App';
 
 // Configuration
 const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
