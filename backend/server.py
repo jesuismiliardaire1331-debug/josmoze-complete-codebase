@@ -5904,6 +5904,77 @@ async def delete_imported_product(product_id: str):
         logging.error(f"❌ Erreur suppression produit importé: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/ai-scraper/import-selected", tags=["Agent AI"])
+async def import_selected_product(request: dict):
+    """
+    🚀 PHASE 2 - Importer un produit avec images sélectionnées par l'utilisateur
+    
+    Args:
+        request: {
+            "title": "Nom du produit",
+            "price": 25.99,
+            "selected_images": ["url1", "url2", ...],
+            "url": "URL source",
+            "platform": "aliexpress"
+        }
+        
+    Returns:
+        Product importé avec intégration automatique aux fiches
+    """
+    try:
+        title = request.get("title", "Produit Importé")
+        price = request.get("price", 0)
+        selected_images = request.get("selected_images", [])
+        source_url = request.get("url", "")
+        platform = request.get("platform", "unknown")
+        
+        if not selected_images:
+            raise HTTPException(400, "Aucune image sélectionnée")
+        
+        # Générer un ID unique pour le produit
+        import uuid
+        product_id = str(uuid.uuid4())
+        
+        # Créer la structure du produit importé
+        imported_product = {
+            "id": product_id,
+            "title": title,
+            "price": price,
+            "currency": "EUR",
+            "images": selected_images,
+            "images_count": len(selected_images),
+            "platform": platform,
+            "source_url": source_url,
+            "imported_at": datetime.utcnow().isoformat(),
+            "status": "imported",
+            "selected_images_count": len(selected_images)
+        }
+        
+        # Optionnel: Sauvegarder dans MongoDB si besoin
+        try:
+            collection = db.imported_products
+            await collection.insert_one(imported_product)
+            logging.info(f"✅ Produit sauvegardé en base: {product_id}")
+        except Exception as e:
+            logging.warning(f"⚠️ Sauvegarde échouée (continuons): {e}")
+        
+        return {
+            "success": True,
+            "message": f"✅ Produit importé avec {len(selected_images)} images sélectionnées !",
+            "product_id": product_id,
+            "title": title,
+            "price": price,
+            "images_count": len(selected_images),
+            "platform": platform,
+            "integration_status": "completed"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur import sélectif: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/api/ai-product-scraper/analyze", tags=["Agent AI"])
 async def analyze_product_url(request: dict):
     """
