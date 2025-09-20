@@ -793,6 +793,126 @@ class BackendTester:
                 return False, None
                 
         except Exception as e:
+    
+    # ========== PHASE 9 - PROMOTIONS & PARRAINAGE TESTS ==========
+    
+    def test_default_promotions_creation(self):
+        """Test 1: Vérifier que les promotions par défaut sont créées au démarrage"""
+        try:
+            response = self.session.get(f"{BACKEND_URL}/admin/promotions")
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifier la structure de la réponse
+                if 'promotions' in response_data:
+                    promotions = response_data['promotions']
+                    
+                    # Chercher les promotions par défaut
+                    expected_codes = ['BIENVENUE10', 'LIVRAISONGRATUITE', 'FAMILLE20']
+                    found_codes = [promo.get('code') for promo in promotions if promo.get('code') in expected_codes]
+                    
+                    if len(found_codes) >= 2:  # Au moins 2 des 3 promotions par défaut
+                        self.log_test(
+                            "Promotions par défaut créées au démarrage",
+                            True,
+                            f"✅ {len(found_codes)}/3 promotions par défaut trouvées: {found_codes}. Total promotions: {len(promotions)}"
+                        )
+                        return True, promotions
+                    else:
+                        self.log_test(
+                            "Promotions par défaut créées au démarrage",
+                            False,
+                            f"❌ Seulement {len(found_codes)}/3 promotions par défaut trouvées: {found_codes}"
+                        )
+                        return False, promotions
+                else:
+                    self.log_test(
+                        "Promotions par défaut créées au démarrage",
+                        False,
+                        f"❌ Structure réponse incorrecte: {list(response_data.keys())}"
+                    )
+                    return False, None
+            else:
+                self.log_test(
+                    "Promotions par défaut créées au démarrage",
+                    False,
+                    f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Promotions par défaut créées au démarrage",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
+    
+    def test_promotion_code_validation(self):
+        """Test 2: Test validation code BIENVENUE10 avec commande 300€ pour utilisateur B2C"""
+        try:
+            test_data = {
+                "code": "BIENVENUE10",
+                "user_email": "test@josmoze.com",
+                "order_amount": 300,
+                "customer_type": "B2C"
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/promotions/validate", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications spécifiques
+                checks = {
+                    "valid": response_data.get('valid') == True,
+                    "discount_amount": isinstance(response_data.get('discount_amount'), (int, float)),
+                    "discount_type": response_data.get('discount_type') in ['percentage', 'fixed_amount', 'free_shipping'],
+                    "final_amount": isinstance(response_data.get('final_amount'), (int, float)),
+                    "code_matches": response_data.get('code') == 'BIENVENUE10'
+                }
+                
+                # Vérifier calcul de réduction (BIENVENUE10 = 10% normalement)
+                discount_amount = response_data.get('discount_amount', 0)
+                expected_discount = 30  # 10% de 300€
+                discount_correct = abs(discount_amount - expected_discount) <= 1  # Tolérance de 1€
+                
+                checks['discount_calculation'] = discount_correct
+                
+                passed_checks = sum(checks.values())
+                total_checks = len(checks)
+                
+                if passed_checks >= total_checks * 0.8:  # 80% des vérifications
+                    self.log_test(
+                        "Validation code BIENVENUE10 (300€, B2C)",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Réduction: {discount_amount}€, Final: {response_data.get('final_amount')}€"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in checks.items() if not v]
+                    self.log_test(
+                        "Validation code BIENVENUE10 (300€, B2C)",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Validation code BIENVENUE10 (300€, B2C)",
+                    False,
+                    f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Validation code BIENVENUE10 (300€, B2C)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
             self.log_test(
                 "Validation structure réponse Phase 8",
                 False,
