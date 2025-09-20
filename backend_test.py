@@ -11510,11 +11510,14 @@ if __name__ == "__main__":
     print("🎯 TESTS CRITIQUES: 4 scénarios de validation fonctionnelle")
     print()
     
-    # Run the AI Upload Agent tests
-    ai_upload_results.append(tester.test_ai_product_scraper_endpoint_exists())
-    ai_upload_results.append(tester.test_ai_product_scraper_supported_platforms())
+    # Run the PHASE 2 Revolutionary Interface tests
+    ai_upload_results.append(tester.test_ai_product_scraper_enhanced_extraction())
+    ai_upload_results.append(tester.test_ai_scraper_import_selected_interface())
+    ai_upload_results.append(tester.test_mongodb_imported_products_persistence())
+    ai_upload_results.append(tester.test_product_integration_validation())
+    
+    # Run legacy AI Upload Agent tests for comparison
     ai_upload_results.append(tester.test_ai_product_scraper_aliexpress_analysis())
-    ai_upload_results.append(tester.test_ai_product_scraper_data_extraction())
     
     # Final assessment
     passed = sum(ai_upload_results)
