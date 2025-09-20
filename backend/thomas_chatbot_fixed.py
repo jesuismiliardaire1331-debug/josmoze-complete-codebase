@@ -332,17 +332,60 @@ class ThomasChatbot:
             # Obtenir recommandation intelligente basée sur le profil
             smart_recommendation = self.get_smart_product_recommendation(context_analysis)
             
+            # 🚀 PHASE 8 - DÉTECTION INTENTION D'ACHAT DIRECTE
+            if any(word in message_lower for word in ["acheter", "commander", "prendre", "veux", "panier"]):
+                produit = self.osmoseurs_catalog[smart_recommendation]
+                
+                purchase_intent_message = f"""🎯 **Parfait ! Je vous aide à finaliser votre choix !**
+
+Basé sur notre conversation, je recommande le **{produit['name']} à {produit['price']}€**.
+
+✅ **Pourquoi c'est idéal pour vous** :
+• {produit['ideal_for']}
+• {produit['benefits']}
+• Installation et garantie incluses
+
+💡 **Action immédiate** : Ajoutez-le directement à votre panier ou consultez tous les détails !"""
+                
+                formatted_response = self.format_response_with_links_and_ctas(
+                    purchase_intent_message,
+                    product_key=smart_recommendation,
+                    cta_actions=["add_to_cart", "view_product", "get_quote"]
+                )
+                
+                return {
+                    "message": formatted_response["formatted_text"],
+                    "suggestions": [f"🛒 Ajouter {produit['name']}", "📋 Voir détails", "💬 Questions ?"],
+                    "cart_data": formatted_response.get("cart_data"),
+                    "product_recommended": smart_recommendation,
+                    "type": "purchase_intent",
+                    "user_analysis": context_analysis
+                }
+            
             # ACCUEIL THOMAS V2 AMÉLIORÉ AVEC RECOMMANDATION INTELLIGENTE
             if any(word in message_lower for word in ["bonjour", "salut", "hello", "bonsoir", "coucou"]):
+                # Personnaliser l'accueil selon l'engagement
+                if context_analysis["engagement_level"] == "high":
+                    accueil_message = f"""👋 Re-bonjour ! Je vois que vous êtes vraiment intéressé par nos osmoseurs ! 
+
+Laissez-moi vous faire une recommandation personnalisée : le **{self.osmoseurs_catalog[smart_recommendation]['name']}** semble parfait pour vous !
+
+Comment puis-je vous aider à finaliser votre choix ? 😊"""
+                else:
+                    accueil_message = self.response_templates["accueil"]
+                
                 formatted_response = self.format_response_with_links_and_ctas(
-                    self.response_templates["accueil"],
-                    cta_actions=["view_product", "ask_question"]
+                    accueil_message,
+                    product_key=smart_recommendation,
+                    cta_actions=["add_to_cart", "view_product", "ask_question"]
                 )
                 return {
                     "message": formatted_response["formatted_text"],
                     "suggestions": ["💰 Voir les prix", "🏠 Recommandation famille", "💧 Comment ça marche ?"],
                     "cart_data": formatted_response.get("cart_data"),
-                    "type": "greeting"
+                    "product_recommended": smart_recommendation,
+                    "type": "greeting",
+                    "user_analysis": context_analysis
                 }
             
             # DEMANDE DE PRIX AVEC LIENS CLIQUABLES
