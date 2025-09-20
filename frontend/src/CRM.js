@@ -9,6 +9,7 @@ import BrandMonitoring from "./BrandMonitoring";
 import AbandonedCarts from "./AbandonedCarts";
 import SecurityAudit from "./SecurityAudit";
 import AIAgentsManager from "./AIAgentsManager";
+import PromotionsManager from './PromotionsManager';
 import ProspectsManager from "./ProspectsManager";
 import ScraperAgent from "./ScraperAgent";
 import SuppressionListManager from "./SuppressionListManager";
