@@ -92,7 +92,7 @@ const PromotionsManager = () => {
       }
     } catch (error) {
       console.error('Error toggling promotion:', error);
-      alert('Erreur lors de la modification');
+      setMessage('❌ Erreur lors de la modification');
     }
   };
 
