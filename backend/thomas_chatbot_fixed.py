@@ -295,13 +295,15 @@ Je trouve l'osmoseur parfait selon vos besoins ! 😊""",
                     "suggestions": ["👨‍👩‍👧 2-3 personnes", "👨‍👩‍👧‍👦 4-5 personnes", "💰 Budget serré"]
                 }
             
-            # RECOMMANDATION FAMILLE - LOGIQUE THOMAS V2
+            # RECOMMANDATION FAMILLE - PERSONNALISÉE SELON CONTEXTE
             if any(word in message_lower for word in ["famille", "personnes", "foyer", "combien de personnes", "quel osmoseur"]):
-                # Logique de recommandation selon nombre de personnes
-                if any(word in message_lower for word in ["4", "quatre", "4-5", "4 personnes", "famille 4"]):
+                
+                # Recommandation intelligente selon contexte
+                if context_analysis["family_size"] == "4-5" or any(word in message_lower for word in ["4", "quatre", "4-5", "4 personnes", "famille 4"]):
                     produit = self.osmoseurs_catalog["osmoseur-premium"]
-                    return {
-                        "message": f"""🎯 **Pour une famille de 4 personnes, je recommande le {produit['name']} !**
+                    product_key = "premium"
+                    
+                    response_text = f"""🎯 **Pour une famille de 4 personnes, je recommande le <a href="{self.product_links[product_key]}" class="product-link">{produit['name']} (549€)</a> !**
 
 {produit['thomas_pitch']}
 
@@ -313,13 +315,24 @@ Je trouve l'osmoseur parfait selon vos besoins ! 😊""",
 
 💰 **Prix** : {produit['price']}€ - Notre bestseller !
 
-{self.response_templates["call_to_action"][2]}""",
+{self.response_templates["call_to_action"][2]}"""
+                    
+                    formatted_response = self.format_response_with_links_and_ctas(
+                        response_text, 
+                        product_key=product_key,
+                        cta_actions=["add_to_cart", "view_product", "ask_question"]
+                    )
+                    
+                    return {
+                        "message": formatted_response,
                         "suggestions": ["🛒 Ajouter Premium 549€", "📋 Comparer modèles", "❓ Plus d'infos"]
                     }
-                elif any(word in message_lower for word in ["2", "3", "deux", "trois", "couple", "petit"]):
+                
+                elif context_analysis["family_size"] == "2-3" or any(word in message_lower for word in ["2", "3", "deux", "trois", "couple", "petit"]):
                     produit = self.osmoseurs_catalog["osmoseur-essentiel"]
-                    return {
-                        "message": f"""🎯 **Pour 2-3 personnes, l'{produit['name']} est idéal !**
+                    product_key = "essentiel"
+                    
+                    response_text = f"""🎯 **Pour 2-3 personnes, l'<a href="{self.product_links[product_key]}" class="product-link">{produit['name']} (449€)</a> est idéal !**
 
 {produit['thomas_pitch']}
 
@@ -329,7 +342,16 @@ Je trouve l'osmoseur parfait selon vos besoins ! 😊""",
 • Installation professionnelle incluse
 • Économique sans compromis qualité
 
-{self.response_templates["call_to_action"][2]}""",
+{self.response_templates["call_to_action"][2]}"""
+                    
+                    formatted_response = self.format_response_with_links_and_ctas(
+                        response_text,
+                        product_key=product_key,
+                        cta_actions=["add_to_cart", "view_product", "ask_question"]
+                    )
+                    
+                    return {
+                        "message": formatted_response,
                         "suggestions": ["🛒 Essentiel 449€", "⬆️ Voir Premium", "❓ Questions"]
                     }
                 else:
