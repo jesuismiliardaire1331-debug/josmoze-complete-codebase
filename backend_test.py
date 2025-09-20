@@ -1543,12 +1543,127 @@ class BackendTester:
             "details": status_details,
             "test_results": self.test_results
         }
+    
+    def run_phase8_thomas_commercial_tests(self):
+        """Execute PHASE 8 Thomas Chatbot Commercial V2 tests"""
+        print("🚀 PHASE 8 - THOMAS CHATBOT COMMERCIAL V2 FINALISATION")
+        print("=" * 70)
+        print("🎯 OBJECTIF: Tester les nouvelles fonctionnalités commerciales Thomas")
+        print("🔧 TESTS: Intention d'achat, recommandations, liens cliquables, structure Phase 8")
+        print("=" * 70)
+        
+        # Reset test results for Phase 8
+        self.test_results = []
+        
+        # Test 1: Vérifier endpoint Thomas existe
+        print("\n📋 TEST 1: Vérification endpoint /api/ai-agents/chat...")
+        endpoint_success = self.test_thomas_endpoint_exists()
+        
+        if not endpoint_success:
+            print("❌ ARRÊT DES TESTS: Endpoint Thomas non accessible")
+            return self.generate_phase8_summary()
+        
+        # Test 2: Test intention d'achat directe
+        print("\n📋 TEST 2: Test intention d'achat directe famille 4 personnes...")
+        purchase_success, purchase_data = self.test_direct_purchase_intent()
+        
+        # Test 3: Test recommandation intelligente avec historique
+        print("\n📋 TEST 3: Test recommandation intelligente avec historique...")
+        recommendation_success, recommendation_data = self.test_smart_recommendation_with_history()
+        
+        # Test 4: Test liens cliquables et données panier
+        print("\n📋 TEST 4: Test liens cliquables et données panier...")
+        links_success, links_data = self.test_clickable_links_and_cart_data()
+        
+        # Test 5: Validation structure réponse Phase 8
+        print("\n📋 TEST 5: Validation structure réponse Phase 8...")
+        structure_success, structure_data = self.test_phase8_response_structure_validation()
+        
+        return self.generate_phase8_summary()
+    
+    def generate_phase8_summary(self):
+        """Generate PHASE 8 Thomas Commercial test summary"""
+        total_tests = len(self.test_results)
+        passed_tests = sum(1 for result in self.test_results if result["success"])
+        failed_tests = total_tests - passed_tests
+        
+        success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
+        
+        print("\n" + "=" * 70)
+        print("📊 RÉSUMÉ PHASE 8 - THOMAS CHATBOT COMMERCIAL V2")
+        print("=" * 70)
+        print(f"Total des tests: {total_tests}")
+        print(f"✅ Réussis: {passed_tests}")
+        print(f"❌ Échoués: {failed_tests}")
+        print(f"📈 Taux de réussite: {success_rate:.1f}%")
+        
+        print("\n📋 DÉTAIL DES RÉSULTATS:")
+        for result in self.test_results:
+            status = "✅" if result["success"] else "❌"
+            print(f"{status} {result['test']}: {result['details']}")
+        
+        # Determine overall status
+        if success_rate == 100:
+            overall_status = "🎉 PHASE 8 TERMINÉE AVEC SUCCÈS - 100% VALIDATION COMPLÈTE!"
+            status_details = f"Thomas commercial convertisseur 100% fonctionnel avec intégration panier complète!"
+        elif success_rate >= 80:
+            overall_status = "✅ PHASE 8 LARGEMENT RÉUSSIE"
+            status_details = f"Fonctionnalités commerciales Thomas opérationnelles ({success_rate:.1f}% réussite)"
+        elif success_rate >= 60:
+            overall_status = "⚠️ PHASE 8 PARTIELLEMENT RÉUSSIE"
+            status_details = f"Quelques fonctionnalités commerciales opérationnelles ({success_rate:.1f}% réussite)"
+        else:
+            overall_status = "❌ PHASE 8 ÉCHOUÉE"
+            status_details = f"Problèmes critiques avec fonctionnalités commerciales Thomas"
+        
+        print(f"\n{overall_status}")
+        print(f"📊 {status_details}")
+        
+        # Critical tests analysis
+        critical_tests = [
+            "Test intention d'achat directe - Famille 4 personnes",
+            "Test recommandation intelligente avec historique",
+            "Test liens cliquables et données panier",
+            "Validation structure réponse Phase 8"
+        ]
+        
+        critical_passed = sum(1 for result in self.test_results 
+                            if result["test"] in critical_tests and result["success"])
+        critical_total = sum(1 for result in self.test_results 
+                           if result["test"] in critical_tests)
+        
+        if critical_total > 0:
+            critical_rate = (critical_passed / critical_total * 100)
+            print(f"\n🎯 TESTS CRITIQUES PHASE 8: {critical_passed}/{critical_total} ({critical_rate:.1f}%)")
+            
+            if critical_rate == 100:
+                print("🚀 OBJECTIF ATTEINT: Thomas commercial convertisseur entièrement fonctionnel!")
+                print("✅ Intention d'achat détectée avec recommandation Premium famille 4 personnes")
+                print("✅ Recommandations intelligentes basées sur historique conversation")
+                print("✅ Liens cliquables et boutons CTA 'Add to Cart' fonctionnels")
+                print("✅ Structure réponse Phase 8 complète (cart_data, user_analysis, etc.)")
+            elif critical_rate >= 75:
+                print("✅ OBJECTIF LARGEMENT ATTEINT: Fonctionnalités commerciales principales opérationnelles")
+            else:
+                print("⚠️ OBJECTIF PARTIEL: Quelques fonctionnalités commerciales critiques échouent")
+        
+        return {
+            "overall_success": success_rate >= 80,
+            "success_rate": success_rate,
+            "total_tests": total_tests,
+            "passed_tests": passed_tests,
+            "failed_tests": failed_tests,
+            "critical_success_rate": critical_rate if critical_total > 0 else 0,
+            "status": overall_status,
+            "details": status_details,
+            "test_results": self.test_results
+        }
 
 if __name__ == "__main__":
     tester = BackendTester()
     
-    # Run PHASE 7 tests for blog images acquisition and upload
-    summary = tester.run_phase7_blog_images_tests()
+    # Run PHASE 8 tests for Thomas Chatbot Commercial V2
+    summary = tester.run_phase8_thomas_commercial_tests()
     
     # Exit code based on success
     exit_code = 0 if summary["overall_success"] else 1
