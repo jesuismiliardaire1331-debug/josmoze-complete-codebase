@@ -4,6 +4,9 @@ RewriteEngine On
 # Routes API vers backend
 RewriteRule ^api/(.*)$ http://localhost:8001/api/$1 [P,L]
 
+# 🚀 PHASE 4 - Routes uploads statiques vers backend
+RewriteRule ^uploads/(.*)$ http://localhost:8001/uploads/$1 [P,L]
+
 # Route unsubscribe vers backend
 RewriteRule ^unsubscribe$ http://localhost:8001/unsubscribe [P,L]
 
