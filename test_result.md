@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "PHASE 1 - CRM Agents IA Integration: Intégrer une section 'Agents IA' dans le CRM avec toggles ON/OFF pour Product Hunter, Content Creator, Email Marketer, SEO Master et lien vers AI Upload Agent. Interface avec cartes design spécifique selon mockup fourni."
+user_problem_statement: "🚀 PHASE 2 - TEST INTERFACE RÉVOLUTIONNAIRE EXTRACTION IMAGES: Tester la nouvelle interface de sélection d'images avec fonctionnalités révolutionnaires - Extraction Améliorée (10-15 images), Interface Sélection (/api/ai-scraper/import-selected), Import Sélectif avec images choisies, Intégration Produit automatique. Validation complète des scénarios de test avec données spécifiques et persistance MongoDB."
 
 backend:
   - task: "Agent AI Upload - Validation Fonctionnelle"
