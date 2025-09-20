@@ -1209,7 +1209,7 @@ class BackendTester:
                 }
             }
             
-            response = self.session.post(f"{BACKEND_URL}/ai-agents/chat", json=test_data)
+            response = self.session.post(f"{BACKEND_URL_DIRECT}/ai-agents/chat", json=test_data)
             
             if response.status_code == 200:
                 response_data = response.json()
