@@ -4,4 +4,8 @@ import "./index.css";
 import AppMinimal from "./AppMinimal";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<AppMinimal />);
+root.render(
+  <React.StrictMode>
+    <AppMinimal />
+  </React.StrictMode>
+);
