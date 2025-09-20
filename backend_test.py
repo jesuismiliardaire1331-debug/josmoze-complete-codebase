@@ -1348,6 +1348,180 @@ class BackendTester:
             self.log_test("AI Product Scraper - AliExpress Analysis", False, f"Exception: {str(e)}")
             return False
     
+    def test_ai_scraper_import_selected_interface(self):
+        """🚀 PHASE 2 - Test POST /api/ai-scraper/import-selected - New selection interface"""
+        try:
+            # Test data as specified in review request
+            import_data = {
+                "title": "Test Produit Phase 2",
+                "price": 29.99,
+                "selected_images": [
+                    "https://ae01.alicdn.com/kf/H1234567890/image1.jpg",
+                    "https://ae01.alicdn.com/kf/H0987654321/image2.jpg",
+                    "https://ae01.alicdn.com/kf/H5555555555/image3.jpg"
+                ],
+                "url": "https://www.aliexpress.com/item/test.html",
+                "platform": "aliexpress"
+            }
+            
+            response = self.session.post(
+                f"{BACKEND_URL}/ai-scraper/import-selected",
+                json=import_data,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields for PHASE 2 import
+                required_fields = ["success", "message", "product_id", "title", "price", "images_count", "platform", "integration_status"]
+                
+                if all(field in data for field in required_fields):
+                    if (data.get("success") == True and 
+                        data.get("images_count") == 3 and  # Should match selected images count
+                        data.get("title") == "Test Produit Phase 2" and
+                        data.get("price") == 29.99 and
+                        data.get("platform") == "aliexpress" and
+                        data.get("integration_status") == "completed"):
+                        
+                        self.imported_product_id = data.get("product_id")  # Store for MongoDB test
+                        self.log_test("🚀 PHASE 2 - Import Selected Interface", True, 
+                                    f"✅ Interface sélection révolutionnaire! Produit importé: {data['product_id'][:8]}..., "
+                                    f"3 images sélectionnées, intégration automatique complétée")
+                        return True
+                    else:
+                        self.log_test("🚀 PHASE 2 - Import Selected Interface", False, 
+                                    f"Invalid import data: success={data.get('success')}, "
+                                    f"images_count={data.get('images_count')}, integration={data.get('integration_status')}")
+                        return False
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_test("🚀 PHASE 2 - Import Selected Interface", False, 
+                                f"Missing fields: {missing}", data)
+                    return False
+            else:
+                self.log_test("🚀 PHASE 2 - Import Selected Interface", False, 
+                            f"Status: {response.status_code}", response.text)
+                return False
+        except Exception as e:
+            self.log_test("🚀 PHASE 2 - Import Selected Interface", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_mongodb_imported_products_persistence(self):
+        """🚀 PHASE 2 - Test MongoDB persistence in imported_products collection"""
+        try:
+            # This test verifies that the imported product was saved to MongoDB
+            # Since we can't directly access MongoDB from the test, we'll use an API endpoint
+            
+            # First, let's check if there's an endpoint to retrieve imported products
+            response = self.session.get(f"{BACKEND_URL}/ai-scraper/imported")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                if isinstance(data, list) and len(data) > 0:
+                    # Look for our imported product
+                    imported_product = None
+                    for product in data:
+                        if (product.get("title") == "Test Produit Phase 2" and 
+                            product.get("price") == 29.99):
+                            imported_product = product
+                            break
+                    
+                    if imported_product:
+                        # Verify MongoDB structure
+                        required_fields = ["id", "title", "price", "images", "platform", "imported_at", "status"]
+                        
+                        if all(field in imported_product for field in required_fields):
+                            self.log_test("🚀 PHASE 2 - MongoDB Persistence", True, 
+                                        f"✅ Produit persisté dans collection imported_products: "
+                                        f"ID: {imported_product['id'][:8]}..., "
+                                        f"Status: {imported_product['status']}, "
+                                        f"Images: {len(imported_product.get('images', []))}")
+                            return True
+                        else:
+                            missing = [f for f in required_fields if f not in imported_product]
+                            self.log_test("🚀 PHASE 2 - MongoDB Persistence", False, 
+                                        f"Missing fields in MongoDB document: {missing}")
+                            return False
+                    else:
+                        self.log_test("🚀 PHASE 2 - MongoDB Persistence", False, 
+                                    "Test product not found in imported_products collection")
+                        return False
+                else:
+                    self.log_test("🚀 PHASE 2 - MongoDB Persistence", False, 
+                                "No imported products found in collection")
+                    return False
+            else:
+                self.log_test("🚀 PHASE 2 - MongoDB Persistence", False, 
+                            f"Cannot access imported products endpoint: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("🚀 PHASE 2 - MongoDB Persistence", False, f"Exception: {str(e)}")
+            return False
+    
+    def test_product_integration_validation(self):
+        """🚀 PHASE 2 - Test automatic integration to product sheets"""
+        try:
+            # Test that imported products are properly integrated into the product system
+            # This validates the complete data structure expected by the review request
+            
+            if not hasattr(self, 'imported_product_id'):
+                self.log_test("🚀 PHASE 2 - Product Integration", False, 
+                            "No imported product ID from previous test")
+                return False
+            
+            # Check if the imported product has the complete structure
+            response = self.session.get(f"{BACKEND_URL}/ai-scraper/imported")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Find our imported product
+                imported_product = None
+                for product in data:
+                    if product.get("id") == self.imported_product_id:
+                        imported_product = product
+                        break
+                
+                if imported_product:
+                    # Validate complete product structure as per review request
+                    validation_checks = {
+                        "title_valid": imported_product.get("title") == "Test Produit Phase 2",
+                        "price_valid": imported_product.get("price") == 29.99,
+                        "images_valid": len(imported_product.get("images", [])) == 3,
+                        "platform_valid": imported_product.get("platform") == "aliexpress",
+                        "currency_valid": imported_product.get("currency") == "EUR",
+                        "status_valid": imported_product.get("status") == "imported",
+                        "integration_complete": "imported_at" in imported_product
+                    }
+                    
+                    passed_checks = sum(validation_checks.values())
+                    total_checks = len(validation_checks)
+                    
+                    if passed_checks == total_checks:
+                        self.log_test("🚀 PHASE 2 - Product Integration", True, 
+                                    f"✅ Intégration automatique complète! {passed_checks}/{total_checks} validations réussies. "
+                                    f"Structure produit conforme aux spécifications PHASE 2")
+                        return True
+                    else:
+                        failed_checks = [k for k, v in validation_checks.items() if not v]
+                        self.log_test("🚀 PHASE 2 - Product Integration", False, 
+                                    f"Intégration incomplète: {passed_checks}/{total_checks} validations. "
+                                    f"Échecs: {failed_checks}")
+                        return False
+                else:
+                    self.log_test("🚀 PHASE 2 - Product Integration", False, 
+                                "Imported product not found for integration validation")
+                    return False
+            else:
+                self.log_test("🚀 PHASE 2 - Product Integration", False, 
+                            f"Cannot validate integration: {response.status_code}")
+                return False
+        except Exception as e:
+            self.log_test("🚀 PHASE 2 - Product Integration", False, f"Exception: {str(e)}")
+            return False
+    
     def test_ai_product_scraper_data_extraction(self):
         """Test AI Product Scraper - Data extraction validation"""
         try:
