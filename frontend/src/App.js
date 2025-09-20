@@ -17,7 +17,7 @@ import PromotionsManager from './PromotionsManager';
 import EspaceClient from './EspaceClient';
 import CheckoutWithPromo from './CheckoutWithPromo';
 import { AuthProvider } from './UserAuth';
-import { AuthProvider } from "./CRMLogin";
+import { AuthProvider as CRMAuthProvider } from "./CRMLogin";
 import CRMLogin from "./CRMLogin";
 import ProductExplanation from "./ProductExplanation";
 import { NotificationProvider } from "./NotificationSystem";
