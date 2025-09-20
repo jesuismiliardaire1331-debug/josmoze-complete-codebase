@@ -328,10 +328,10 @@ class AIProductScraper:
         return 0.0
     
     def _extract_images(self, soup: BeautifulSoup, selectors: List[str]) -> List[str]:
-        """Extraire URLs d'images avec amélioration pour AliExpress/Alibaba"""
+        """🚀 PHASE 2 - Extraction images révolutionnaire (10-15 images de qualité)"""
         images = []
         
-        # Chercher d'abord dans les balises meta et scripts (données JSON)
+        # ÉTAPE 1: Chercher dans les données JSON structurées (priorité)
         scripts = soup.find_all('script', type='application/ld+json')
         for script in scripts:
             try:
@@ -344,34 +344,49 @@ class AIProductScraper:
             except:
                 continue
         
-        # Extraction améliorée pour AliExpress
+        # ÉTAPE 2: Sélecteurs spécialisés par plateforme (AMÉLIORÉS PHASE 2)
         aliexpress_selectors = [
-            'img[src*="alicd"]',
-            'img[data-src*="alicdn"]',
-            'img[src*="ae01.alicdn"]',
-            'img[data-original*="alicdn"]',
-            '.image-view img',
-            '.product-image img',
-            '[data-spm-anchor-id] img'
+            # Images principales produit
+            'img[src*="alicdn"]', 'img[data-src*="alicdn"]', 'img[data-original*="alicdn"]',
+            'img[src*="ae01.alicdn"]', 'img[src*="ae02.alicdn"]', 'img[src*="ae03.alicdn"]',
+            
+            # Galeries et vues produit
+            '.image-view img', '.product-image img', '.gallery-image img',
+            '.image-gallery img', '.thumb-image img', '.product-gallery img',
+            
+            # Nouvelles classes pour plus d'images
+            '[data-spm-anchor-id] img', '.slider-image img', '.main-image img',
+            '.sub-image img', '.detail-image img', '.zoom-image img',
+            '.product-photos img', '.item-gallery img'
         ]
         
-        # Extraction pour Alibaba
         alibaba_selectors = [
-            'img[src*="alibaba"]',
-            'img[data-src*="alibaba"]',
-            '.image-item img',
-            '.thumb-item img',
-            '.gallery-img'
+            'img[src*="alibaba"]', 'img[data-src*="alibaba"]',
+            '.image-item img', '.thumb-item img', '.gallery-img',
+            '.product-img img', '.detail-img img', '.main-img img'
         ]
         
-        # Combiner tous les sélecteurs
-        all_selectors = selectors + aliexpress_selectors + alibaba_selectors
+        amazon_selectors = [
+            'img[src*="images-amazon"]', 'img[data-src*="images-amazon"]',
+            '.image-item img', '#altImages img', '.thumbnail img',
+            '.a-dynamic-image', '.product-image img'
+        ]
+        
+        temu_selectors = [
+            'img[src*="temu"]', 'img[data-src*="temu"]',
+            '.product-image img', '.gallery-image img', '.item-image img'
+        ]
+        
+        # ÉTAPE 3: Extraction générique améliorée (toutes plateformes)
+        all_selectors = (selectors + aliexpress_selectors + alibaba_selectors + 
+                        amazon_selectors + temu_selectors)
         
         for selector in all_selectors:
             elements = soup.select(selector)
             for img in elements:
-                # Chercher dans différents attributs
-                src_attrs = ['src', 'data-src', 'data-original', 'data-lazy-src', 'data-img']
+                # Chercher dans tous les attributs possibles
+                src_attrs = ['src', 'data-src', 'data-original', 'data-lazy-src', 
+                           'data-img', 'data-zoom-image', 'data-large-image']
                 
                 for attr in src_attrs:
                     src = img.get(attr)
@@ -384,37 +399,58 @@ class AIProductScraper:
                         elif not src.startswith('http'):
                             continue
                         
-                        # Filtrer les images trop petites ou logo
-                        if any(keyword in src.lower() for keyword in ['logo', 'icon', 'avatar', '50x50', '100x100']):
+                        # PHASE 2: Filtrage qualité amélioré
+                        # Ignorer images trop petites, logos, icônes
+                        bad_keywords = ['logo', 'icon', 'avatar', 'favicon', 'banner', 
+                                      '50x50', '100x100', '32x32', '64x64', 'thumbnail']
+                        if any(keyword in src.lower() for keyword in bad_keywords):
                             continue
-                            
-                        if src not in images:
-                            images.append(src)
                         
-                        if len(images) >= 10:  # Limite à 10 images
+                        # Priorité aux images de bonne résolution
+                        quality_indicators = ['800', '600', '400', 'large', 'big', 'main']
+                        is_quality = any(indicator in src.lower() for indicator in quality_indicators)
+                        
+                        if src not in images:
+                            if is_quality:
+                                images.insert(0, src)  # Priorité aux images de qualité
+                            else:
+                                images.append(src)
+                        
+                        # PHASE 2: Objectif 15 images maximum
+                        if len(images) >= 15:
                             break
                 
-                if len(images) >= 10:
+                if len(images) >= 15:
                     break
             
-            if len(images) >= 10:
+            if len(images) >= 15:
                 break
         
-        # Si aucune image trouvée, chercher toutes les images sur la page
-        if not images:
+        # ÉTAPE 4: Si pas assez d'images, recherche élargie
+        if len(images) < 10:
+            logging.info(f"🔍 Recherche élargie - seulement {len(images)} images trouvées")
             all_images = soup.find_all('img')
-            for img in all_images:
-                src = img.get('src') or img.get('data-src')
-                if src and src.startswith('http') and len(src) > 50:  # URL suffisamment longue
-                    images.append(src)
-                    if len(images) >= 5:
-                        break
+            for img in all_images[:50]:  # Limiter la recherche
+                src = img.get('src') or img.get('data-src') or img.get('data-original')
+                if src and src.startswith('http') and len(src) > 30:  # URL suffisamment longue
+                    # Vérifier que c'est probablement une image produit
+                    if any(keyword in src.lower() for keyword in ['product', 'item', 'goods', 'jpg', 'jpeg', 'png', 'webp']):
+                        if src not in images:
+                            images.append(src)
+                            if len(images) >= 15:
+                                break
         
-        print(f"🖼️ Images extraites: {len(images)}")
-        for i, img in enumerate(images[:3]):
-            print(f"   Image {i+1}: {img[:80]}...")
+        # PHASE 2: Logging amélioré
+        print(f"🚀 PHASE 2 - Images extraites: {len(images)} (objectif: 10-15)")
+        for i, img in enumerate(images[:5]):
+            print(f"   📷 Image {i+1}: {img[:100]}...")
         
-        return list(set(images))  # Supprimer doublons
+        if len(images) >= 10:
+            print(f"✅ Objectif PHASE 2 atteint: {len(images)} images extraites!")
+        else:
+            print(f"⚠️ Objectif partiel: {len(images)} images (cible: 10+)")
+        
+        return list(dict.fromkeys(images))  # Supprimer doublons en gardant l'ordre
     
     def _extract_description(self, soup: BeautifulSoup, selectors: List[str]) -> str:
         """Extraire description produit"""
