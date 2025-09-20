@@ -215,7 +215,7 @@ const AIUploadAgent = () => {
                 disabled={loading}
               />
               <button
-                onClick={handleImport}
+                onClick={handleAnalyze}
                 disabled={loading || !productUrl.trim()}
                 className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
                   loading || !productUrl.trim()
@@ -223,7 +223,7 @@ const AIUploadAgent = () => {
                     : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700'
                 }`}
               >
-                {loading ? '🔄 Analyse...' : '🚀 Analyser et Importer'}
+                {loading ? '🔄 Analyse...' : '🚀 Analyser le Produit'}
               </button>
             </div>
           </div>
