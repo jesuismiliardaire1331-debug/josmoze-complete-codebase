@@ -7,6 +7,7 @@ const PromotionsManager = () => {
   const [promotions, setPromotions] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
   const [newPromotion, setNewPromotion] = useState({
     code: '',
     name: '',
