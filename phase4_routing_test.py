@@ -17,7 +17,7 @@ import io
 from PIL import Image
 from datetime import datetime
 
-BACKEND_URL = "https://water-ecom-admin.preview.emergentagent.com"
+BACKEND_URL = "https://josmoze-ecom-fix.preview.emergentagent.com"
 
 class Phase4RoutingTester:
     def __init__(self):

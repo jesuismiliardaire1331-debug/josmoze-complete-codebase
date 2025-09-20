@@ -2,13 +2,13 @@ Options -MultiViews
 RewriteEngine On
 
 # Routes API vers backend
-RewriteRule ^api/(.*)$ https://water-ecom-admin.preview.emergentagent.com/api/$1 [P,L]
+RewriteRule ^api/(.*)$ https://josmoze-ecom-fix.preview.emergentagent.com/api/$1 [P,L]
 
 # 🚀 PHASE 4 - Routes uploads statiques vers backend
-RewriteRule ^uploads/(.*)$ https://water-ecom-admin.preview.emergentagent.com/uploads/$1 [P,L]
+RewriteRule ^uploads/(.*)$ https://josmoze-ecom-fix.preview.emergentagent.com/uploads/$1 [P,L]
 
 # Route unsubscribe vers backend
-RewriteRule ^unsubscribe$ https://water-ecom-admin.preview.emergentagent.com/unsubscribe [P,L]
+RewriteRule ^unsubscribe$ https://josmoze-ecom-fix.preview.emergentagent.com/unsubscribe [P,L]
 
 # Toutes les autres routes vers React Router
 RewriteCond %{REQUEST_FILENAME} !-f

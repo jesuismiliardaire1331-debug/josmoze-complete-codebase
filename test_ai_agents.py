@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = "https://water-ecom-admin.preview.emergentagent.com/api"
+BACKEND_URL = "https://josmoze-ecom-fix.preview.emergentagent.com/api"
 
 class AIAgentsTester:
     def __init__(self):
