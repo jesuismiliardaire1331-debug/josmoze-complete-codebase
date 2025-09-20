@@ -252,13 +252,15 @@ class ThomasChatbot:
             
             # ACCUEIL THOMAS V2 AMÉLIORÉ
             if any(word in message_lower for word in ["bonjour", "salut", "hello", "bonsoir", "coucou"]):
-                response_text = self.format_response_with_links_and_ctas(
+                formatted_response = self.format_response_with_links_and_ctas(
                     self.response_templates["accueil"],
                     cta_actions=["view_product", "ask_question"]
                 )
                 return {
-                    "message": response_text,
-                    "suggestions": ["💰 Voir les prix", "🏠 Recommandation famille", "💧 Comment ça marche ?"]
+                    "message": formatted_response["formatted_text"],
+                    "suggestions": ["💰 Voir les prix", "🏠 Recommandation famille", "💧 Comment ça marche ?"],
+                    "cart_data": formatted_response.get("cart_data"),
+                    "type": "greeting"
                 }
             
             # DEMANDE DE PRIX AVEC LIENS CLIQUABLES
