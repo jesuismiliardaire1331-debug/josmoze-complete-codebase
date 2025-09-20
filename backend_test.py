@@ -975,7 +975,7 @@ class BackendTester:
         """🚀 PHASE 3 - Test enrichissement automatique GET /api/blog/articles/{slug}"""
         try:
             # Test avec un slug d'article existant
-            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            test_slug = "pourquoi-l-eau-du-robinet-peut-etre-dangereuse-pour-votre-sante"
             
             response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
             
@@ -1027,8 +1027,8 @@ class BackendTester:
             # Attendre un peu pour l'initialisation
             time.sleep(1)
             
-            # Tester avec le premier article par défaut
-            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            # Tester avec le premier article par défaut (slug correct)
+            test_slug = "pourquoi-l-eau-du-robinet-peut-etre-dangereuse-pour-votre-sante"
             
             response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
             
@@ -1076,7 +1076,7 @@ class BackendTester:
         """🚀 PHASE 3 - Test section CTA automatique dans blog"""
         try:
             # Tester avec un article existant (après initialisation)
-            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            test_slug = "pourquoi-l-eau-du-robinet-peut-etre-dangereuse-pour-votre-sante"
             
             response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
             
@@ -1128,7 +1128,7 @@ class BackendTester:
             # Mesurer temps de réponse avec enrichissement
             start_time = time.time()
             
-            test_slug = "pourquoi-eau-robinet-dangereuse-sante"
+            test_slug = "pourquoi-l-eau-du-robinet-peut-etre-dangereuse-pour-votre-sante"
             response = self.session.get(f"{BACKEND_URL}/blog/articles/{test_slug}")
             
             end_time = time.time()
