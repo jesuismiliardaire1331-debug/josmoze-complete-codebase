@@ -53,7 +53,27 @@ class BlogManager:
         self.client = None
         self.db = None
         
-    async def initialize(self):
+    def serialize_mongodb_doc(self, doc: Dict) -> Dict:
+        """🚀 PHASE 3 - Convertir ObjectId MongoDB en string pour JSON"""
+        if not doc:
+            return doc
+            
+        # Copier le document pour éviter la mutation
+        serialized = dict(doc)
+        
+        # Convertir _id ObjectId en string
+        if '_id' in serialized and isinstance(serialized['_id'], ObjectId):
+            serialized['id'] = str(serialized['_id'])
+            del serialized['_id']  # Supprimer _id MongoDB
+        
+        # Convertir tous les autres ObjectId en string
+        for key, value in serialized.items():
+            if isinstance(value, ObjectId):
+                serialized[key] = str(value)
+            elif isinstance(value, list):
+                serialized[key] = [str(item) if isinstance(item, ObjectId) else item for item in value]
+        
+        return serialized
         """Initialiser la connexion MongoDB"""
         if not self.client:
             self.client = AsyncIOMotorClient(MONGO_URL)
