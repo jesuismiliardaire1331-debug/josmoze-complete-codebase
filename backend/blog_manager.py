@@ -5,14 +5,24 @@ Système de blog complet avec CMS et gestion des articles
 
 import os
 import uuid
+import json
 import logging
 from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
 from slugify import slugify
+from bson import ObjectId
 
 from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field
+
+# 🚀 PHASE 3 - Custom JSON Encoder pour ObjectId MongoDB
+class MongoJSONEncoder(json.JSONEncoder):
+    """Encoder pour sérialiser ObjectId MongoDB en string"""
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        return super(MongoJSONEncoder, self).default(obj)
 
 # Configuration
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
