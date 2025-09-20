@@ -3130,6 +3130,33 @@ class BackendTester:
         
         return validation_status == "SUCCESS"
 
+
+# ========== MAIN EXECUTION ==========
+
+if __name__ == "__main__":
+    print("🚀 DÉMARRAGE TESTS THOMAS V2 + PHASE 3")
+    print("="*100)
+    
+    tester = BackendTester()
+    
+    try:
+        # Run the comprehensive Thomas V2 + Phase 3 tests
+        success = tester.run_thomas_v2_phase3_tests()
+        
+        if success:
+            print("\n🎉 TESTS THOMAS V2 + PHASE 3 TERMINÉS AVEC SUCCÈS!")
+            exit(0)
+        else:
+            print("\n❌ TESTS THOMAS V2 + PHASE 3 ÉCHOUÉS - CORRECTIONS NÉCESSAIRES")
+            exit(1)
+            
+    except KeyboardInterrupt:
+        print("\n⚠️ Tests interrompus par l'utilisateur")
+        exit(1)
+    except Exception as e:
+        print(f"\n💥 ERREUR CRITIQUE: {str(e)}")
+        exit(1)
+
     def test_payment_automation_integration(self):
         """Test that payment completion triggers automatic invoice and tracking creation"""
         try:
