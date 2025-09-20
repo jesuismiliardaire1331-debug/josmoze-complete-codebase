@@ -1023,6 +1023,153 @@ class BackendTester:
                     )
                     return False, response_data
             else:
+    
+    def test_user_registration(self):
+        """Test 5: Test inscription nouveau utilisateur"""
+        try:
+            test_data = {
+                "email": "newuser@josmoze.com",
+                "password": "Password123",
+                "first_name": "Test",
+                "last_name": "User",
+                "customer_type": "B2C",
+                "accept_terms": True
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/auth/register", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications inscription
+                checks = {
+                    "success": response_data.get('success') == True,
+                    "user_id": bool(response_data.get('user_id')),
+                    "email": response_data.get('email') == 'newuser@josmoze.com',
+                    "customer_type": response_data.get('customer_type') == 'B2C',
+                    "message": bool(response_data.get('message'))
+                }
+                
+                # Vérifier que le mot de passe n'est pas retourné (sécurité)
+                checks['password_not_returned'] = 'password' not in response_data
+                
+                passed_checks = sum(checks.values())
+                total_checks = len(checks)
+                
+                if passed_checks >= total_checks * 0.8:  # 80% des vérifications
+                    self.log_test(
+                        "Inscription utilisateur (newuser@josmoze.com)",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. User ID: {response_data.get('user_id')}, Type: {response_data.get('customer_type')}"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in checks.items() if not v]
+                    self.log_test(
+                        "Inscription utilisateur (newuser@josmoze.com)",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                # Vérifier si c'est une erreur "utilisateur existe déjà" (acceptable)
+                if response.status_code == 400:
+                    try:
+                        error_data = response.json()
+                        error_detail = error_data.get('detail', '').lower()
+                        if 'existe' in error_detail or 'already' in error_detail:
+                            self.log_test(
+                                "Inscription utilisateur (newuser@josmoze.com)",
+                                True,
+                                f"✅ Utilisateur existe déjà (comportement attendu): {error_detail}"
+                            )
+                            return True, error_data
+                    except:
+                        pass
+                
+                self.log_test(
+                    "Inscription utilisateur (newuser@josmoze.com)",
+                    False,
+                    f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Inscription utilisateur (newuser@josmoze.com)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
+    
+    def test_user_login(self):
+        """Test 6: Test connexion utilisateur avec compte créé"""
+        try:
+            test_data = {
+                "email": "newuser@josmoze.com",
+                "password": "Password123"
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/auth/login", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications connexion
+                checks = {
+                    "success": response_data.get('success') == True,
+                    "access_token": bool(response_data.get('access_token')),
+                    "token_type": response_data.get('token_type') == 'bearer',
+                    "user_info": bool(response_data.get('user')),
+                    "email": response_data.get('user', {}).get('email') == 'newuser@josmoze.com'
+                }
+                
+                # Vérifier structure user info
+                user_info = response_data.get('user', {})
+                if user_info:
+                    checks['user_id'] = bool(user_info.get('id'))
+                    checks['customer_type'] = user_info.get('customer_type') == 'B2C'
+                else:
+                    checks['user_id'] = False
+                    checks['customer_type'] = False
+                
+                # Stocker le token pour d'éventuels tests futurs
+                if response_data.get('access_token'):
+                    self.auth_token = response_data.get('access_token')
+                
+                passed_checks = sum(checks.values())
+                total_checks = len(checks)
+                
+                if passed_checks >= total_checks * 0.8:  # 80% des vérifications
+                    self.log_test(
+                        "Connexion utilisateur (newuser@josmoze.com)",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Token reçu, User ID: {user_info.get('id')}"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in checks.items() if not v]
+                    self.log_test(
+                        "Connexion utilisateur (newuser@josmoze.com)",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Connexion utilisateur (newuser@josmoze.com)",
+                    False,
+                    f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Connexion utilisateur (newuser@josmoze.com)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
                 self.log_test(
                     "Validation code parrainage (filleul@josmoze.com)",
                     False,
