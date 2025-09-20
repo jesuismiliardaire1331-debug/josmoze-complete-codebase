@@ -99,6 +99,54 @@ class BlogManager:
             "message": "Article créé avec succès"
         }
         
+    def add_product_links_to_content(self, content: str) -> str:
+        """🚀 PHASE 3 - Ajouter liens produits cliquables dans le contenu blog"""
+        
+        # Définir les liens produits
+        product_links = {
+            "osmoseur": '<a href="/produit/osmoseur-premium" class="product-link-blog" style="color: #2563eb; text-decoration: underline; font-weight: 600;">système d\'osmose inverse</a>',
+            "osmose inverse": '<a href="/produit/osmoseur-premium" class="product-link-blog" style="color: #2563eb; text-decoration: underline; font-weight: 600;">osmose inverse</a>',
+            "purificateur d'eau": '<a href="/produit/osmoseur-premium" class="product-link-blog" style="color: #2563eb; text-decoration: underline; font-weight: 600;">purificateur d\'eau</a>',
+            "filtre à eau": '<a href="/produit/osmoseur-premium" class="product-link-blog" style="color: #2563eb; text-decoration: underline; font-weight: 600;">filtre à eau</a>',
+            "eau pure": '<a href="/produit/osmoseur-premium" class="product-link-blog" style="color: #2563eb; text-decoration: underline; font-weight: 600;">eau pure</a>',
+            "purification": '<a href="/produit/osmoseur-premium" class="product-link-blog" style="color: #2563eb; text-decoration: underline; font-weight: 600;">purification</a>',
+        }
+        
+        # Ajouter des boutons CTA dans le contenu
+        cta_section = """
+
+---
+
+## 🚀 **Solution Josmoze - Osmoseurs Professionels**
+
+Protégez votre famille avec nos solutions de purification d'eau :
+
+- 🔹 **[Osmoseur Essentiel (449€)](/produit/osmoseur-essentiel)** - Parfait pour 2-3 personnes
+- 🔸 **[Osmoseur Premium (549€)](/produit/osmoseur-premium)** - Notre bestseller pour familles 4-5 personnes
+- 🔹 **[Osmoseur Prestige (899€)](/produit/osmoseur-prestige)** - Solution professionnelle haut de gamme
+
+### ✨ Avantages Josmoze :
+- 🛡️ **Élimination 99% des contaminants**
+- 💧 **Eau pure illimitée**  
+- 🔧 **Installation professionnelle incluse**
+- 📞 **Support client expert**
+
+**[🛒 Découvrir nos osmoseurs](/produits) | [💬 Conseil gratuit](/contact)**
+
+---
+"""
+        
+        # Remplacer les termes par des liens cliquables
+        enriched_content = content
+        for term, link in product_links.items():
+            # Remplacer seulement les premières occurrences pour éviter la sur-optimisation
+            enriched_content = enriched_content.replace(term, link, 2)
+        
+        # Ajouter la section CTA à la fin
+        enriched_content += cta_section
+        
+        return enriched_content
+
     async def get_articles(
         self, 
         published_only: bool = True,
