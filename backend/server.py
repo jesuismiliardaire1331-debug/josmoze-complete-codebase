@@ -5435,6 +5435,40 @@ async def upload_media_file(
         logging.error(f"❌ Erreur upload administrateur: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/admin/get-uploaded-image/{filename}", tags=["Admin"])
+async def get_uploaded_image(filename: str):
+    """
+    🚀 PHASE 4 - Servir images uploadées via API (contournement routage frontend)
+    
+    Alternative pour environnement Kubernetes où routes statiques sont interceptées
+    """
+    import os
+    from fastapi.responses import FileResponse
+    
+    try:
+        file_path = f"/app/uploads/products/{filename}"
+        
+        if not os.path.exists(file_path):
+            raise HTTPException(404, "Image non trouvée")
+        
+        # Déterminer le type MIME selon l'extension
+        import mimetypes
+        mime_type, _ = mimetypes.guess_type(file_path)
+        if not mime_type or not mime_type.startswith('image/'):
+            mime_type = 'image/jpeg'  # Défaut
+        
+        return FileResponse(
+            path=file_path,
+            media_type=mime_type,
+            filename=filename
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur servir image uploadée: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/admin/media/library", tags=["Administration"])
 async def get_media_library(
     media_type: Optional[str] = None,
