@@ -463,9 +463,45 @@ const ChatBotV2 = () => {
     }
   };
 
+  // 🚀 PHASE 8 - Gestionnaire "Add to Cart" depuis Thomas
+  const handleAddToCart = (cartData) => {
+    if (cartData && cartData.id) {
+      try {
+        addToCart({
+          id: cartData.id,
+          name: cartData.name,
+          price: cartData.price,
+          image: cartData.image || "https://images.unsplash.com/photo-1628239532623-c035054bff4e?w=400&h=400&fit=crop&q=80",
+          quantity: 1
+        });
+        
+        // Feedback visuel dans le chat
+        const confirmationMsg = {
+          id: Date.now(),
+          text: `✅ **${cartData.name}** ajouté au panier !\n\n💰 Prix: ${formatPrice(cartData.price)}\n🛒 Total panier: ${cart.length + 1} article(s)\n\nVoulez-vous continuer vos achats ou finaliser votre commande ?`,
+          sender: 'assistant',
+          timestamp: new Date().toISOString(),
+          agent: 'thomas',
+          suggestions: ['🛒 Voir le panier', '💳 Finaliser commande', '💬 Continuer discussion']
+        };
+        
+        setMessages(prev => [...prev, confirmationMsg]);
+        console.log('🛒 THOMAS - Produit ajouté au panier:', cartData);
+      } catch (error) {
+        console.error('Erreur ajout panier depuis Thomas:', error);
+      }
+    }
+  };
+
   const handleSuggestionClick = (suggestion) => {
-    // Logique selon la suggestion
-    if (suggestion.includes('prix') || suggestion.includes('prices')) {
+    // Logique selon la suggestion Thomas V2
+    if (suggestion.includes('panier')) {
+      window.location.href = '/panier';
+      setIsOpen(false);
+    } else if (suggestion.includes('commande')) {
+      window.location.href = '/checkout';
+      setIsOpen(false);
+    } else if (suggestion.includes('prix') || suggestion.includes('prices')) {
       window.scrollTo({
         top: document.querySelector('#products-section')?.offsetTop || 0,
         behavior: 'smooth'
