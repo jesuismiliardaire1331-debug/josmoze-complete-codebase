@@ -5538,23 +5538,29 @@ async def get_blog_articles(
 
 @app.get("/api/blog/articles/{slug}", tags=["Blog"])
 async def get_blog_article_by_slug(slug: str, increment_views: bool = True):
-    """📖 Récupérer un article par son slug"""
+    """📖 Récupérer un article par son slug avec liens produits enrichis - PHASE 3"""
     try:
         blog_manager = await get_blog_manager()
         article = await blog_manager.get_article_by_slug(slug, increment_views)
         
         if not article:
             raise HTTPException(404, "Article non trouvé")
+        
+        # 🚀 PHASE 3: Enrichir le contenu avec liens produits
+        if "content" in article:
+            article["content"] = blog_manager.add_product_links_to_content(article["content"])
+            logging.info(f"✅ Article '{slug}' enrichi avec liens produits")
             
         return {
             "success": True,
-            "article": article
+            "article": article,
+            "enhanced_with_product_links": True  # Indicateur PHASE 3
         }
         
     except HTTPException:
         raise
     except Exception as e:
-        logging.error(f"❌ Erreur récupération article: {e}")
+        logging.error(f"❌ Erreur récupération article enrichi: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.put("/api/blog/articles/{article_id}", tags=["Blog"])
