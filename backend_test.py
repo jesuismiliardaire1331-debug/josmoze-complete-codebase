@@ -1579,6 +1579,7 @@ class BackendTester:
             
             working_endpoints = 0
             total_endpoints = len(endpoints_to_test)
+            endpoint_results = []
             
             for endpoint_info in endpoints_to_test:
                 endpoint = endpoint_info[0]
@@ -1594,8 +1595,12 @@ class BackendTester:
                     # Consider 200, 401 (auth required), 422 (validation error) as "working"
                     if response.status_code in [200, 401, 422]:
                         working_endpoints += 1
+                        endpoint_results.append(f"✅ {name}: {response.status_code}")
+                    else:
+                        endpoint_results.append(f"❌ {name}: {response.status_code}")
                         
-                except Exception:
+                except Exception as e:
+                    endpoint_results.append(f"❌ {name}: Exception - {str(e)}")
                     continue
             
             # Vérifications health check
