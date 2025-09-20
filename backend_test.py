@@ -909,6 +909,16 @@ class BackendTester:
                     "Validation code BIENVENUE10 (300€, B2C)",
                     False,
                     f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Validation code BIENVENUE10 (300€, B2C)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
     
     def test_referral_code_generation(self):
         """Test 3: Test génération code parrainage pour utilisateur test@josmoze.com"""
