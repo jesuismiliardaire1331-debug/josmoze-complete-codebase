@@ -384,7 +384,7 @@ const ChatBotV2 = () => {
 
     const userMsg = { 
       id: Date.now(), 
-      text: userMessage, 
+      text: userMessage && typeof userMessage === 'string' ? userMessage.trim() : 'Message utilisateur', 
       sender: 'user',
       timestamp: new Date().toISOString()
     };
