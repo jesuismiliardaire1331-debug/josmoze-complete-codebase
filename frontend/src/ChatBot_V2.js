@@ -343,8 +343,10 @@ const ChatBotV2 = () => {
       
       setMessages([
         {
-          type: 'bot',
-          content: welcome.initial,
+          id: Date.now(),
+          text: welcome.initial,
+          sender: 'assistant',
+          agent: 'thomas',
           timestamp: new Date().toISOString(),
           suggestions: welcome.suggestions
         }
