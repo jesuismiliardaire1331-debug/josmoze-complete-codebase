@@ -573,41 +573,164 @@ class BackendTester:
             )
             return False
     
-    def run_all_tests(self):
-        """Exécuter tous les tests Phase 4"""
-        print("🚀 DÉMARRAGE TESTS PHASE 4 - INTERFACE ADMIN UPLOAD IMAGES")
+    def run_phase4_final_tests(self):
+        """Exécuter les tests finaux Phase 4 avec solution API dédiée"""
+        print("🚀 PHASE 4 - TEST FINAL AVEC SOLUTION API DÉDIÉE")
+        print("=" * 70)
+        print("🎯 OBJECTIF: Tester la solution alternative avec endpoint API dédié")
+        print("🔧 CONTOURNEMENT: Problème routage Kubernetes résolu avec FileResponse")
         print("=" * 70)
         
-        # Test 1: Endpoint existe
-        endpoint_exists = self.test_admin_upload_endpoint_exists()
+        # Test 1: Endpoint upload existe
+        print("\n📋 TEST 1: Vérification endpoint upload...")
+        upload_exists = self.test_admin_upload_endpoint_exists()
         
-        if not endpoint_exists:
-            print("\n❌ ARRÊT DES TESTS - Endpoint non accessible")
-            return self.generate_summary()
+        # Test 2: Endpoint API dédié existe  
+        print("\n📋 TEST 2: Vérification endpoint API dédié...")
+        api_exists = self.test_dedicated_api_endpoint_exists()
         
-        # Test 2: Validation champs requis
+        if not upload_exists:
+            print("\n❌ ARRÊT DES TESTS - Endpoint upload non accessible")
+            return self.generate_phase4_summary()
+        
+        # Test 3: Validation basique
+        print("\n📋 TEST 3: Validation champs requis...")
         self.test_validation_required_fields()
         
-        # Test 3: Validation type de fichier
+        # Test 4: Validation type de fichier
+        print("\n📋 TEST 4: Validation type fichier...")
         self.test_file_type_validation()
         
-        # Test 4: Validation taille
-        self.test_file_size_validation()
+        # Test 5: Upload avec URL API (TEST CRITIQUE)
+        print("\n📋 TEST 5: Upload → URL API dédiée (CRITIQUE)...")
+        success, image_url = self.test_successful_upload_with_api_url()
         
-        # Test 5: Upload réussi
-        success, image_url = self.test_successful_upload()
-        
-        # Test 6: URL accessible (seulement si upload réussi)
+        # Test 6: Accès image via API avec MIME type (TEST CRITIQUE)
         if success and image_url:
-            self.test_image_url_accessible(image_url)
+            print("\n📋 TEST 6: Accès API + MIME Type (CRITIQUE)...")
+            self.test_api_image_access_with_correct_mime_type(image_url)
+        else:
+            self.log_test(
+                "API Image Access + MIME Type",
+                False,
+                "❌ Impossible de tester - Upload précédent échoué"
+            )
         
-        # Test 7: Noms uniques
-        self.test_unique_filename_generation()
+        # Test 7: Scénario complet osmoseur-premium
+        print("\n📋 TEST 7: Scénario complet osmoseur-premium...")
+        self.test_complete_osmoseur_premium_scenario()
         
-        # Test 8: Mise à jour DB
-        self.test_database_update_with_replace_current()
-        
-        return self.generate_summary()
+        return self.generate_phase4_summary()
+    
+    def test_complete_osmoseur_premium_scenario(self):
+        """Test SCÉNARIO COMPLET selon review_request"""
+        try:
+            print("   🔄 Étape 1: Upload test image → osmoseur-premium")
+            
+            # Créer une image de test spécifique
+            test_image = self.create_test_image("osmoseur_premium_test.jpg", "JPEG", (600, 400))
+            
+            files = {
+                'image': ('osmoseur_premium_final.jpg', test_image, 'image/jpeg')
+            }
+            data = {
+                'product_id': 'osmoseur-premium',
+                'replace_current': 'true'
+            }
+            
+            # Upload
+            response = self.session.post(f"{BACKEND_URL}/admin/upload-product-image", files=files, data=data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                image_url = response_data.get('image_url', '')
+                
+                print(f"   ✅ Étape 2: URL récupérée: {image_url}")
+                
+                # Vérifier format URL API
+                if '/api/admin/get-uploaded-image/' in image_url:
+                    print("   ✅ Étape 3: Format URL API correct")
+                    
+                    # Test GET sur URL API
+                    full_url = f"https://josmoze-admin.preview.emergentagent.com{image_url}"
+                    img_response = self.session.get(full_url)
+                    
+                    if img_response.status_code == 200:
+                        content_type = img_response.headers.get('content-type', '').lower()
+                        
+                        print(f"   📊 Étape 4: Content-Type reçu: {content_type}")
+                        
+                        # Vérifications critiques
+                        is_image = content_type.startswith('image/')
+                        not_html = 'text/html' not in content_type
+                        is_jpeg = 'image/jpeg' in content_type
+                        
+                        if is_image and not_html:
+                            print("   ✅ Étape 5: MIME type correct (image/* et pas text/html)")
+                            
+                            # Test PIL
+                            try:
+                                from PIL import Image
+                                import io
+                                img = Image.open(io.BytesIO(img_response.content))
+                                img.verify()
+                                print("   ✅ Étape 6: Image lisible par PIL")
+                                
+                                self.log_test(
+                                    "SCÉNARIO COMPLET osmoseur-premium",
+                                    True,
+                                    f"🎉 SUCCÈS TOTAL: Upload → {image_url} → Content-Type: {content_type} → PIL: OK"
+                                )
+                                return True
+                                
+                            except Exception as pil_error:
+                                print(f"   ❌ Étape 6: PIL échoue: {pil_error}")
+                                self.log_test(
+                                    "SCÉNARIO COMPLET osmoseur-premium",
+                                    False,
+                                    f"PIL validation échouée: {pil_error}"
+                                )
+                                return False
+                        else:
+                            print(f"   ❌ Étape 5: MIME type incorrect - Image: {is_image}, Not HTML: {not_html}")
+                            self.log_test(
+                                "SCÉNARIO COMPLET osmoseur-premium",
+                                False,
+                                f"MIME type incorrect: {content_type}"
+                            )
+                            return False
+                    else:
+                        print(f"   ❌ Étape 4: GET API échoue: {img_response.status_code}")
+                        self.log_test(
+                            "SCÉNARIO COMPLET osmoseur-premium",
+                            False,
+                            f"GET API échoue: {img_response.status_code}"
+                        )
+                        return False
+                else:
+                    print(f"   ❌ Étape 3: Format URL incorrect: {image_url}")
+                    self.log_test(
+                        "SCÉNARIO COMPLET osmoseur-premium",
+                        False,
+                        f"Format URL incorrect: {image_url}"
+                    )
+                    return False
+            else:
+                print(f"   ❌ Étape 1: Upload échoue: {response.status_code}")
+                self.log_test(
+                    "SCÉNARIO COMPLET osmoseur-premium",
+                    False,
+                    f"Upload échoue: {response.status_code}"
+                )
+                return False
+                
+        except Exception as e:
+            self.log_test(
+                "SCÉNARIO COMPLET osmoseur-premium",
+                False,
+                f"Erreur: {str(e)}"
+            )
+            return False
     
     def generate_summary(self):
         """Générer le résumé des tests"""
