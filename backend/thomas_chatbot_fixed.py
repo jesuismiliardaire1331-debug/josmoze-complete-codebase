@@ -211,40 +211,53 @@ class ThomasChatbot:
     
     def generate_response(self, user_message: str, user_context: Dict = None) -> Dict:
         """
-        Génère une réponse Thomas V2 avec nouveau prompt professionnel
+        🚀 THOMAS V2 - Génère réponse avec liens cliquables et CTA fonctionnels
         """
         try:
             message_lower = user_message.lower()
             
-            # ACCUEIL THOMAS V2
+            # Analyser contexte utilisateur pour personnalisation
+            context_analysis = self.get_user_context_analysis(user_message, 
+                user_context.get('conversation_history', []) if user_context else [])
+            
+            # ACCUEIL THOMAS V2 AMÉLIORÉ
             if any(word in message_lower for word in ["bonjour", "salut", "hello", "bonsoir", "coucou"]):
+                response_text = self.format_response_with_links_and_ctas(
+                    self.response_templates["accueil"],
+                    cta_actions=["view_product", "ask_question"]
+                )
                 return {
-                    "message": self.response_templates["accueil"],
+                    "message": response_text,
                     "suggestions": ["💰 Voir les prix", "🏠 Recommandation famille", "💧 Comment ça marche ?"]
                 }
             
-            # DEMANDE DE PRIX AVEC PRIX CORRECTS V2
+            # DEMANDE DE PRIX AVEC LIENS CLIQUABLES
             if any(word in message_lower for word in ["prix", "coût", "combien", "tarif", "budget"]):
                 prix_message = f"""💰 **Nos prix osmoseurs Josmoze** :
 
-🔹 **Osmoseur Essentiel** : **449€**
+🔹 **<a href="{self.product_links["essentiel"]}" class="product-link">Osmoseur Essentiel (449€)</a>**
    👨‍👩‍👧 Familles 2-3 personnes, efficace
 
-🔸 **Osmoseur Premium** : **549€** ⭐ *Le plus populaire*
+🔸 **<a href="{self.product_links["premium"]}" class="product-link">Osmoseur Premium (549€)</a>** ⭐ *Le plus populaire*
    👨‍👩‍👧‍👦 Familles 4-5 personnes, technologie avancée
 
-🔹 **Osmoseur Prestige** : **899€**
+🔹 **<a href="{self.product_links["prestige"]}" class="product-link">Osmoseur Prestige (899€)</a>**
    🏢 Solution professionnelle, écran tactile
 
-🚿 **Filtre Douche** : **39.90€**
+🚿 **<a href="{self.product_links["filtre-douche"]}" class="product-link">Filtre Douche (39.90€)</a>**
    ✨ Complément bien-être peau/cheveux
 
 {self.response_templates["objection_prix"]}
 
 {self.response_templates["call_to_action"][0]}"""
                 
+                formatted_response = self.format_response_with_links_and_ctas(
+                    prix_message,
+                    cta_actions=["get_quote", "ask_question"]
+                )
+                
                 return {
-                    "message": prix_message,
+                    "message": formatted_response,
                     "suggestions": ["🛒 Ajouter au panier", "❓ Plus d'infos", "📞 Parler à un expert"]
                 }
             
