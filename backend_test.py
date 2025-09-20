@@ -1307,16 +1307,6 @@ class BackendTester:
                 f"❌ Erreur: {str(e)}"
             )
             return False, None
-                False,
-                f"❌ Erreur: {str(e)}"
-            )
-            return False, None
-            self.log_test(
-                "Validation structure réponse Phase 8",
-                False,
-                f"Erreur: {str(e)}"
-            )
-            return False, None
         
     def log_test(self, test_name: str, success: bool, details: str = "", response_data: Any = None):
         """Log test results"""
