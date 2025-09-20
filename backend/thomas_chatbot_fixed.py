@@ -125,8 +125,8 @@ class ThomasChatbot:
             "5️⃣ Stockage : Réservoir eau pure toujours disponible"
         ]
     
-    def format_response_with_links_and_ctas(self, text: str, product_key: str = None, cta_actions: List[str] = None) -> str:
-        """🚀 THOMAS V2 - Formatter réponse avec liens cliquables et boutons CTA"""
+    def format_response_with_links_and_ctas(self, text: str, product_key: str = None, cta_actions: List[str] = None) -> Dict:
+        """🚀 THOMAS V2 COMMERCIAL - Formatter réponse avec liens cliquables et données panier"""
         
         # Ajouter liens cliquables aux produits mentionnés
         formatted_text = text
@@ -147,13 +147,34 @@ class ThomasChatbot:
             if mention in formatted_text and '<a href=' not in formatted_text.replace(mention, ''):
                 formatted_text = formatted_text.replace(mention, link, 1)  # Une seule occurrence
         
+        # 🚀 NOUVEAUTÉ PHASE 8 - Données panier pour "Add to Cart" fonctionnel
+        cart_data = None
+        if product_key and product_key in self.osmoseurs_catalog:
+            product_info = self.osmoseurs_catalog[product_key]
+            
+            # Mapping des clés internes vers IDs de base de données
+            product_id_mapping = {
+                "osmoseur-essentiel": "osmoseur-essentiel",
+                "osmoseur-premium": "osmoseur-premium", 
+                "osmoseur-prestige": "osmoseur-prestige",
+                "filtre-douche": "purificateur-portable-hydrogene"  # Ajustement selon la base de données
+            }
+            
+            cart_data = {
+                "id": product_id_mapping.get(product_key, product_key),
+                "name": product_info["name"],
+                "price": product_info["price"],
+                "image": "https://images.unsplash.com/photo-1628239532623-c035054bff4e?w=400&h=400&fit=crop&q=80",  # Image par défaut
+                "quantity": 1
+            }
+        
         # Ajouter boutons CTA si spécifié
         if cta_actions:
             cta_html = "\n\n<div class='thomas-cta-buttons' style='margin-top: 15px;'>\n"
             for action in cta_actions:
                 if action in self.cta_buttons:
                     if action == "add_to_cart" and product_key:
-                        cta_html += f'  <button class="cta-button add-to-cart" data-product="{product_key}" style="margin: 5px; padding: 8px 15px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer;">{self.cta_buttons[action]}</button>\n'
+                        cta_html += f'  <button class="cta-button add-to-cart thomas-add-to-cart" data-product-id="{cart_data["id"] if cart_data else product_key}" style="margin: 5px; padding: 8px 15px; background: #10b981; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: 600;">{self.cta_buttons[action]}</button>\n'
                     elif action == "view_product" and product_key:
                         cta_html += f'  <a href="{self.product_links.get(product_key, "#")}" class="cta-button view-product" style="display: inline-block; margin: 5px; padding: 8px 15px; background: #059669; color: white; text-decoration: none; border-radius: 5px;">{self.cta_buttons[action]}</a>\n'
                     elif action == "ask_question":
@@ -163,7 +184,12 @@ class ThomasChatbot:
             cta_html += "</div>"
             formatted_text += cta_html
         
-        return formatted_text
+        # Retourner un dictionnaire avec le texte formaté et les données panier
+        return {
+            "formatted_text": formatted_text,
+            "cart_data": cart_data,
+            "product_recommended": product_key
+        }
 
     def get_user_context_analysis(self, message: str, conversation_history: List = None) -> Dict:
         """🚀 THOMAS V2 - Analyser contexte utilisateur pour recommandations personnalisées"""
