@@ -275,7 +275,7 @@ const AIUploadAgent = () => {
                   </div>
                   
                   <p className="mt-4 text-green-700">
-                    {result.data.message}
+                    {result.data.message || result.message}
                   </p>
                 </div>
               ) : (
@@ -283,12 +283,113 @@ const AIUploadAgent = () => {
                   <div className="flex items-center space-x-2 mb-2">
                     <span className="text-2xl">❌</span>
                     <h3 className="text-lg font-semibold text-red-800">
-                      Erreur d'import
+                      Erreur d'analyse
                     </h3>
                   </div>
                   <p className="text-red-700">{result.error}</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* PHASE 2: Interface révolutionnaire de sélection d'images */}
+          {showImageSelector && extractedImages.length > 0 && (
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-xl font-bold text-gray-800 flex items-center">
+                    🎨 Sélection d'images révolutionnaire
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {extractedImages.length} images extraites • {selectedImages.length} sélectionnées
+                  </p>
+                </div>
+                
+                <div className="flex space-x-2">
+                  <button
+                    onClick={selectAllImages}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm"
+                  >
+                    ✅ Tout sélectionner
+                  </button>
+                  <button
+                    onClick={deselectAllImages}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                  >
+                    ❌ Tout désélectionner
+                  </button>
+                </div>
+              </div>
+
+              {/* Grille d'images avec coches */}
+              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
+                {extractedImages.map((imageUrl, index) => (
+                  <div 
+                    key={index}
+                    className={`relative cursor-pointer rounded-lg overflow-hidden transition-all duration-200 transform hover:scale-105 ${
+                      selectedImages.includes(imageUrl) 
+                        ? 'ring-4 ring-green-400 shadow-lg' 
+                        : 'hover:ring-2 hover:ring-blue-300'
+                    }`}
+                    onClick={() => toggleImageSelection(imageUrl)}
+                  >
+                    {/* Image miniature */}
+                    <div className="aspect-square bg-gray-200 flex items-center justify-center">
+                      <img
+                        src={imageUrl}
+                        alt={`Produit ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Y3ZjdmNyIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZTwvdGV4dD48L3N2Zz4=';
+                        }}
+                        loading="lazy"
+                      />
+                    </div>
+                    
+                    {/* Coche de sélection */}
+                    <div className={`absolute top-2 right-2 w-6 h-6 rounded-full flex items-center justify-center transition-all ${
+                      selectedImages.includes(imageUrl)
+                        ? 'bg-green-500 text-white'
+                        : 'bg-black bg-opacity-30 text-white hover:bg-black hover:bg-opacity-50'
+                    }`}>
+                      {selectedImages.includes(imageUrl) ? '✓' : index + 1}
+                    </div>
+                    
+                    {/* Overlay sur sélection */}
+                    {selectedImages.includes(imageUrl) && (
+                      <div className="absolute inset-0 bg-green-400 bg-opacity-20 flex items-center justify-center">
+                        <div className="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold">
+                          SÉLECTIONNÉE
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Bouton d'import révolutionnaire */}
+              <div className="text-center">
+                <button
+                  onClick={handleImportSelected}
+                  disabled={selectedImages.length === 0 || importingSelected}
+                  className={`px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 ${
+                    selectedImages.length === 0 || importingSelected
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-green-500 to-blue-600 text-white hover:from-green-600 hover:to-blue-700 shadow-lg'
+                  }`}
+                >
+                  {importingSelected 
+                    ? '🔄 Import en cours...' 
+                    : `🚀 Importer ${selectedImages.length} image${selectedImages.length > 1 ? 's' : ''} sélectionnée${selectedImages.length > 1 ? 's' : ''}`
+                  }
+                </button>
+                
+                {selectedImages.length > 0 && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    💡 Ces images seront ajoutées directement à votre fiche produit
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </div>
