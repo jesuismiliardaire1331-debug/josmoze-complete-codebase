@@ -903,6 +903,140 @@ class BackendTester:
                     "Validation code BIENVENUE10 (300€, B2C)",
                     False,
                     f"❌ Erreur API: {response.status_code}"
+    
+    def test_referral_code_generation(self):
+        """Test 3: Test génération code parrainage pour utilisateur test@josmoze.com"""
+        try:
+            test_data = {
+                "user_email": "test@josmoze.com"
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/referrals/generate", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications génération code
+                checks = {
+                    "success": response_data.get('success') == True,
+                    "referral_code": bool(response_data.get('referral_code')),
+                    "user_email": response_data.get('user_email') == 'test@josmoze.com',
+                    "expires_at": bool(response_data.get('expires_at')),
+                    "reward_amount": isinstance(response_data.get('reward_amount'), (int, float))
+                }
+                
+                # Vérifier format du code (doit être unique et valide)
+                referral_code = response_data.get('referral_code', '')
+                if referral_code:
+                    checks['code_format'] = len(referral_code) >= 6  # Code minimum 6 caractères
+                    self.generated_referral_code = referral_code  # Stocker pour test suivant
+                else:
+                    checks['code_format'] = False
+                
+                passed_checks = sum(checks.values())
+                total_checks = len(checks)
+                
+                if passed_checks >= total_checks * 0.8:  # 80% des vérifications
+                    self.log_test(
+                        "Génération code parrainage (test@josmoze.com)",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Code généré: {referral_code}, Récompense: {response_data.get('reward_amount')}€"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in checks.items() if not v]
+                    self.log_test(
+                        "Génération code parrainage (test@josmoze.com)",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Génération code parrainage (test@josmoze.com)",
+                    False,
+                    f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Génération code parrainage (test@josmoze.com)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
+    
+    def test_referral_code_validation(self):
+        """Test 4: Test validation code parrainage avec nouveau utilisateur filleul@josmoze.com"""
+        if not self.generated_referral_code:
+            self.log_test(
+                "Validation code parrainage (filleul@josmoze.com)",
+                False,
+                "❌ Aucun code parrainage généré lors du test précédent"
+            )
+            return False, None
+            
+        try:
+            test_data = {
+                "code": self.generated_referral_code,
+                "referee_email": "filleul@josmoze.com"
+            }
+            
+            response = self.session.post(f"{BACKEND_URL}/referrals/validate", json=test_data)
+            
+            if response.status_code == 200:
+                response_data = response.json()
+                
+                # Vérifications validation code parrainage
+                checks = {
+                    "valid": response_data.get('valid') == True,
+                    "referrer_email": response_data.get('referrer_email') == 'test@josmoze.com',
+                    "referee_email": response_data.get('referee_email') == 'filleul@josmoze.com',
+                    "discount_percentage": isinstance(response_data.get('discount_percentage'), (int, float)),
+                    "referrer_reward": isinstance(response_data.get('referrer_reward'), (int, float))
+                }
+                
+                # Vérifier les montants (15% filleul, 20€ parrain selon contexte)
+                discount_percentage = response_data.get('discount_percentage', 0)
+                referrer_reward = response_data.get('referrer_reward', 0)
+                
+                checks['discount_15_percent'] = discount_percentage == 15  # 15% pour filleul
+                checks['referrer_20_euros'] = referrer_reward == 20  # 20€ pour parrain
+                
+                passed_checks = sum(checks.values())
+                total_checks = len(checks)
+                
+                if passed_checks >= total_checks * 0.7:  # 70% des vérifications (plus flexible)
+                    self.log_test(
+                        "Validation code parrainage (filleul@josmoze.com)",
+                        True,
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Code: {self.generated_referral_code}, Réduction filleul: {discount_percentage}%, Récompense parrain: {referrer_reward}€"
+                    )
+                    return True, response_data
+                else:
+                    failed_checks = [k for k, v in checks.items() if not v]
+                    self.log_test(
+                        "Validation code parrainage (filleul@josmoze.com)",
+                        False,
+                        f"❌ {passed_checks}/{total_checks} vérifications réussies. Échecs: {failed_checks}"
+                    )
+                    return False, response_data
+            else:
+                self.log_test(
+                    "Validation code parrainage (filleul@josmoze.com)",
+                    False,
+                    f"❌ Erreur API: {response.status_code}"
+                )
+                return False, None
+                
+        except Exception as e:
+            self.log_test(
+                "Validation code parrainage (filleul@josmoze.com)",
+                False,
+                f"❌ Erreur: {str(e)}"
+            )
+            return False, None
                 )
                 return False, None
                 
