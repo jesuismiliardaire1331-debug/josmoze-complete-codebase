@@ -487,18 +487,12 @@ metadata:
 
 test_plan:
   current_focus:
+    - "PHASE 2 - Interface Révolutionnaire Extraction Images"
+    - "Agent AI Upload - Validation Fonctionnelle"
     - "Panier E-commerce Fonctionnel - Tests Critiques"
-    - "Product Database Cleanup - Remove Old Products"
-    - "CRM Routing Infrastructure - CRITIQUE"
-    - "Email Sequencer Osmoseur - Frontend Interface"
-    - "Suppression List / Opt-out Guardian - Frontend Interface"
-  stuck_tasks:
-    - "Panier E-commerce Fonctionnel - Tests Critiques"
-    - "CRM Routing Infrastructure - CRITIQUE"
-    - "Email Sequencer Osmoseur - Frontend Interface"
-    - "Suppression List / Opt-out Guardian - Frontend Interface"
+  stuck_tasks: []
   test_all: false
-  test_priority: "critical_first"
+  test_priority: "phase2_revolutionary_first"
 
   - task: "Email Sequencer Osmoseur - Backend Implementation"
     implemented: true
