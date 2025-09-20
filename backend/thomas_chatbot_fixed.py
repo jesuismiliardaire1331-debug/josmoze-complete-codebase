@@ -325,11 +325,14 @@ class ThomasChatbot:
         try:
             message_lower = user_message.lower()
             
-            # Analyser contexte utilisateur pour personnalisation
+            # 🚀 PHASE 8 - Analyser contexte utilisateur pour personnalisation avancée
             context_analysis = self.get_user_context_analysis(user_message, 
                 user_context.get('conversation_history', []) if user_context else [])
             
-            # ACCUEIL THOMAS V2 AMÉLIORÉ
+            # Obtenir recommandation intelligente basée sur le profil
+            smart_recommendation = self.get_smart_product_recommendation(context_analysis)
+            
+            # ACCUEIL THOMAS V2 AMÉLIORÉ AVEC RECOMMANDATION INTELLIGENTE
             if any(word in message_lower for word in ["bonjour", "salut", "hello", "bonsoir", "coucou"]):
                 formatted_response = self.format_response_with_links_and_ctas(
                     self.response_templates["accueil"],
