@@ -424,7 +424,7 @@ const ChatBotV2 = () => {
       if (response.data?.response) {
         const assistantMsg = {
           id: Date.now() + 1,
-          text: response.data.response,
+          text: response.data.response || "Désolé, je n'ai pas pu traiter votre demande. Pouvez-vous reformuler ?",
           sender: 'assistant',
           timestamp: new Date().toISOString(),
           agent: 'thomas',
@@ -432,7 +432,7 @@ const ChatBotV2 = () => {
           cartData: response.data.cart_data,
           productRecommended: response.data.product_recommended,
           userAnalysis: response.data.user_analysis,
-          suggestions: response.data.suggestions
+          suggestions: response.data.suggestions || []
         };
         
         setTimeout(() => {
