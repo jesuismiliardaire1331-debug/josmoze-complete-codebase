@@ -126,12 +126,20 @@ const AppProvider = ({ children }) => {
     setShowQuestionnaire(false);
     localStorage.setItem('hasSeenQuestionnaire', 'true');
   };
+  
+  const openQuestionnaire = () => {
+    setShowQuestionnaire(true);
+  };
 
   const handleQuestionnaireRecommendation = (recommendation) => {
     console.log('🎯 Recommandation reçue:', recommendation);
     setRecommendations(prev => [...prev, recommendation]);
     handleQuestionnaireClose();
   };
+
+  // Missing properties that App.js components expect
+  const updateCartQuantity = updateQuantity; // Alias for compatibility
+  const loading = false; // Add loading state
 
   return (
     <AppContext.Provider value={{
