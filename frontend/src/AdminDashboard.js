@@ -181,6 +181,19 @@ const AdminDashboard = () => {
               </button>
 
               <button
+                onClick={() => navigate('/admin/upload-images')}
+                className="w-full text-left p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">🖼️</span>
+                  <div>
+                    <p className="font-medium text-green-900">Upload Images PDF - PHASE 4</p>
+                    <p className="text-sm text-green-600">Remplacer images Unsplash par vraies images</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
                 className="w-full text-left p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
               >
                 <div className="flex items-center space-x-3">
