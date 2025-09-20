@@ -1,14 +1,21 @@
 import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from './context/AppContext';
+import ChatBotV2 from "./ChatBot_V2";
 
-// Minimal App to test what's breaking
+// Test with just the chatbot to resolve BUG 1
 const AppMinimal = () => {
   return (
     <AppProvider>
-      <div style={{padding: '20px'}}>
-        <h1>🎉 APP IS WORKING!</h1>
-        <p>If you see this, the basic app structure is functional</p>
-      </div>
+      <BrowserRouter>
+        <div style={{padding: '20px', minHeight: '100vh'}}>
+          <h1>🎉 JOSMOZE OSMOSEURS</h1>
+          <p>Minimal app with Thomas chatbot</p>
+          
+          {/* Thomas Chatbot - THE FIX FOR BUG 1 */}
+          <ChatBotV2 />
+        </div>
+      </BrowserRouter>
     </AppProvider>
   );
 };
