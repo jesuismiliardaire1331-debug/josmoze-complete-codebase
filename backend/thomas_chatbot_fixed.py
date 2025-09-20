@@ -131,7 +131,7 @@ class ThomasChatbot:
         # Ajouter liens cliquables aux produits mentionnés
         formatted_text = text
         
-        # Remplacer mentions produits par liens cliquables
+        # Remplacer mentions produits par liens cliquables (éviter double remplacement)
         product_replacements = {
             "Osmoseur Essentiel": f'<a href="{self.product_links["essentiel"]}" class="product-link">Osmoseur Essentiel (449€)</a>',
             "Osmoseur Premium": f'<a href="{self.product_links["premium"]}" class="product-link">Osmoseur Premium (549€)</a>',
