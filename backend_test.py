@@ -2186,8 +2186,8 @@ class BackendTester:
 if __name__ == "__main__":
     tester = BackendTester()
     
-    # Run PHASE 8 tests for Thomas Chatbot Commercial V2
-    summary = tester.run_phase8_thomas_commercial_tests()
+    # Run PHASE 9 tests for Promotions and Referrals System
+    summary = tester.run_phase9_promotions_referrals_tests()
     
     # Exit code based on success
     exit_code = 0 if summary["overall_success"] else 1
