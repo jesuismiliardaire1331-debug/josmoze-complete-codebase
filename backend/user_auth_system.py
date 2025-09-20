@@ -210,7 +210,7 @@ class UserAuthSystem:
                 "email_verified": False,  # À implémenter si nécessaire
                 "total_orders": 0,
                 "total_spent": 0.0,
-                "referral_code": None,
+                # Ne pas insérer referral_code: None pour éviter le conflit d'index
                 "created_at": datetime.utcnow(),
                 "last_login": None,
                 "address": None
