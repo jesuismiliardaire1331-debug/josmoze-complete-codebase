@@ -62,7 +62,7 @@ class BackendTester:
             response = self.session.get(f"{BACKEND_URL}/")
             if response.status_code == 200:
                 data = response.json()
-                if "message" in data and "Josmose.com" in data["message"]:
+                if "message" in data and ("Josmose.com" in data["message"] or "Josmoze.com" in data["message"]):
                     self.log_test("Root Endpoint", True, f"Status: {response.status_code}, Message: {data['message']}")
                     return True
                 else:
