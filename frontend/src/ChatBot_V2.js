@@ -540,7 +540,13 @@ const ChatBotV2 = () => {
                   ? 'bg-blue-500 text-white' 
                   : 'bg-gray-100 text-gray-800'
               }`}>
-                <div className="text-sm whitespace-pre-line">{message.text}</div>
+                {/* 🚀 THOMAS V2 - Support HTML pour liens et boutons CTA */}
+                <div 
+                  className="text-sm whitespace-pre-line thomas-message"
+                  dangerouslySetInnerHTML={{
+                    __html: message.text.replace(/\n/g, '<br/>')
+                  }}
+                />
                 
                 {/* Suggestions */}
                 {message.suggestions && message.suggestions.length > 0 && (
