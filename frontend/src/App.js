@@ -58,13 +58,18 @@ const AppProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(true);
   const [customerType, setCustomerType] = useState("B2C"); // B2C or B2B
-  // 🎯 QUESTIONNAIRE - Initialisation avec vérification localStorage
+  // 🎯 QUESTIONNAIRE - Initialisation avec vérification localStorage (PHASE 8 - Optimisé pour chatbot)
   const [showQuestionnaire, setShowQuestionnaire] = useState(() => {
+    // 🚀 PHASE 8 - Désactiver temporairement pour tests Thomas Chatbot
     // Vérifier dès l'initialisation si l'utilisateur a déjà vu le questionnaire
     try {
       const hasSeenThisSession = sessionStorage.getItem('josmoze_questionnaire_shown');
       const hasSeenPermanent = localStorage.getItem('josmoze_questionnaire_seen');
-      console.log('🎯 Vérification initiale questionnaire:', { hasSeenThisSession, hasSeenPermanent });
+      
+      // Force disable for Phase 8 testing
+      const isTestingPhase8 = window.location.search.includes('phase8') || sessionStorage.getItem('phase8_testing');
+      
+      console.log('🎯 Vérification initiale questionnaire:', { hasSeenThisSession, hasSeenPermanent, isTestingPhase8 });
       return false; // Ne jamais afficher par défaut
     } catch (error) {
       console.error('Error checking questionnaire status:', error);
