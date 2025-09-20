@@ -676,7 +676,7 @@ test_plan:
 
   - task: "PHASE 4 - Interface Admin Upload Images PDF"
     implemented: true
-    working: false
+    working: true
     file: "backend/server.py, frontend/src/AdminUploadImages.js"
     stuck_count: 1
     priority: "critical"
