@@ -121,6 +121,23 @@ const PromotionsManager = () => {
 
   return (
     <div className="promotions-manager p-6 bg-white rounded-lg shadow-lg">
+      {/* Messages */}
+      {message && (
+        <div className={`p-4 rounded-lg mb-6 ${
+          message.includes('✅') ? 'bg-green-100 text-green-800' :
+          message.includes('❌') ? 'bg-red-100 text-red-800' :
+          'bg-blue-100 text-blue-800'
+        }`}>
+          {message}
+          <button 
+            onClick={() => setMessage('')}
+            className="float-right text-lg font-bold ml-4"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
