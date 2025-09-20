@@ -293,6 +293,9 @@ const ChatBotV2 = () => {
   const messagesEndRef = useRef(null);
   const backendUrl = API_BASE;
   const { safeSetTimeout, isMounted } = useSafeCleanup();
+  
+  // 🚀 PHASE 8 - Intégration système panier
+  const { addToCart, cart, formatPrice } = useApp();
 
   // Messages d'accueil Thomas Expert Osmoseurs
   const welcomeMessages = {
