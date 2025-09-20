@@ -5491,6 +5491,79 @@ async def update_product_image(
         logging.error(f"❌ Erreur mise à jour image produit: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/admin/upload-product-image", tags=["Admin"])
+async def upload_product_image(request: Request):
+    """
+    🚀 PHASE 4 - Upload et remplacement image produit
+    
+    Remplace les images Unsplash par les vraies images du PDF
+    """
+    try:
+        form = await request.form()
+        image_file = form.get("image")
+        product_id = form.get("product_id")
+        replace_current = form.get("replace_current", "false").lower() == "true"
+        
+        if not image_file or not product_id:
+            raise HTTPException(400, "Image et product_id requis")
+        
+        # Valider le type de fichier
+        allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
+        if image_file.content_type not in allowed_types:
+            raise HTTPException(400, f"Type de fichier non supporté: {image_file.content_type}")
+        
+        # Valider la taille (max 5MB)
+        max_size = 5 * 1024 * 1024  # 5MB
+        image_content = await image_file.read()
+        if len(image_content) > max_size:
+            raise HTTPException(400, "Fichier trop volumineux (max 5MB)")
+        
+        # Générer nom de fichier unique
+        import uuid
+        file_extension = image_file.filename.split('.')[-1] if '.' in image_file.filename else 'jpg'
+        unique_filename = f"{product_id}_{uuid.uuid4().hex[:8]}.{file_extension}"
+        
+        # Créer le dossier uploads s'il n'existe pas
+        import os
+        upload_dir = "/app/uploads/products"
+        os.makedirs(upload_dir, exist_ok=True)
+        
+        # Sauvegarder le fichier
+        file_path = os.path.join(upload_dir, unique_filename)
+        with open(file_path, "wb") as f:
+            f.write(image_content)
+        
+        # URL de l'image (servie statiquement)
+        image_url = f"/uploads/products/{unique_filename}"
+        
+        # Si remplacement demandé, mettre à jour la base de données produits
+        if replace_current:
+            try:
+                # Mettre à jour le produit dans la base de données
+                await db.products.update_one(
+                    {"id": product_id},
+                    {"$set": {"image_url": image_url, "updated_at": datetime.utcnow().isoformat()}}
+                )
+                logging.info(f"✅ Image produit {product_id} mise à jour: {image_url}")
+            except Exception as e:
+                logging.warning(f"⚠️ Mise à jour produit échouée (fichier sauvé): {e}")
+        
+        return {
+            "success": True,
+            "message": f"Image uploadée avec succès pour {product_id}",
+            "image_url": image_url,
+            "filename": unique_filename,
+            "product_id": product_id,
+            "file_size": len(image_content),
+            "replaced": replace_current
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logging.error(f"❌ Erreur upload image produit: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Servir les fichiers statiques uploadés
 app.mount("/static", StaticFiles(directory="/app/backend/static"), name="static")
 
