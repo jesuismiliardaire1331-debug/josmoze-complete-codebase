@@ -732,8 +732,8 @@ class BackendTester:
             )
             return False
     
-    def generate_summary(self):
-        """Générer le résumé des tests"""
+    def generate_phase4_summary(self):
+        """Générer le résumé des tests Phase 4 Final"""
         total_tests = len(self.test_results)
         passed_tests = sum(1 for result in self.test_results if result["success"])
         failed_tests = total_tests - passed_tests
@@ -741,7 +741,7 @@ class BackendTester:
         success_rate = (passed_tests / total_tests * 100) if total_tests > 0 else 0
         
         print("\n" + "=" * 70)
-        print("📊 RÉSUMÉ TESTS PHASE 4 - INTERFACE ADMIN UPLOAD IMAGES")
+        print("📊 RÉSUMÉ PHASE 4 - TEST FINAL AVEC SOLUTION API DÉDIÉE")
         print("=" * 70)
         print(f"Total des tests: {total_tests}")
         print(f"✅ Réussis: {passed_tests}")
@@ -753,19 +753,46 @@ class BackendTester:
             status = "✅" if result["success"] else "❌"
             print(f"{status} {result['test']}: {result['details']}")
         
-        # Déterminer le statut global
-        if success_rate >= 80:
-            overall_status = "🎉 PHASE 4 VALIDATION RÉUSSIE"
-            status_details = f"Interface admin upload images 100% fonctionnelle ({success_rate:.1f}% réussite)"
+        # Déterminer le statut global selon les critères Phase 4
+        if success_rate == 100:
+            overall_status = "🎉 PHASE 4 DÉFINITIVEMENT TERMINÉE"
+            status_details = f"Solution API dédiée 100% fonctionnelle - Problème routage résolu!"
+        elif success_rate >= 80:
+            overall_status = "✅ PHASE 4 QUASI-TERMINÉE"
+            status_details = f"Solution API fonctionne largement ({success_rate:.1f}% réussite)"
         elif success_rate >= 60:
             overall_status = "⚠️ PHASE 4 PARTIELLEMENT FONCTIONNELLE"
-            status_details = f"Quelques problèmes détectés ({success_rate:.1f}% réussite)"
+            status_details = f"Solution API partiellement opérationnelle ({success_rate:.1f}% réussite)"
         else:
-            overall_status = "❌ PHASE 4 VALIDATION ÉCHOUÉE"
-            status_details = f"Problèmes critiques détectés ({success_rate:.1f}% réussite)"
+            overall_status = "❌ PHASE 4 SOLUTION API ÉCHOUÉE"
+            status_details = f"Problèmes critiques avec solution API ({success_rate:.1f}% réussite)"
         
         print(f"\n{overall_status}")
         print(f"📊 {status_details}")
+        
+        # Messages spécifiques selon les résultats
+        critical_tests = [
+            "Upload image → URL API dédiée",
+            "API Image Access + MIME Type", 
+            "SCÉNARIO COMPLET osmoseur-premium"
+        ]
+        
+        critical_passed = sum(1 for result in self.test_results 
+                            if result["test"] in critical_tests and result["success"])
+        critical_total = sum(1 for result in self.test_results 
+                           if result["test"] in critical_tests)
+        
+        if critical_total > 0:
+            critical_rate = (critical_passed / critical_total * 100)
+            print(f"\n🎯 TESTS CRITIQUES: {critical_passed}/{critical_total} ({critical_rate:.1f}%)")
+            
+            if critical_rate == 100:
+                print("🚀 OBJECTIF ATTEINT: Solution API dédiée entièrement fonctionnelle!")
+                print("✅ Contournement Kubernetes réussi avec FileResponse")
+                print("✅ MIME type correct (image/* et non text/html)")
+                print("✅ Images servies correctement via API")
+            else:
+                print("⚠️ OBJECTIF PARTIEL: Quelques tests critiques échouent encore")
         
         return {
             "overall_success": success_rate >= 80,
@@ -773,6 +800,7 @@ class BackendTester:
             "total_tests": total_tests,
             "passed_tests": passed_tests,
             "failed_tests": failed_tests,
+            "critical_success_rate": critical_rate if critical_total > 0 else 0,
             "status": overall_status,
             "details": status_details,
             "test_results": self.test_results
