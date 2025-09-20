@@ -192,52 +192,131 @@ class ThomasChatbot:
         }
 
     def get_user_context_analysis(self, message: str, conversation_history: List = None) -> Dict:
-        """🚀 THOMAS V2 - Analyser contexte utilisateur pour recommandations personnalisées"""
+        """🚀 THOMAS V2 COMMERCIAL - Analyser contexte utilisateur pour recommandations personnalisées avancées"""
         
         analysis = {
             "family_size": None,
             "budget_range": None,
             "concerns": [],
             "previous_questions": [],
-            "intent": "information"
+            "intent": "information",
+            "engagement_level": "low",
+            "purchase_readiness": 0,
+            "preferred_features": [],
+            "conversation_stage": "discovery"
         }
         
         message_lower = message.lower()
         
-        # Analyser taille famille
-        if any(word in message_lower for word in ["2", "couple", "deux"]):
+        # 🚀 PHASE 8 - Analyse avancée de l'historique de conversation
+        if conversation_history:
+            # Analyser l'évolution de l'engagement
+            question_count = len([msg for msg in conversation_history if msg.get('sender') == 'user'])
+            if question_count >= 5:
+                analysis["engagement_level"] = "high"
+            elif question_count >= 3:
+                analysis["engagement_level"] = "medium"
+            
+            # Déterminer le stade de la conversation
+            all_user_messages = " ".join([msg.get('text', '').lower() for msg in conversation_history if msg.get('sender') == 'user'])
+            
+            if any(word in all_user_messages for word in ["acheter", "commander", "prendre", "décider"]):
+                analysis["conversation_stage"] = "purchase_intent"
+                analysis["purchase_readiness"] = 80
+            elif any(word in all_user_messages for word in ["comparer", "différence", "lequel", "choisir"]):
+                analysis["conversation_stage"] = "consideration"
+                analysis["purchase_readiness"] = 60
+            elif any(word in all_user_messages for word in ["prix", "coût", "budget"]):
+                analysis["conversation_stage"] = "evaluation"
+                analysis["purchase_readiness"] = 40
+            else:
+                analysis["conversation_stage"] = "discovery"
+                analysis["purchase_readiness"] = 20
+        
+        # Analyser taille famille avec plus de précision
+        if any(word in message_lower for word in ["2", "couple", "deux", "petit foyer"]):
             analysis["family_size"] = "2-3"
-        elif any(word in message_lower for word in ["4", "quatre", "famille"]):
+        elif any(word in message_lower for word in ["4", "quatre", "famille", "enfants"]):
             analysis["family_size"] = "4-5"
-        elif any(word in message_lower for word in ["5", "6", "grand", "nombreux"]):
+        elif any(word in message_lower for word in ["5", "6", "grand", "nombreux", "grande famille"]):
             analysis["family_size"] = "5+"
         
-        # Analyser budget
+        # Analyser budget avec plus de nuances
         if any(word in message_lower for word in ["budget", "cher", "prix", "coût"]):
-            if any(word in message_lower for word in ["serré", "limité", "économique"]):
+            if any(word in message_lower for word in ["serré", "limité", "économique", "pas cher", "abordable"]):
                 analysis["budget_range"] = "budget_serre"
-            elif any(word in message_lower for word in ["élevé", "premium", "haut"]):
+            elif any(word in message_lower for word in ["élevé", "premium", "haut", "qualité", "meilleur"]):
                 analysis["budget_range"] = "premium"
             else:
                 analysis["budget_range"] = "moyen"
         
-        # Analyser préoccupations
-        if any(word in message_lower for word in ["santé", "enfant", "bébé"]):
+        # Analyser préoccupations spécifiques
+        if any(word in message_lower for word in ["santé", "enfant", "bébé", "famille"]):
             analysis["concerns"].append("health")
-        if any(word in message_lower for word in ["goût", "odeur", "chlore"]):
+        if any(word in message_lower for word in ["goût", "odeur", "chlore", "calcaire"]):
             analysis["concerns"].append("taste")
-        if any(word in message_lower for word in ["économie", "bouteille", "plastique"]):
+        if any(word in message_lower for word in ["économie", "bouteille", "plastique", "environnement"]):
             analysis["concerns"].append("economy")
+        if any(word in message_lower for word in ["installation", "pose", "technique"]):
+            analysis["concerns"].append("installation")
+        if any(word in message_lower for word in ["garantie", "service", "maintenance"]):
+            analysis["concerns"].append("service")
         
-        # Analyser intention
-        if any(word in message_lower for word in ["acheter", "commander", "panier"]):
+        # Analyser les caractéristiques préférées
+        if any(word in message_lower for word in ["facile", "simple", "pratique"]):
+            analysis["preferred_features"].append("ease_of_use")
+        if any(word in message_lower for word in ["technologie", "avancé", "moderne", "intelligent"]):
+            analysis["preferred_features"].append("advanced_tech")
+        if any(word in message_lower for word in ["efficace", "performance", "puissant"]):
+            analysis["preferred_features"].append("performance")
+        if any(word in message_lower for word in ["compact", "petit", "encombrement"]):
+            analysis["preferred_features"].append("compact_size")
+        
+        # Analyser intention avec plus de précision
+        if any(word in message_lower for word in ["acheter", "commander", "panier", "prendre", "veux"]):
             analysis["intent"] = "purchase"
-        elif any(word in message_lower for word in ["comparer", "différence"]):
+            analysis["purchase_readiness"] = max(analysis["purchase_readiness"], 70)
+        elif any(word in message_lower for word in ["comparer", "différence", "versus", "ou"]):
             analysis["intent"] = "comparison"
-        elif any(word in message_lower for word in ["hésite", "réfléchir"]):
+        elif any(word in message_lower for word in ["hésite", "réfléchir", "pas sûr", "doute"]):
             analysis["intent"] = "hesitation"
+        elif any(word in message_lower for word in ["prix", "coût", "tarif", "combien"]):
+            analysis["intent"] = "pricing_inquiry"
         
         return analysis
+    
+    def get_smart_product_recommendation(self, user_analysis: Dict) -> str:
+        """🚀 PHASE 8 - Recommandation intelligente basée sur l'analyse utilisateur"""
+        
+        # Matrice de recommandation basée sur le profil utilisateur
+        if user_analysis["family_size"] == "5+":
+            return "osmoseur-prestige"
+        elif user_analysis["family_size"] == "4-5":
+            if user_analysis["budget_range"] == "premium":
+                return "osmoseur-prestige"
+            else:
+                return "osmoseur-premium"
+        elif user_analysis["family_size"] == "2-3":
+            if user_analysis["budget_range"] == "budget_serre":
+                return "osmoseur-essentiel"
+            elif user_analysis["budget_range"] == "premium":
+                return "osmoseur-premium"
+            else:
+                return "osmoseur-essentiel"
+        
+        # Recommandation par défaut basée sur les préoccupations
+        if "health" in user_analysis["concerns"] and user_analysis["purchase_readiness"] > 50:
+            return "osmoseur-premium"  # Meilleur équilibre santé/prix
+        elif "economy" in user_analysis["concerns"]:
+            return "osmoseur-essentiel"  # Le plus économique
+        elif "advanced_tech" in user_analysis["preferred_features"]:
+            return "osmoseur-prestige"  # Le plus technologique
+        
+        # Recommandation par défaut selon l'engagement
+        if user_analysis["engagement_level"] == "high":
+            return "osmoseur-premium"  # Notre bestseller pour les clients engagés
+        else:
+            return "osmoseur-essentiel"  # Point d'entrée pour découverte
     
     def generate_response(self, user_message: str, user_context: Dict = None) -> Dict:
         """
