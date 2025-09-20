@@ -1239,31 +1239,59 @@ class BackendTester:
             self.log_test("Product Stock Info", False, f"Exception: {str(e)}")
             return False
 
-    # ========== AGENT AI UPLOAD - TESTS CRITIQUES ==========
+    # ========== PHASE 2 - INTERFACE RÉVOLUTIONNAIRE EXTRACTION IMAGES ==========
     
-    def test_ai_product_scraper_endpoint_exists(self):
-        """Test POST /api/ai-product-scraper/analyze - Endpoint exists"""
+    def test_ai_product_scraper_enhanced_extraction(self):
+        """🚀 PHASE 2 - Test POST /api/ai-product-scraper/analyze - Enhanced extraction 10-15 images"""
         try:
-            # Test with minimal data to check if endpoint exists
+            # Test with AliExpress URL as specified in review request
             test_data = {"url": "https://www.aliexpress.com/item/1005006854441059.html"}
             
             response = self.session.post(
                 f"{BACKEND_URL}/ai-product-scraper/analyze",
                 json=test_data,
-                headers={"Content-Type": "application/json"}
+                headers={"Content-Type": "application/json"},
+                timeout=30
             )
             
-            # Endpoint should exist (not 404)
-            if response.status_code != 404:
-                self.log_test("AI Product Scraper - Endpoint Exists", True, 
-                            f"✅ Endpoint exists (status: {response.status_code})")
-                return True
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check required fields for PHASE 2
+                required_fields = ["success", "title", "price", "images", "platform", "product_data"]
+                
+                if all(field in data for field in required_fields):
+                    images_count = data.get("images", 0)
+                    title = data.get("title", "")
+                    price = data.get("price", 0)
+                    platform = data.get("platform", "")
+                    
+                    # PHASE 2 REQUIREMENT: Should return 10-15 images (not just 3)
+                    if images_count >= 10 and images_count <= 15:
+                        self.log_test("🚀 PHASE 2 - Enhanced Extraction 10-15 Images", True, 
+                                    f"✅ RÉVOLUTIONNAIRE! {images_count} images extraites (vs 3 avant), "
+                                    f"Titre: '{title[:30]}...', Prix: {price}€, Plateforme: {platform}")
+                        return True
+                    elif images_count >= 3:
+                        self.log_test("🚀 PHASE 2 - Enhanced Extraction 10-15 Images", False, 
+                                    f"⚠️ Seulement {images_count} images extraites (attendu: 10-15 pour PHASE 2). "
+                                    f"L'amélioration révolutionnaire n'est pas encore active.")
+                        return False
+                    else:
+                        self.log_test("🚀 PHASE 2 - Enhanced Extraction 10-15 Images", False, 
+                                    f"❌ Extraction insuffisante: {images_count} images (minimum: 10)")
+                        return False
+                else:
+                    missing = [f for f in required_fields if f not in data]
+                    self.log_test("🚀 PHASE 2 - Enhanced Extraction 10-15 Images", False, 
+                                f"Missing fields: {missing}", data)
+                    return False
             else:
-                self.log_test("AI Product Scraper - Endpoint Exists", False, 
-                            "❌ Endpoint not found (404)")
+                self.log_test("🚀 PHASE 2 - Enhanced Extraction 10-15 Images", False, 
+                            f"Status: {response.status_code}", response.text)
                 return False
         except Exception as e:
-            self.log_test("AI Product Scraper - Endpoint Exists", False, f"Exception: {str(e)}")
+            self.log_test("🚀 PHASE 2 - Enhanced Extraction 10-15 Images", False, f"Exception: {str(e)}")
             return False
     
     def test_ai_product_scraper_aliexpress_analysis(self):
