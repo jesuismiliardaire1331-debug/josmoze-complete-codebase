@@ -5863,19 +5863,35 @@ async def get_supported_platforms():
 async def get_imported_products(limit: int = 20):
     """📦 Liste des produits importés par l'Agent AI"""
     try:
-        # Récupérer de la base de données
+        # Try to get from imported_products collection first (PHASE 2)
+        try:
+            cursor = db.imported_products.find().sort("imported_at", -1).limit(limit)
+            imported_products = await cursor.to_list(length=None)
+            
+            # Convert ObjectId to string for JSON serialization
+            for product in imported_products:
+                if "_id" in product:
+                    product["_id"] = str(product["_id"])
+            
+            if imported_products:
+                return imported_products
+                
+        except Exception as e:
+            logging.warning(f"⚠️ imported_products collection not accessible: {e}")
+        
+        # Fallback to products collection
         cursor = db.products.find(
             {"source.import_method": "AI_SCRAPER"}
         ).sort("metadata.created_date", -1).limit(limit)
         
         imported_products = await cursor.to_list(length=None)
         
-        return {
-            "success": True,
-            "products": imported_products,
-            "count": len(imported_products),
-            "message": f"{len(imported_products)} produits importés par l'Agent AI"
-        }
+        # Convert ObjectId to string for JSON serialization
+        for product in imported_products:
+            if "_id" in product:
+                product["_id"] = str(product["_id"])
+        
+        return imported_products
         
     except Exception as e:
         logging.error(f"❌ Erreur récupération produits importés: {e}")
