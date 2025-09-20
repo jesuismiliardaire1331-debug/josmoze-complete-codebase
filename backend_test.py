@@ -656,12 +656,15 @@ class BackendTester:
                 
                 # Vérifications données panier
                 cart_data = response_data.get('cart_data', {})
+                if cart_data is None:
+                    cart_data = {}
+                    
                 cart_checks = {
                     "cart_data_exists": bool(cart_data),
-                    "product_id_correct": cart_data.get('id') == 'osmoseur-premium',
-                    "product_name": bool(cart_data.get('name')),
-                    "product_price": cart_data.get('price') == 549.0,
-                    "product_image": bool(cart_data.get('image'))
+                    "product_id_correct": cart_data.get('id') == 'osmoseur-premium' if cart_data else False,
+                    "product_name": bool(cart_data.get('name')) if cart_data else False,
+                    "product_price": cart_data.get('price') == 549.0 if cart_data else False,
+                    "product_image": bool(cart_data.get('image')) if cart_data else False
                 }
                 
                 all_checks = {**link_checks, **cta_checks, **cart_checks}
@@ -672,7 +675,7 @@ class BackendTester:
                     self.log_test(
                         "Test liens cliquables et données panier",
                         True,
-                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Cart ID: {cart_data.get('id')}, Prix: {cart_data.get('price')}€"
+                        f"✅ {passed_checks}/{total_checks} vérifications réussies. Cart ID: {cart_data.get('id') if cart_data else 'None'}, Prix: {cart_data.get('price') if cart_data else 'None'}€"
                     )
                     return True, response_data
                 else:
