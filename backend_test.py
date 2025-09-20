@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
 """
-🚀 TEST THOMAS V2 + PHASE 3 - VALIDATION COMPLÈTE
-Backend API Testing for Josmose.com - Thomas V2 Commercial Features + Phase 3 Blog Product Links
+🚀 PHASE 4 - TEST INTERFACE ADMIN UPLOAD IMAGES PDF
+Backend API Testing for Josmose.com - Admin Upload Images Interface
 
 TESTS REQUIS PAR ORDRE DE PRIORITÉ :
 
-✅ THOMAS V2 - FONCTIONNALITÉS COMMERCIALES :
-1. **Liens Cliquables** : Vérifier que "Osmoseur Premium 549€" devient un lien HTML cliquable
-2. **Boutons CTA** : Tester boutons "🛒 Ajouter au panier", "👀 Voir le produit", "❓ Poser une question"
-3. **Recommandations Personnalisées** : Vérifier logique selon contexte utilisateur
-4. **Format HTML** : Confirmer que le frontend affiche correctement les liens et boutons
+✅ PHASE 4 - INTERFACE ADMIN UPLOAD IMAGES :
+1. **Endpoint Backend** : POST `/api/admin/upload-product-image` avec validation
+2. **Interface Frontend** : Route `/admin/upload-images` accessible
+3. **Upload Fichiers** : Validation types (JPG, PNG, WebP) et taille (max 5MB)
+4. **Association Produits** : Mapping image → produit spécifique
+5. **Sauvegarde** : Stockage dans `/app/uploads/products/`
+6. **URL Statique** : Servir images via `/uploads/products/{filename}`
+7. **Base de Données** : Mise à jour produits avec replace_current=true
 
-✅ PHASE 3 - LIENS PRODUITS BLOG :
-1. **Enrichissement Automatique** : Vérifier que GET `/api/blog/articles/{slug}` enrichit le contenu
-2. **Liens Produits** : Confirmer que "osmoseur" devient lien cliquable vers produits
-3. **Section CTA** : Vérifier ajout automatique de la section promotionnelle
-4. **Performance** : S'assurer que l'enrichissement ne ralentit pas l'API
+✅ TESTS BACKEND CRITIQUES :
+1. **Validation** : `image` et `product_id` requis
+2. **Types Fichiers** : JPG, PNG, WebP autorisés
+3. **Taille Max** : 5MB maximum
+4. **Noms Uniques** : Génération UUID
+5. **Dossier Uploads** : Création automatique
+6. **JSON Response** : Structure success/image_url
+7. **Codes HTTP** : Gestion erreurs appropriés
 
-✅ TESTS CRITIQUES :
-1. **Thomas conversation** : "Quel osmoseur pour 4 personnes ?" → Doit retourner liens HTML + boutons CTA
-2. **Blog enrichi** : Récupérer article → Doit contenir liens produits + section CTA
-3. **Frontend HTML** : Vérifier que dangerouslySetInnerHTML affiche correctement les liens
-4. **Navigation** : Tester que les liens mènent aux bonnes pages produits
+✅ SIMULATION UPLOAD :
+1. **Fichier Test** : Créer image valide
+2. **Product ID** : Tester avec "osmoseur-premium"
+3. **Replace Current** : Vérifier replace_current=true
+4. **URL Accessible** : Confirmer URL retournée accessible
 """
 
 import requests
