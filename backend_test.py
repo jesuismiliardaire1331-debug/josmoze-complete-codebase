@@ -1307,12 +1307,6 @@ class BackendTester:
                 f"❌ Erreur: {str(e)}"
             )
             return False, None
-                )
-                return False, None
-                
-        except Exception as e:
-            self.log_test(
-                "Validation code BIENVENUE10 (300€, B2C)",
                 False,
                 f"❌ Erreur: {str(e)}"
             )
