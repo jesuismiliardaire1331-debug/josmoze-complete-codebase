@@ -161,9 +161,9 @@ class RegressionTester:
     def test_user_login(self):
         """Test /api/auth/login with valid credentials"""
         try:
-            # Try with manager credentials first
+            # Try with manager credentials first - use email field not username
             test_data = {
-                "username": "naima@josmoze.com",
+                "email": "naima@josmoze.com",
                 "password": "Naima@2024!Commerce"
             }
             
