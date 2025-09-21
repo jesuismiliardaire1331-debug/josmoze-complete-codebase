@@ -1849,7 +1849,7 @@ function App() {
     </div>}>
       <NotificationProvider>  
         <TranslationGuardian>
-          <AuthProvider>
+          <UserAuthProvider>
             <AppProvider>
               <div className="App min-h-screen flex flex-col">
               <BrowserRouter>
