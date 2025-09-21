@@ -5419,7 +5419,7 @@ async def get_security_reports(current_user: User = Depends(require_role(["manag
     }
 # Include all routers after all routes are defined
 api_router.include_router(crm_router, prefix="/crm")  # Include crm_router in api_router with /crm prefix
-app.include_router(api_router, prefix="/api/v1")  # Ajouter préfixe pour éviter conflit avec Phase 9
+app.include_router(api_router, prefix="/api")  # Mount at /api to match frontend expectations
 
 # ========== ADMINISTRATION ENDPOINTS - UPLOAD MANAGER ==========
 
