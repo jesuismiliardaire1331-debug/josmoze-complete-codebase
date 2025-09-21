@@ -11,7 +11,7 @@ from datetime import datetime
 import logging
 
 # Ajouter le répertoire backend au path
-sys.path.append('/app/backend')
+sys.path.append('./backend')
 
 # Importer les nouveaux produits
 from products_final import FINAL_PRODUCTS, PROMOTION_RULES, REFERRAL_SYSTEM

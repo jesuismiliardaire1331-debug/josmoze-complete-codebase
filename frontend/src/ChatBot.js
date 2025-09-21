@@ -69,7 +69,7 @@ const KNOWLEDGE_BASE_V2 = {
       garanties_securite: ['garantie', 'sav', 'assurance', 'securite', 'rembourse', 'satisfait'],
       
       // Intentions d engagement
-      urgence_decision: ['urgent', 'rapidement', 'maintenant', 'aujourd'hui', 'vite'],
+      urgence_decision: ['urgent', 'rapidement', 'maintenant', 'aujourd\'hui', 'vite'],
       hesitation_doute: ['hesite', 'reflechir', 'pas sur', 'doute', 'incertain'],
       temoignages_avis: ['avis', 'temoignage', 'retour', 'experience', 'satisfaction'],
       contact_humain: ['parler', 'contact', 'telephone', 'rendez-vous', 'expert', 'conseiller'],
