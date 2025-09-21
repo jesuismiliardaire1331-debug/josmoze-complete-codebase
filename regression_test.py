@@ -719,9 +719,9 @@ class RegressionTester:
     def test_crm_authentication(self):
         """Test CRM authentication endpoints"""
         try:
-            # Test with manager credentials
+            # Test with manager credentials - use email field not username
             test_data = {
-                "username": "naima@josmoze.com",
+                "email": "naima@josmoze.com",
                 "password": "Naima@2024!Commerce"
             }
             
