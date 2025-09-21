@@ -122,8 +122,8 @@ async def startup_event():
         logging.error(f"❌ Error during service initialization: {e}")
 
 # Add Security and Performance Middleware (Critical for Production)
-# app.add_middleware(SecurityMiddleware)
-# app.add_middleware(CacheMiddleware)
+app.add_middleware(SecurityMiddleware)
+app.add_middleware(CacheMiddleware)
 
 # CORS middleware
 app.add_middleware(
