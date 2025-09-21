@@ -18,7 +18,7 @@ async def setup_production_config():
     # Connexion MongoDB
     mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
     client = AsyncIOMotorClient(mongo_url)
-    db = client.josmose_db
+    db = client[os.environ.get('DB_NAME', 'josmoze_production')]
     
     # Configuration production
     production_config = {
