@@ -66,6 +66,7 @@ from promotions_manager import PromotionsManager, init_promotions_manager, get_p
 # 🚀 PHASE 9 - Nouveaux imports
 from promotions_system import get_promotions_system, init_promotions_system, PromotionsSystem
 from user_auth_system import get_user_auth_system, init_user_auth_system, UserAuthSystem, UserRegistration, UserLogin
+from translation_service import translation_service
 
 
 ROOT_DIR = Path(__file__).parent
@@ -83,6 +84,42 @@ social_media_automation = None
 
 # Create the main app
 app = FastAPI(title="Josmose CRM & Marketing Automation", version="2.0.0")
+
+# Startup event to initialize services
+@app.on_event("startup")
+async def startup_event():
+    """Initialize all services on application startup"""
+    global marketing_automation, inventory_manager, social_media_automation, abandoned_cart_service, security_audit_agent
+    
+    try:
+        # Initialize inventory manager
+        from inventory_manager import get_inventory_manager
+        inventory_manager = get_inventory_manager(db)
+        logging.info("✅ Inventory manager initialized successfully")
+        
+        # Initialize marketing automation
+        from ai_agents import get_marketing_automation
+        marketing_automation = get_marketing_automation(db)
+        logging.info("✅ Marketing automation initialized successfully")
+        
+        # Initialize social media automation
+        from social_media_automation import get_social_media_automation
+        social_media_automation = get_social_media_automation(db)
+        logging.info("✅ Social media automation initialized successfully")
+        
+        # Initialize abandoned cart service
+        abandoned_cart_service = AbandonedCartService(db)
+        logging.info("✅ Abandoned cart service initialized successfully")
+        
+        # Initialize security audit agent
+        from security_audit_agent import get_security_audit_agent
+        security_audit_agent = get_security_audit_agent(db)
+        logging.info("✅ Security audit agent initialized successfully")
+        
+        logging.info("🚀 All services initialized successfully on startup")
+        
+    except Exception as e:
+        logging.error(f"❌ Error during service initialization: {e}")
 
 # Add Security and Performance Middleware (Critical for Production)
 # app.add_middleware(SecurityMiddleware)
@@ -491,7 +528,16 @@ async def get_products(customer_type: str = "B2C"):
         product_obj = Product(**product)
         
         # Obtenir le statut du stock
-        stock_status = await inventory_manager.get_stock_status(product["id"])
+        stock_status = {}
+        if inventory_manager:
+            try:
+                stock_status = await inventory_manager.get_stock_status(product["id"])
+            except Exception as e:
+                logging.warning(f"⚠️ Could not get stock status for {product['id']}: {e}")
+                stock_status = {"available_stock": 50}  # Default fallback
+        else:
+            logging.warning("⚠️ Inventory manager not initialized, using default stock")
+            stock_status = {"available_stock": 50}  # Default fallback
         
         # Ajouter les infos de stock au produit - TOUS les produits sont EN STOCK selon exigence client
         product_dict = product_obj.dict()
@@ -637,7 +683,16 @@ async def get_translated_products(
             
             # Ajouter les informations de stock
             product_obj = Product(**translated_product)
-            stock_status = await inventory_manager.get_stock_status(product["id"])
+            stock_status = {}
+            if inventory_manager:
+                try:
+                    stock_status = await inventory_manager.get_stock_status(product["id"])
+                except Exception as e:
+                    logging.warning(f"⚠️ Could not get stock status for {product['id']}: {e}")
+                    stock_status = {"available_stock": 50}  # Default fallback
+            else:
+                logging.warning("⚠️ Inventory manager not initialized, using default stock")
+                stock_status = {"available_stock": 50}  # Default fallback
             
             product_dict = product_obj.dict()
             product_dict["stock_info"] = {
@@ -790,7 +845,13 @@ async def create_lead(lead: Lead, request: Request):
     await db.leads.insert_one(lead.dict())
     
     # Trigger welcome automation
-    await marketing_automation.trigger_welcome_sequence(lead.dict())
+    if marketing_automation:
+        try:
+            await marketing_automation.trigger_welcome_sequence(lead.dict())
+        except Exception as e:
+            logging.warning(f"⚠️ Could not trigger welcome sequence: {e}")
+    else:
+        logging.warning("⚠️ Marketing automation not initialized, skipping welcome sequence")
     
     logging.info(f"New lead created: {lead.email} (score: {lead.score})")
     
@@ -883,7 +944,13 @@ async def submit_contact_form(form: ContactForm, request: Request):
         await db.leads.insert_one(lead.dict())
         
         # Trigger welcome automation
-        await marketing_automation.trigger_welcome_sequence({"email": form.email, "name": form.name, "customer_type": form.customer_type})
+        if marketing_automation:
+            try:
+                await marketing_automation.trigger_welcome_sequence({"email": form.email, "name": form.name, "customer_type": form.customer_type})
+            except Exception as e:
+                logging.warning(f"⚠️ Could not trigger welcome sequence: {e}")
+        else:
+            logging.warning("⚠️ Marketing automation not initialized, skipping welcome sequence")
         
         logging.info(f"Contact form submitted: {form.email} - {form.request_type}")
         
