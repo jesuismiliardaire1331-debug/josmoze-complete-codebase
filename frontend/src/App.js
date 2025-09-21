@@ -1855,18 +1855,22 @@ function App() {
               <BrowserRouter>
                 <AutoLanguageDetector />  
                 <CustomerTypeHandler />
-                <main>
-                  <Routes>
-                    <Route path="/" element={<><Header /><Home /></>} />
-                    <Route path="/particuliers" element={<><Header /><Home /></>} />
-                    <Route path="/professionnels" element={<><Header /><BusinessHome /></>} />
-                    <Route path="/produit/:productId" element={<><Header /><ProductDetail /></>} />
-                    <Route path="/panier" element={<><Header /><Cart /></>} />
-                    <Route path="/checkout" element={<><Header /><Checkout /></>} />
-                    <Route path="/contact" element={<><Header /><Contact /></>} />
-                    <Route path="/installation" element={<><Header /><Installation /></>} />
-                    <Route path="/consultation" element={<><Header /><Consultation /></>} />
-                    <Route path="/comment-ca-marche" element={<><Header /><ProductExplanation /></>} />
+                <Routes>
+                  <Route path="/*" element={
+                    <>
+                      <Header />
+                      <main>
+                        <Routes>
+                          <Route path="/" element={<Home />} />
+                          <Route path="/particuliers" element={<Home />} />
+                          <Route path="/professionnels" element={<BusinessHome />} />
+                          <Route path="/produit/:productId" element={<ProductDetail />} />
+                          <Route path="/panier" element={<Cart />} />
+                          <Route path="/checkout" element={<Checkout />} />
+                          <Route path="/contact" element={<Contact />} />
+                          <Route path="/installation" element={<Installation />} />
+                          <Route path="/consultation" element={<Consultation />} />
+                          <Route path="/comment-ca-marche" element={<ProductExplanation />} />
                     <Route path="/promotions-manager" element={<PromotionsManager />} />
                     <Route path="/payment-success" element={<PaymentSuccess />} />
                     <Route path="/payment-cancelled" element={<PaymentCancelled />} />
