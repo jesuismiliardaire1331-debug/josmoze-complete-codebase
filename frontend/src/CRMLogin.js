@@ -248,7 +248,7 @@ const CRMLogin = () => {
               <li>• Connexion par email professionnel</li>
               <li>• Mots de passe renforcés (8+ caractères)</li>
               <li>• Session chiffrée JWT 8 heures</li>
-              <li>• Permissions par rôle & logs RGPD</li>
+              <li>• Permissions par rôle &amp; logs RGPD</li>
             </ul>
           </div>
         </div>
@@ -256,7 +256,7 @@ const CRMLogin = () => {
         {/* Footer */}
         <div className="text-center mt-8 text-blue-200">
           <p className="text-sm">
-            Josmoze.com © 2024 | Système CRM & Marketing Automation
+            Josmoze.com &copy; 2024 | Système CRM &amp; Marketing Automation
           </p>
         </div>
       </div>
