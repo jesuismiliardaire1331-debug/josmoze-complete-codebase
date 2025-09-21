@@ -505,10 +505,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "User Authentication System - Critical Bug Fix Validation"
+    - "MANDATORY REGRESSION TEST SUITE - Frontend Validation"
   stuck_tasks: []
   test_all: false
-  test_priority: "authentication_critical"
+  test_priority: "frontend_validation_complete"
 
 agent_communication:
     - agent: "main"
