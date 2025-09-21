@@ -1,27 +1,46 @@
 #!/usr/bin/env python3
 """
-🚨 URGENT BACKEND VALIDATION - BUG 1 & 2 DEPENDENCIES
-Backend API Testing for Josmose.com - Critical Backend Services Validation
+🚨 MANDATORY REGRESSION TEST SUITE - CRITICAL VALIDATION
+Backend API Testing for Josmose.com - Complete Core Functionality Validation
 
-TESTS CRITIQUES SELON REVIEW REQUEST :
-1. **Thomas Chatbot API** : /api/ai-agents/chat - Test avec "Bonjour Thomas"
-2. **User Authentication System** : /api/auth/login, /api/auth/register
-3. **Core Application APIs** : /api/products, /api/detect-location
-4. **General Health Check** : Vérifier services et logs
+COMPREHENSIVE REGRESSION TESTS REQUIRED:
 
-✅ OBJECTIFS VALIDATION :
-- Éliminer backend comme cause potentielle des problèmes frontend
-- Confirmer que tous les APIs critiques sont opérationnels
-- Valider que Phase 8 cart functionality fonctionne
-- Vérifier JWT token generation et user authentication
-- Tester product listing et location detection
+**Test 1: User Authentication (Login/Register)**
+- Test /api/auth/register with new user data
+- Test /api/auth/login with valid credentials  
+- Verify JWT token generation and validation
+- Test /api/auth/profile endpoint access
 
-🎯 CONTEXTE : 
-- Frontend compile mais React root reste vide
-- Besoin de confirmer backend avant investigation frontend JS runtime errors
-- Bloque BUG 1 (chatbot) et BUG 2 (authentication) fixes
+**Test 2: Chatbot Initialization (No JS error)**
+- Test Thomas chatbot API /api/ai-agents/chat
+- Verify Phase 8 cart functionality integration
+- Test multiple conversation rounds
+- Confirm no JavaScript errors in responses
 
-🚀 RÉSULTAT ATTENDU : Backend 100% opérationnel pour débloquer frontend fixes
+**Test 3: Blog Rendering (9-10 articles visible)**
+- Test /api/blog/articles endpoint
+- Verify all imported blog articles return correctly
+- Test individual article retrieval /api/blog/article/{slug}
+- Confirm image and product link data
+
+**Test 4: Cart & Checkout Flow**
+- Test cart management endpoints
+- Verify checkout process APIs
+- Test promotional codes system (Phase 9)
+
+**Test 5: Admin Panel & CRM Access**
+- Test CRM authentication endpoints
+- Verify admin dashboard access
+- Test product management APIs
+- Confirm upload functionalities
+
+VALIDATION CRITERIA:
+- All endpoints must return 200 OK responses
+- No 500 errors or database connection issues
+- Confirm MongoDB serialization working correctly
+- Verify all Phase 8 & Phase 9 features operational
+
+OUTCOME REQUIRED: Complete validation that backend supports the restored frontend without regressions.
 """
 
 import requests
