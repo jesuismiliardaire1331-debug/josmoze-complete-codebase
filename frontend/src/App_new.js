@@ -294,6 +294,8 @@ const Checkout = () => {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     alert('Commande simulée - Merci pour votre achat !');
