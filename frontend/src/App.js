@@ -1853,24 +1853,23 @@ function App() {
             <AppProvider>
               <div className="App min-h-screen flex flex-col">
               <BrowserRouter>
-                <AutoLanguageDetector />  
+                <AutoLanguageDetector />
                 <CustomerTypeHandler />
-                <Routes>
-                  <Route path="/*" element={
-                    <>
-                      <Header />
-                      <main>
-                        <Routes>
-                          <Route path="/" element={<Home />} />
-                          <Route path="/particuliers" element={<Home />} />
-                          <Route path="/professionnels" element={<BusinessHome />} />
-                          <Route path="/produit/:productId" element={<ProductDetail />} />
-                          <Route path="/panier" element={<Cart />} />
-                          <Route path="/checkout" element={<Checkout />} />
-                          <Route path="/contact" element={<Contact />} />
-                          <Route path="/installation" element={<Installation />} />
-                          <Route path="/consultation" element={<Consultation />} />
-                          <Route path="/comment-ca-marche" element={<ProductExplanation />} />
+                <Header />
+                <main>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/particuliers" element={<Home />} />
+                    <Route path="/professionnels" element={<BusinessHome />} />
+                    <Route path="/produit/:productId" element={<ProductDetail />} />
+                    <Route path="/panier" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/installation" element={<Installation />} />
+                    <Route path="/consultation" element={<Consultation />} />
+                    <Route path="/comment-ca-marche" element={<ProductExplanation />} />
+                    <Route path="/login" element={<UserAuth />} />
+                    <Route path="/register" element={<UserAuth />} />
                     <Route path="/promotions-manager" element={<PromotionsManager />} />
                     <Route path="/payment-success" element={<PaymentSuccess />} />
                     <Route path="/payment-cancelled" element={<PaymentCancelled />} />
@@ -1893,11 +1892,20 @@ function App() {
                     <Route path="/checkout-promo" element={<CheckoutWithPromo />} />
                   </Routes>
                 </main>
-                <Footer />
-                {/* ChatBot pour prospects */}
+                <footer className="bg-blue-900 text-white py-16">
+                  <Footer />
+                </footer>
                 <ChatBotV2 />
-                {/* Questionnaire produits */}
-                <QuestionnaireWrapper />
+                {showQuestionnaire && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full m-4">
+                      <ProductQuestionnaire 
+                        onClose={handleQuestionnaireClose}
+                        onRecommendation={handleQuestionnaireRecommendation}
+                      />
+                    </div>
+                  </div>
+                )}
               </BrowserRouter>
               </div>
             </AppProvider>
