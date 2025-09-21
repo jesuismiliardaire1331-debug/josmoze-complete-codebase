@@ -1,46 +1,22 @@
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, useNavigate, useSearchParams, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// Import traduction - TEMPORARILY DISABLED TO FIX MOUNTING
-// import './i18n';
-import { useTranslation } from 'react-i18next';
-import LanguageSelector from './LanguageSelector';
-import useTranslationService from './useTranslationService';
-import AutoLanguageDetector from './AutoLanguageDetector';
 
 // Import context
 import { AppProvider, useApp } from './context/AppContext';
+import { AuthProvider as UserAuthProvider } from './UserAuth';
 
-// Import CRM components
-import CRMDashboard from "./CRM";
-import AdminUploadImages from './AdminUploadImages';
-import PromotionsManager from './PromotionsManager';
-import EspaceClient from './EspaceClient';
-import CheckoutWithPromo from './CheckoutWithPromo';
-import UserAuth, { AuthProvider as UserAuthProvider } from './UserAuth';
-import { AuthProvider as CRMAuthProvider } from "./CRMLogin";
-import CRMLogin from "./CRMLogin";
-import ProductExplanation from "./ProductExplanation";
-import { NotificationProvider } from "./NotificationSystem";
-import ProductRecommendations from "./ProductRecommendations";
-
-// Import ChatBot
+// Import core components
 import ChatBotV2 from "./ChatBot_V2";
-
-// Import Translation Guardian  
-import TranslationGuardian from "./TranslationGuardian";
-import ProductQuestionnaire from "./ProductQuestionnaire";
-import StripeCheckout from "./StripeCheckout";
-import ProductDetail from "./ProductDetail";
-import AdminUpload from "./AdminUpload";
+import UserAuth from "./UserAuth";
+import EspaceClient from "./EspaceClient";
 import BlogPage from "./BlogPage";
 import BlogArticle from "./BlogArticle";
-import TestimonialsPage from "./TestimonialsPage";
 import AdminLogin from "./AdminLogin";
-import AIUploadAgent from "./AIUploadAgent";
 import AdminDashboard from "./AdminDashboard";
+import CRMLogin from "./CRMLogin";
+import CRM from "./CRM";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
