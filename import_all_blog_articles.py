@@ -28,7 +28,7 @@ TOUS_LES_ARTICLES = [
         "content": """
 # Pourquoi l'eau du robinet peut être dangereuse pour votre santé
 
-![Pollution dramatique de l'eau](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_2a747c07.jpg "Déchets polluant l'eau - impact émotionnel fort")
+![Pollution dramatique de l'eau](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_2a747c07.jpg "Déchets polluant l'eau - impact émotionnel fort")
 
 L'eau du robinet, bien qu'elle soit traitée et considérée comme potable, peut contenir de nombreux contaminants qui posent des risques pour votre santé. Voici les principales menaces que vous devez connaître.
 
@@ -37,7 +37,7 @@ L'eau du robinet, bien qu'elle soit traitée et considérée comme potable, peut
 ### Chlore et chloramine
 Le chlore, utilisé pour désinfecter l'eau, peut former des sous-produits cancérigènes appelés trihalométhanes (THM). Ces composés augmentent les risques de cancer de la vessie et du côlon.
 
-![Pollution marine plastique](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f56ff5e2.jpg "Plastique dans l'océan - conscience écologique")
+![Pollution marine plastique](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f56ff5e2.jpg "Plastique dans l'océan - conscience écologique")
 
 ### Métaux lourds
 - **Plomb** : Provient des anciennes canalisations, cause des troubles neurologiques
@@ -117,7 +117,7 @@ Ne prenez plus de risques avec votre santé. Testez votre eau et découvrez nos 
         "content": """
 # Les 7 bienfaits prouvés des osmoseurs pour votre famille
 
-![Famille heureuse buvant de l'eau pure](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_a8c5f3d1.jpg "Famille profitant d'une eau pure - bonheur familial")
+![Famille heureuse buvant de l'eau pure](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_a8c5f3d1.jpg "Famille profitant d'une eau pure - bonheur familial")
 
 L'installation d'un osmoseur dans votre foyer apporte des bénéfices concrets et mesurables pour la santé et le bien-être de toute votre famille.
 
@@ -130,7 +130,7 @@ L'osmose inverse élimine :
 - 99% des pesticides et herbicides
 - 100% des parasites (cryptosporidium, giardia)
 
-![Protection familiale optimale](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_b9f44e8a.jpg "Bouclier protecteur famille - sécurité")
+![Protection familiale optimale](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_b9f44e8a.jpg "Bouclier protecteur famille - sécurité")
 
 ### Témoignage client
 *"Depuis l'installation de notre [Osmoseur Premium](/produit/osmoseur-premium), les analyses d'eau montrent une pureté exceptionnelle. Plus aucune trace de nitrates !"* - Famille Martin, Lyon
@@ -142,7 +142,7 @@ L'osmose inverse élimine :
 - Eau cristalline et rafraîchissante
 - Retour au plaisir de boire de l'eau
 
-![Verre d'eau cristalline](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_c7e6d2b3.jpg "Eau pure et cristalline - pureté visuelle")
+![Verre d'eau cristalline](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_c7e6d2b3.jpg "Eau pure et cristalline - pureté visuelle")
 
 ### Impact sur la cuisine
 - Thé et café aux arômes préservés  
@@ -165,7 +165,7 @@ Pour une famille de 4 personnes :
 
 ## 4. 👶 Sécurité pour les enfants
 
-![Bébé buvant eau pure](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_d4f1a9c5.jpg "Bébé sécurisé avec eau pure - protection maternelle")
+![Bébé buvant eau pure](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_d4f1a9c5.jpg "Bébé sécurisé avec eau pure - protection maternelle")
 
 ### Eau adaptée aux bébés
 - Préparation des biberons en toute sécurité
@@ -184,7 +184,7 @@ Pour une famille de 4 personnes :
 - Réduction de l'empreinte carbone de 80%
 - Préservation des ressources naturelles
 
-![Environnement préservé](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_e3a8b7f6.jpg "Nature préservée - conscience écologique")
+![Environnement préservé](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_e3a8b7f6.jpg "Nature préservée - conscience écologique")
 
 ### Engagement Josmoze
 Nos osmoseurs sont conçus pour durer 15 ans minimum, avec des cartouches recyclables.
@@ -254,7 +254,7 @@ Nos experts vous accompagnent :
         "content": """
 # Témoignages clients : Comment l'osmose inverse a changé leur vie
 
-![Clients satisfaits Josmoze](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f8b3d9e7.jpg "Clients heureux et satisfaits - témoignages authentiques")
+![Clients satisfaits Josmoze](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f8b3d9e7.jpg "Clients heureux et satisfaits - témoignages authentiques")
 
 Découvrez les histoires vraies de nos clients qui ont fait le choix de l'osmose inverse Josmoze. Leurs témoignages authentiques révèlent l'impact transformateur d'une eau pure sur leur quotidien.
 
@@ -263,7 +263,7 @@ Découvrez les histoires vraies de nos clients qui ont fait le choix de l'osmose
 ### Le problème initial
 *"Notre eau du robinet avait un goût chloré terrible. Ma fille de 3 ans refusait de boire et préférait les sodas. Les bouteilles d'eau nous coûtaient une fortune !"*
 
-![Installation osmoseur famille](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_g7c4e2f8.jpg "Installation professionnelle - service de qualité")
+![Installation osmoseur famille](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_g7c4e2f8.jpg "Installation professionnelle - service de qualité")
 
 ### La solution Josmoze
 Installation d'un Osmoseur Premium en octobre 2023.
@@ -293,7 +293,7 @@ Rejoignez nos clients satisfaits avec nos [osmoseurs de qualité professionnelle
         "content": """
 # Comment fonctionne un osmoseur : Guide technique complet
 
-![Schéma osmoseur technique](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_12f8a4b7.jpg "Schéma technique osmoseur - compréhension claire")
+![Schéma osmoseur technique](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_12f8a4b7.jpg "Schéma technique osmoseur - compréhension claire")
 
 Comprendre le fonctionnement d'un osmoseur vous aide à faire le meilleur choix pour votre famille. Ce guide technique détaille chaque étape de purification.
 
@@ -302,7 +302,7 @@ Comprendre le fonctionnement d'un osmoseur vous aide à faire le meilleur choix 
 ### Définition scientifique
 L'osmose inverse utilise une membrane semi-perméable pour séparer l'eau pure des contaminants. Le processus force l'eau à travers des pores ultra-fins (0,0001 micron) sous pression.
 
-![Membrane osmose inverse](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_23a9b5c8.jpg "Membrane filtration microscopique - technologie avancée")
+![Membrane osmose inverse](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_23a9b5c8.jpg "Membrane filtration microscopique - technologie avancée")
 
 ### Efficacité de filtration
 - **Bactéries** : 99,99% éliminées
@@ -325,7 +325,7 @@ L'osmose inverse utilise une membrane semi-perméable pour séparer l'eau pure d
 - **Durée de vie** : 12 mois
 - **Amélioration** : Goût et odeur
 
-![Filtres osmoseur étapes](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_34b6c7d9.jpg "Système filtration multicouches - protection optimale")
+![Filtres osmoseur étapes](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_34b6c7d9.jpg "Système filtration multicouches - protection optimale")
 
 ### Étape 3 : Pré-filtration fine
 - **Fonction** : Filtration particules fines
@@ -344,7 +344,7 @@ L'osmose inverse utilise une membrane semi-perméable pour séparer l'eau pure d
 - **Reminéralisation** : Ajout minéraux essentiels (Premium/Prestige)
 - **Résultat** : Eau parfaitement équilibrée
 
-![Installation harmonieuse](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_27d8fca6.jpg "Osmoseur élégant en cuisine - intégration harmonieuse")
+![Installation harmonieuse](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_27d8fca6.jpg "Osmoseur élégant en cuisine - intégration harmonieuse")
 
 ## 🔧 Composants essentiels
 
@@ -404,7 +404,7 @@ Nos techniciens certifiés vous garantissent :
         "content": """
 # Installation osmoseur : Guide pas à pas pour débutants
 
-![Installation professionnelle osmoseur](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_45c8d9e1.jpg "Technicien installant osmoseur - service professionnel")
+![Installation professionnelle osmoseur](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_45c8d9e1.jpg "Technicien installant osmoseur - service professionnel")
 
 L'installation d'un osmoseur peut sembler complexe, mais avec les bonnes étapes, c'est accessible. Ce guide vous accompagne pour une installation réussie.
 
@@ -417,7 +417,7 @@ L'installation d'un osmoseur peut sembler complexe, mais avec les bonnes étapes
 - Niveau à bulle
 - Mètre ruban
 
-![Outils installation](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_56d9f1a2.jpg "Outils installation professionnels - préparation technique")
+![Outils installation](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_56d9f1a2.jpg "Outils installation professionnels - préparation technique")
 
 ### Matériaux fournis
 - Système osmoseur complet
@@ -440,7 +440,7 @@ L'installation d'un osmoseur peut sembler complexe, mais avec les bonnes étapes
 - **Protection** : Lunettes et gants
 - **Finition** : Ébavurage soigneux
 
-![Robinet osmoseur élégant](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_67f2b4e3.jpg "Robinet eau pure design - finition soignée")
+![Robinet osmoseur élégant](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_67f2b4e3.jpg "Robinet eau pure design - finition soignée")
 
 ### Étape 3 : Raccordement arrivée d'eau
 - **Piquage** : Sur arrivée eau froide
@@ -460,7 +460,7 @@ L'installation d'un osmoseur peut sembler complexe, mais avec les bonnes étapes
 - **Évacuation** : Rejet vers égout
 - **Robinet** : Liaison finale
 
-![Système installé proprement](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_78a3c5f4.jpg "Installation discrète sous évier - intégration parfaite")
+![Système installé proprement](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_78a3c5f4.jpg "Installation discrète sous évier - intégration parfaite")
 
 ### Étape 6 : Mise en service
 - **Réouverture eau** : Progressive et contrôlée
@@ -490,7 +490,7 @@ L'installation d'un osmoseur peut sembler complexe, mais avec les bonnes étapes
 - **Tests** : Contrôles qualité systématiques
 - **Garantie** : 5 ans pièces et main d'œuvre
 
-![Service client excellence](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_89b4d6f5.jpg "Service client professionnel - accompagnement expert")
+![Service client excellence](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_89b4d6f5.jpg "Service client professionnel - accompagnement expert")
 
 ### Formation utilisateur
 - **Fonctionnement** : Explication système complet
@@ -539,7 +539,7 @@ Nos équipes vous accompagnent :
         "content": """
 # Entretien osmoseur : Maintenance préventive pour une eau pure
 
-![Maintenance osmoseur professionnel](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_91c5e7f6.jpg "Technicien maintenance osmoseur - service expert")
+![Maintenance osmoseur professionnel](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_91c5e7f6.jpg "Technicien maintenance osmoseur - service expert")
 
 Un entretien régulier garantit des performances optimales et une eau pure en permanence. Découvrez comment maintenir votre osmoseur Josmoze.
 
@@ -557,7 +557,7 @@ Un entretien régulier garantit des performances optimales et une eau pure en pe
 - **Vérification raccords** : Serrage si nécessaire
 - **Test qualité** : Bandelettes test TDS
 
-![Filtres osmoseur qualité](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_a2d8f9g7.jpg "Filtres haute qualité - performance optimale")
+![Filtres osmoseur qualité](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_a2d8f9g7.jpg "Filtres haute qualité - performance optimale")
 
 ## 🔄 Remplacement des filtres
 
@@ -579,7 +579,7 @@ Un entretien régulier garantit des performances optimales et une eau pure en pe
 - **Coût** : 80-120€
 - **Critique** : Cœur du système de purification
 
-![Changement filtre facile](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_b3f1a8h9.jpg "Changement filtre simplifié - maintenance accessible")
+![Changement filtre facile](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_b3f1a8h9.jpg "Changement filtre simplifié - maintenance accessible")
 
 ## 🔧 Maintenance préventive
 
@@ -603,7 +603,7 @@ Un entretien régulier garantit des performances optimales et une eau pure en pe
 - **Eau trouble** : Membrane défaillante
 - **Bruits** : Pompe ou vannes problématiques
 
-![Diagnostic osmoseur](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_c4g2b9i1.jpg "Diagnostic professionnel - détection précise")
+![Diagnostic osmoseur](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_c4g2b9i1.jpg "Diagnostic professionnel - détection précise")
 
 ### Solutions rapides
 - **Pression basse** : Vérifier vannes ouvertes
@@ -639,7 +639,7 @@ Un entretien régulier garantit des performances optimales et une eau pure en pe
 - 1 filtre post-carbone
 - Manuel changement détaillé
 
-![Kit maintenance complet](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_d5h3c1j2.jpg "Kit maintenance professionnel - simplicité garantie")
+![Kit maintenance complet](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_d5h3c1j2.jpg "Kit maintenance professionnel - simplicité garantie")
 
 ### Kit Entretien Premium - 95€
 - Filtres complets 7 étapes
@@ -688,7 +688,7 @@ Nos experts vous accompagnent :
         "content": """
 # Comparatif osmoseurs 2024 : Quel modèle choisir pour votre foyer
 
-![Gamme osmoseurs Josmoze](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_e6i4d2k3.jpg "Gamme complète osmoseurs - choix adapté")
+![Gamme osmoseurs Josmoze](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_e6i4d2k3.jpg "Gamme complète osmoseurs - choix adapté")
 
 Choisir le bon osmoseur dépend de vos besoins spécifiques. Ce comparatif détaillé vous aide à faire le meilleur choix pour votre famille.
 
@@ -703,7 +703,7 @@ Choisir le bon osmoseur dépend de vos besoins spécifiques. Ce comparatif déta
 | **Idéal pour** | 2-3 pers | 4-5 pers | 5+ pers |
 | **Garantie** | 5 ans | 5 ans | 5 ans |
 
-![Tableau comparatif détaillé](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f7j5e3l4.jpg "Comparaison technique détaillée - choix éclairé")
+![Tableau comparatif détaillé](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f7j5e3l4.jpg "Comparaison technique détaillée - choix éclairé")
 
 ## 🥉 [Osmoseur Essentiel - 449€](/produit/osmoseur-essentiel)
 
@@ -720,7 +720,7 @@ Choisir le bon osmoseur dépend de vos besoins spécifiques. Ce comparatif déta
 - **Débit** : 7L/h en continu
 - **Dimensions** : 40x15x35cm
 
-![Osmoseur Essentiel compact](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_g8k6f4m5.jpg "Essentiel compact - efficacité optimale")
+![Osmoseur Essentiel compact](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_g8k6f4m5.jpg "Essentiel compact - efficacité optimale")
 
 ### Idéal pour :
 - Couples ou petites familles
@@ -746,7 +746,7 @@ Choisir le bon osmoseur dépend de vos besoins spécifiques. Ce comparatif déta
 - **Monitoring** : Écran LCD multinfos
 - **Alertes** : Maintenance préventive
 
-![Osmoseur Premium intelligent](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_h9l7g5n6.jpg "Premium intelligent - technologie avancée")
+![Osmoseur Premium intelligent](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_h9l7g5n6.jpg "Premium intelligent - technologie avancée")
 
 ### Idéal pour :
 - Familles de 4-5 personnes
@@ -772,7 +772,7 @@ Choisir le bon osmoseur dépend de vos besoins spécifiques. Ce comparatif déta
 - **Capteurs** : Qualité temps réel
 - **Maintenance** : Prédictive intelligente
 
-![Osmoseur Prestige connecté](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_i1m8h6o7.jpg "Prestige connecté - excellence technologique")
+![Osmoseur Prestige connecté](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_i1m8h6o7.jpg "Prestige connecté - excellence technologique")
 
 ### Idéal pour :
 - Grandes familles (5+ personnes)
@@ -798,7 +798,7 @@ Choisir le bon osmoseur dépend de vos besoins spécifiques. Ce comparatif déta
 - **Budget moyen** : Premium (11€/mois sur 5 ans)
 - **Sans contrainte** : Prestige (18€/mois sur 5 ans)
 
-![Guide choix personnalisé](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_j2n9i7p8.jpg "Guide choix personnalisé - conseil adapté")
+![Guide choix personnalisé](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_j2n9i7p8.jpg "Guide choix personnalisé - conseil adapté")
 
 ### Selon les priorités
 - **Simplicité** : Essentiel
@@ -857,7 +857,7 @@ Nos experts vous aident à choisir :
         "content": """
 # Économies eau en bouteille : Calculez vos gains avec un osmoseur
 
-![Économies eau bouteille](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_k3o1j8q9.jpg "Économies considérables - retour investissement rapide")
+![Économies eau bouteille](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_k3o1j8q9.jpg "Économies considérables - retour investissement rapide")
 
 L'eau en bouteille coûte cher et pollue. Découvrez vos économies potentielles en passant à un osmoseur Josmoze.
 
@@ -870,7 +870,7 @@ L'eau en bouteille coûte cher et pollue. Découvrez vos économies potentielles
 - **Économie annuelle** : 550€
 - **ROI** : 10 mois
 
-![Couple économe](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_l4p2k9r1.jpg "Couple économisant - gestion budget optimisée")
+![Couple économe](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_l4p2k9r1.jpg "Couple économisant - gestion budget optimisée")
 
 ### Famille de 4 personnes  
 **Consommation moyenne** : 6L/jour d'eau pure
@@ -894,7 +894,7 @@ L'eau en bouteille coûte cher et pollue. Découvrez vos économies potentielles
 | **Famille 4** | 12 000€ | 2 049€ | **9 951€** |
 | **Grande famille** | 20 000€ | 2 899€ | **17 101€** |
 
-![Graphique économies](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_m5q3l1s2.jpg "Graphique économies spectaculaires - vision long terme")
+![Graphique économies](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_m5q3l1s2.jpg "Graphique économies spectaculaires - vision long terme")
 
 ## 🌱 Impact environnemental
 
@@ -909,7 +909,7 @@ L'eau en bouteille coûte cher et pollue. Découvrez vos économies potentielles
 - **Recyclage** : Suppression besoin recyclage
 - **Empreinte totale** : -75% impact environnemental
 
-![Impact environnemental positif](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_n6r4m2t3.jpg "Planète préservée - conscience écologique forte")
+![Impact environnemental positif](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_n6r4m2t3.jpg "Planète préservée - conscience écologique forte")
 
 ## 🏪 Coûts cachés eau bouteille
 
@@ -933,7 +933,7 @@ L'eau en bouteille coûte cher et pollue. Découvrez vos économies potentielles
 - **Température** : Froide instantanément
 - **Qualité** : Constante garantie
 
-![Confort quotidien](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_o7s5n3u4.jpg "Usage quotidien simplifié - confort maximal")
+![Confort quotidien](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_o7s5n3u4.jpg "Usage quotidien simplifié - confort maximal")
 
 ### Qualité supérieure
 - **Pureté** : 99,9% contaminants éliminés
@@ -970,7 +970,7 @@ L'eau en bouteille coûte cher et pollue. Découvrez vos économies potentielles
 4. **Modèle osmoseur choisi** : ___€
 5. **Vos économies** : ___€/an
 
-![Calculateur économies](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_p8t6o4v5.jpg "Calculateur personnalisé - précision maximale")
+![Calculateur économies](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_p8t6o4v5.jpg "Calculateur personnalisé - précision maximale")
 
 ## 💳 Financement facilité
 
@@ -1013,7 +1013,7 @@ Nos conseillers calculent vos gains :
         "content": """
 # Osmoseur vs autres systèmes : Carafe, robinet filtrant, adoucisseur
 
-![Comparaison systèmes filtration](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_q9u7p5w6.jpg "Comparaison systèmes filtration - choix éclairé")
+![Comparaison systèmes filtration](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_q9u7p5w6.jpg "Comparaison systèmes filtration - choix éclairé")
 
 Face aux nombreuses solutions de traitement d'eau, il est difficile de s'y retrouver. Comparons objectivement chaque système pour vous aider à choisir.
 
@@ -1032,7 +1032,7 @@ Face aux nombreuses solutions de traitement d'eau, il est difficile de s'y retro
 - **Maintenance** : Changement mensuel obligatoire
 - **Développement bactérien** : Risque si mal entretenue
 
-![Carafe filtrante limitée](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_r1v8q6x7.jpg "Carafe filtrante - efficacité partielle")
+![Carafe filtrante limitée](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_r1v8q6x7.jpg "Carafe filtrante - efficacité partielle")
 
 ### Verdict carafe
 *Dépannage occasionnel acceptable, mais inefficace pour protection familiale complète.*
@@ -1052,7 +1052,7 @@ Face aux nombreuses solutions de traitement d'eau, il est difficile de s'y retro
 - **Compatibilité** : Tous robinets non adaptés
 - **Esthétique** : Impact design robinetterie
 
-![Robinet filtrant basique](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_s2w9r7y8.jpg "Robinet filtrant - solution temporaire")
+![Robinet filtrant basique](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_s2w9r7y8.jpg "Robinet filtrant - solution temporaire")
 
 ### Verdict robinet filtrant
 *Amélioration légère mais insuffisante face aux contaminants modernes.*
@@ -1072,7 +1072,7 @@ Face aux nombreuses solutions de traitement d'eau, il est difficile de s'y retro
 - **Sodium ajouté** : Contre-indication médicale possible
 - **Aucune purification** : Contaminants conservés
 
-![Adoucisseur encombrant](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_t3x1s8z9.jpg "Adoucisseur - traitement spécialisé calcaire")
+![Adoucisseur encombrant](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_t3x1s8z9.jpg "Adoucisseur - traitement spécialisé calcaire")
 
 ### Verdict adoucisseur
 *Excellent contre calcaire mais ne traite pas la qualité de l'eau de boisson.*
@@ -1093,7 +1093,7 @@ Face aux nombreuses solutions de traitement d'eau, il est difficile de s'y retro
 - **Entretien** : Changement filtres annuel
 - **Eau de rejet** : 3L rejetés pour 1L produit
 
-![Osmoseur performance maximale](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_u4y2t9a1.jpg "Osmoseur - technologie supérieure")
+![Osmoseur performance maximale](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_u4y2t9a1.jpg "Osmoseur - technologie supérieure")
 
 ## 📊 Comparatif performance
 
@@ -1114,7 +1114,7 @@ Face aux nombreuses solutions de traitement d'eau, il est difficile de s'y retro
 - **Adoucisseur** : 3500€ (achat + sel + entretien)
 - **[Osmoseur Premium](/produit/osmoseur-premium)** : 1099€ (tout inclus)
 
-![Comparaison coûts réels](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_v5z3u1b2.jpg "Coûts réels comparés - osmoseur gagnant")
+![Comparaison coûts réels](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_v5z3u1b2.jpg "Coûts réels comparés - osmoseur gagnant")
 
 ## 🎯 Quel système pour quel besoin ?
 
@@ -1146,7 +1146,7 @@ Eau municipale Paris analysée après traitement :
 - **Adoucisseur** : 200 ppm (+11% sodium)
 - **Osmoseur Josmoze** : 15 ppm (-92%)
 
-![Tests laboratoire](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_w6a4v2c3.jpg "Tests laboratoire - preuves scientifiques")
+![Tests laboratoire](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_w6a4v2c3.jpg "Tests laboratoire - preuves scientifiques")
 
 ## 💡 Recommandations d'experts
 

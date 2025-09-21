@@ -28,4 +28,4 @@ echo "📊 Statut des services..."
 sudo supervisorctl status
 
 echo "✅ Correction du routage CRM terminée !"
-echo "🌍 Testez maintenant: https://josmoze-ecom-fix.preview.emergentagent.com/crm"
+echo "🌍 Testez maintenant: https://chatbot-debug-2.preview.emergentagent.com/crm"

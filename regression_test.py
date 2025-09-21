@@ -51,7 +51,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Tuple
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-ecom-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://chatbot-debug-2.preview.emergentagent.com/api"
 
 class RegressionTester:
     def __init__(self):

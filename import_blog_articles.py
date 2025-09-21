@@ -29,7 +29,7 @@ ARTICLES_COMPLETS = [
         "content": """
 # Pourquoi l'eau du robinet peut être dangereuse pour votre santé
 
-![Pollution dramatique de l'eau](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_2a747c07.jpg "Déchets polluant l'eau - impact émotionnel fort")
+![Pollution dramatique de l'eau](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_2a747c07.jpg "Déchets polluant l'eau - impact émotionnel fort")
 
 L'eau du robinet, bien qu'elle soit traitée et considérée comme potable, peut contenir de nombreux contaminants qui posent des risques pour votre santé. Voici les principales menaces que vous devez connaître.
 
@@ -38,7 +38,7 @@ L'eau du robinet, bien qu'elle soit traitée et considérée comme potable, peut
 ### Chlore et chloramine
 Le chlore, utilisé pour désinfecter l'eau, peut former des sous-produits cancérigènes appelés trihalométhanes (THM). Ces composés augmentent les risques de cancer de la vessie et du côlon.
 
-![Pollution marine plastique](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f56ff5e2.jpg "Plastique dans l'océan - conscience écologique")
+![Pollution marine plastique](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f56ff5e2.jpg "Plastique dans l'océan - conscience écologique")
 
 ### Métaux lourds
 - **Plomb** : Provient des anciennes canalisations, cause des troubles neurologiques
@@ -118,7 +118,7 @@ Ne prenez plus de risques avec votre santé. Testez votre eau et découvrez nos 
         "content": """
 # Les 7 bienfaits prouvés des osmoseurs pour votre famille
 
-![Famille heureuse buvant de l'eau pure](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_a8c5f3d1.jpg "Famille profitant d'une eau pure - bonheur familial")
+![Famille heureuse buvant de l'eau pure](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_a8c5f3d1.jpg "Famille profitant d'une eau pure - bonheur familial")
 
 L'installation d'un osmoseur dans votre foyer apporte des bénéfices concrets et mesurables pour la santé et le bien-être de toute votre famille.
 
@@ -131,7 +131,7 @@ L'osmose inverse élimine :
 - 99% des pesticides et herbicides
 - 100% des parasites (cryptosporidium, giardia)
 
-![Protection familiale optimale](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_b9f44e8a.jpg "Bouclier protecteur famille - sécurité")
+![Protection familiale optimale](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_b9f44e8a.jpg "Bouclier protecteur famille - sécurité")
 
 ### Témoignage client
 *"Depuis l'installation de notre [Osmoseur Premium](/produit/osmoseur-premium), les analyses d'eau montrent une pureté exceptionnelle. Plus aucune trace de nitrates !"* - Famille Martin, Lyon
@@ -143,7 +143,7 @@ L'osmose inverse élimine :
 - Eau cristalline et rafraîchissante
 - Retour au plaisir de boire de l'eau
 
-![Verre d'eau cristalline](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_c7e6d2b3.jpg "Eau pure et cristalline - pureté visuelle")
+![Verre d'eau cristalline](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_c7e6d2b3.jpg "Eau pure et cristalline - pureté visuelle")
 
 ### Impact sur la cuisine
 - Thé et café aux arômes préservés  
@@ -166,7 +166,7 @@ Pour une famille de 4 personnes :
 
 ## 4. 👶 Sécurité pour les enfants
 
-![Bébé buvant eau pure](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_d4f1a9c5.jpg "Bébé sécurisé avec eau pure - protection maternelle")
+![Bébé buvant eau pure](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_d4f1a9c5.jpg "Bébé sécurisé avec eau pure - protection maternelle")
 
 ### Eau adaptée aux bébés
 - Préparation des biberons en toute sécurité
@@ -185,7 +185,7 @@ Pour une famille de 4 personnes :
 - Réduction de l'empreinte carbone de 80%
 - Préservation des ressources naturelles
 
-![Environnement préservé](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_e3a8b7f6.jpg "Nature préservée - conscience écologique")
+![Environnement préservé](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_e3a8b7f6.jpg "Nature préservée - conscience écologique")
 
 ### Engagement Josmoze
 Nos osmoseurs sont conçus pour durer 15 ans minimum, avec des cartouches recyclables.
@@ -255,7 +255,7 @@ Nos experts vous accompagnent :
         "content": """
 # Témoignages clients : Comment l'osmose inverse a changé leur vie
 
-![Clients satisfaits Josmoze](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f8b3d9e7.jpg "Clients heureux et satisfaits - témoignages authentiques")
+![Clients satisfaits Josmoze](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_f8b3d9e7.jpg "Clients heureux et satisfaits - témoignages authentiques")
 
 Découvrez les histoires vraies de nos clients qui ont fait le choix de l'osmose inverse Josmoze. Leurs témoignages authentiques révèlent l'impact transformateur d'une eau pure sur leur quotidien.
 
@@ -264,7 +264,7 @@ Découvrez les histoires vraies de nos clients qui ont fait le choix de l'osmose
 ### Le problème initial
 *"Notre eau du robinet avait un goût chloré terrible. Ma fille de 3 ans refusait de boire et préférait les sodas. Les bouteilles d'eau nous coûtaient une fortune !"*
 
-![Installation osmoseur famille](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_g7c4e2f8.jpg "Installation professionnelle - service de qualité")
+![Installation osmoseur famille](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_g7c4e2f8.jpg "Installation professionnelle - service de qualité")
 
 ### La solution Josmoze
 Installation d'un Osmoseur Premium en octobre 2023.
@@ -282,7 +282,7 @@ Installation d'un Osmoseur Premium en octobre 2023.
 ### Le défi : eau calcaire et chlorée
 *"L'eau de Marseille est très calcaire. Nos appareils électroménagers tombaient en panne, notre peau était irritée et le thé avait un goût horrible."*
 
-![Eau calcaire problématique](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_h5f7a3b9.jpg "Calcaire dans les canalisations - problème résolu")
+![Eau calcaire problématique](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_h5f7a3b9.jpg "Calcaire dans les canalisations - problème résolu")
 
 ### Installation mars 2024
 Osmoseur Essentiel sous l'évier principal.
@@ -307,7 +307,7 @@ Osmoseur Essentiel sous l'évier principal.
 ### Préoccupation : bébé de 6 mois
 *"Avec l'arrivée de notre premier enfant, nous voulions le meilleur pour sa santé. Les analyses de notre eau municipale montraient des traces de pesticides."*
 
-![Parents et bébé sécurisés](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_i8e2d4c1.jpg "Protection bébé - sécurité parentale")
+![Parents et bébé sécurisés](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_i8e2d4c1.jpg "Protection bébé - sécurité parentale")
 
 ### Solution haut de gamme
 Osmoseur Prestige avec système de reminéralisation.
@@ -325,7 +325,7 @@ Osmoseur Prestige avec système de reminéralisation.
 ### Enjeu business : qualité gustative
 *"Nos clients se plaignaient du goût de l'eau et des glaçons troubles. Cela impactait notre réputation de restaurant gastronomique."*
 
-![Service restaurant professionnel](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_j6f8b5d2.jpg "Excellence culinaire - eau pure restaurant")
+![Service restaurant professionnel](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_j6f8b5d2.jpg "Excellence culinaire - eau pure restaurant")
 
 ### Installation professionnelle
 Système d'osmose inverse haute capacité.
@@ -359,7 +359,7 @@ Installation par notre équipe avec formation complète.
 ### Exigence : performance optimale
 *"En tant que triathlète professionnel, mon hydratation est cruciale. Je voulais une eau parfaitement pure pour mes entraînements."*
 
-![Performance sportive optimisée](https://josmoze-ecom-fix.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_k9a7c6e3.jpg "Athlète performance - hydratation optimale")
+![Performance sportive optimisée](https://chatbot-debug-2.preview.emergentagent.com/api/admin/get-uploaded-image/blog-images_k9a7c6e3.jpg "Athlète performance - hydratation optimale")
 
 ### Résultats sportifs
 - 💪 **Performances** : Récupération plus rapide

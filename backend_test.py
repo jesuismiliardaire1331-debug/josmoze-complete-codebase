@@ -56,8 +56,8 @@ from PIL import Image
 from urllib.parse import urlparse
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-ecom-fix.preview.emergentagent.com/api/v1"
-BACKEND_URL_DIRECT = "https://josmoze-ecom-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://chatbot-debug-2.preview.emergentagent.com/api/v1"
+BACKEND_URL_DIRECT = "https://chatbot-debug-2.preview.emergentagent.com/api"
 
 class BackendTester:
     def __init__(self):
@@ -290,7 +290,7 @@ class BackendTester:
             description = image_info['description']
             
             try:
-                full_url = f"https://josmoze-ecom-fix.preview.emergentagent.com{api_url}"
+                full_url = f"https://chatbot-debug-2.preview.emergentagent.com{api_url}"
                 response = self.session.get(full_url, timeout=10)
                 
                 if response.status_code == 200:
@@ -2117,7 +2117,7 @@ class BackendTester:
             
         try:
             # Construire l'URL complète pour l'API
-            full_url = f"https://josmoze-ecom-fix.preview.emergentagent.com{image_url}"
+            full_url = f"https://chatbot-debug-2.preview.emergentagent.com{image_url}"
             
             response = self.session.get(full_url)
             
@@ -2452,7 +2452,7 @@ class BackendTester:
                     print("   ✅ Étape 3: Format URL API correct")
                     
                     # Test GET sur URL API
-                    full_url = f"https://josmoze-ecom-fix.preview.emergentagent.com{image_url}"
+                    full_url = f"https://chatbot-debug-2.preview.emergentagent.com{image_url}"
                     img_response = self.session.get(full_url)
                     
                     if img_response.status_code == 200:

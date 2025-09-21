@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 # Backend URL from environment
-BACKEND_URL = "https://josmoze-ecom-fix.preview.emergentagent.com/api"
+BACKEND_URL = "https://chatbot-debug-2.preview.emergentagent.com/api"
 
 def test_api_health():
     """Test API health"""
