@@ -19,7 +19,7 @@ import AdminUploadImages from './AdminUploadImages';
 import PromotionsManager from './PromotionsManager';
 import EspaceClient from './EspaceClient';
 import CheckoutWithPromo from './CheckoutWithPromo';
-import { AuthProvider as UserAuthProvider } from './UserAuth';
+import UserAuth, { AuthProvider as UserAuthProvider } from './UserAuth';
 import { AuthProvider as CRMAuthProvider } from "./CRMLogin";
 import CRMLogin from "./CRMLogin";
 import ProductExplanation from "./ProductExplanation";
