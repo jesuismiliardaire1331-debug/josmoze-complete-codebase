@@ -15,7 +15,7 @@ import BlogPage from "./BlogPage";
 import BlogArticle from "./BlogArticle";
 import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
-import CRMLogin from "./CRMLogin";
+import CRMLogin, { AuthProvider as CRMAuthProvider } from "./CRMLogin";
 import CRM from "./CRM";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -434,8 +434,8 @@ function App() {
                 <Route path="/blog/:slug" element={<BlogArticle />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/crm-login" element={<CRMLogin />} />
-                <Route path="/crm" element={<CRM />} />
+                <Route path="/crm-login" element={<CRMAuthProvider><CRMLogin /></CRMAuthProvider>} />
+                <Route path="/crm" element={<CRMAuthProvider><CRM /></CRMAuthProvider>} />
               </Routes>
             </main>
             <footer className="bg-blue-900 text-white py-16">
