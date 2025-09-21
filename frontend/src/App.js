@@ -1898,7 +1898,7 @@ function App() {
               </BrowserRouter>
               </div>
             </AppProvider>
-          </AuthProvider>
+          </UserAuthProvider>
         </TranslationGuardian>
       </NotificationProvider>
     </Suspense>
