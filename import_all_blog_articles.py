@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 
 # Ajouter le chemin du backend
-sys.path.append('/app/backend')
+sys.path.append('./backend')
 
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")

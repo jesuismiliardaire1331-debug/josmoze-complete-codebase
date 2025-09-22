@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "josmoze-ecommerce-backend"
+version = "2.0.0"
+description = "Josmose CRM & Marketing Automation Backend"
+authors = ["Devin AI <devin-ai-integration[bot]@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.110.1"
+uvicorn = "^0.25.0"
+motor = "^3.3.1"
+pymongo = "^4.5.0"
+python-dotenv = "^1.1.1"
+python-multipart = "^0.0.20"
+pydantic = "^2.11.7"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+PyJWT = "^2.10.1"
+httpx = "^0.28.1"
+aiofiles = "^23.2.1"
+deepl = "^1.22.0"
+openai = "^1.98.0"
+anthropic = "^0.61.0"
+stripe = "^12.4.0"
+twilio = "^9.7.0"
+redis = "^6.2.0"
+requests = "^2.32.4"
+beautifulsoup4 = "^4.13.5"
+geocoder = "^1.38.1"
+geoip2 = "^5.1.0"
+langdetect = "^1.0.9"
+schedule = "^1.2.0"
+pandas = "^2.3.1"
+numpy = "^2.3.1"
+pillow = "^11.3.0"
+reportlab = "^4.4.3"
+fpdf2 = "^2.8.3"
+weasyprint = "^66.0"
+google-generativeai = "^0.8.5"
+google-api-python-client = "^2.177.0"
+boto3 = "^1.39.12"
+playwright = "^1.55.0"
+selenium = "^4.34.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
+black = "^25.1.0"
+flake8 = "^7.3.0"
+mypy = "^1.17.0"
+isort = "^6.0.1"
+autopep8 = "^2.3.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "uvicorn server:app --host 0.0.0.0 --port 8000"
