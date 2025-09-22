@@ -1,3 +1,6 @@
+import sys
+sys.path.append('.')
+
 from fastapi import FastAPI, APIRouter, HTTPException, Request, Depends, status, UploadFile, File, Form, Header
 from fastapi.responses import StreamingResponse, HTMLResponse
 from fastapi.security import HTTPBearer
