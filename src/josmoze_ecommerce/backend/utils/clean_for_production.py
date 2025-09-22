@@ -16,7 +16,7 @@ async def clean_for_production():
     print("=" * 50)
     
     # Connexion MongoDB
-    mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+    mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', 'mongodb://localhost:27017'))
     client = AsyncIOMotorClient(mongo_url)
     db = client.josmose_db
     

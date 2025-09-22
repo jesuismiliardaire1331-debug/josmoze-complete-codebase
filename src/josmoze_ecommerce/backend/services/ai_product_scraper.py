@@ -21,7 +21,7 @@ from bs4 import BeautifulSoup
 import json
 
 # Configuration
-MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
 
 @dataclass
