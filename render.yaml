@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: josmoze-ecommerce-backend
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: MONGO_URL
+        value: mongodb+srv://jesuismiliardaire1331_db_user:NWNCcv9h3OOFkavQ@cluster0.jhfn6ic.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - key: DB_NAME
+        value: josmoze_production
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: DEEPL_API_KEY
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: COMPANY_NAME
+        value: Josmoze
+      - key: COMPANY_ADDRESS
+        value: 123 Rue de la Paix, 75001 Paris, France
+      - key: COMPANY_PHONE
+        value: +33 1 23 45 67 89
+      - key: COMPANY_EMAIL
+        value: contact@josmoze.com
+      - key: COMPANY_SIRET
+        value: 12345678901234
+      - key: COMPANY_TVA
+        value: FR12345678901
+    region: oregon
+    plan: free
+
+  - type: static
+    name: josmoze-ecommerce-frontend
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
+    envVars:
+      - key: REACT_APP_BACKEND_URL
+        value: https://josmoze-ecommerce-backend.onrender.com
+    region: oregon
+    plan: free
