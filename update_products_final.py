@@ -10,11 +10,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 import logging
 
-# Ajouter le répertoire backend au path
-sys.path.append('./backend')
+# Ajouter le répertoire src au path pour accéder aux modules refactorisés
+sys.path.append('./src')
 
-# Importer les nouveaux produits
-from products_final import FINAL_PRODUCTS, PROMOTION_RULES, REFERRAL_SYSTEM
+# Importer les nouveaux produits depuis la structure refactorisée
+from josmoze_ecommerce.backend.models.products_final import FINAL_PRODUCTS, PROMOTION_RULES, REFERRAL_SYSTEM
 
 # Configuration MongoDB
 MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')

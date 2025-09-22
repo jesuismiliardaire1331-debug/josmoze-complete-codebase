@@ -44,6 +44,6 @@ services:
     staticPublishPath: frontend/build
     envVars:
       - key: REACT_APP_BACKEND_URL
-        value: https://josmoze-ecommerce-backend.onrender.com
+        value: https://josmoze-backend.onrender.com
     region: oregon
     plan: free

@@ -11,6 +11,8 @@ from fastapi.responses import JSONResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 
+from .routers import products, auth, crm, ai_agents
+
 # Load environment variables
 load_dotenv()
 
@@ -40,6 +42,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(products.router, prefix="/api")
+app.include_router(auth.router, prefix="/api")
+app.include_router(crm.router, prefix="/api")
+app.include_router(ai_agents.router, prefix="/api")
 
 db_client = None
 db = None
