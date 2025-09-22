@@ -18,7 +18,12 @@ from datetime import datetime, timedelta
 import httpx
 import re
 import asyncio
-from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
+import sys
+from pathlib import Path
+src_path = Path(__file__).parent.parent / "src"
+sys.path.insert(0, str(src_path))
+
+from josmoze_ecommerce.backend.services.stripe_service import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
 
 # Import security and performance middleware
 from security_middleware import SecurityMiddleware, CacheMiddleware, get_security_stats, clear_cache

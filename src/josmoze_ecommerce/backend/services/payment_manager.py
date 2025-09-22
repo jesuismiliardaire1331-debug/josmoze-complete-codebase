@@ -12,7 +12,12 @@ from uuid import uuid4
 
 from fastapi import HTTPException
 from motor.motor_asyncio import AsyncIOMotorClient
-from emergentintegrations.payments.stripe.checkout import (
+import sys
+from pathlib import Path
+src_path = Path(__file__).parent.parent.parent / "src"
+sys.path.insert(0, str(src_path))
+
+from josmoze_ecommerce.backend.services.stripe_service import (
     StripeCheckout, 
     CheckoutSessionResponse, 
     CheckoutStatusResponse, 

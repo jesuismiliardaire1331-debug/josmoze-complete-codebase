@@ -2,8 +2,8 @@ services:
   - type: web
     name: josmoze-ecommerce-backend
     runtime: python
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && uvicorn server:app --host 0.0.0.0 --port $PORT
+    buildCommand: cd backend && pip install poetry && poetry install --no-dev
+    startCommand: poetry run uvicorn josmoze_ecommerce.backend.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: MONGO_URL
         value: mongodb+srv://jesuismiliardaire1331_db_user:NWNCcv9h3OOFkavQ@cluster0.jhfn6ic.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
