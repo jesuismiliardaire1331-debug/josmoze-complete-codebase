@@ -10,8 +10,8 @@ import sys
 from datetime import datetime, timezone
 from motor.motor_asyncio import AsyncIOMotorClient
 
-# Ajouter le chemin du backend
-sys.path.append('./backend')
+# Ajouter le chemin src pour la structure refactorisée
+sys.path.append('./src')
 
 MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
