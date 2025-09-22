@@ -12,6 +12,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 
 from .routers import products, auth, crm, ai_agents
+from fastapi import APIRouter
 
 # Load environment variables
 load_dotenv()
@@ -43,10 +44,43 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+blog_router = APIRouter(prefix="/blog", tags=["blog"])
+
+@blog_router.get("/articles")
+async def get_blog_articles():
+    """Get all blog articles"""
+    try:
+        import os
+        from motor.motor_asyncio import AsyncIOMotorClient
+        
+        MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+        DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
+        
+        client = AsyncIOMotorClient(MONGO_URL)
+        db = client[DB_NAME]
+        
+        cursor = db.blog_articles.find({})
+        articles = await cursor.to_list(length=None)
+        
+        # Convert ObjectId to string for JSON serialization
+        for article in articles:
+            if "_id" in article:
+                article["_id"] = str(article["_id"])
+        
+        return {
+            "articles": articles,
+            "count": len(articles),
+            "message": f"Found {len(articles)} blog articles"
+        }
+    except Exception as e:
+        logger.error(f"Error getting blog articles: {e}")
+        return {"articles": [], "count": 0, "error": str(e)}
+
 app.include_router(products.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(crm.router, prefix="/api")
 app.include_router(ai_agents.router, prefix="/api")
+app.include_router(blog_router, prefix="/api")
 
 db_client = None
 db = None
