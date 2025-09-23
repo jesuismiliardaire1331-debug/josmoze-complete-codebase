@@ -120,7 +120,7 @@ Référence de votre message : #{reference}
 
 class EmailService:
     def __init__(self):
-        self.mongo_client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "mongodb://localhost:27017")))
+        self.mongo_client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "")))
         self.db = self.mongo_client[os.getenv("DB_NAME", "josmoze_production")]
         self.setup_logging()
 

@@ -13,7 +13,7 @@ from datetime import datetime
 
 class PriceManager:
     def __init__(self):
-        self.mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', 'mongodb://localhost:27017'))
+        self.mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
         
     async def get_current_products(self):
         """Récupère les produits actuels depuis MongoDB"""

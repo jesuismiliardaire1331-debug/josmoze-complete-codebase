@@ -26,7 +26,7 @@ from josmoze_ecommerce.backend.services.stripe_service import (
 
 # Configuration
 STRIPE_API_KEY = os.environ.get("STRIPE_API_KEY")
-MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
 
 # Packages de produits Josmoze (prix fixes pour sécurité)

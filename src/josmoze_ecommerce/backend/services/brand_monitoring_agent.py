@@ -57,7 +57,7 @@ ALLOWED_TERMS = [
 
 class BrandMonitoringAgent:
     def __init__(self):
-        self.mongo_client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "mongodb://localhost:27017")))
+        self.mongo_client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "")))
         self.db = self.mongo_client[os.getenv("DB_NAME", "test_database")]
         self.setup_logging()
         self.running = False

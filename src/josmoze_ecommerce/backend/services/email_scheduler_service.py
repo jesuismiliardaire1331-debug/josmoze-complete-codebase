@@ -23,7 +23,7 @@ async def process_scheduled_emails():
     """Traiter les emails programmés"""
     try:
         # Connexion MongoDB
-        mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017/josmoze_crm')
+        mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
         client = AsyncIOMotorClient(mongo_url)
         db = client.josmoze_crm
         

@@ -53,7 +53,7 @@ async def get_blog_articles():
         import os
         from motor.motor_asyncio import AsyncIOMotorClient
         
-        MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+        MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
         DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
         
         client = AsyncIOMotorClient(MONGO_URL)
@@ -93,7 +93,7 @@ async def startup_event():
     
     try:
         # Initialize MongoDB connection
-        mongodb_url = os.getenv("MONGODB_URL", os.getenv("MONGO_URI", os.getenv("MONGO_URL", "mongodb://localhost:27017")))
+        mongodb_url = os.getenv("MONGODB_URL", os.getenv("MONGO_URI", os.getenv("MONGO_URL", "")))
         db_name = os.getenv("DB_NAME", "josmoze_ecommerce")
         
         db_client = AsyncIOMotorClient(mongodb_url)

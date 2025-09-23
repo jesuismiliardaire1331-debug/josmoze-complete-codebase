@@ -11,7 +11,7 @@ from datetime import datetime
 
 router = APIRouter(prefix="/crm", tags=["crm"])
 
-MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
 
 async def get_database():

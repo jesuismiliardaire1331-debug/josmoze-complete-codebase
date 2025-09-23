@@ -25,7 +25,7 @@ class MongoJSONEncoder(json.JSONEncoder):
         return super(MongoJSONEncoder, self).default(obj)
 
 # Configuration
-MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
+MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
 
 class BlogArticle(BaseModel):
