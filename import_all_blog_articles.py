@@ -13,7 +13,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 # Ajouter le chemin src pour la structure refactorisée
 sys.path.append('./src')
 
-MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
 
 # 10 ARTICLES COMPLETS AVEC IMAGES ET LIENS PRODUITS

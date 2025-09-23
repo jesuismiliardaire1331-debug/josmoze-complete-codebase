@@ -151,7 +151,7 @@ GENERATE_SOURCEMAP=false
         
         # Update database name and add production flags
         backend_content = backend_content.replace('DB_NAME="test_database"', 'DB_NAME="josmoze_production"')
-        backend_content = backend_content.replace('MONGO_URL="mongodb://localhost:27017"', 'MONGO_URL="mongodb://localhost:27017"')
+        backend_content = backend_content.replace('MONGO_URL=""', 'MONGO_URL=""')
         
         # Add production environment marker if not exists
         if 'ENVIRONMENT=' not in backend_content:

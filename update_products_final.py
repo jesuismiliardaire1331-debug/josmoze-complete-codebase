@@ -17,7 +17,7 @@ sys.path.append('./src')
 from josmoze_ecommerce.backend.models.products_final import FINAL_PRODUCTS, PROMOTION_RULES, REFERRAL_SYSTEM
 
 # Configuration MongoDB
-MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+MONGO_URL = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[os.environ.get('DB_NAME', 'josmoze_production')]
 

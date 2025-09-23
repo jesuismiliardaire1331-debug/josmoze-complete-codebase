@@ -10,7 +10,7 @@ import os
 import logging
 
 # Configuration
-MONGO_URL = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+MONGO_URL = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
 DB_NAME = os.environ.get('DB_NAME', 'josmoze_production')
 
 # Nouvelles images appropriées pour osmoseurs

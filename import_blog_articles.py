@@ -14,7 +14,7 @@ from slugify import slugify
 # Ajouter le chemin du backend
 sys.path.append('/app/backend')
 
-MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
 DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
 
 # Articles complets avec contenu enrichi d'images et liens produits
