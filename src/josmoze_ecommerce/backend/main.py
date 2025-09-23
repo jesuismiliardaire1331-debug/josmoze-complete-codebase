@@ -86,6 +86,13 @@ db_client = None
 db = None
 stripe_checkout = None
 
+async def get_database():
+    """Get database connection - ensures it's available"""
+    global db
+    if db is None:
+        raise HTTPException(status_code=503, detail="Database not initialized")
+    return db
+
 @app.on_event("startup")
 async def startup_event():
     """Initialize all services on application startup"""

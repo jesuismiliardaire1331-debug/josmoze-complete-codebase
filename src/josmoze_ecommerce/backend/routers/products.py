@@ -12,8 +12,8 @@ router = APIRouter(prefix="/products", tags=["products"])
 
 async def get_database():
     """Get shared database connection from main app"""
-    from ..main import db
-    return db
+    from ..main import get_database as get_main_db
+    return await get_main_db()
 
 @router.get("/")
 async def get_products():

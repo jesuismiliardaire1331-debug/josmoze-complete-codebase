@@ -12,8 +12,8 @@ router = APIRouter(prefix="/crm", tags=["crm"])
 
 async def get_database():
     """Get shared database connection from main app"""
-    from ..main import db
-    return db
+    from ..main import get_database as get_main_db
+    return await get_main_db()
 
 @router.get("/leads")
 async def get_leads():
