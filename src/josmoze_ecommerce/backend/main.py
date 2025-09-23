@@ -96,6 +96,8 @@ async def startup_event():
         mongodb_url = os.getenv("MONGODB_URL", os.getenv("MONGO_URI", os.getenv("MONGO_URL", "")))
         db_name = os.getenv("DB_NAME", "josmoze_ecommerce")
         
+        logger.info(f"🔍 MongoDB Configuration - URL: {'***CONFIGURED***' if mongodb_url else 'NOT SET'}, DB: {db_name}")
+        
         db_client = AsyncIOMotorClient(mongodb_url)
         db = db_client[db_name]
         

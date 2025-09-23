@@ -471,7 +471,7 @@ class BrandMonitoringAgent:
         """
         try:
             # Create a new MongoDB client for this request to avoid loop issues
-            client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "mongodb://localhost:27017")))
+            client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "")))
             db = client[os.getenv("DB_NAME", "test_database")]
             
             # Statistiques des derniers scans
