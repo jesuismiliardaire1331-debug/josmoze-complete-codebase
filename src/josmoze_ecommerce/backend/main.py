@@ -50,15 +50,6 @@ blog_router = APIRouter(prefix="/blog", tags=["blog"])
 async def get_blog_articles():
     """Get all blog articles"""
     try:
-        import os
-        from motor.motor_asyncio import AsyncIOMotorClient
-        
-        MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
-        DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
-        
-        client = AsyncIOMotorClient(MONGO_URL)
-        db = client[DB_NAME]
-        
         cursor = db.blog_articles.find({})
         articles = await cursor.to_list(length=None)
         
