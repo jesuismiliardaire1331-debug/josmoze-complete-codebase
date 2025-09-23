@@ -18,8 +18,9 @@ class PriceManager:
     async def get_current_products(self):
         """Récupère les produits actuels depuis MongoDB"""
         
-        client = AsyncIOMotorClient(self.mongo_url)
-        db = client.josmose_db
+        mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
+        client = AsyncIOMotorClient(mongo_url)
+        db = client[os.environ.get('DB_NAME', 'josmoze_production')]
         products = db.products
         
         current_products = []
@@ -37,8 +38,9 @@ class PriceManager:
     async def update_product_prices(self, price_updates):
         """Met à jour les prix dans la base de données"""
         
-        client = AsyncIOMotorClient(self.mongo_url)
-        db = client.josmose_db
+        mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
+        client = AsyncIOMotorClient(mongo_url)
+        db = client[os.environ.get('DB_NAME', 'josmoze_production')]
         products = db.products
         
         updated_products = []
@@ -78,8 +80,9 @@ class PriceManager:
     async def log_price_changes(self, changes):
         """Log des changements de prix pour historique"""
         
-        client = AsyncIOMotorClient(self.mongo_url)
-        db = client.josmose_db
+        mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
+        client = AsyncIOMotorClient(mongo_url)
+        db = client[os.environ.get('DB_NAME', 'josmoze_production')]
         price_history = db.price_history
         
         for change in changes:

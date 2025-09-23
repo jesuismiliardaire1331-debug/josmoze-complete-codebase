@@ -57,8 +57,9 @@ ALLOWED_TERMS = [
 
 class BrandMonitoringAgent:
     def __init__(self):
-        self.mongo_client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "")))
-        self.db = self.mongo_client[os.getenv("DB_NAME", "test_database")]
+        mongo_url = os.getenv("MONGO_URI", os.getenv("MONGO_URL", ""))
+        self.mongo_client = AsyncIOMotorClient(mongo_url)
+        self.db = self.mongo_client[os.getenv("DB_NAME", "josmoze_production")]
         self.setup_logging()
         self.running = False
         self.violation_count = 0
@@ -471,8 +472,9 @@ class BrandMonitoringAgent:
         """
         try:
             # Create a new MongoDB client for this request to avoid loop issues
-            client = AsyncIOMotorClient(os.getenv("MONGO_URI", os.getenv("MONGO_URL", "")))
-            db = client[os.getenv("DB_NAME", "test_database")]
+            mongo_url = os.getenv("MONGO_URI", os.getenv("MONGO_URL", ""))
+            client = AsyncIOMotorClient(mongo_url)
+            db = client[os.getenv("DB_NAME", "josmoze_production")]
             
             # Statistiques des derniers scans
             recent_scans = await db.brand_monitoring.find().sort("scan_time", -1).limit(10).to_list(10)
