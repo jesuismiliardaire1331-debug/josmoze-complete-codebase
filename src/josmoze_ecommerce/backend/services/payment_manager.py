@@ -79,8 +79,9 @@ class PaymentManager:
         """Initialiser les connexions DB et Stripe"""
         try:
             # Connexion MongoDB
-            self.db_client = AsyncIOMotorClient(MONGO_URL)
-            self.db = self.db_client[DB_NAME]
+            mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
+            self.db_client = AsyncIOMotorClient(mongo_url)
+            self.db = self.db_client[os.environ.get('DB_NAME', 'josmoze_production')]
             
             # Test connexion
             await self.db_client.admin.command('ping')

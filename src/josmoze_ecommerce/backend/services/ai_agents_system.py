@@ -135,7 +135,11 @@ class AgentConfig:
             }
 
 class AIAgentSystem:
-    def __init__(self, mongo_url: str, db_name: str):
+    def __init__(self, mongo_url: str = None, db_name: str = None):
+        if mongo_url is None:
+            mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
+        if db_name is None:
+            db_name = os.environ.get('DB_NAME', 'josmoze_production')
         self.client = AsyncIOMotorClient(mongo_url)
         self.db = self.client[db_name]
         self.agents = {}

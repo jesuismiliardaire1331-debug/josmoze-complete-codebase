@@ -78,8 +78,9 @@ class BlogManager:
     async def initialize(self):
         """Initialiser la connexion MongoDB"""
         if not self.client:
-            self.client = AsyncIOMotorClient(MONGO_URL)
-            self.db = self.client[DB_NAME]
+            mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
+            self.client = AsyncIOMotorClient(mongo_url)
+            self.db = self.client[os.environ.get('DB_NAME', 'josmoze_production')]
             
     async def create_article(self, article_data: BlogArticle) -> dict:
         """
