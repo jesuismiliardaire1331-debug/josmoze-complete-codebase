@@ -499,7 +499,7 @@ async def get_ai_agent_system():
     global ai_agent_system
     
     if ai_agent_system is None:
-        mongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')
+        mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
         db_name = os.environ.get('DB_NAME', '{self.project_name.lower()}_database')
         ai_agent_system = AIAgentSystem(mongo_url, db_name)
         
@@ -634,7 +634,7 @@ Date: {self.timestamp}
 # Secteur: {sector_config["name"]}
 
 # Base de données
-MONGO_URL="mongodb://localhost:27017"
+MONGO_URL=""
 DB_NAME="{self.project_name.lower()}_database"
 
 # APIs IA (Requis)
