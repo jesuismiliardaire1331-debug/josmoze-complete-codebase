@@ -82,6 +82,7 @@ load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
 mongo_url = os.environ.get('MONGO_URI', os.environ.get('MONGO_URL', ''))
+print(f"🔍 MongoDB Configuration - URL: {'***CONFIGURED***' if mongo_url else 'NOT SET'}, DB: {os.environ.get('DB_NAME', 'josmoze_production')}")
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ.get('DB_NAME', 'josmoze_production')]
 
