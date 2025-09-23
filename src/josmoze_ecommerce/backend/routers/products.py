@@ -6,18 +6,14 @@ from fastapi import APIRouter, HTTPException, Request, Depends
 from typing import List, Optional, Dict, Any
 import logging
 import os
-from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 
 router = APIRouter(prefix="/products", tags=["products"])
 
-MONGO_URL = os.environ.get("MONGO_URI", os.environ.get("MONGO_URL", ""))
-DB_NAME = os.environ.get("DB_NAME", "josmoze_production")
-
 async def get_database():
-    """Get database connection"""
-    client = AsyncIOMotorClient(MONGO_URL)
-    return client[DB_NAME]
+    """Get shared database connection from main app"""
+    from ..main import db
+    return db
 
 @router.get("/")
 async def get_products():
